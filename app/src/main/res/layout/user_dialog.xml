@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" ><![CDATA[
+
+    />
+
+    ]]>
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:text="name"
+        android:ems="10"
+        android:id="@+id/dialogName"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textPassword"
+        android:ems="10"
+        android:id="@+id/dialogPasswd"
+        android:text="password"
+        android:layout_below="@+id/dialogName"
+        android:layout_alignStart="@+id/dialogName"
+        android:layout_centerHorizontal="true" />
+
+    <Button
+        android:id="@+id/dialogButtonOK"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text=" Ok "
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true" />
+
+    <CheckBox
+        android:text="uložit data"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/dialogButtonOK"
+        android:layout_alignStart="@+id/dialogPasswd"
+        android:layout_marginStart="11dp"
+        android:layout_marginBottom="67dp"
+        android:id="@+id/dialogSaveData"
+        android:checked="true" />
+
+</RelativeLayout>

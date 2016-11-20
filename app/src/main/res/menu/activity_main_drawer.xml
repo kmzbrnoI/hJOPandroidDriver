@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_train_manage"
+            android:icon="@drawable/ic_menu_send"
+            android:title="Rozhraní vlaku" />
+        <item
+            android:id="@+id/nav_trains"
+            android:icon="@drawable/ic_menu_gallery"
+            android:title="Výběr vlaků" />
+
+
+
+        <item android:title="Nastavení">
+            <menu>
+                <item
+                    android:id="@+id/nav_server"
+                    android:icon="@drawable/ic_menu_slideshow"
+                    android:title="Výběr serveru" />
+                <item
+                    android:id="@+id/nav_settings"
+                    android:icon="@drawable/ic_menu_manage"
+                    android:title="Nastavení" />
+            </menu>
+        </item>
+    </group>
+    <item android:title="about">
+        <menu>
+            <item
+                android:id="@+id/nav_about"
+                android:icon="@drawable/ic_menu_share"
+                android:title="about" />
+
+        </menu>
+    </item>
+
+</menu>

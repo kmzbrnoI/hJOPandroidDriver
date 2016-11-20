@@ -1,0 +1,320 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/content_train_handler"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="cz.mendelu.xmarik.train_manager.TrainHandler"
+    tools:showIn="@layout/activity_train_handler">
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="horizontal" android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ScrollView
+            android:layout_width="288dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/scrollView3" >
+
+            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:weightSum="1" >
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:weightSum="1" >
+
+                    <Spinner
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/spinner1"
+                        android:layout_weight="0.82" />
+
+                    <LinearLayout
+                        android:orientation="vertical"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.82">
+
+                        <CheckBox
+                            android:layout_width="match_parent"
+                            android:layout_height="38dp"
+                            android:text="skupina"
+                            android:id="@+id/goupManaged1"
+                            android:layout_weight="0.82"
+                            android:checked="false" />
+
+                        <CheckBox
+                            android:text="total"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/totalManaged"
+                            android:layout_weight="0.82" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="81dp"
+                    android:layout_weight="0.12"
+                    android:weightSum="1" >
+
+                    <ImageButton
+                        android:layout_width="94dp"
+                        android:layout_height="53dp"
+                        android:id="@+id/imageButton1"
+                        android:layout_gravity="right"
+                        android:src="@mipmap/ic_green_light"
+                        android:layout_weight="1.25"
+                        android:onClick="statButton1Handler" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceLarge"
+                        android:text="-----------"
+                        android:id="@+id/handlerName1"
+                        android:layout_weight="0.30"
+                        android:onClick="showStats1" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="93dp"
+                    android:weightSum="1" >
+
+                    <Switch
+                        android:layout_width="136dp"
+                        android:layout_height="46dp"
+                        android:id="@+id/handlerDirection1"
+                        android:layout_gravity="top|center_horizontal"
+                        android:checked="false"
+                        android:onClick="directionChange1" />
+
+                    <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:weightSum="1" >
+
+                        <Button
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="idle"
+                            android:id="@+id/startButton1"
+                            android:layout_gravity="bottom|center"
+                            android:layout_weight="0.51"
+                            android:onClick="idle1" />
+
+                        <Button
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="stop"
+                            android:id="@+id/stopButton1"
+                            android:layout_gravity="bottom|right"
+                            android:layout_weight="0.51"
+                            android:onClick="stop1" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <TextView
+                    android:text="TextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/kmh1"
+                    android:layout_gravity="center"
+                    android:textAlignment="center" />
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="49dp"
+                    android:layout_gravity="center_vertical"
+                    android:id="@+id/linearLayout" >
+
+                    <SeekBar
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:id="@+id/speedkBar1"
+                        android:layout_weight="1"
+                        android:max="30"
+                        android:indeterminate="false"
+                        android:layout_gravity="center_vertical" />
+                </LinearLayout>
+
+                <ListView
+                    android:layout_width="wrap_content"
+                    android:layout_height="185dp"
+                    android:id="@+id/checkBoxView1"
+                    android:numColumns="4"
+                    android:choiceMode="multipleChoice"
+                    android:elevation="13dp" />
+            </LinearLayout>
+        </ScrollView>
+
+        <ScrollView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/scrollView4" >
+
+            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:weightSum="1" >
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:weightSum="1" >
+
+                    <Spinner
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/spinner2"
+                        android:layout_weight="0.82" />
+
+                    <LinearLayout
+                        android:orientation="vertical"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.82">
+
+                        <CheckBox
+                            android:layout_width="match_parent"
+                            android:layout_height="38dp"
+                            android:text="skupina"
+                            android:id="@+id/goupManaged2"
+                            android:layout_weight="0.82"
+                            android:checked="false" />
+
+                        <CheckBox
+                            android:text="total"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/totalManaged2"
+                            android:layout_weight="0.82" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="81dp"
+                    android:layout_weight="0.12"
+                    android:weightSum="1" >
+
+                    <ImageButton
+                        android:layout_width="94dp"
+                        android:layout_height="53dp"
+                        android:id="@+id/imageButton2"
+                        android:layout_gravity="right"
+                        android:src="@drawable/ic_red_light"
+                        android:layout_weight="1.25"
+                        android:onClick="statButton2Handler" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceLarge"
+                        android:text="-----------"
+                        android:id="@+id/handlerName2"
+                        android:layout_weight="0.30"
+                        android:onClick="showStats2" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="93dp"
+                    android:weightSum="1" >
+
+                    <Switch
+                        android:layout_width="136dp"
+                        android:layout_height="46dp"
+                        android:text="forward"
+                        android:id="@+id/handlerDirection2"
+                        android:layout_gravity="top|center_horizontal"
+                        android:checked="false"
+                        android:onClick="directionChange2"
+                        android:nestedScrollingEnabled="true" />
+
+                    <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:weightSum="1" >
+
+                        <Button
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="idle"
+                            android:id="@+id/startButton2"
+                            android:layout_gravity="bottom|center"
+                            android:layout_weight="0.51"
+                            android:onClick="idle2" />
+
+                        <Button
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="stop"
+                            android:id="@+id/stopButton2"
+                            android:layout_gravity="bottom|right"
+                            android:layout_weight="0.51"
+                            android:onClick="stop2" />
+
+                    </LinearLayout>
+                </LinearLayout>
+
+                <TextView
+                    android:text="TextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/kmh2"
+                    android:layout_weight="0.51"
+                    android:textAlignment="center"
+                    android:layout_gravity="center_vertical|center_horizontal|center" />
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="49dp"
+                    android:layout_weight="0.57"
+                    android:id="@+id/linearLayout2" >
+
+                    <SeekBar
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:id="@+id/speedkBar2"
+                        android:layout_weight="1"
+                        android:max="30"
+                        android:indeterminate="false"
+                        android:layout_gravity="center_vertical" />
+                </LinearLayout>
+                <ListView
+                    android:layout_width="wrap_content"
+                    android:layout_height="185dp"
+                    android:id="@+id/checkBoxView2"
+                    android:numColumns="4"
+                    android:choiceMode="multipleChoice" />
+
+            </LinearLayout>
+        </ScrollView>
+    </LinearLayout>
+</RelativeLayout>
