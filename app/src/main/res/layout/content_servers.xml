@@ -2,7 +2,6 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/content_servers"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingBottom="@dimen/activity_vertical_margin"
@@ -11,51 +10,50 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="cz.mendelu.xmarik.train_manager.Servers"
-    tools:showIn="@layout/activity_servers">
+    tools:showIn="@layout/app_bar_servers">
 
-    <Button
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:text="search"
-        android:id="@+id/serverButton"
-        android:layout_gravity="center_horizontal"
-        android:onClick="discoverServer" />
-
-    <ScrollView
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="171dp"
-        android:id="@+id/scrollView"
-        android:layout_gravity="center_horizontal" >
+        android:layout_height="match_parent"
+        android:weightSum="1" >
+
+        <Button
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="search"
+            android:id="@+id/serverButton"
+            android:layout_gravity="center_horizontal"
+            android:onClick="discoverServer" />
+
+        <ListView
+            android:layout_width="match_parent"
+            android:layout_height="187dp"
+            android:id="@+id/localServers" />
+
+        <ImageButton
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/imageButton3" />
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:weightSum="1" >
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Add new server"
+                android:id="@+id/add"
+                android:onClick="addServer"
+                android:layout_gravity="center_horizontal" />
+        </LinearLayout>
 
         <ListView
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/localServers" />
-    </ScrollView>
-
-    <ImageButton
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/imageButton" />
-
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="56dp"
-        android:weightSum="1">
-
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Add new server"
-            android:id="@+id/add"
-            android:onClick="addServer"
-            android:layout_gravity="center_horizontal" />
-
+            android:layout_height="185dp"
+            android:id="@+id/farServers" />
     </LinearLayout>
-
-    <ListView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/farServers" />
 </RelativeLayout>

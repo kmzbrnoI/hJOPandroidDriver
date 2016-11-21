@@ -2,7 +2,6 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/content_trains_box"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingBottom="@dimen/activity_vertical_margin"
@@ -11,7 +10,7 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="cz.mendelu.xmarik.train_manager.Trains_box"
-    tools:showIn="@layout/activity_trains_box">
+    tools:showIn="@layout/app_bar_trains_box">
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 
@@ -19,6 +18,16 @@
         android:orientation="vertical" android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:weightSum="1">
+
+        <TextView
+            android:text="oblasti řízení"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/areaLabel"
+            tools:text="Oblasti řízení"
+            android:gravity="top|center_vertical|center_horizontal"
+            android:background="@android:color/darker_gray"
+            android:textColor="@android:color/holo_red_dark" />
 
         <ListView
             android:layout_width="match_parent"
@@ -39,6 +48,15 @@
                 android:indeterminate="false"
                 tools:visibility="gone" />
         </RelativeLayout>
+
+        <TextView
+            android:text="přiřaztené soupravy"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/ackquiredLabel"
+            android:background="@android:color/darker_gray"
+            android:textColor="@android:color/holo_red_dark"
+            android:gravity="center_vertical|center_horizontal|center" />
 
         <ListView
             android:layout_width="match_parent"
@@ -81,4 +99,5 @@
         </LinearLayout>
 
     </LinearLayout>
+
 </RelativeLayout>

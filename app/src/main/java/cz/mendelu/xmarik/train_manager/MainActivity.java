@@ -289,13 +289,6 @@ public class MainActivity extends AppCompatActivity
 
     }
 
-   /* public void setUserData(String itemValue)
-    {
-        Intent intent = new Intent(getBaseContext(), UserData.class);
-        intent.putExtra("server", itemValue);
-        startActivityForResult(intent,3);
-    }*/
-
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         if (requestCode == 1) {
@@ -482,6 +475,7 @@ public class MainActivity extends AppCompatActivity
 
         SharedPreferences.Editor editor = sharedpreferences.edit();
         editor.remove("StoredServers");
+        editor.clear();
         editor.putString("StoredServers", n);
         editor.commit();
     }

@@ -25,6 +25,7 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -63,7 +64,6 @@ public class Trains_box extends AppCompatActivity
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -211,6 +211,7 @@ public class Trains_box extends AppCompatActivity
 
     }
 
+    @Subscribe
     public void onEvent(RefuseEvent event){
 
         Toast.makeText(getApplicationContext(),
@@ -222,6 +223,7 @@ public class Trains_box extends AppCompatActivity
         this.sendButton.setText("poslat");
     }
 
+    @Subscribe
     public void onEvent(FreeEvent event){
 
         Toast.makeText(getApplicationContext(),
