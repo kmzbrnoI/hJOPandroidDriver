@@ -9,7 +9,6 @@ public class TrainFunction {
     boolean checked;
 
     /**
-     *
      * @param code
      * @param name
      * @param checked
@@ -23,12 +22,15 @@ public class TrainFunction {
     public String getCode() {
         return code;
     }
+
     public void setCode(String code) {
         this.code = code;
     }
+
     public String getName() {
         return name;
     }
+
     public void setName(String name) {
         this.name = name;
     }
@@ -36,6 +38,7 @@ public class TrainFunction {
     public boolean isSelected() {
         return checked;
     }
+
     public void setSelected(boolean selected) {
         this.checked = selected;
     }

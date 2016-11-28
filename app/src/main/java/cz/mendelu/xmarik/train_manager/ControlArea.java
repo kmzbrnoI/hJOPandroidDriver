@@ -18,6 +18,7 @@ public class ControlArea {
         this.trains = trains;
         this.storedTxt =  this.name +"-|||-"+ this.id;
     }
+
     public ControlArea(String id, String name) {
         this.id = id;
         this.name = name;
@@ -50,7 +51,6 @@ public class ControlArea {
     }
 
     public String getString() {
-
         return this.storedTxt;
     }
 
@@ -61,4 +61,5 @@ public class ControlArea {
         }
         trains.add(newTrain);
     }
+
 }

@@ -535,7 +535,7 @@ public class TrainHandler extends AppCompatActivity
         if (train1 != null) {
             train1 = activeServer.getTrain(train1.getName());
             name1.setText(train1.getName());
-            speed1.setProgress(train1.getSpeed());
+            if(train1.getSpeed() != speed1.getProgress())speed1.setProgress(train1.getSpeed());
             direction1.setChecked(train1.isDirection());
             group1.setChecked(managed.contains(train1));
             kmhSpeed1.setText(Double.toString(train1.getKmhSpeed())+ "km/h");

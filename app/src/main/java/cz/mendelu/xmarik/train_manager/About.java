@@ -1,17 +1,15 @@
 package cz.mendelu.xmarik.train_manager;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-
-import java.io.IOException;
 
 public class About extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -20,16 +18,13 @@ public class About extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_about);
-
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
-
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
     }
@@ -57,7 +52,6 @@ public class About extends AppCompatActivity
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
@@ -78,27 +72,22 @@ public class About extends AppCompatActivity
         } else if (id == R.id.nav_about) {
             Intent intent = new Intent(this, About.class);
             startActivity(intent);
-
         } else if (id == R.id.nav_settings) {
             Intent intent = new Intent(this, Settings.class);
             startActivity(intent);
-
         } else if (id == R.id.nav_train_manage) {
             Intent intent = new Intent(this, TrainHandler.class);
             startActivity(intent);
-
         } else if (id == R.id.nav_trains) {
             Intent intent = new Intent(this, Trains_box.class);
             startActivity(intent);
-
         } else if (id == R.id.nav_view) {
             Intent intent = new Intent(this, Servers.class);
             startActivity(intent);
-
         }
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
 }

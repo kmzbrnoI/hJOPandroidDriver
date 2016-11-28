@@ -11,7 +11,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * Created by ja on 15. 6. 2016.
  */
 public class Server {
-    public static AtomicInteger id = new AtomicInteger(0);;
+    public static AtomicInteger id = new AtomicInteger(0);
     public int serverId;
     public String name;
     public String ipAdr;
@@ -19,7 +19,7 @@ public class Server {
     public String about;
     public boolean status;
     public List<ControlArea> areas;
-    private String base ="-;LOK;G;";
+    private String base = "-;LOK;G;";
     private boolean active;
     private String dnsName;
     private String userName;
@@ -28,33 +28,31 @@ public class Server {
 
 
     public Server(String name, String ipAdr, int port, boolean status, String about) {
-        this.ipAdr=ipAdr;
-        this.name=name;
-        this.port=port;
-        this.about=about;
-        this.areas= new ArrayList<>();
-        this.status= status;
-        this.active=false;
-
+        this.ipAdr = ipAdr;
+        this.name = name;
+        this.port = port;
+        this.about = about;
+        this.areas = new ArrayList<>();
+        this.status = status;
+        this.active = false;
         this.serverId = id.incrementAndGet();
-
-        List<Train> trains=new ArrayList<>();;
-        trains.add(new Train("bnn21f86",false,new boolean [16],16,true));
-        trains.add(new Train("aaaa",true,new boolean [16],16,false));
-        trains.add(new Train("nov",true,new boolean [16],16,true));
+        List<Train> trains = new ArrayList<>();
+        trains.add(new Train("bnn21f86", false, new boolean[16], 16, true));
+        trains.add(new Train("aaaa", true, new boolean[16], 16, false));
+        trains.add(new Train("nov", true, new boolean[16], 16, true));
         trains.get(0).setAuthorized(true);
         trains.get(2).setAuthorized(true);
-        areas.add(new ControlArea("1","full", trains));
-        areas.add(new ControlArea("1","empty", new ArrayList<Train>()));
+        areas.add(new ControlArea("1", "full", trains));
+        areas.add(new ControlArea("1", "empty", new ArrayList<Train>()));
     }
 
     public Server(String name, int port, boolean status, String about) {
-        this.name=name;
-        this.port=port;
-        this.about=about;
-        this.areas= new ArrayList<>();
-        this.status= status;
-        this.active=false;
+        this.name = name;
+        this.port = port;
+        this.about = about;
+        this.areas = new ArrayList<>();
+        this.status = status;
+        this.active = false;
 
         this.serverId = id.incrementAndGet();
     }
@@ -71,55 +69,40 @@ public class Server {
 
     //asi to pak spis udelat pres id lokomotivy
 
-    public String Autorizace(String username, String passwd)
-    {
+    public String Autorizace(String username, String passwd) {
         String text = null;
-        text=base+"AUTH;"+username+";"+passwd;
+        text = base + "AUTH;" + username + ";" + passwd;
         return text;
     }
 
-    public String GetAreaLoko(int id, String comment)
-    {
+    public String GetAreaLoko(int id, String comment) {
         String text = null;
-        text=base+"PLEASE;"+id+";"+comment;
+        text = base + "PLEASE;" + id + ";" + comment;
         return text;
     }
 
-    public String GetLoko(String token, String adr)
-    {
+    public String GetLoko(String token, String adr) {
         String text = null;
         //-:LOK;G;PLEASE;id_stanice;{poznámka}                 - zadost o rizeni konkretni lokomotivy; token neni potreba pripojovat v pripade, kdy loko uz mame autorizovane a bylo nam ukradeno napriklad mysi
         List<Train> trains;
-        for (ControlArea a : areas)
-        {
+        for (ControlArea a : areas) {
             trains = a.getTrains();
-            for (Train t : trains)
-            {
-                if(t.getName().equals(adr))
-                {
-                    if(t.isAuthorized())
-                    {
-                        token=t.getToken();
+            for (Train t : trains) {
+                if (t.getName().equals(adr)) {
+                    if (t.isAuthorized()) {
+                        token = t.getToken();
                     }
                 }
             }
         }
-        text= token!=null ? "-:LOK;"+adr+";PLEASE;"+token : "-:LOK;"+adr+";PLEASE";
+        text = token != null ? "-:LOK;" + adr + ";PLEASE;" + token : "-:LOK;" + adr + ";PLEASE";
         return text;
     }
 
-    public String Release(String adr)
-    {
+    public String Release(String adr) {
         String text = null;
-        text= "-:LOK;"+adr+"RELEASE";
+        text = "-:LOK;" + adr + "RELEASE";
         return text;
-    }
-
-    public void setActive(boolean ac)
-    {
-
-        this.active=ac;
-
     }
 
     public String getBase() {
@@ -158,20 +141,22 @@ public class Server {
         this.userPassword = userPassword;
     }
 
-    public boolean getActive()
-    {
+    public boolean getActive() {
         return active;
     }
 
-    public Train getTrain(String adr)
-    {
+    public void setActive(boolean ac) {
+
+        this.active = ac;
+
+    }
+
+    public Train getTrain(String adr) {
         List<Train> trains;
-        for (ControlArea a : areas)
-        {
+        for (ControlArea a : areas) {
             trains = a.getTrains();
-            for(Train t : trains)
-            {
-                if(t.getName().equals(adr)) return t;
+            for (Train t : trains) {
+                if (t.getName().equals(adr)) return t;
             }
 
         }
@@ -180,175 +165,135 @@ public class Server {
 
     @Override
     public String toString() {
-        return "Server --" + name+"--"+
+        return "Server --" + name + "--" +
                 "| ip=" + ipAdr +
-                "| port=" + port+ ' ';
+                "| port=" + port + ' ';
     }
 
-    public ArrayList <String> getAuthorizedTrainsString() {
-
-        ArrayList <String> temp= new ArrayList<>();
+    public ArrayList<String> getAuthorizedTrainsString() {
+        ArrayList<String> temp = new ArrayList<>();
         List<Train> trains;
-        if(areas.size()>0)
-        {
-            for(ControlArea a : areas)
-            {
-
+        if (areas.size() > 0) {
+            for (ControlArea a : areas) {
                 trains = a.getTrains();
-                if((trains.size()>0)) {
-
+                if ((trains.size() > 0)) {
                     for (Train s : trains) {
-
-                        if(s.isAuthorized()){
-                            temp.add("loko: "+s.nameString());
+                        if (s.isAuthorized()) {
+                            temp.add(s.nameString());
                         }
-                }
+                    }
                 }
             }
-            if(!temp.isEmpty()) return temp;
+            if (!temp.isEmpty()) return temp;
         }
-
         return temp;
     }
 
-    public ArrayList <String> getTrainString() {
-
-        ArrayList <String> temp= new ArrayList<>();
+    public ArrayList<String> getTrainString() {
+        ArrayList<String> temp = new ArrayList<>();
         List<Train> trains;
-        if(areas.size()>0)
-        {
-            for(ControlArea a : areas)
-            {
-
+        if (areas.size() > 0) {
+            for (ControlArea a : areas) {
                 trains = a.getTrains();
-                if((trains.size()>0)) {
+                if ((trains.size() > 0)) {
 
                     for (Train s : trains) {
 
-                        if(s.isAuthorized()){
+                        if (s.isAuthorized()) {
                             temp.add(s.toString());
                         }
                     }
                 }
             }
-            if(!temp.isEmpty()) return temp;
+            if (!temp.isEmpty()) return temp;
         }
-
         temp.add("no trains loaded");
-
         return temp;
     }
 
-    public ArrayList <String> getUnAuthorizedTrainsString() {
+    public ArrayList<String> getUnAuthorizedTrainsString() {
 
-        ArrayList <String> temp= new ArrayList<>();
+        ArrayList<String> temp = new ArrayList<>();
         List<Train> trains;
-        if(areas.size()>0)
-        {
-            for(ControlArea a : areas)
-            {
-
+        if (areas.size() > 0) {
+            for (ControlArea a : areas) {
                 trains = a.getTrains();
-                if((trains.size()>0)) {
-
+                if ((trains.size() > 0)) {
                     for (Train s : trains) {
-
-                        if(!s.isAuthorized()){
-                            temp.add("loko:"+s.toString());
+                        if (!s.isAuthorized()) {
+                            temp.add("loko:" + s.toString());
                         }
                     }
                 }
             }
-            if(!temp.isEmpty()) return temp;
+            if (!temp.isEmpty()) return temp;
         }
-
         temp.add("no trains loaded");
-
         return temp;
     }
 
-    public void addArea(ControlArea area)
-    {
+    public void addArea(ControlArea area) {
         this.areas.add(area);
     }
 
-    public ArrayList<String> getAreasId()
-    {
-        ArrayList <String> id = new ArrayList<>();
-        for (ControlArea a : areas)
-        {
+    public ArrayList<String> getAreasId() {
+        ArrayList<String> id = new ArrayList<>();
+        for (ControlArea a : areas) {
             id.add(a.getId());
         }
         return id;
     }
 
 
-
     public ArrayList<String> getUnAuthorizedAreas() {
-
-        ArrayList <String> temp= new ArrayList<>();
-
-        if((areas.size()>0)) {
-
+        ArrayList<String> temp = new ArrayList<>();
+        if ((areas.size() > 0)) {
             for (ControlArea s : areas) {
-
-
-                    temp.add(s.getId()+" "+s.getName());
-
+                temp.add(s.getId() + " " + s.getName());
             }
-            if(!temp.isEmpty()) return temp;
+            if (!temp.isEmpty()) return temp;
         }
         temp.add("no areas loaded");
-        return  temp;
+        return temp;
     }
 
     public Collection<? extends String> getAuthorizedAreas() {
-
-        ArrayList <String> temp= new ArrayList<>();
-
-        if((areas.size()>0)) {
-
+        ArrayList<String> temp = new ArrayList<>();
+        if ((areas.size() > 0)) {
             for (ControlArea s : areas) {
-
-                    temp.add("area:"+s.getName());
-
+                temp.add("area:" + s.getName());
             }
-            if(!temp.isEmpty()) return temp;
+            if (!temp.isEmpty()) return temp;
         }
         temp.add("no areas loaded");
-        return  temp;
+        return temp;
     }
 
     public ControlArea getArea(String itemValue) {
-        for(ControlArea c : areas)
-        {
-            if(c.getName().equals(itemValue)) return c;
+        for (ControlArea c : areas) {
+            if (c.getName().equals(itemValue)) return c;
         }
-        return  null;
+        return null;
     }
 
-    public String getAreaServerString( String itemValue) {
-        String tmp[] = itemValue.split(" ",2);
-        Log.e("","prvni: "+tmp[0]+" druha: "+tmp[1]);
+    public String getAreaServerString(String itemValue) {
+        String tmp[] = itemValue.split(" ", 2);
+        Log.e("", "prvni: " + tmp[0] + " druha: " + tmp[1]);
         ControlArea c = this.getArea(tmp[1]);
-        Log.e("","id: "+c.getId());
-        String text = "-;LOK;G;PLEASE;"+c.getId()+";";
-
+        Log.e("", "id: " + c.getId());
+        String text = "-;LOK;G;PLEASE;" + c.getId() + ";";
         return text;
     }
 
 
-
     public String getStringData() {
-
-        String statusText = this.status?"online":"offline";
-        String stringData = this.name+"\t"+this.ipAdr+"\n"+this.about+" \t"+statusText ;
+        String statusText = this.status ? "online" : "offline";
+        String stringData = this.name + "\t" + this.ipAdr + "\n" + this.about + " \t" + statusText;
         return stringData;
     }
 
-    public String getSaveDataString()
-    {
-        String stringData= this.name+";"+this.ipAdr+";"+this.port+";"+this.about+";"+this.userName+";"+this.userPassword;
+    public String getSaveDataString() {
+        String stringData = this.name + ";" + this.ipAdr + ";" + this.port + ";" + this.about + ";" + this.userName + ";" + this.userPassword;
         return stringData;
     }
 
@@ -360,24 +305,24 @@ public class Server {
         Server server = (Server) o;
 
         if (port != server.port) return false;
-        return ipAdr.equals(server.ipAdr);
-
+        if (!name.equals(server.name)) return false;
+        return ipAdr != null ? ipAdr.equals(server.ipAdr) : server.ipAdr == null;
     }
 
     @Override
     public int hashCode() {
-        int result = ipAdr.hashCode();
+        int result = name.hashCode();
+        result = 31 * result + (ipAdr != null ? ipAdr.hashCode() : 0);
         result = 31 * result + port;
         return result;
     }
 
+    public TCPClient getTcpClient() {
+        return this.tcpClient;
+    }
+
     public void setTcpClient(TCPClient tcpClient) {
         this.tcpClient = tcpClient;
-    }
-    
-    public TCPClient getTcpClient()
-    {
-        return this.tcpClient;
     }
 
     public String getInfo() {
@@ -386,20 +331,20 @@ public class Server {
 
     public void addTrain(Train newTrain) {
         //TODO dodelat
-        ControlArea tmp = this.areas.get(areas.size()-1);
-        if(tmp.getTrains().contains(newTrain)) tmp.getTrains().remove(newTrain);
-
+        ControlArea tmp = this.areas.get(areas.size() - 1);
+        if (tmp.getTrains().contains(newTrain)) tmp.getTrains().remove(newTrain);
         tmp.addTrain(newTrain);
     }
 
     public ArrayList<Train> getTrains() {
-        ArrayList<Train> trains=new ArrayList<>();;
-        trains.add(new Train("bnn21f86",false,new boolean [16],16,true));
-        trains.add(new Train("aaaa",true,new boolean [16],16,false));
-        trains.add(new Train("nov",true,new boolean [16],16,true));
+        ArrayList<Train> trains = new ArrayList<>();
+        trains.add(new Train("bnn21f86", false, new boolean[16], 16, true));
+        trains.add(new Train("aaaa", true, new boolean[16], 16, false));
+        trains.add(new Train("nov", true, new boolean[16], 16, true));
         trains.get(0).setAuthorized(true);
         trains.get(1).setAuthorized(true);
         trains.get(2).setAuthorized(true);
         return trains;
     }
+
 }

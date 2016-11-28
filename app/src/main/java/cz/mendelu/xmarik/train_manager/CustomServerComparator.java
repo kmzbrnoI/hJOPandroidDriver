@@ -11,7 +11,6 @@ public class CustomServerComparator implements Comparator<Server> {
 
     @Override
     public int compare(Server server, Server t1) {
-
         return server.name.compareTo(t1.name);
     }
 

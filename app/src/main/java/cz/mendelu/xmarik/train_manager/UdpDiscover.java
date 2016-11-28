@@ -8,8 +8,6 @@ import android.util.Log;
 
 import org.greenrobot.eventbus.EventBus;
 
-import cz.mendelu.xmarik.train_manager.events.ReloadEvent;
-
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
@@ -21,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import cz.mendelu.xmarik.train_manager.events.ReloadEvent;
 
 
 /**
@@ -28,23 +27,22 @@ import java.util.List;
  */
 //URL, Integer, Long
 public class UdpDiscover extends AsyncTask<String, Void, String> {
-    InetAddress nov=null;
     private static final int TIMEOUT_MS = 500;
-    private WifiManager mWifi;
+    InetAddress nov = null;
     String message;
     int DISCOVERY_PORT;
     ServerList reciver;
     MainActivity main;
-
+    private WifiManager mWifi;
 
 
     UdpDiscover(Context context, int port, MainActivity mainActivity) {
         mWifi = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
-        String zprava ="hJOP;1.0;regulator;mobileManager;";
-        message=zprava+this.getIPAddress(true)+";"+"\n";
-        DISCOVERY_PORT= port;
+        String zprava = "hJOP;1.0;regulator;mobileManager;";
+        message = zprava + this.getIPAddress(true) + ";" + "\n";
+        DISCOVERY_PORT = port;
         reciver = ServerList.getInstance();
-        Log.e("","udp create");
+        Log.e("", "udp create");
         main = mainActivity;
     }
 
@@ -59,7 +57,7 @@ public class UdpDiscover extends AsyncTask<String, Void, String> {
      * @throws IOException
      */
     private void sendDiscoveryRequest(DatagramSocket socket) throws IOException {
-        Log.e("","udp sending");
+        Log.e("", "udp sending");
         DatagramPacket packet = new DatagramPacket(message.getBytes(), message
                 .length(), getBroadcastAddress(), DISCOVERY_PORT);
         socket.send(packet);
@@ -73,7 +71,7 @@ public class UdpDiscover extends AsyncTask<String, Void, String> {
     public InetAddress getBroadcastAddress() throws IOException {
         DhcpInfo dhcp = mWifi.getDhcpInfo();
         if (dhcp == null) {
-           //"Could not get dhcp info"
+            //"Could not get dhcp info"
             return null;
         }
 
@@ -88,8 +86,7 @@ public class UdpDiscover extends AsyncTask<String, Void, String> {
     /**
      * Listen on socket for responses, timing out after TIMEOUT_MS
      *
-     * @param socket
-     *            socket on which the announcement request was sent
+     * @param socket socket on which the announcement request was sent
      * @return list of discovered servers, never null
      * @throws IOException
      */
@@ -122,42 +119,26 @@ public class UdpDiscover extends AsyncTask<String, Void, String> {
     }
 
     public InetAddress zjisti(int port) {
-        String zprava ="hJOP;1.0;panel;;";
-        zprava=zprava+this.getIPAddress(true)+";";
-
-
+        String zprava = "hJOP;1.0;panel;;";
+        zprava = zprava + this.getIPAddress(true) + ";";
 
         return nov;
     }
-
-   /* InetAddress getBroadcastAddress() throws IOException {
-        WifiManager wifi = mContext.getSystemService(Context.WIFI_SERVICE);
-        DhcpInfo dhcp = wifi.getDhcpInfo();
-        // handle null somehow
-
-        int broadcast = (dhcp.ipAddress & dhcp.netmask) | ~dhcp.netmask;
-        byte[] quads = new byte[4];
-        for (int k = 0; k < 4; k++)
-            quads[k] = (byte) ((broadcast >> k * 8) & 0xFF);
-        return InetAddress.getByAddress(quads);
-    }*/
-
 
     private Server parseServerMessage(String message) {
         //"hJOP";verze_protokolu;typ_zarizeni;server_nazev;server_ip;server_port;
         //server_status;server_popis
         Log.e("parse message", "start message parsing: " + message + "'");
-        String [] tmp = HelpServices.parseHelper(message);
+        String[] tmp = HelpServices.parseHelper(message);
         Server server = null;
 
-        if((tmp.length>0)&&(tmp[0].equals("hJOP")))
-        {
-            if(tmp[2].equals("server"))
-            {
-                server=new Server(tmp.length>4 ? tmp[3] : null,tmp.length>5 ? tmp[4] : null,
-                        tmp.length>6 ? Integer.parseInt(tmp[5]) : null,
-                        tmp.length>7 ? Boolean.valueOf(tmp[6]) : null,
-                        tmp.length>8 ? tmp[7] : null);
+        if ((tmp.length > 0) && (tmp[0].equals("hJOP"))) {
+            if (tmp[2].equals("server")) {
+                server = new Server(tmp.length > 4 ? tmp[3] : null,
+                        tmp.length > 5 ? tmp[4] : null,
+                        tmp.length > 6 ? Integer.parseInt(tmp[5]) : null,
+                        tmp.length > 7 ? Boolean.valueOf(tmp[6]) : null,
+                        tmp.length > 8 ? tmp[7] : null);
             }
         }
         return server;
@@ -165,8 +146,9 @@ public class UdpDiscover extends AsyncTask<String, Void, String> {
 
     /**
      * Get IP address from first non-localhost interface
-     * @param useIPv4  true=return ipv4, false=return ipv6
-     * @return  address or empty string
+     *
+     * @param useIPv4 true=return ipv4, false=return ipv6
+     * @return address or empty string
      */
     private String getIPAddress(boolean useIPv4) {
         try {
@@ -177,7 +159,7 @@ public class UdpDiscover extends AsyncTask<String, Void, String> {
                     if (!addr.isLoopbackAddress()) {
                         String sAddr = addr.getHostAddress();
                         //boolean isIPv4 = InetAddressUtils.isIPv4Address(sAddr);
-                        boolean isIPv4 = sAddr.indexOf(':')<0;
+                        boolean isIPv4 = sAddr.indexOf(':') < 0;
 
                         if (useIPv4) {
                             if (isIPv4)
@@ -185,13 +167,14 @@ public class UdpDiscover extends AsyncTask<String, Void, String> {
                         } else {
                             if (!isIPv4) {
                                 int delim = sAddr.indexOf('%'); // drop ip6 zone suffix
-                                return delim<0 ? sAddr.toUpperCase() : sAddr.substring(0, delim).toUpperCase();
+                                return delim < 0 ? sAddr.toUpperCase() : sAddr.substring(0, delim).toUpperCase();
                             }
                         }
                     }
                 }
             }
-        } catch (Exception ex) { } // for now eat exceptions
+        } catch (Exception ex) {
+        } // for now eat exceptions
         return "";
     }
 
@@ -199,17 +182,12 @@ public class UdpDiscover extends AsyncTask<String, Void, String> {
     protected String doInBackground(String... urls) {
         ArrayList<Server> servers = null;
         try {
-
-            DatagramSocket sock =  new DatagramSocket(null);
-
+            DatagramSocket sock = new DatagramSocket(null);
             sock.setReuseAddress(true);
             sock.bind(new InetSocketAddress(DISCOVERY_PORT));
-
             DatagramSocket socket = sock;
-
             socket.setBroadcast(true);
             socket.setSoTimeout(TIMEOUT_MS);
-
             sendDiscoveryRequest(socket);
             servers = listenForResponses(socket);
             socket.close();
@@ -220,10 +198,8 @@ public class UdpDiscover extends AsyncTask<String, Void, String> {
             //"Could not send discovery request", e);
         }
         reciver.addServer(servers);
-
         Log.e("RESPONSE FROM SERVER", "S: Received Message: '" + servers + "'");
         //main.dataReload();
-
 
         return null;
     }
@@ -234,7 +210,6 @@ public class UdpDiscover extends AsyncTask<String, Void, String> {
         Log.e("RESPONSE FROM SERVER", "S: response here: '");
         EventBus.getDefault().post(new ReloadEvent(""));
     }
-
 
 
 }

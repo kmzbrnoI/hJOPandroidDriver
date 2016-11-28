@@ -24,7 +24,7 @@
             android:text="search"
             android:id="@+id/serverButton"
             android:layout_gravity="center_horizontal"
-            android:onClick="discoverServer" />
+            android:onClick="discoverServer (MainActivity)" />
 
         <ListView
             android:layout_width="match_parent"

@@ -26,6 +26,7 @@ proguard/
 # Log Files
 *.log
 
+
 # Android Studio Navigation editor temp files
 .navigation/
 
@@ -35,6 +36,23 @@ captures/
 # Intellij
 *.iml
 .idea/workspace.xml
+
+# Android Studio
+.idea
+
+#.idea/workspace.xml - remove # and delete .idea if it better suit your needs.
+.gradle
+build/
+
+*.iml
+.gradle
+/local.properties
+/.idea/workspace.xml
+/.idea/libraries
+.DS_Store
+/build
+/captures
+.externalNativeBuild
 
 # Keystore files
 *.jks
