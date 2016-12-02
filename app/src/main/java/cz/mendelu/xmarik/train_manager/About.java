@@ -71,8 +71,8 @@ public class About extends AppCompatActivity
             Intent intent = new Intent(this, Servers.class);
             startActivity(intent);
         } else if (id == R.id.nav_about) {
-            Intent intent = new Intent(this, About.class);
-            startActivity(intent);
+            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+            drawer.closeDrawer(GravityCompat.START);
         } else if (id == R.id.nav_settings) {
             Intent intent = new Intent(this, Settings.class);
             startActivity(intent);

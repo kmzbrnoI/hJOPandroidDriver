@@ -272,11 +272,11 @@ public class Trains_box extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
-        EventBus.getDefault().unregister(this);
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
+            EventBus.getDefault().unregister(this);
             super.onBackPressed();
         }
     }
@@ -325,8 +325,8 @@ public class Trains_box extends AppCompatActivity
             startActivity(intent);
 
         } else if (id == R.id.nav_trains) {
-            Intent intent = new Intent(this, Trains_box.class);
-            startActivity(intent);
+            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+            drawer.closeDrawer(GravityCompat.START);
 
         } else if (id == R.id.nav_view) {
             Intent intent = new Intent(this, Servers.class);
