@@ -103,7 +103,6 @@
                         android:id="@+id/handlerDirection1"
                         android:layout_gravity="top|center_horizontal"
                         android:checked="false"
-                        android:onClick="directionChange1"
                         android:nestedScrollingEnabled="true" />
 
                     <LinearLayout

@@ -101,8 +101,7 @@
                         android:layout_height="46dp"
                         android:id="@+id/handlerDirection1"
                         android:layout_gravity="top|center_horizontal"
-                        android:checked="false"
-                        android:onClick="directionChange1" />
+                        android:checked="false" />
 
                     <LinearLayout
                         android:orientation="horizontal"
@@ -252,7 +251,6 @@
                         android:id="@+id/handlerDirection2"
                         android:layout_gravity="top|center_horizontal"
                         android:checked="false"
-                        android:onClick="directionChange2"
                         android:nestedScrollingEnabled="true" />
 
                     <LinearLayout

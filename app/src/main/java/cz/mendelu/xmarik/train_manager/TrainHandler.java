@@ -175,6 +175,25 @@ public class TrainHandler extends AppCompatActivity
                 }
             });
 
+            direction1.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    if (direction1.isChecked()) {
+                        direction1.setText("vpřed");
+                    } else direction1.setText("vzad");
+                    if (managed.contains(train1)) {
+                        for (Train s : managed) {
+                            String text = s.changeDirection();
+                            sendNext(text);
+                        }
+                    } else {
+                        if (train1 != null) {
+                            String text = train1.changeDirection();
+                            sendNext(text);
+                        }
+                    }
+                }
+            });
+
             spinner1.setOnItemSelectedListener(new Spinner.OnItemSelectedListener() {
 
                 @Override
@@ -295,6 +314,23 @@ public class TrainHandler extends AppCompatActivity
                     }
                 });
 
+                direction2.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                        setDirectionText(2);
+                        if (managed.contains(train2)) {
+                            for (Train s : managed) {
+                                String text = s.changeDirection();
+                                sendNext(text);
+                            }
+                        } else {
+                            if (train2 != null) {
+                                String text = train2.changeDirection();
+                                sendNext(text);
+                            }
+                        }
+                    }
+                });
+
                 totalManaged2.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                     @Override
                     public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
@@ -314,11 +350,8 @@ public class TrainHandler extends AppCompatActivity
 
                     @Override
                     public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
-
                         // ListView Clicked item index
                         int itemPosition = position;
-
-
                         Train t = activeServer.getTrain(spinner2.getItemAtPosition(position).toString());
                         String itemValue = t.getName();
                         if (itemValue != null) {
@@ -348,7 +381,6 @@ public class TrainHandler extends AppCompatActivity
                             CheckBoxAdapter dataAdapter = new CheckBoxAdapter(context,
                                     R.layout.trainfunctioninfo, new ArrayList<TrainFunction>(Arrays.asList(train2.getFunction())));
                             checkBoxView2.setAdapter(dataAdapter);
-
                         }
                     }
                 });
@@ -373,12 +405,17 @@ public class TrainHandler extends AppCompatActivity
                 .show();
     }
 
-    public void addTrain(String adr) {
-        this.activeTrains.add(adr);
-    }
+    private void setDirectionText(int direction) {
+        if (direction == 1) {
+            if (direction1.isChecked()) {
+                direction1.setText("vpřed");
+            } else direction1.setText("vzad");
+        }else {
+            if (direction2.isChecked()) {
+                direction2.setText("vpřed");
+            } else direction2.setText("vzad");
+        }
 
-    public void removeTrain(String adr) {
-        this.activeTrains.remove(adr);
     }
 
     public void setSpeed(int spd, Train train) {
@@ -443,45 +480,6 @@ public class TrainHandler extends AppCompatActivity
         setSpeed(0, train2);
     }
 
-    public void directionChange1(View view) {
-        Server tmp = ServerList.getInstance().getActiveServer();
-
-        if (direction1.isChecked()) {
-            direction1.setText("vpřed");
-        } else direction1.setText("vzad");
-
-
-        if (managed.contains(train1)) {
-            for (Train s : managed) {
-                String text = s.changeDirection();
-                sendNext(text);
-            }
-        } else {
-            if (train1 != null) {
-                String text = train1.changeDirection();
-                sendNext(text);
-            }
-        }
-    }
-
-    public void directionChange2(View view) {
-        if (direction2.isChecked()) {
-            direction2.setText("vpřed");
-        } else direction2.setText("vzad");
-
-        if (managed.contains(train2)) {
-            for (Train s : managed) {
-                String text = s.changeDirection();
-                sendNext(text);
-            }
-        } else {
-            if (train2 != null) {
-                String text = train2.changeDirection();
-                sendNext(text);
-            }
-        }
-    }
-
     public void changeManaged(String s) {
         Server tmp = ServerList.getInstance().getActiveServer();
         Train t = tmp.getTrain(s);
@@ -527,6 +525,7 @@ public class TrainHandler extends AppCompatActivity
             kmhSpeed1.setText(Double.toString(train1.getKmhSpeed()) + "km/h");
             totalManaged.setChecked(train1.getTotalManaged());
 
+            setDirectionText(1);
             syncStatus(train1, status1);
             clicableManager(true, train1.getTotalManaged());
         }
@@ -541,6 +540,7 @@ public class TrainHandler extends AppCompatActivity
                 kmhSpeed2.setText(Double.toString(train2.getKmhSpeed()));
                 totalManaged2.setChecked(train2.getTotalManaged());
 
+                setDirectionText(2);
                 syncStatus(train2, status2);
             }
         }
@@ -750,4 +750,6 @@ public class TrainHandler extends AppCompatActivity
         stopTrains();
         super.onDestroy();
     }
+
+
 }
