@@ -26,8 +26,8 @@ public class NewServer extends AppCompatActivity {
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             String value = extras.getString("server");
-            String[] tmp = value.split("--");
-            server = ServerList.getInstance().getServer(tmp[1]);
+            String[] tmp = value.split("\t");
+            server = ServerList.getInstance().getServer(tmp[0]);
             nameText.setText(server.name);
             ipAdrText.setText(server.ipAdr);
             portText.setText(server.port);

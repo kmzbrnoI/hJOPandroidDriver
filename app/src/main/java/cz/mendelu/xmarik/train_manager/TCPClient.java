@@ -2,6 +2,8 @@ package cz.mendelu.xmarik.train_manager;
 
 import android.util.Log;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -11,6 +13,8 @@ import java.io.PrintWriter;
 import java.net.ConnectException;
 import java.net.InetAddress;
 import java.net.Socket;
+
+import cz.mendelu.xmarik.train_manager.events.ReloadEvent;
 
 /**
  * Created by ja on 24. 6. 2016.
@@ -84,6 +88,7 @@ public class TCPClient {
                     //receive the message which the server sends back
                     in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                     //in this while the client listens for the messages sent by the server
+                    EventBus.getDefault().post(new ReloadEvent(""));
                     while (mRun) {
                         serverMessage = in.readLine();
                         if (serverMessage != null && mMessageListener != null) {

@@ -19,6 +19,7 @@ import java.util.ArrayList;
 
 import cz.mendelu.xmarik.train_manager.events.AreasEvent;
 import cz.mendelu.xmarik.train_manager.events.HandShakeEvent;
+import cz.mendelu.xmarik.train_manager.events.ReloadEvent;
 
 
 public class ServerConnector extends Activity {
@@ -34,6 +35,7 @@ public class ServerConnector extends Activity {
     private Button send;
     private ServerConnector classObject;
     private Server server;
+    private boolean faildSender = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -42,6 +44,7 @@ public class ServerConnector extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_server_connector);
         Bundle extras = getIntent().getExtras();
+        TCPClientApplication tcp = TCPClientApplication.startNewServer();
         messges = new String[3];
         if (extras != null) {
             String value = extras.getString("server");
@@ -49,6 +52,9 @@ public class ServerConnector extends Activity {
             server = ServerList.getInstance().getServer(tmp[0]);
             Log.e("", "server" + server.getDnsName());
             Log.e("services", "ulozene jmeno a heslo: " + server.getUserName() + "  " + server.getUserPassword());
+            tcp.server = server;
+            tcp.auth = true;
+            tcp.start();
         } else finish();
         messges[0] = "-;HELLO;1.0\n";
         if (server.getUserName() != null && server.getUserPassword() != null) {
@@ -92,17 +98,13 @@ public class ServerConnector extends Activity {
             dialog.show();
         }
         messges[2] = "-;OR-LIST;" + "\n";
-        arrayList = new ArrayList<String>();
+        arrayList = new ArrayList<>();
         send = (Button) findViewById(R.id.send_button);
         //relate the listView from java to the one created in xml
         mList = (ListView) findViewById(R.id.list);
         mAdapter = new MyCustomAdapter(this, arrayList);
         mList.setAdapter(mAdapter);
         //new connectTask().execute("");
-        TCPClientApplication tcp = TCPClientApplication.startNewServer();
-        tcp.server = server;
-        tcp.auth = true;
-        tcp.start();
         send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -113,7 +115,6 @@ public class ServerConnector extends Activity {
         });
         //TODO podminka ze settings
         initialize();
-        sendNext();
     }
 
     public void setData(String name, String tmpPass, boolean save) {
@@ -156,24 +157,38 @@ public class ServerConnector extends Activity {
     @Override
     public void onPause() {
         super.onPause();
-        EventBus.getDefault().unregister(this);
+        if(EventBus.getDefault().isRegistered(this))EventBus.getDefault().unregister(this);
     }
 
     @Override
     public void onResume() {
         super.onResume();
+        /*TCPClientApplication tcp = TCPClientApplication.startNewServer();
+        tcp.server = server;
+        tcp.auth = true;
+        tcp.start();*/
         if (!EventBus.getDefault().isRegistered(this)) EventBus.getDefault().register(this);
     }
 
     private void sendNext() {
         String message = getMessage();
-        Log.e("", "odeslano:" + message);
         //sends the message to the server
-        if (TCPClientApplication.getInstance().getClient() != null) {
+        Log.e("", "Send pokus odeslat:" + message);
+        if (TCPClientApplication.getInstance().getClient() != null && message != null) {
             TCPClientApplication.getInstance().getClient().sendMessage(message);
-        }
+            Log.e("", "Send odeslano:" + message);
+        } else faildSender = true;
         //refresh the list
         mAdapter.notifyDataSetChanged();
+    }
+
+    @Subscribe
+    public void onEvent(ReloadEvent event) {
+        Log.e("", "pokus odeslat eventem:" + "-;HELLO;1.0");
+        if(!faildSender) {
+            Log.e("", "event odeslal:" + "-;HELLO;1.0");
+            TCPClientApplication.getInstance().getClient().sendMessage("-;HELLO;1.0\n");
+        }
     }
 
     public void changeUserData(View view) {
@@ -226,10 +241,11 @@ public class ServerConnector extends Activity {
     @Subscribe
     public void onEvent(AreasEvent event) {
         // your implementation
+        Log.e("", "Area event : " + event.getMessage());
         addControlAreas(event.getMessage().substring("-;OR-LIST;".length()));
         arrayList.add("Data načteny, aktivace serveru dokončena");
         Intent returnIntent = new Intent();
-//TODO dodelat nejakou chybu
+        //TODO dodelat nejakou chybu
         server.setTcpClient(TCPClientApplication.getInstance().getClient());
         server.setActive(true);
         ServerList.getInstance().setActive(server);
@@ -250,6 +266,7 @@ public class ServerConnector extends Activity {
     @Subscribe
     public void onEvent(HandShakeEvent event) {
         // your implementation
+        Log.e("", "Hand shake : " + event.getMessage());
         if (event.getMessage().startsWith("-;HELLO;")) {
             arrayList.add("komunikace navázána");
             sendNext();

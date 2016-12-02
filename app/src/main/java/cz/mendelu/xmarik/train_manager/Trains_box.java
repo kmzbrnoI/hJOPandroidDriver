@@ -341,18 +341,18 @@ public class Trains_box extends AppCompatActivity
     @Override
     public void onPause() {
         super.onPause();
-        EventBus.getDefault().unregister(this);
+        if(EventBus.getDefault().isRegistered(this))EventBus.getDefault().unregister(this);
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        EventBus.getDefault().register(this);
+        if(!EventBus.getDefault().isRegistered(this))EventBus.getDefault().register(this);
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        EventBus.getDefault().unregister(this);
+        if(EventBus.getDefault().isRegistered(this))EventBus.getDefault().unregister(this);
     }
 }

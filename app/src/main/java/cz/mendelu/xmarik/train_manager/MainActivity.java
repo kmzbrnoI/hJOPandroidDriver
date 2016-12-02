@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -75,7 +76,6 @@ public class MainActivity extends AppCompatActivity
             //udp.run();
             udp.execute();
             this.lButton.setClickable(false);
-            //TODO after few sec make button clickable again and reload data
             Toast.makeText(getApplicationContext(),
                     "server discover method start", Toast.LENGTH_LONG)
                     .show();
@@ -166,7 +166,6 @@ public class MainActivity extends AppCompatActivity
         lAdapter.notifyDataSetChanged();
         Log.e("reload", "S: reoad done size '" + array.size() + "'");
         //TODO porovna existujici server a pripadne nastavit hesla
-
     }
 
     @Override
@@ -187,20 +186,19 @@ public class MainActivity extends AppCompatActivity
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
         int menuItemIndex = item.getItemId();
         String listItemName = array1.get(info.position);
-        String value = listItemName;
-        String[] tmp = value.split("--");
+        String[] tmp = listItemName.split("\t");
         //TODO dialogy k mazani
         switch (menuItemIndex) {
             case 0:
-                Server tmpServer = ServerList.getInstance().getServer(tmp[1]);
-                if (tmpServer.status == true) {
-                    AuthorizeServer(tmp[1]);
+                Server tmpServer = ServerList.getInstance().getServer(tmp[0]);
+                if (tmpServer.status) {
+                    AuthorizeServer(tmp[0]);
                 } else Toast.makeText(getApplicationContext(),
                         "server je offline", Toast.LENGTH_LONG)
                         .show();
                 break;
             case 1:
-                showDialog(tmp[1]);
+                showDialog(tmp[0]);
                 break;
             case 2:
                 Intent intent = new Intent(getBaseContext(), NewServer.class);
@@ -209,7 +207,7 @@ public class MainActivity extends AppCompatActivity
                 break;
             case 3:
                 Toast.makeText(getApplicationContext(),
-                        ServerList.getInstance().getServer(tmp[1]).getInfo(), Toast.LENGTH_LONG)
+                        ServerList.getInstance().getServer(tmp[0]).getInfo(), Toast.LENGTH_LONG)
                         .show();
                 break;
             case 4:
@@ -255,7 +253,8 @@ public class MainActivity extends AppCompatActivity
             String txt = ServerList.getInstance().getServerStoreString();
             SharedPreferences.Editor editor = sharedpreferences.edit();
             editor.putString("storedServers", txt);
-            editor.commit();
+            //editor.commit();
+            editor.apply();
             if (resultCode == RESULT_OK) {
                 array1 = ServerList.getInstance().getStoredServersString();
                 fAdapter.notifyDataSetChanged();
@@ -308,7 +307,7 @@ public class MainActivity extends AppCompatActivity
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
         if (id == R.id.nav_server) {
@@ -380,20 +379,20 @@ public class MainActivity extends AppCompatActivity
     public void onPause() {
         super.onPause();
         Save();
-        EventBus.getDefault().unregister(this);
+        if(EventBus.getDefault().isRegistered(this))EventBus.getDefault().unregister(this);
     }
 
     @Override
     public void onStop() {
         super.onStop();
         Save();
-        EventBus.getDefault().unregister(this);
+        if(EventBus.getDefault().isRegistered(this))EventBus.getDefault().unregister(this);
     }
 
     @Override
     public void onResume() {
         super.onResume();
-
+        get();
         if (!EventBus.getDefault().isRegistered(this)) EventBus.getDefault().register(this);
     }
 

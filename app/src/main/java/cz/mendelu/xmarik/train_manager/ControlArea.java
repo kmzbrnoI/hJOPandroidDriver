@@ -9,7 +9,7 @@ import java.util.List;
 public class ControlArea {
     private String id;
     private String name;
-    public List<Train> trains;
+    private List<Train> trains;
     private String storedTxt;
 
     public ControlArea(String id, String name, List<Train> trains) {
@@ -44,10 +44,6 @@ public class ControlArea {
 
     public List<Train> getTrains() {
         return trains;
-    }
-
-    public void setTrains(List<Train> trains) {
-        this.trains = trains;
     }
 
     public String getString() {

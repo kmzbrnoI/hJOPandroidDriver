@@ -7,6 +7,7 @@ import java.net.UnknownHostException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.Collections;
 
 /**
  * Created by ja on 1. 7. 2016.
@@ -16,22 +17,19 @@ public class HelpServices {
     public static String[] parseHelper(String s) {
         Log.e("parse helper ", "start with : " + s + "'");
         String splitByBrecket[] = s.split("\\{.*\\}");
-        String test[] = s.split("\\{*\\}");
         ArrayList<String> response = new ArrayList<>();
         for (String tmp : splitByBrecket) {
-            for (String st : tmp.split(";"))
-                response.add(st);
+            Collections.addAll(response, tmp.split(";"));
         }
-        String[] responseArray = response.toArray(new String[0]);
-        return responseArray;
+
+        return response.toArray(new String[0]);
     }
 
     public static String[] trainParseHelper(String s) {
         int count = 0;
-        int start = 0, lastStart = 0;
+        int start = 0;
         int end = 0, lastEnd = 0;
         ArrayList<String> tmp = new ArrayList<>();
-        String[] response = new String[0];
         for (int i = 0; i < s.length(); i++) {
             if (s.charAt(i) == '{') {
                 if (count == 0) {
@@ -44,9 +42,7 @@ public class HelpServices {
                     if (start > 0) {
                         String toParse = s.substring(lastEnd, start - 1);
                         String[] field = toParse.split(";");
-                        for (String f : field) {
-                            tmp.add(f);
-                        }
+                        Collections.addAll(tmp, field);
                         tmp.add(s.substring(start + 1, end - 1));
                         lastEnd = end + 1;
                     } else {
@@ -60,17 +56,14 @@ public class HelpServices {
         if (lastEnd + 1 < s.length()) {
             String toParse = s.substring(lastEnd, s.length() - 1);
             String[] field = toParse.split(";");
-            for (String f : field) {
-                tmp.add(f);
-            }
+            Collections.addAll(tmp, field);
         }
 
-        String[] responseArray = tmp.toArray(new String[0]);
-        return responseArray;
+        return tmp.toArray(new String[0]);
     }
 
     public static String domainName(String ipAddr) {
-        InetAddress addr = null;
+        InetAddress addr;
         try {
             addr = InetAddress.getByName(ipAddr);
         } catch (UnknownHostException e) {
@@ -90,9 +83,8 @@ public class HelpServices {
             e.printStackTrace();
             //TODO nejak to dopracovat
         }
-        String ip = address.getHostAddress();
-        System.out.println(ip);
-        return ip;
+
+        return address != null ? address.getHostAddress() : null;
     }
 
     public static String hashPasswd(String passwd) {
@@ -105,11 +97,11 @@ public class HelpServices {
         md.update(passwd.getBytes());
         byte byteData[] = md.digest();
         //convert the byte to hex format method 1
-        StringBuffer sb = new StringBuffer();
-        for (int i = 0; i < byteData.length; i++) {
-            sb.append(Integer.toString((byteData[i] & 0xff) + 0x100, 16).substring(1));
+        StringBuilder sb = new StringBuilder();
+        for (byte aByteData : byteData) {
+            sb.append(Integer.toString((aByteData & 0xff) + 0x100, 16).substring(1));
         }
-        System.out.println("Hex format : " + sb.toString());
+
         return sb.toString();
     }
 

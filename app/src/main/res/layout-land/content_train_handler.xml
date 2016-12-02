@@ -14,16 +14,16 @@
     tools:showIn="@layout/app_bar_train_handler">
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:orientation="horizontal" android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
 
         <ScrollView
             android:layout_width="288dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:id="@+id/scrollView3" >
 
             <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:orientation="vertical"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:weightSum="1" >
 
@@ -76,6 +76,7 @@
                         android:layout_height="53dp"
                         android:id="@+id/imageButton1"
                         android:layout_gravity="right"
+                        android:background="@drawable/roundcorner"
                         android:src="@mipmap/ic_green_light"
                         android:layout_weight="1.25"
                         android:onClick="showStats1" />
@@ -86,8 +87,7 @@
                         android:textAppearance="?android:attr/textAppearanceLarge"
                         android:text="-----------"
                         android:id="@+id/handlerName1"
-                        android:layout_weight="0.30"
-                        android:onClick="showStats1" />
+                        android:layout_weight="0.30" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -157,7 +157,7 @@
 
                 <ListView
                     android:layout_width="wrap_content"
-                    android:layout_height="185dp"
+                    android:layout_height="1850dp"
                     android:id="@+id/checkBoxView1"
                     android:numColumns="4"
                     android:choiceMode="multipleChoice"
@@ -225,6 +225,7 @@
                         android:layout_height="53dp"
                         android:id="@+id/imageButton2"
                         android:layout_gravity="right"
+                        android:background="@drawable/roundcorner"
                         android:src="@drawable/ic_red_light"
                         android:layout_weight="1.25"
                         android:onClick="showStats2" />
@@ -235,8 +236,7 @@
                         android:textAppearance="?android:attr/textAppearanceLarge"
                         android:text="-----------"
                         android:id="@+id/handlerName2"
-                        android:layout_weight="0.30"
-                        android:onClick="showStats2" />
+                        android:layout_weight="0.30" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -309,10 +309,10 @@
                 </LinearLayout>
                 <ListView
                     android:layout_width="wrap_content"
-                    android:layout_height="185dp"
                     android:id="@+id/checkBoxView2"
                     android:numColumns="4"
-                    android:choiceMode="multipleChoice" />
+                    android:choiceMode="multipleChoice"
+                    android:layout_height="1850dp" />
 
             </LinearLayout>
         </ScrollView>

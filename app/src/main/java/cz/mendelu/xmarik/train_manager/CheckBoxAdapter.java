@@ -1,6 +1,7 @@
 package cz.mendelu.xmarik.train_manager;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,23 +16,24 @@ import java.util.ArrayList;
  * Created by ja on 5. 9. 2016.
  */
 public class CheckBoxAdapter extends ArrayAdapter<TrainFunction> {
-    LayoutInflater vi;
+    private LayoutInflater vi;
     private ArrayList<TrainFunction> trainList;
     private int names;
     public CheckBoxAdapter(Context context, int textViewResourceId,
                            ArrayList<TrainFunction> trainList) {
         super(context, textViewResourceId, trainList);
-        this.trainList = new ArrayList<TrainFunction>();
+        this.trainList = new ArrayList<>();
         this.trainList.addAll(trainList);
         vi = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         //TODO nacis data z pameti
         names = Settings.buttons;
     }
 
+    @NonNull
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(int position, View convertView, @NonNull ViewGroup parent) {
 
-        ViewHolder holder = null;
+        ViewHolder holder;
         Log.v("ConvertView", String.valueOf(position));
         if (convertView == null) {
             convertView = vi.inflate(R.layout.trainfunctioninfo, null);

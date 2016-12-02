@@ -4,18 +4,16 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.util.Log;
-import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -40,6 +38,7 @@ import cz.mendelu.xmarik.train_manager.events.ReloadEvent;
 
 public class TrainHandler extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+    String err;
     private ArrayList<String> activeTrains;
     private Server activeServer;
     private List<String> array;
@@ -49,19 +48,15 @@ public class TrainHandler extends AppCompatActivity
     private Switch direction1;
     private CheckBox totalManaged;
     private Spinner spinner1;
-
     private Button stopButton1;
     private CheckBox group1;
     private boolean landscape = false;
     private ImageButton status1;
-
     private Train train1;
     private ListView checkBoxView1;
     private TextView kmhSpeed1;
     private Button idleButton1;
-
     private String message;
-
     private Train train2;
     private TextView name2;
     private SeekBar speed2;
@@ -75,10 +70,8 @@ public class TrainHandler extends AppCompatActivity
     private CheckBox totalManaged2;
     private ListView checkBoxView2;
     private Spinner spinner2;
-
-    String err;
-
     private Context context;
+    private boolean update;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,6 +79,7 @@ public class TrainHandler extends AppCompatActivity
         setContentView(R.layout.activity_train_handler);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        update = false;
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -116,7 +110,7 @@ public class TrainHandler extends AppCompatActivity
         active2 = "";
 
         //makes all controls inactive before train is chosen
-        this.clicableManager(true,false);
+        this.clicableManager(true, false);
 
         final ArrayAdapter<String> funcAdapter1 = new ArrayAdapter<String>(this,
                 android.R.layout.simple_list_item_1, ServerList.FUNCTION);
@@ -164,8 +158,7 @@ public class TrainHandler extends AppCompatActivity
                 }
             });
 
-            checkBoxView1.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
-            {
+            checkBoxView1.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
                 @Override
                 public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
@@ -196,7 +189,7 @@ public class TrainHandler extends AppCompatActivity
                     int itemPosition = position;
 
                     // ListView Clicked item value
-                    Train t =  activeServer.getTrain(spinner1.getItemAtPosition(position).toString());
+                    Train t = activeServer.getTrain(spinner1.getItemAtPosition(position).toString());
                     String itemValue = t.getName();
                     if (itemValue != null) {
                         train1 = activeServer.getTrain(itemValue);
@@ -213,7 +206,7 @@ public class TrainHandler extends AppCompatActivity
                         kmhSpeed1.setText(Double.toString(train1.getKmhSpeed()) + "km/h");
                         totalManaged.setChecked(train1.getTotalManaged());
 
-                        syncStatus(train1,status1);
+                        syncStatus(train1, status1);
 
                         if (train1.getTotalManaged()) {
                             clicableManager(true, true);
@@ -227,23 +220,19 @@ public class TrainHandler extends AppCompatActivity
                         checkBoxView1.setAdapter(dataAdapter);
 
                     }
-
-
                 }
 
             });
 
-            group1.setOnCheckedChangeListener(new CheckBox.OnCheckedChangeListener(){
+            group1.setOnCheckedChangeListener(new CheckBox.OnCheckedChangeListener() {
 
                 @Override
                 public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                    if(train1 != null)
-                        if(b)
-                        {
+                    if (train1 != null)
+                        if (b) {
                             managed.add(train1);
                             train1.setControled(true);
-                        }else
-                        {
+                        } else {
                             train1.setControled(false);
                             managed.remove(train1);
                         }
@@ -265,7 +254,7 @@ public class TrainHandler extends AppCompatActivity
                 @Override
                 public void onProgressChanged(SeekBar seekBar, int progress,
                                               boolean fromUser) {
-                    if(train1 != null){
+                    if (train1 != null) {
                         train1.setSpeed(progress);
                         String text = train1.GetSpeedTxt();
                         setSpeed(progress, train1);
@@ -284,7 +273,6 @@ public class TrainHandler extends AppCompatActivity
             });
 
             if (landscape) {
-
                 spinner2.setAdapter(lAdapter);
                 speed2.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
 
@@ -331,7 +319,7 @@ public class TrainHandler extends AppCompatActivity
                         int itemPosition = position;
 
 
-                        Train t =  activeServer.getTrain(spinner2.getItemAtPosition(position).toString());
+                        Train t = activeServer.getTrain(spinner2.getItemAtPosition(position).toString());
                         String itemValue = t.getName();
                         if (itemValue != null) {
                             train2 = activeServer.getTrain(itemValue);
@@ -354,7 +342,7 @@ public class TrainHandler extends AppCompatActivity
                                 clicableManager(false, false);
                             }
 
-                            syncStatus(train2,status2);
+                            syncStatus(train2, status2);
 
                             //set custom adapter with check boxes to list view
                             CheckBoxAdapter dataAdapter = new CheckBoxAdapter(context,
@@ -365,17 +353,15 @@ public class TrainHandler extends AppCompatActivity
                     }
                 });
 
-                group2.setOnCheckedChangeListener(new CheckBox.OnCheckedChangeListener(){
+                group2.setOnCheckedChangeListener(new CheckBox.OnCheckedChangeListener() {
 
                     @Override
                     public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                        if(train2 != null)
-                            if(b)
-                            {
+                        if (train2 != null)
+                            if (b) {
                                 managed.add(train2);
                                 train2.setControled(true);
-                            }else
-                            {
+                            } else {
                                 train2.setControled(false);
                                 managed.remove(train2);
                             }
@@ -399,7 +385,7 @@ public class TrainHandler extends AppCompatActivity
 
         int speed = spd;
 
-        if (train != null) {
+        if (train != null && !update) {
             if (managed.contains(train)) {
                 for (Train s : managed) {
                     Train t = s;
@@ -531,37 +517,37 @@ public class TrainHandler extends AppCompatActivity
     }
 
     public void dataChangeNotify() {
-
+        update = true;
         if (train1 != null) {
             train1 = activeServer.getTrain(train1.getName());
             name1.setText(train1.getName());
-            if(train1.getSpeed() != speed1.getProgress())speed1.setProgress(train1.getSpeed());
+            if (train1.getSpeed() != speed1.getProgress()) speed1.setProgress(train1.getSpeed());
             direction1.setChecked(train1.isDirection());
             group1.setChecked(managed.contains(train1));
-            kmhSpeed1.setText(Double.toString(train1.getKmhSpeed())+ "km/h");
+            kmhSpeed1.setText(Double.toString(train1.getKmhSpeed()) + "km/h");
+            totalManaged.setChecked(train1.getTotalManaged());
 
-            syncStatus(train1,status1);
+            syncStatus(train1, status1);
             clicableManager(true, train1.getTotalManaged());
         }
 
         if (landscape) {
-            if(train2 != null){
+            if (train2 != null) {
                 train2 = activeServer.getTrain(train2.getName());
                 name2.setText(train2.getName());
                 speed2.setProgress(train2.getSpeed());
                 direction2.setChecked(train2.isDirection());
                 group2.setChecked(managed.contains(train2));
                 kmhSpeed2.setText(Double.toString(train2.getKmhSpeed()));
+                totalManaged2.setChecked(train2.getTotalManaged());
 
-                syncStatus(train2,status2);
+                syncStatus(train2, status2);
             }
         }
-
-
+        update = false;
     }
 
-    private void syncStatus(Train t, ImageButton s)
-    {
+    private void syncStatus(Train t, ImageButton s) {
         if (t.getErr() != null) {
             if (t.getErr().equals("stolen")) {
                 s.setImageResource(R.mipmap.ic_yellow);
@@ -574,7 +560,7 @@ public class TrainHandler extends AppCompatActivity
 
         if (train1.getErr() != null) {
             if (train1.getErr().equals("stolen")) {
-                sendNext(train1.getBase()+";PLEASE");
+                sendNext(train1.getBase() + ";PLEASE");
             } else {
                 Toast.makeText(getApplicationContext(),
                         train1.getErr(),
@@ -593,7 +579,7 @@ public class TrainHandler extends AppCompatActivity
 
         if (train2.getErr() != null) {
             if (train2.getErr().equals("stolen")) {
-                sendNext(train2.getBase()+";PLEASE");
+                sendNext(train2.getBase() + ";PLEASE");
             } else {
                 Toast.makeText(getApplicationContext(),
                         train1.getErr(),
@@ -635,10 +621,8 @@ public class TrainHandler extends AppCompatActivity
             group1.setEnabled(state);
             speed1.setEnabled(state);
 
-            if(!state)
-            {
-                if(group1.isChecked())
-                {
+            if (!state) {
+                if (group1.isChecked()) {
                     group1.setChecked(false);
                     managed.remove(train1);
                 }
@@ -651,20 +635,16 @@ public class TrainHandler extends AppCompatActivity
             speed2.setEnabled(state);
             group2.setEnabled(state);
 
-            if(!state)
-            {
-                if(group2.isChecked())
-                {
+            if (!state) {
+                if (group2.isChecked()) {
                     group2.setChecked(false);
                     managed.remove(train2);
                 }
             }
         }
-
-
     }
 
-    public void stopTrains(){
+    public void stopTrains() {
 
         if (train1 != null) {
             setSpeed(0, train1);
@@ -765,7 +745,7 @@ public class TrainHandler extends AppCompatActivity
     }
 
     @Override
-    public void onDestroy(){
+    public void onDestroy() {
         // set trains speed to 0
         stopTrains();
         super.onDestroy();

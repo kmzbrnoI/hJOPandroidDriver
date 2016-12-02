@@ -39,7 +39,7 @@ public class ServerList {
         return instance;
     }
 
-    public void setPassword(Server server) {
+    void setPassword(Server server) {
         if (storedServers.contains(server)) {
             for (Server s : storedServers) {
                 if (s.equals(server)) {
@@ -50,7 +50,7 @@ public class ServerList {
         } else storedServers.add(server);
     }
 
-    public String getSaveString() {
+    String getSaveString() {
         String saveString = "";
         for (Server s : this.storedServers) {
             saveString = saveString + s.getSaveDataString() + "|";
@@ -58,43 +58,40 @@ public class ServerList {
         return saveString;
     }
 
-    public void loadServers(String servers) {
+    void loadServers(String servers) {
         String[] serverString = servers.split("\\|");
         for (String tmpS : serverString) {
             String[] attributes = tmpS.split(";");
             if (tmpS.length() > 5) {
                 Server tmpServer = new Server(attributes[0], attributes[1], attributes[2], attributes[3],
                         attributes[4], attributes[5]);
-                if (!storedServers.contains(servers)) storedServers.add(tmpServer);
+                if (!storedServers.contains(tmpServer)) storedServers.add(tmpServer);
             }
         }
     }
 
-    public void clearCustomServer() {
+    void clearCustomServer() {
         Server tmp = this.getActiveServer();
         this.storedServers.clear();
         if (tmp != null) this.storedServers.add(tmp);
     }
 
-    public void addServer(Server server) {
-        this.servers.add(server);
-    }
 
-    public void addServer(ArrayList<Server> servers) {
+    void addServer(ArrayList<Server> servers) {
         for(Server s : servers) {
             if(!this.servers.contains(s))
                 this.servers.add(s);
         }
     }
 
-    public void clear() {
+    void clear() {
         Set<Server> hs = new HashSet<>();
         hs.addAll(servers);
         servers.clear();
         servers.addAll(hs);
     }
 
-    public void addCustomServer(Server server) {
+    void addCustomServer(Server server) {
         if (!this.storedServers.contains(server)) {
                 this.storedServers.add(server);
                 Collections.sort(storedServers, new CustomServerComparator());
@@ -105,7 +102,7 @@ public class ServerList {
         return this.servers;
     }
 
-    public ArrayList<String> getServersString() {
+    ArrayList<String> getServersString() {
         ArrayList<String> tmp = new ArrayList<>();
         for (Server s : this.servers) {
             tmp.add(s.getStringData());
@@ -113,7 +110,7 @@ public class ServerList {
         return tmp;
     }
 
-    public ArrayList<String> getStoredServersString() {
+    ArrayList<String> getStoredServersString() {
         ArrayList<String> tmp = new ArrayList<>();
         for (Server s : this.storedServers) {
             tmp.add(s.getStringData());
@@ -121,11 +118,11 @@ public class ServerList {
         return tmp;
     }
 
-    public ArrayList<Server> getCustomServers() {
+    ArrayList<Server> getCustomServers() {
         return this.storedServers;
     }
 
-    public Server getActiveServer() {
+    Server getActiveServer() {
         for (Server s : this.servers) {
             if (s.getActive()) return s;
         }
@@ -135,12 +132,12 @@ public class ServerList {
         return null;
     }
 
-    public void deleteAllData() {
+    void deleteAllData() {
         storedServers = null;
         servers = null;
     }
 
-    public void deleteAllUserData() {
+    void deleteAllUserData() {
         for (Server s : this.storedServers) {
             s.setUserName(null);
             s.setUserPassword(null);
@@ -151,7 +148,7 @@ public class ServerList {
         }
     }
 
-    public Server getServer(String itemValue) {
+    Server getServer(String itemValue) {
         for (Server s : this.storedServers) {
             if (s.name.equals(itemValue)) return s;
         }
@@ -161,12 +158,12 @@ public class ServerList {
         return null;
     }
 
-    public void removeServer(int position) {
+    void removeServer(int position) {
         if (position <= storedServers.size())
             this.storedServers.remove(position);
     }
 
-    public String getServerStoreString() {
+    String getServerStoreString() {
         String serverStoreString = "";
         for (Server s : this.storedServers) {
             serverStoreString = serverStoreString + "--" + s.getStringData();
@@ -174,7 +171,7 @@ public class ServerList {
         return serverStoreString;
     }
 
-    public void setActive(Server server) {
+    void setActive(Server server) {
         for (Server s : this.servers) {
             if ((s.getActive())) {
                 if (!s.equals(server)) {
@@ -191,7 +188,7 @@ public class ServerList {
         }
     }
 
-    public static enum TRAINTYPE {
+    enum TRAINTYPE {
         PARNI, DIESEL, MOTOROVÁ, ELEKTRICKÁ
     }
 

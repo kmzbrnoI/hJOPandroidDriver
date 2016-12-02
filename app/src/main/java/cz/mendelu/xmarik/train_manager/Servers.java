@@ -141,19 +141,19 @@ public class Servers extends AppCompatActivity
         int menuItemIndex = item.getItemId();
         String listItemName = array1.get(info.position);
         String value = listItemName;
-        String[] tmp = value.split("--");
+        String[] tmp = value.split("\t");
         //TODO dialogy k mazani
         switch (menuItemIndex) {
             case 0:
                 Server tmpServer = ServerList.getInstance().getServer(tmp[1]);
                 if (tmpServer.status == true) {
-                    AuthorizeServer(tmp[1]);
+                    AuthorizeServer(tmp[0]);
                 } else Toast.makeText(getApplicationContext(),
                         "server je offline", Toast.LENGTH_LONG)
                         .show();
                 break;
             case 1:
-                showDialog(tmp[1]);
+                showDialog(tmp[0]);
                 break;
             case 2:
                 Intent intent = new Intent(getBaseContext(), NewServer.class);
@@ -162,7 +162,7 @@ public class Servers extends AppCompatActivity
                 break;
             case 3:
                 Toast.makeText(getApplicationContext(),
-                        ServerList.getInstance().getServer(tmp[1]).getInfo(), Toast.LENGTH_LONG)
+                        ServerList.getInstance().getServer(tmp[0]).getInfo(), Toast.LENGTH_LONG)
                         .show();
                 break;
             case 4:
@@ -187,25 +187,19 @@ public class Servers extends AppCompatActivity
     }
 
     public void addServer(View view) {
-
         Intent intent = new Intent(this, NewServer.class);
         startActivityForResult(intent, 1);
-
     }
-
 
     public void AuthorizeServer(String itemValue) {
 
         Intent intent = new Intent(getBaseContext(), ServerConnector.class);
         intent.putExtra("server", itemValue);
         startActivityForResult(intent, 2);
-
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-
         if (requestCode == 1) {
-
             array1 = ServerList.getInstance().getStoredServersString();
             fAdapter.notifyDataSetChanged();
             //asi predelat s tim novym adapterem do ifu, pak to vali
@@ -214,17 +208,13 @@ public class Servers extends AppCompatActivity
             fAdapter.notifyDataSetChanged();
             fServers.setAdapter(fAdapter);
             fAdapter.notifyDataSetChanged();
-
             String txt = ServerList.getInstance().getServerStoreString();
             SharedPreferences.Editor editor = sharedpreferences.edit();
             editor.putString("storedServers", txt);
             editor.commit();
-
-
             if (resultCode == RESULT_OK) {
                 array1 = ServerList.getInstance().getStoredServersString();
                 fAdapter.notifyDataSetChanged();
-
             }
             if (resultCode == RESULT_CANCELED) {
                 //Do nothing?

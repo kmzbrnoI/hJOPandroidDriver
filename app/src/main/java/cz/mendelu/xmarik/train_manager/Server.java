@@ -26,7 +26,7 @@ public class Server {
     private String userPassword;
     private TCPClient tcpClient;
 
-
+//verze_protokolu;typ_zarizeni;server_nazev;server_ip;server_port;
     public Server(String name, String ipAdr, int port, boolean status, String about) {
         this.ipAdr = ipAdr;
         this.name = name;
@@ -36,14 +36,14 @@ public class Server {
         this.status = status;
         this.active = false;
         this.serverId = id.incrementAndGet();
-        List<Train> trains = new ArrayList<>();
+        /*List<Train> trains = new ArrayList<>();
         trains.add(new Train("bnn21f86", false, new boolean[16], 16, true));
         trains.add(new Train("aaaa", true, new boolean[16], 16, false));
         trains.add(new Train("nov", true, new boolean[16], 16, true));
         trains.get(0).setAuthorized(true);
         trains.get(2).setAuthorized(true);
         areas.add(new ControlArea("1", "full", trains));
-        areas.add(new ControlArea("1", "empty", new ArrayList<Train>()));
+        areas.add(new ControlArea("1", "empty", new ArrayList<Train>()));*/
     }
 
     public Server(String name, int port, boolean status, String about) {
@@ -65,20 +65,6 @@ public class Server {
         this.about = attribute3;
         this.userName = attribute4;
         this.userPassword = attribute5;
-    }
-
-    //asi to pak spis udelat pres id lokomotivy
-
-    public String Autorizace(String username, String passwd) {
-        String text = null;
-        text = base + "AUTH;" + username + ";" + passwd;
-        return text;
-    }
-
-    public String GetAreaLoko(int id, String comment) {
-        String text = null;
-        text = base + "PLEASE;" + id + ";" + comment;
-        return text;
     }
 
     public String GetLoko(String token, String adr) {
@@ -211,27 +197,6 @@ public class Server {
         return temp;
     }
 
-    public ArrayList<String> getUnAuthorizedTrainsString() {
-
-        ArrayList<String> temp = new ArrayList<>();
-        List<Train> trains;
-        if (areas.size() > 0) {
-            for (ControlArea a : areas) {
-                trains = a.getTrains();
-                if ((trains.size() > 0)) {
-                    for (Train s : trains) {
-                        if (!s.isAuthorized()) {
-                            temp.add("loko:" + s.toString());
-                        }
-                    }
-                }
-            }
-            if (!temp.isEmpty()) return temp;
-        }
-        temp.add("no trains loaded");
-        return temp;
-    }
-
     public void addArea(ControlArea area) {
         this.areas.add(area);
     }
@@ -293,8 +258,8 @@ public class Server {
     }
 
     public String getSaveDataString() {
-        String stringData = this.name + ";" + this.ipAdr + ";" + this.port + ";" + this.about + ";" + this.userName + ";" + this.userPassword;
-        return stringData;
+        return this.name + ";" + this.ipAdr + ";" + this.port + ";"
+                + this.about + ";" + this.userName + ";" + this.userPassword;
     }
 
     @Override
@@ -317,16 +282,12 @@ public class Server {
         return result;
     }
 
-    public TCPClient getTcpClient() {
-        return this.tcpClient;
-    }
-
     public void setTcpClient(TCPClient tcpClient) {
         this.tcpClient = tcpClient;
     }
 
     public String getInfo() {
-        return this.about;
+        return this.about +" uživatel:"+ this.userName;
     }
 
     public void addTrain(Train newTrain) {

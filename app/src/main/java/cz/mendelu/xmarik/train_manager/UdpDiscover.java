@@ -134,11 +134,11 @@ public class UdpDiscover extends AsyncTask<String, Void, String> {
 
         if ((tmp.length > 0) && (tmp[0].equals("hJOP"))) {
             if (tmp[2].equals("server")) {
-                server = new Server(tmp.length > 4 ? tmp[3] : null,
-                        tmp.length > 5 ? tmp[4] : null,
-                        tmp.length > 6 ? Integer.parseInt(tmp[5]) : null,
-                        tmp.length > 7 ? Boolean.valueOf(tmp[6]) : null,
-                        tmp.length > 8 ? tmp[7] : null);
+                server = new Server(tmp.length > 4 ? tmp[3] : "",
+                        tmp.length > 5 ? tmp[4] : "",
+                        tmp.length > 6 ? Integer.parseInt(tmp[5]) : 0,
+                        tmp.length > 7 ? tmp[6].equals("on") : null,
+                        tmp.length > 8 ? tmp[7] : "");
             }
         }
         return server;
