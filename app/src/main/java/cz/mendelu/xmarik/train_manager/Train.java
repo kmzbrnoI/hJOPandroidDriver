@@ -12,7 +12,7 @@ public class Train {
     private boolean controled;
     private TrainFunction function[];
     private int speed;
-    private double kmhSpeed;
+    private int kmhSpeed;
     private boolean direction;
     private boolean totalManaged;
     private String err;
@@ -167,69 +167,18 @@ public class Train {
         return base;
     }
 
-    public void setBase(String base) {
-        this.base = base;
-    }
-
     public double getKmhSpeed() {
         return kmhSpeed;
     }
 
-    public void setKmhSpeed(double kmhSpeed) {
+    public void setKmhSpeed(int kmhSpeed) {
         this.kmhSpeed = kmhSpeed;
-    }
-
-    public boolean isTotalManaged() {
-        return totalManaged;
-    }
-
-    public String getOwner() {
-        return owner;
-    }
-
-    public void setOwner(String owner) {
-        this.owner = owner;
-    }
-
-    public String getMark() {
-        return mark;
-    }
-
-    public void setMark(String mark) {
-        this.mark = mark;
-    }
-
-    public String getNote() {
-        return note;
-    }
-
-    public void setNote(String note) {
-        this.note = note;
     }
 
     public String getUserLokoName() {
         return userLokoName;
     }
 
-    public void setUserLokoName(String userLokoName) {
-        this.userLokoName = userLokoName;
-    }
-
-    public String getLokoClass() {
-        return lokoClass;
-    }
-
-    public void setLokoClass(String lokoClass) {
-        this.lokoClass = lokoClass;
-    }
-
-    public String getTrainSet() {
-        return trainSet;
-    }
-
-    public void setTrainSet(String trainSet) {
-        this.trainSet = trainSet;
-    }
 
     public String setDirection(boolean direction) {
         this.direction = direction;

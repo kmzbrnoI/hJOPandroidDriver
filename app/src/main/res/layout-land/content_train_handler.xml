@@ -112,20 +112,21 @@
                         <Button
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:text="stop"
+                            android:id="@+id/stopButton1"
+                            android:layout_gravity="bottom|right"
+                            android:layout_weight="0.51"
+                            android:onClick="stop1" />
+
+                        <Button
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
                             android:text="idle"
                             android:id="@+id/startButton1"
                             android:layout_gravity="bottom|center"
                             android:layout_weight="0.51"
                             android:onClick="idle1" />
 
-                        <Button
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="stop"
-                            android:id="@+id/stopButton1"
-                            android:layout_gravity="bottom|right"
-                            android:layout_weight="0.51"
-                            android:onClick="stop1" />
                     </LinearLayout>
                 </LinearLayout>
 
@@ -262,20 +263,20 @@
                         <Button
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="idle"
-                            android:id="@+id/startButton2"
-                            android:layout_gravity="bottom|center"
-                            android:layout_weight="0.51"
-                            android:onClick="idle2" />
-
-                        <Button
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
                             android:text="stop"
                             android:id="@+id/stopButton2"
                             android:layout_gravity="bottom|right"
                             android:layout_weight="0.51"
                             android:onClick="stop2" />
+
+                        <Button
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="idle"
+                            android:id="@+id/startButton2"
+                            android:layout_gravity="bottom|center"
+                            android:layout_weight="0.51"
+                            android:onClick="idle2" />
 
                     </LinearLayout>
                 </LinearLayout>

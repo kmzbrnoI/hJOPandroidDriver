@@ -174,7 +174,7 @@ public class MainActivity extends AppCompatActivity
         if (v.getId() == R.id.farServers) {
             AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
             menu.setHeaderTitle(array1.get(info.position));
-            String[] menuItems = {"zvolit", "přihlašovací údaje", "změnit", "info", "smazat", "smazat vše"};
+            String[] menuItems = {"připojit", "přihlašovací údaje", "změnit", "info", "smazat", "smazat vše"};
             for (int i = 0; i < menuItems.length; i++) {
                 menu.add(Menu.NONE, i, i, menuItems[i]);
             }

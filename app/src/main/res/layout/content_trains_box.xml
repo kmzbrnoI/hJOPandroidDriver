@@ -35,19 +35,13 @@
             android:id="@+id/nav_trains"
             android:scrollbars="horizontal|vertical" />
 
-        <RelativeLayout
+        <ProgressBar
+            style="@android:style/Widget.Material.Light.ProgressBar.Large"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1.07">
-
-            <ProgressBar
-                style="@android:style/Widget.Material.Light.ProgressBar.Large"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/progressBar"
-                android:indeterminate="false"
-                tools:visibility="gone" />
-        </RelativeLayout>
+            android:layout_height="wrap_content"
+            android:id="@+id/progressBar"
+            android:indeterminate="false"
+            tools:visibility="gone" />
 
         <TextView
             android:text="přiřaztené soupravy"
