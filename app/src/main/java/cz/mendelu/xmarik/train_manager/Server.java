@@ -91,12 +91,16 @@ public class Server {
         return text;
     }
 
-    public String getBase() {
-        return base;
+    public String getLongInfo() {
+        return "Server :" + about + "\n" +
+                "ip = " + ipAdr + "\n" +
+                "port = " + port + "\n" +
+                "typ = " + name + "\n" +
+                "aktivní = " + (active ? "ano" : "ne");
     }
 
-    public void setBase(String base) {
-        this.base = base;
+    public String getBase() {
+        return base;
     }
 
     public boolean isActive() {

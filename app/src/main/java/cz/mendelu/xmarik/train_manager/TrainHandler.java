@@ -72,6 +72,7 @@ public class TrainHandler extends AppCompatActivity
     private Spinner spinner2;
     private Context context;
     private boolean update;
+    private Long timer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,6 +95,7 @@ public class TrainHandler extends AppCompatActivity
         managed = new ArrayList<>();
         context = this;
         err = null;
+        timer = System.currentTimeMillis();
 
         name1 = (TextView) findViewById(R.id.handlerName1);
         speed1 = (SeekBar) findViewById(R.id.speedkBar1);
@@ -273,11 +275,13 @@ public class TrainHandler extends AppCompatActivity
                 @Override
                 public void onProgressChanged(SeekBar seekBar, int progress,
                                               boolean fromUser) {
-                    if (train1 != null) {
-                        train1.setSpeed(progress);
-                        String text = train1.GetSpeedTxt();
-                        setSpeed(progress, train1);
-                    }
+                    if ( timer < System.currentTimeMillis() )
+                        if (train1 != null) {
+                            //because server cant handle as mutch packet as client possible could send
+                            timer=System.currentTimeMillis() + 200;
+                            train1.setSpeed(progress);
+                            setSpeed(progress, train1);
+                        }
                 }
 
                 @Override
@@ -298,9 +302,13 @@ public class TrainHandler extends AppCompatActivity
                     @Override
                     public void onProgressChanged(SeekBar seekBar, int progress,
                                                   boolean fromUser) {
-                        train1.setSpeed(progress);
-                        String text = train1.GetSpeedTxt();
-                        setSpeed(progress, train1);
+                        if ( timer < System.currentTimeMillis() )
+                            if (train2 != null) {
+                                //because server cant handle as mutch packet as client possible could send
+                                timer=System.currentTimeMillis() + 200;
+                                train2.setSpeed(progress);
+                                setSpeed(progress, train2);
+                            }
                     }
 
                     @Override
@@ -432,7 +440,6 @@ public class TrainHandler extends AppCompatActivity
                 }
             } else {
                 if (train.GetSpeedSTxt() != null) {
-
                     String text = train.GetSpeedSTxt();
                     sendNext(text);
                 }
@@ -703,7 +710,7 @@ public class TrainHandler extends AppCompatActivity
             startActivity(intent);
 
         } else if (id == R.id.nav_view) {
-            Intent intent = new Intent(this, Servers.class);
+            Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
 
         }

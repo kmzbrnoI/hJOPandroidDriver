@@ -61,7 +61,9 @@ public class CheckBoxAdapter extends ArrayAdapter<TrainFunction> {
         } else if (names == 2) {
             holder.code.setText(tmpName);
         } else if (names == 3) {
-            holder.code.setText(function.getCode() + ": " + tmpName);
+
+            holder.code.setText(tmpName != null ?
+                    function.getCode() + ": " + tmpName : function.getCode());
         }
         holder.name.setText("");
         holder.name.setChecked(function.isSelected());

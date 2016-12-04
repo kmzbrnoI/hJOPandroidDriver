@@ -18,13 +18,28 @@
         android:layout_height="match_parent"
         android:weightSum="1" >
 
-        <Button
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:text="search"
-            android:id="@+id/serverButton"
-            android:layout_gravity="center_horizontal"
-            android:onClick="discoverServer (MainActivity)" />
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:text="Nalezené servery"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/textView9"
+                android:layout_weight="1"
+                android:textStyle="normal|bold"
+                android:textAlignment="center" />
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/serverButton"
+                android:layout_gravity="center_horizontal"
+                android:onClick="discoverServer (MainActivity)"
+                android:background="@mipmap/ic_refresh" />
+        </LinearLayout>
 
         <ListView
             android:layout_width="match_parent"
@@ -42,13 +57,25 @@
             android:layout_height="56dp"
             android:weightSum="1" >
 
-            <Button
-                android:layout_width="match_parent"
+            <TextView
+                android:text="Uložené servery"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Add new server"
+                android:id="@+id/textView10"
+                android:layout_weight="1"
+                android:textAlignment="center"
+                android:textStyle="normal|bold" />
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:id="@+id/add"
                 android:onClick="addServer"
-                android:layout_gravity="center_horizontal" />
+                android:layout_gravity="center_horizontal"
+                android:layout_weight="1"
+                style="@style/Widget.AppCompat.Button.Borderless"
+                android:background="@mipmap/ic_plus" />
+
         </LinearLayout>
 
         <ListView

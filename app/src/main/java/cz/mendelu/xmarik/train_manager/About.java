@@ -83,7 +83,7 @@ public class About extends AppCompatActivity
             Intent intent = new Intent(this, Trains_box.class);
             startActivity(intent);
         } else if (id == R.id.nav_view) {
-            Intent intent = new Intent(this, Servers.class);
+            Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

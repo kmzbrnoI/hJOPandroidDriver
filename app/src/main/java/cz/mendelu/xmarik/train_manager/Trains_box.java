@@ -329,7 +329,7 @@ public class Trains_box extends AppCompatActivity
             drawer.closeDrawer(GravityCompat.START);
 
         } else if (id == R.id.nav_view) {
-            Intent intent = new Intent(this, Servers.class);
+            Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
 
         }
