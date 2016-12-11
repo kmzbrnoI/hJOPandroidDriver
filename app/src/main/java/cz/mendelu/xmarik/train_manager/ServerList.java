@@ -113,7 +113,7 @@ public class ServerList {
     ArrayList<String> getStoredServersString() {
         ArrayList<String> tmp = new ArrayList<>();
         for (Server s : this.storedServers) {
-            tmp.add(s.getStringData());
+            tmp.add(s.getStoredStringData());
         }
         return tmp;
     }

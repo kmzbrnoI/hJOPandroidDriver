@@ -18,9 +18,9 @@ import org.greenrobot.eventbus.Subscribe;
 import java.util.ArrayList;
 
 import cz.mendelu.xmarik.train_manager.events.AreasEvent;
+import cz.mendelu.xmarik.train_manager.events.ErrorEvent;
 import cz.mendelu.xmarik.train_manager.events.HandShakeEvent;
 import cz.mendelu.xmarik.train_manager.events.ReloadEvent;
-
 
 public class ServerConnector extends Activity {
     private static String[] messges = {};//dodelat vsechno retezce co budou treba
@@ -35,86 +35,14 @@ public class ServerConnector extends Activity {
     private Button send;
     private ServerConnector classObject;
     private Server server;
-    private boolean faildSender = false;
+    private boolean tcpOK = false;
+
+    public static final MonitorObject  monitor = new MonitorObject();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        classObject = this;
-        EventBus.getDefault().register(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_server_connector);
-        Bundle extras = getIntent().getExtras();
-        TCPClientApplication tcp = TCPClientApplication.startNewServer();
-        messges = new String[3];
-        if (extras != null) {
-            String value = extras.getString("server");
-            String[] tmp = value.split("\t");
-            server = ServerList.getInstance().getServer(tmp[0]);
-            Log.e("", "server" + server.getDnsName());
-            Log.e("services", "ulozene jmeno a heslo: " + server.getUserName() + "  " + server.getUserPassword());
-            tcp.server = server;
-            tcp.auth = true;
-            tcp.start();
-        } else finish();
-        messges[0] = "-;HELLO;1.0\n";
-        if (server.getUserName() != null && server.getUserPassword() != null) {
-            user = server.getUserName();
-            passwd = server.getUserPassword();
-            messges[1] = "-;LOK;G;AUTH;{" + user + "};" + passwd + "\n";
-        } else {
-            final Dialog dialog = new Dialog(this);
-            dialog.setContentView(R.layout.user_dialog);
-            dialog.setTitle("Title...");
-            //set dialog component
-            final EditText mName = (EditText) dialog.findViewById(R.id.dialogName);
-            final EditText mPasswd = (EditText) dialog.findViewById(R.id.dialogPasswd);
-            Button dialogButton = (Button) dialog.findViewById(R.id.dialogButtonOK);
-            final CheckBox save = (CheckBox) dialog.findViewById(R.id.dialogSaveData);
-            mName.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-                @Override
-                public void onFocusChange(View view, boolean b) {
-                    if (mName.isFocused()) mName.setText("");
-                }
-            });
-            mPasswd.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-                @Override
-                public void onFocusChange(View view, boolean b) {
-                    if (mPasswd.isFocused()) mPasswd.setText("");
-                }
-            });
-            // if button is clicked, close the custom dialog
-            dialogButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    user = mName.getText().toString();
-                    passwd = HelpServices.hashPasswd(mPasswd.getText().toString());
-                    if (save.isChecked()) {
-                        setData(user, passwd, true);
-                    } else setData(user, passwd, false);
-                    messges[1] = "-;LOK;G;AUTH;{" + user + "};" + passwd + "\n";
-                    dialog.dismiss();
-                }
-            });
-            dialog.show();
-        }
-        messges[2] = "-;OR-LIST;" + "\n";
-        arrayList = new ArrayList<>();
-        send = (Button) findViewById(R.id.send_button);
-        //relate the listView from java to the one created in xml
-        mList = (ListView) findViewById(R.id.list);
-        mAdapter = new MyCustomAdapter(this, arrayList);
-        mList.setAdapter(mAdapter);
-        //new connectTask().execute("");
-        send.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                initialize();
-                sendNext();
-            }
-
-        });
-        //TODO podminka ze settings
-        initialize();
     }
 
     public void setData(String name, String tmpPass, boolean save) {
@@ -162,32 +90,32 @@ public class ServerConnector extends Activity {
 
     @Override
     public void onResume() {
+        i = 0;
+        tcpOK = false;
         super.onResume();
-        /*TCPClientApplication tcp = TCPClientApplication.startNewServer();
-        tcp.server = server;
-        tcp.auth = true;
-        tcp.start();*/
         if (!EventBus.getDefault().isRegistered(this)) EventBus.getDefault().register(this);
+        startMethod();
     }
 
     private void sendNext() {
         String message = getMessage();
         //sends the message to the server
         Log.e("", "Send pokus odeslat:" + message);
+
         if (TCPClientApplication.getInstance().getClient() != null && message != null) {
             TCPClientApplication.getInstance().getClient().sendMessage(message);
             Log.e("", "Send odeslano:" + message);
-        } else faildSender = true;
+        }
         //refresh the list
         mAdapter.notifyDataSetChanged();
     }
 
     @Subscribe
     public void onEvent(ReloadEvent event) {
-        Log.e("", "pokus odeslat eventem:" + "-;HELLO;1.0");
-        if(!faildSender) {
-            Log.e("", "event odeslal:" + "-;HELLO;1.0");
-            TCPClientApplication.getInstance().getClient().sendMessage("-;HELLO;1.0\n");
+        Log.e("", "TCP navázáno a plikace to ví");
+        sendNext();
+        synchronized(monitor){
+            monitor.notify();
         }
     }
 
@@ -235,7 +163,7 @@ public class ServerConnector extends Activity {
         arrayList.clear();
         arrayList.add("připojuji k serveru");
         mAdapter.notifyDataSetChanged();
-        sendNext();
+        //sendNext();
     }
 
     @Subscribe
@@ -297,6 +225,12 @@ public class ServerConnector extends Activity {
         }
     }
 
+    @Subscribe
+    public void onEvent(ErrorEvent event) {
+        raiseErrorState(event.getMessage());
+    }
+
+
     private void raiseErrorState(final String error) {
         runOnUiThread(new Runnable() {
             @Override
@@ -308,6 +242,90 @@ public class ServerConnector extends Activity {
                 mAdapter.notifyDataSetChanged();
             }
         });
+    }
+
+    private void startMethod() {
+        classObject = this;
+        if(!EventBus.getDefault().isRegistered(this))EventBus.getDefault().register(this);
+        Bundle extras = getIntent().getExtras();
+        TCPClientApplication tcp = TCPClientApplication.startNewServer();
+        messges = new String[3];
+        if ( extras != null ) {
+            String value = extras.getString("server");
+            String[] tmp = value.split("\t");
+            server = ServerList.getInstance().getServer(tmp[0]);
+            Log.e("", "server" + server.getDnsName());
+            Log.e("services", "ulozene jmeno a heslo: " + server.getUserName() + "  " + server.getUserPassword());
+            tcp.server = server;
+            tcp.auth = true;
+            tcp.start();
+        } else if (this.server != null) {
+            Log.e("connector", "server nebyl null a ma udaje:: " + server.getUserName() + "  " + server.getUserPassword());
+            tcp.server = server;
+            tcp.auth = true;
+            tcp.start();
+        } else finish();
+        messges[0] = "-;HELLO;1.0\n";
+        if (server.getUserName() != null && server.getUserPassword() != null) {
+            user = server.getUserName();
+            passwd = server.getUserPassword();
+            messges[1] = "-;LOK;G;AUTH;{" + user + "};" + passwd + "\n";
+        } else {
+            final Dialog dialog = new Dialog(this);
+            dialog.setContentView(R.layout.user_dialog);
+            dialog.setTitle("Title...");
+            //set dialog component
+            final EditText mName = (EditText) dialog.findViewById(R.id.dialogName);
+            final EditText mPasswd = (EditText) dialog.findViewById(R.id.dialogPasswd);
+            Button dialogButton = (Button) dialog.findViewById(R.id.dialogButtonOK);
+            final CheckBox save = (CheckBox) dialog.findViewById(R.id.dialogSaveData);
+            mName.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                @Override
+                public void onFocusChange(View view, boolean b) {
+                    if (mName.isFocused()) mName.setText("");
+                }
+            });
+            mPasswd.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                @Override
+                public void onFocusChange(View view, boolean b) {
+                    if (mPasswd.isFocused()) mPasswd.setText("");
+                }
+            });
+            // if button is clicked, close the custom dialog
+            dialogButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    user = mName.getText().toString();
+                    passwd = HelpServices.hashPasswd(mPasswd.getText().toString());
+                    if (save.isChecked()) {
+                        setData(user, passwd, true);
+                    } else setData(user, passwd, false);
+                    messges[1] = "-;LOK;G;AUTH;{" + user + "};" + passwd + "\n";
+                    dialog.dismiss();
+                }
+            });
+            dialog.show();
+        }
+        messges[2] = "-;OR-LIST;" + "\n";
+        arrayList = new ArrayList<>();
+        send = (Button) findViewById(R.id.send_button);
+        //relate the listView from java to the one created in xml
+        mList = (ListView) findViewById(R.id.list);
+        mAdapter = new MyCustomAdapter(this, arrayList);
+        mList.setAdapter(mAdapter);
+        //new connectTask().execute("");
+        send.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                initialize();
+            }
+
+        });
+        //TODO podminka ze settings
+        initialize();
+    }
+
+    public static class MonitorObject{
     }
 
 }

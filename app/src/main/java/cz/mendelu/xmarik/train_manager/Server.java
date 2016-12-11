@@ -146,7 +146,7 @@ public class Server {
         for (ControlArea a : areas) {
             trains = a.getTrains();
             for (Train t : trains) {
-                if (t.getName().equals(adr)) return t;
+                if (t.getUserLokoName().equals(adr) || t.getName().equals(adr)) return t;
             }
 
         }
@@ -312,4 +312,8 @@ public class Server {
         return trains;
     }
 
+    public String getStoredStringData() {
+        String stringData = this.name + "\t " + this.ipAdr+ " " + this.about;
+        return stringData;
+    }
 }

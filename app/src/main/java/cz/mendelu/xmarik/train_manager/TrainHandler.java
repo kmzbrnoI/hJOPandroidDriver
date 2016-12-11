@@ -179,20 +179,23 @@ public class TrainHandler extends AppCompatActivity
 
             direction1.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    if (direction1.isChecked()) {
-                        direction1.setText("vpřed");
-                    } else direction1.setText("vzad");
-                    if (managed.contains(train1)) {
-                        for (Train s : managed) {
-                            String text = s.changeDirection();
-                            sendNext(text);
-                        }
-                    } else {
-                        if (train1 != null) {
-                            String text = train1.changeDirection();
-                            sendNext(text);
+                    if(!update) {
+                        if (direction1.isChecked()) {
+                            direction1.setText("vpřed");
+                        } else direction1.setText("vzad");
+                        if (managed.contains(train1)) {
+                            for (Train s : managed) {
+                                String text = s.changeDirection();
+                                sendNext(text);
+                            }
+                        } else {
+                            if (train1 != null) {
+                                String text = train1.changeDirection();
+                                sendNext(text);
+                            }
                         }
                     }
+
                 }
             });
 
@@ -210,12 +213,14 @@ public class TrainHandler extends AppCompatActivity
                     int itemPosition = position;
 
                     // ListView Clicked item value
-                    Train t = activeServer.getTrain(spinner1.getItemAtPosition(position).toString());
-                    String itemValue = t.getName();
+                    String value = spinner1.getItemAtPosition(position).toString();
+                    String lokoName = value.substring(0, value.indexOf(":"));
+                    Train t = activeServer.getTrain(lokoName);
+                    String itemValue = t!=null ? t.getName() : null;
                     if (itemValue != null) {
                         train1 = activeServer.getTrain(itemValue);
                         active1 = itemValue;
-                        name1.setText(train1.getName());
+                        name1.setText(train1.getUserLokoName());
                         speed1.setProgress(train1.getSpeed());
                         direction1.setChecked(train1.isDirection());
 
@@ -325,15 +330,17 @@ public class TrainHandler extends AppCompatActivity
                 direction2.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                         setDirectionText(2);
-                        if (managed.contains(train2)) {
-                            for (Train s : managed) {
-                                String text = s.changeDirection();
-                                sendNext(text);
-                            }
-                        } else {
-                            if (train2 != null) {
-                                String text = train2.changeDirection();
-                                sendNext(text);
+                        if (!update) {
+                            if (managed.contains(train2)) {
+                                for (Train s : managed) {
+                                    String text = s.changeDirection();
+                                    sendNext(text);
+                                }
+                            } else {
+                                if (train2 != null) {
+                                    String text = train2.changeDirection();
+                                    sendNext(text);
+                                }
                             }
                         }
                     }
@@ -360,12 +367,14 @@ public class TrainHandler extends AppCompatActivity
                     public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
                         // ListView Clicked item index
                         int itemPosition = position;
-                        Train t = activeServer.getTrain(spinner2.getItemAtPosition(position).toString());
-                        String itemValue = t.getName();
+                        String value = spinner2.getItemAtPosition(position).toString();
+                        String lokoName = value.substring(0, value.indexOf(":"));
+                        Train t = activeServer.getTrain(lokoName);
+                        String itemValue = t!=null ? t.getName() : null;
                         if (itemValue != null) {
                             train2 = activeServer.getTrain(itemValue);
                             active2 = itemValue;
-                            name2.setText(train2.getName());
+                            name2.setText(train2.getUserLokoName());
                             speed2.setProgress(train2.getSpeed());
                             direction2.setChecked(train2.isDirection());
 
@@ -414,16 +423,16 @@ public class TrainHandler extends AppCompatActivity
     }
 
     private void setDirectionText(int direction) {
-        if (direction == 1) {
-            if (direction1.isChecked()) {
-                direction1.setText("vpřed");
-            } else direction1.setText("vzad");
-        }else {
-            if (direction2.isChecked()) {
-                direction2.setText("vpřed");
-            } else direction2.setText("vzad");
-        }
-
+        if(!update)
+            if (direction == 1) {
+                if (direction1.isChecked()) {
+                    direction1.setText("vpřed");
+                } else direction1.setText("vzad");
+            }else {
+                if (direction2.isChecked()) {
+                    direction2.setText("vpřed");
+                } else direction2.setText("vzad");
+            }
     }
 
     public void setSpeed(int spd, Train train) {
@@ -525,7 +534,7 @@ public class TrainHandler extends AppCompatActivity
         update = true;
         if (train1 != null) {
             train1 = activeServer.getTrain(train1.getName());
-            name1.setText(train1.getName());
+            name1.setText(train1.getUserLokoName());
             if (train1.getSpeed() != speed1.getProgress()) speed1.setProgress(train1.getSpeed());
             direction1.setChecked(train1.isDirection());
             group1.setChecked(managed.contains(train1));
@@ -540,7 +549,7 @@ public class TrainHandler extends AppCompatActivity
         if (landscape) {
             if (train2 != null) {
                 train2 = activeServer.getTrain(train2.getName());
-                name2.setText(train2.getName());
+                name2.setText(train2.getUserLokoName());
                 speed2.setProgress(train2.getSpeed());
                 direction2.setChecked(train2.isDirection());
                 group2.setChecked(managed.contains(train2));
@@ -603,14 +612,14 @@ public class TrainHandler extends AppCompatActivity
 
     private void sendNext(String message) {
 
-        //sends the message to the server
-        if (TCPClientApplication.getInstance().getClient() != null) {
-            TCPClientApplication.getInstance().getClient().sendMessage(message);
-            Log.e("data", "C: Odeslana zpráva: " + message + "");
-        } else {
-            //TODO error
+        if(!update) {
+            if (TCPClientApplication.getInstance().getClient() != null) {
+                TCPClientApplication.getInstance().getClient().sendMessage(message);
+                Log.e("data", "C: Odeslana zpráva: " + message + "");
+            } else {
+                //TODO error
+            }
         }
-
     }
 
     @Subscribe

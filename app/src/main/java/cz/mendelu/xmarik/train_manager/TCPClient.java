@@ -14,6 +14,7 @@ import java.net.ConnectException;
 import java.net.InetAddress;
 import java.net.Socket;
 
+import cz.mendelu.xmarik.train_manager.events.ErrorEvent;
 import cz.mendelu.xmarik.train_manager.events.ReloadEvent;
 
 /**
@@ -66,20 +67,18 @@ public class TCPClient {
         mRun = true;
 
         try {
-            //here you must put your computer's IP address.
             InetAddress serverAddr = InetAddress.getByName(SERVERIP);
-            //InetAddress serverAddr = InetAddress.getByName("10.2.0.174");
             Log.e("TCP Client", "C: Connecting...");
             //create a socket to make the connection with the server
-            //datserver port \\\SERVERPORT
-            //socket null
+
             try {
                 if (socket == null) socket = new Socket(serverAddr, SERVERPORT);
             } catch (ConnectException e) {
-                serverMessage = "error connection refused";
+                Log.e("TCP Client", "C: error connection refused");
+                EventBus.getDefault().post(new ErrorEvent("error - connection refused"));
+                return  "error - connection refused";
             }
             try {
-
                 //send the message to the server
                 if (socket != null) {
                     out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(socket.getOutputStream())), true);
@@ -101,14 +100,14 @@ public class TCPClient {
                     Log.e("RESPONSE FROM SERVER", "S: Received Message: '" + serverMessage + "'");
                 } else {
                     Log.e("TCP", "S: Error - server is unreachable");
-                    serverMessage = "server is unreachable";
+                    serverMessage = "error - server is unreachable";
                     mMessageListener.messageReceived(serverMessage);
                 }
                 //return serverMessage;
             } catch (Exception e) {
-
                 Log.e("TCP", "S: Error", e);
-                serverMessage = "error server";
+                EventBus.getDefault().post(new ErrorEvent("error - server"));
+                serverMessage = "error - server";
             } finally {
                 //the socket must be closed. It is not possible to reconnect to this socket
                 // after it is closed, which means a new socket instance has to be created.

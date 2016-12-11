@@ -101,7 +101,7 @@ public class Train {
 
     public String getUserTrainInfo() {
         return "název: " + this.userLokoName + "\n" +
-                "majtel: " + this.owner + "\n" +
+                "majitel: " + this.owner + "\n" +
                 "označení: " + this.mark + "\n" +
                 "poznámka: " + this.note + "\n" +
                 "třída: " + ServerList.TRAINTYPE.values()[Integer.parseInt(this.lokoClass)] + "\n" +
@@ -109,7 +109,7 @@ public class Train {
     }
 
     public String toString() {
-        return name;
+        return userLokoName +": "+name;
     }
 
     public String getName() {
@@ -190,13 +190,6 @@ public class Train {
         this.direction = !this.direction;
         String tmp = direction ? "0" : "1";
         return base + ";D;" + tmp + "\n";
-    }
-
-    public String GetLoko(String token) {
-        String text = null;
-        //-:LOK;addr;PLEASE;token                 - zadost o rizeni konkretni lokomotivy; token neni potreba pripojovat v pripade, kdy loko uz mame autorizovane a bylo nam ukradeno napriklad mysi
-        text = token != null ? base + "PLEASE;" + token + "\n" : base + "PLEASE" + "\n";
-        return text;
     }
 
     public String Release() {
@@ -349,6 +342,6 @@ public class Train {
     }
 
     public String nameString() {
-        return this.name + " \t " + this.owner;
+        return this.userLokoName +" \n "+ this.name + " " + this.owner;
     }
 }

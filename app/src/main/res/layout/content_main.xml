@@ -25,20 +25,21 @@
 
             <TextView
                 android:text="Nalezené servery"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:id="@+id/textView9"
                 android:layout_weight="1"
                 android:textStyle="normal|bold"
-                android:textAlignment="center" />
+                android:textAlignment="textStart"
+                android:textSize="24dp" />
 
             <Button
-                android:layout_width="wrap_content"
+                android:layout_width="60dp"
                 android:layout_height="wrap_content"
                 android:id="@+id/serverButton"
                 android:layout_gravity="center_horizontal"
                 android:onClick="discoverServer (MainActivity)"
-                android:background="@mipmap/ic_refresh" />
+                android:background="@drawable/ic_refresh_new" />
         </LinearLayout>
 
         <ListView
@@ -54,7 +55,7 @@
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="56dp"
+            android:layout_height="wrap_content"
             android:weightSum="1" >
 
             <TextView
@@ -63,23 +64,23 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/textView10"
                 android:layout_weight="1"
-                android:textAlignment="center"
-                android:textStyle="normal|bold" />
+                android:textAlignment="textStart"
+                android:textStyle="normal|bold"
+                android:textSize="24dp" />
 
             <Button
-                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/add"
                 android:onClick="addServer"
                 android:layout_gravity="center_horizontal"
-                android:layout_weight="1"
                 style="@style/Widget.AppCompat.Button.Borderless"
-                android:background="@mipmap/ic_plus" />
+                android:background="@drawable/ic_add_black_24dp"
+                android:layout_width="60dp" />
 
         </LinearLayout>
 
         <ListView
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="185dp"
             android:id="@+id/farServers" />
     </LinearLayout>

@@ -13,6 +13,7 @@ import cz.mendelu.xmarik.train_manager.events.FreeEvent;
 import cz.mendelu.xmarik.train_manager.events.HandShakeEvent;
 import cz.mendelu.xmarik.train_manager.events.RefuseEvent;
 import cz.mendelu.xmarik.train_manager.events.ReloadEvent;
+import cz.mendelu.xmarik.train_manager.events.TrainReloadEvent;
 
 /**
  * Created by ja on 9. 10. 2016.
@@ -40,8 +41,6 @@ public class TCPClientApplication extends Application {
     }
 
     public static TCPClientApplication startNewServer() {
-        if (instance != null)
-            instance.mTcpClient.stopClient();
         instance = new TCPClientApplication();
         return instance;
     }
@@ -63,7 +62,7 @@ public class TCPClientApplication extends Application {
     }
 
     public void start() {
-        new connectTask().execute("");
+        new connectTask().execute();
     }
 
     public void sendToServer(String message) {
@@ -102,7 +101,6 @@ public class TCPClientApplication extends Application {
             super.onProgressUpdate(values);
             String serverMessage = values[0];
             //parsovat odpoved od serveru je ve values 0
-            //TODO tady tohle smazat
             Log.e("", "zprava :" + serverMessage);
             if (serverMessage.startsWith("-;MOD-CAS") || serverMessage.startsWith("-;DCC")) {
 
@@ -136,7 +134,7 @@ public class TCPClientApplication extends Application {
                                     if (lokoData.length > 14)
                                         newTrain.setFunctionNames(lokoData[15]);
                                     ServerList.getInstance().getActiveServer().addTrain(newTrain);
-                                    EventBus.getDefault().post(new ReloadEvent(serverMessage));
+                                    EventBus.getDefault().post(new TrainReloadEvent(serverMessage));
                                 }
                                 break;
                             case "total":
@@ -185,7 +183,7 @@ public class TCPClientApplication extends Application {
                     } else if (tmp[1].equals("RESP")) {
                         Train train = ServerList.getInstance().getActiveServer().getTrain(tmp[0]);
                         if (tmp[2].equals("ok")) {
-                            train.setKmhSpeed(Double.parseDouble(tmp[3]));
+                            train.setKmhSpeed(Integer.parseInt(tmp[3]));
                             train.setErr(null);
                         } else {
                             train.setErr(tmp[3]);
@@ -193,7 +191,7 @@ public class TCPClientApplication extends Application {
                         EventBus.getDefault().post(new ReloadEvent(serverMessage));
                     } else if (tmp[1].equals("SPD")) {
                         Train train = ServerList.getInstance().getActiveServer().getTrain(tmp[0]);
-                        train.setKmhSpeed(Double.parseDouble(tmp[2]));
+                        train.setKmhSpeed(Integer.parseInt(tmp[2]));
                         train.setSpeed(Integer.parseInt(tmp[3]));
                         train.setDirection(tmp[4].equals("1"));
                         train.setErr(null);

@@ -33,6 +33,7 @@ import java.util.List;
 import cz.mendelu.xmarik.train_manager.events.FreeEvent;
 import cz.mendelu.xmarik.train_manager.events.RefuseEvent;
 import cz.mendelu.xmarik.train_manager.events.ReloadEvent;
+import cz.mendelu.xmarik.train_manager.events.TrainReloadEvent;
 
 public class Trains_box extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -133,7 +134,8 @@ public class Trains_box extends AppCompatActivity
                 Server s = ServerList.getInstance().getActiveServer();
 
                 //TODO kontextovy menu
-                Train t = s.getTrain(itemValue);
+                String lokoString = itemValue.substring(0, itemValue.indexOf("\n"));
+                Train t = s.getTrain(lokoString);
                 sendNext("-;LOK;" + t.getName() + ";RELEASE");
                 t.setAuthorized(false);
 
@@ -155,7 +157,7 @@ public class Trains_box extends AppCompatActivity
     }
 
     @Subscribe
-    public void onEvent(ReloadEvent event) {
+    public void onEvent(TrainReloadEvent event) {
         // your implementation
         reloadEventHelper();
         if (this.sendButton.getText().equals("zrusit")) this.sendButton.setText("poslat");
