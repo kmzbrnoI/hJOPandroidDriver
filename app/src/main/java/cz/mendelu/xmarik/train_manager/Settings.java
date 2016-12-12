@@ -179,7 +179,7 @@ public class Settings extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
         if (id == R.id.nav_server) {
-            Intent intent = new Intent(this, Servers.class);
+            Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
         } else if (id == R.id.nav_about) {
             Intent intent = new Intent(this, About.class);

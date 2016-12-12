@@ -36,14 +36,14 @@ public class Server {
         this.status = status;
         this.active = false;
         this.serverId = id.incrementAndGet();
-        /*List<Train> trains = new ArrayList<>();
-        trains.add(new Train("bnn21f86", false, new boolean[16], 16, true));
-        trains.add(new Train("aaaa", true, new boolean[16], 16, false));
-        trains.add(new Train("nov", true, new boolean[16], 16, true));
+        List<Train> trains = new ArrayList<>();
+        trains.add(new Train("bnn21f86", false, new boolean[16], 16, true, "loko1", 10));
+        trains.add(new Train("aaaa", true, new boolean[16], 16, false, "loko2", 15));
+        trains.add(new Train("nov", true, new boolean[16], 16, true, "loko3", 100));
         trains.get(0).setAuthorized(true);
         trains.get(2).setAuthorized(true);
         areas.add(new ControlArea("1", "full", trains));
-        areas.add(new ControlArea("1", "empty", new ArrayList<Train>()));*/
+        areas.add(new ControlArea("1", "empty", new ArrayList<Train>()));
     }
 
     public Server(String name, int port, boolean status, String about) {
@@ -301,7 +301,7 @@ public class Server {
         tmp.addTrain(newTrain);
     }
 
-    public ArrayList<Train> getTrains() {
+   /* public ArrayList<Train> getTrains() {
         ArrayList<Train> trains = new ArrayList<>();
         trains.add(new Train("bnn21f86", false, new boolean[16], 16, true));
         trains.add(new Train("aaaa", true, new boolean[16], 16, false));
@@ -310,7 +310,7 @@ public class Server {
         trains.get(1).setAuthorized(true);
         trains.get(2).setAuthorized(true);
         return trains;
-    }
+    }*/
 
     public String getStoredStringData() {
         String stringData = this.name + "\t " + this.ipAdr+ " " + this.about;

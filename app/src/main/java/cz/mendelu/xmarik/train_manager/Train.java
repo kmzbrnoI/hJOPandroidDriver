@@ -63,7 +63,7 @@ public class Train {
         }
     }
 
-    public Train(String name, boolean controled, boolean[] function, int speed, boolean direction) {
+    public Train(String name, boolean controled, boolean[] function, int speed, boolean direction, String lokoName, int kmhSpeed) {
         this.name = name;
         this.base = "-;LOK;test;";
         this.controled = controled;
@@ -77,6 +77,8 @@ public class Train {
         this.authorized = false;
         this.statusOk = true;
         functionNames = new ArrayList<>();
+        this.userLokoName = lokoName;
+        this.kmhSpeed = kmhSpeed;
     }
 
     public ArrayList<String> getFunctionNames() {
@@ -167,7 +169,7 @@ public class Train {
         return base;
     }
 
-    public double getKmhSpeed() {
+    public int getKmhSpeed() {
         return kmhSpeed;
     }
 

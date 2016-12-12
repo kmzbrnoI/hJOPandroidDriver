@@ -32,7 +32,6 @@ import java.util.List;
 
 import cz.mendelu.xmarik.train_manager.events.FreeEvent;
 import cz.mendelu.xmarik.train_manager.events.RefuseEvent;
-import cz.mendelu.xmarik.train_manager.events.ReloadEvent;
 import cz.mendelu.xmarik.train_manager.events.TrainReloadEvent;
 
 public class Trains_box extends AppCompatActivity
@@ -312,7 +311,7 @@ public class Trains_box extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_server) {
-            Intent intent = new Intent(this, Servers.class);
+            Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
         } else if (id == R.id.nav_about) {
             Intent intent = new Intent(this, About.class);

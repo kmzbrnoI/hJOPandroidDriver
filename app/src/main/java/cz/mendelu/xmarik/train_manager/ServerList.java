@@ -25,10 +25,10 @@ public class ServerList {
         this.servers = new ArrayList<>();
         this.storedServers = new ArrayList<>();
         //just fot testing
-       /* this.servers.add(new Server("test1","127.1.2.2",1448,false, ""));
+        this.servers.add(new Server("test1","127.1.2.2",1448,false, ""));
         this.storedServers.add(new Server("test2","192.168.2.101",4444,true, ""));
         this.storedServers.add(new Server("test3","192.168.0.114",4444,true, ""));
-        this.storedServers.get(0).setActive(true);*/
+        this.storedServers.get(0).setActive(true);
     }
 
     public static ServerList getInstance() {
@@ -186,6 +186,10 @@ public class ServerList {
                 }
             }
         }
+    }
+
+    public void clearLocalServers() {
+        this.servers = new ArrayList<>();
     }
 
     enum TRAINTYPE {

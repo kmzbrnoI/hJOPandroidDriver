@@ -19,6 +19,7 @@ import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -114,7 +115,14 @@ public class MainActivity extends AppCompatActivity
                 new View.OnClickListener() {
 
                     public void onClick(View view) {
-                        //tady to funguje
+                        ServerList.getInstance().clearLocalServers();
+                        array = ServerList.getInstance().getServersString();
+
+                        lAdapter = new ArrayAdapter<>(context,
+                                android.R.layout.simple_list_item_1, android.R.id.text1, array);
+                        lServers.setAdapter(lAdapter);
+                        lAdapter.notifyDataSetChanged();
+
                         ConnectivityManager connManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
                         NetworkInfo mWifi = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
                         if (mWifi.isConnected()) {
@@ -122,13 +130,13 @@ public class MainActivity extends AppCompatActivity
                             System.out.print("button activated");
                             //udp.run();
                             udp.execute();
-                            Toast.makeText(getApplicationContext(),
-                                    "server discover method done", Toast.LENGTH_LONG)
-                                    .show();
+                            float deg = lButton.getRotation() + 720F;
+                            lButton.animate().rotation(deg).setInterpolator(new AccelerateDecelerateInterpolator());
                         } else Toast.makeText(getApplicationContext(),
                                 "Wifi připojení není dostupné", Toast.LENGTH_LONG)
                                 .show();
-                        dataReload();
+                        float deg = lButton.getRotation() + 360F;
+                        lButton.animate().rotation(deg).setInterpolator(new AccelerateDecelerateInterpolator());
                     }
                 });
         // ListView Item Click Listener
@@ -165,7 +173,9 @@ public class MainActivity extends AppCompatActivity
         lServers.setAdapter(lAdapter);
         lAdapter.notifyDataSetChanged();
         Log.e("reload", "S: reoad done size '" + array.size() + "'");
-        //TODO porovna existujici server a pripadne nastavit hesla
+        Toast.makeText(getApplicationContext(),
+                "vyhledávání serveru skončilo", Toast.LENGTH_LONG)
+                .show();
     }
 
     @Override

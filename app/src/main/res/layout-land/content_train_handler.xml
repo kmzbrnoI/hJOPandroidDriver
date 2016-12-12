@@ -112,7 +112,7 @@
                         <Button
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="stop"
+                            android:text="nouzová stop"
                             android:id="@+id/stopButton1"
                             android:layout_gravity="bottom|right"
                             android:layout_weight="0.51"
@@ -121,7 +121,7 @@
                         <Button
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="idle"
+                            android:text="zastav"
                             android:id="@+id/startButton1"
                             android:layout_gravity="bottom|center"
                             android:layout_weight="0.51"
@@ -263,7 +263,7 @@
                         <Button
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="stop"
+                            android:text="nouzová stop"
                             android:id="@+id/stopButton2"
                             android:layout_gravity="bottom|right"
                             android:layout_weight="0.51"
@@ -272,7 +272,7 @@
                         <Button
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="idle"
+                            android:text="zastav"
                             android:id="@+id/startButton2"
                             android:layout_gravity="bottom|center"
                             android:layout_weight="0.51"

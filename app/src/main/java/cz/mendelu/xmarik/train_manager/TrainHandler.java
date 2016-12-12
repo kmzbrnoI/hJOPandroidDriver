@@ -229,7 +229,7 @@ public class TrainHandler extends AppCompatActivity
                         } else direction1.setText("vzad");
 
                         group1.setChecked(train1.isControled());
-                        kmhSpeed1.setText(Double.toString(train1.getKmhSpeed()) + "km/h");
+                        kmhSpeed1.setText(Integer.toString(train1.getKmhSpeed()) + " km/h");
                         totalManaged.setChecked(train1.getTotalManaged());
 
                         syncStatus(train1, status1);
@@ -270,6 +270,9 @@ public class TrainHandler extends AppCompatActivity
                 public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                     if (train1 != null) {
                         String msg = train1.setTotalManged(b);
+                        if (!b) {
+                            group1.setChecked(false);
+                        }
                         sendNext(msg);
                     }
                 }
@@ -351,6 +354,9 @@ public class TrainHandler extends AppCompatActivity
                     public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                         if (train1 != null) {
                             String msg = train1.setTotalManged(b);
+                            if (!b) {
+                                group2.setChecked(false);
+                            }
                             sendNext(msg);
                         }
                     }
@@ -383,7 +389,7 @@ public class TrainHandler extends AppCompatActivity
                             } else direction2.setText("vzad");
 
                             group2.setChecked(train2.isControled());
-                            kmhSpeed2.setText(Double.toString(train2.getKmhSpeed()) + "km/h");
+                            kmhSpeed2.setText(Integer.toString(train2.getKmhSpeed()) + " km/h");
                             totalManaged.setChecked(train2.getTotalManaged());
 
                             if (train2.getTotalManaged()) {
@@ -700,7 +706,7 @@ public class TrainHandler extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_server) {
-            Intent intent = new Intent(this, Servers.class);
+            Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
         } else if (id == R.id.nav_about) {
             Intent intent = new Intent(this, About.class);

@@ -74,7 +74,7 @@
                     android:text="zobrazovat všechny funkce? (i nepodporované)"
                     android:id="@+id/textView3"
                     android:layout_weight="0.02"
-                    android:layout_gravity="center_vertical|center_horizontal" />
+                    android:layout_gravity="left" />
 
                 <CheckBox
                     android:layout_width="wrap_content"
@@ -92,7 +92,7 @@
                     android:text="automatický přechod mezi obrazovkami?"
                     android:id="@+id/textView8"
                     android:layout_weight="0.02"
-                    android:layout_gravity="center_vertical|center_horizontal" />
+                    android:layout_gravity="left" />
 
                 <CheckBox
                     android:layout_width="wrap_content"
@@ -110,22 +110,33 @@
                     <Button
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="saveButton"
-                        android:id="@+id/saveButton"
-                        android:onClick="save"
-                        android:layout_centerVertical="true"
-                        android:layout_centerHorizontal="true" />
-
-                    <Button
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
                         android:text="vymazat všechna hesla"
                         android:id="@+id/deletPrivateData"
                         android:onClick="deleteAllPrivate"
                         android:elevation="0dp"
-                        android:layout_above="@+id/saveButton"
+                        android:layout_alignParentTop="true"
                         android:layout_centerHorizontal="true"
-                        android:layout_marginBottom="52dp" />
+                        android:layout_marginTop="45dp" />
+
+                    <Button
+                        android:text="Vymazat vše"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/button"
+                        android:layout_alignTop="@+id/deletPrivateData"
+                        android:layout_alignStart="@+id/saveButton"
+                        android:layout_marginTop="51dp" />
+
+                    <Button
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="saveButton"
+                        android:id="@+id/saveButton"
+                        android:onClick="save"
+                        android:layout_below="@+id/button"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="48dp" />
+
                 </RelativeLayout>
             </LinearLayout>
         </ScrollView>
