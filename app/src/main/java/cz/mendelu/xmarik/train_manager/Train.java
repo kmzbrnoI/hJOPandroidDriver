@@ -102,11 +102,14 @@ public class Train {
     }
 
     public String getUserTrainInfo() {
+        String classString = this.lokoClass != null
+                ? ServerList.TRAINTYPE.values()
+                [Integer.parseInt(this.lokoClass)].toString() : "nezadáno";
         return "název: " + this.userLokoName + "\n" +
                 "majitel: " + this.owner + "\n" +
                 "označení: " + this.mark + "\n" +
                 "poznámka: " + this.note + "\n" +
-                "třída: " + ServerList.TRAINTYPE.values()[Integer.parseInt(this.lokoClass)] + "\n" +
+                "třída: " + classString + "\n" +
                 "souprava: " + this.trainSet + "\n";
     }
 

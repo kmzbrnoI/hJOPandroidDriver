@@ -41,6 +41,7 @@ public class TCPClientApplication extends Application {
     }
 
     public static TCPClientApplication startNewServer() {
+
         instance = new TCPClientApplication();
         return instance;
     }
