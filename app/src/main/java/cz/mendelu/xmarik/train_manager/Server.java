@@ -218,7 +218,7 @@ public class Server {
         ArrayList<String> temp = new ArrayList<>();
         if ((areas.size() > 0)) {
             for (ControlArea s : areas) {
-                temp.add(s.getId() + " " + s.getName());
+                temp.add(s.getName());
             }
             if (!temp.isEmpty()) return temp;
         }
