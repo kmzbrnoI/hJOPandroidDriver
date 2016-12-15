@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import org.greenrobot.eventbus.EventBus;
@@ -31,11 +32,11 @@ public class ServerConnector extends Activity {
     private ListView mList;
     private ArrayList<String> arrayList;
     private MyCustomAdapter mAdapter;
-    private TCPClient mTcpClient;
     private Button send;
     private ServerConnector classObject;
     private Server server;
     private boolean tcpOK = false;
+    private ProgressBar progressBar;
 
     public static final MonitorObject  monitor = new MonitorObject();
 
@@ -182,10 +183,12 @@ public class ServerConnector extends Activity {
             Toast.makeText(getApplicationContext(),
                     "Server authorized and connected", Toast.LENGTH_LONG)
                     .show();
+            progressBar.setVisibility(View.GONE);
             Intent intent = new Intent(this, Trains_box.class);
             startActivity(intent);
         } else {
             returnIntent.putExtra("result", "authorization failed");
+            progressBar.setVisibility(View.GONE);
             setResult(RESULT_CANCELED, returnIntent);
             finish();
         }
@@ -240,6 +243,7 @@ public class ServerConnector extends Activity {
                 send.setText("opakovat");
                 arrayList.add(error);
                 mAdapter.notifyDataSetChanged();
+                progressBar.setVisibility(View.GONE);
             }
         });
     }
@@ -309,7 +313,9 @@ public class ServerConnector extends Activity {
         messges[2] = "-;OR-LIST;" + "\n";
         arrayList = new ArrayList<>();
         send = (Button) findViewById(R.id.send_button);
-        //relate the listView from java to the one created in xml
+        progressBar = (ProgressBar) findViewById(R.id.serverLoadBar);
+        progressBar.setVisibility(View.VISIBLE);
+                //relate the listView from java to the one created in xml
         mList = (ListView) findViewById(R.id.list);
         mAdapter = new MyCustomAdapter(this, arrayList);
         mList.setAdapter(mAdapter);
