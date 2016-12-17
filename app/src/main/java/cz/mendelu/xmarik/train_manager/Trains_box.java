@@ -56,12 +56,14 @@ public class Trains_box extends AppCompatActivity
     private ListView trains;
     private ListView ackTrains;
     private List<String> lokos;
+    AlertDialog.Builder connectionDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_trains_box);
 
+        connectionDialog = new AlertDialog.Builder(this);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -140,8 +142,6 @@ public class Trains_box extends AppCompatActivity
                 String itemValue = (String) ackTrains.getItemAtPosition(position);
                 // Show Alert
                 Server s = ServerList.getInstance().getActiveServer();
-
-                //TODO kontextovy menu
                 String lokoString = itemValue.substring(0, itemValue.indexOf("\n"));
                 Train t = s.getTrain(lokoString);
                 sendNext("-;LOK;" + t.getName() + ";RELEASE");
@@ -257,19 +257,40 @@ public class Trains_box extends AppCompatActivity
             Log.e("tcp", "zadáno:" + msg + " \n");
             serverMessage[0] = serverMessage[0] + "{" + msg + "}\n";
             sendNext(serverMessage[0]);
-
             lAdapter.notifyDataSetChanged();
             ackAdapter.notifyDataSetChanged();
             mProgressBar.setVisibility(View.VISIBLE);
             this.sendButton.setText("zrusit");
             this.trains.setClickable(false);
+
+            connectionDialog.setMessage("Probíhá žádost o loko");
+            connectionDialog.setNegativeButton("Zrušit", new DialogInterface.OnClickListener()
+            {
+                public void onClick(DialogInterface dialog, int id)
+                {
+                    dialog.dismiss();
+                }
+            });
+            connectionDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                @Override
+                public void onDismiss(DialogInterface dialogInterface) {
+                    cancelMessage();
+                }
+            });
+            connectionDialog.show();
+
         } else {
-            sendNext("-;LOK;G;CANCEL;\n");
-            mProgressBar.setVisibility(View.GONE);
-            this.sendButton.setText("poslat");
-            this.trains.setClickable(true);
+            cancelMessage();
         }
     }
+
+    private void cancelMessage() {
+        sendNext("-;LOK;G;CANCEL;\n");
+        mProgressBar.setVisibility(View.GONE);
+        this.sendButton.setText("poslat");
+        this.trains.setClickable(true);
+    }
+
 
     private void reloadEventHelper() {
         mProgressBar.setVisibility(View.GONE);

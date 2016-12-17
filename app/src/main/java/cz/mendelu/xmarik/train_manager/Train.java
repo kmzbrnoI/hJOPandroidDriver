@@ -347,6 +347,6 @@ public class Train {
     }
 
     public String nameString() {
-        return this.userLokoName +" \n "+ this.name + " " + this.owner;
+        return this.userLokoName +"\n "+ this.name + " " + this.owner;
     }
 }

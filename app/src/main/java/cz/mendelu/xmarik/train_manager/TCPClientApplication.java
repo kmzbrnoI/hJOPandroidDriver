@@ -9,6 +9,7 @@ import org.greenrobot.eventbus.EventBus;
 import java.util.ArrayList;
 
 import cz.mendelu.xmarik.train_manager.events.AreasEvent;
+import cz.mendelu.xmarik.train_manager.events.ErrorEvent;
 import cz.mendelu.xmarik.train_manager.events.FreeEvent;
 import cz.mendelu.xmarik.train_manager.events.HandShakeEvent;
 import cz.mendelu.xmarik.train_manager.events.RefuseEvent;
@@ -109,7 +110,9 @@ public class TCPClientApplication extends Application {
                 EventBus.getDefault().post(new HandShakeEvent(serverMessage));
             } else if (serverMessage.startsWith("-;LOK;G;AUTH;ok;")) {
                 EventBus.getDefault().post(new HandShakeEvent(serverMessage));
-            } else if (serverMessage.startsWith("-;OR-LIST;")) {
+            } else if (serverMessage.startsWith("-;LOK;G;AUTH;")) {
+                EventBus.getDefault().post(new ErrorEvent(serverMessage));
+            } else if (serverMessage.startsWith("-;OR-LIST;err")) {
                 EventBus.getDefault().post(new AreasEvent(serverMessage));
             } else if (serverMessage.startsWith("-;LOK;") && !auth) {
                 serverMessage = serverMessage.substring("-;LOK;".length());

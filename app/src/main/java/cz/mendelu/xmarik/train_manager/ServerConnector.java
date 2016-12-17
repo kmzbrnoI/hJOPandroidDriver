@@ -230,7 +230,9 @@ public class ServerConnector extends Activity {
 
     @Subscribe
     public void onEvent(ErrorEvent event) {
-        raiseErrorState(event.getMessage());
+        String message = event.getMessage()
+                .substring(event.getMessage().lastIndexOf(";"));
+        raiseErrorState(message);
     }
 
 

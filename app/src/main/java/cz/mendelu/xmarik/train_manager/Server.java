@@ -247,8 +247,9 @@ public class Server {
 
     public String getAreaServerString(String itemValue) {
         String tmp[] = itemValue.split(" ", 2);
-        Log.e("", "prvni: " + tmp[0] + " druha: " + tmp[1]);
-        ControlArea c = this.getArea(tmp[1]);
+        //Log.e("", "prvni: " + tmp[0] + " druha: " + tmp[1]);
+        //ControlArea c = this.getArea(tmp[1]);
+        ControlArea c = this.getArea(itemValue);
         Log.e("", "id: " + c.getId());
         String text = "-;LOK;G;PLEASE;" + c.getId() + ";";
         return text;
