@@ -10,6 +10,10 @@
             android:id="@+id/nav_trains"
             android:icon="@drawable/ic_menu_gallery"
             android:title="Výběr vlaků" />
+        <item
+            android:id="@+id/nav_ack_trains"
+            android:icon="@drawable/ic_train"
+            android:title="uvolnění vlaků" />
 
 
 

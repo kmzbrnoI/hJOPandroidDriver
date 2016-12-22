@@ -148,7 +148,6 @@ public class Server {
             for (Train t : trains) {
                 if (t.getUserLokoName().equals(adr) || t.getName().equals(adr)) return t;
             }
-
         }
         return null;
     }
@@ -316,5 +315,14 @@ public class Server {
     public String getStoredStringData() {
         String stringData = this.name + "\t " + this.ipAdr+ " " + this.about;
         return stringData;
+    }
+
+    public void removeTrain(Train train) {
+        List<Train> trains;
+        for (ControlArea a : areas) {
+            trains = a.getTrains();
+            if (trains.contains(train))
+                trains.remove(train);
+        }
     }
 }

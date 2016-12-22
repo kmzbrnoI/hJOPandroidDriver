@@ -184,6 +184,10 @@ public class Train {
         return userLokoName;
     }
 
+    public String getDisplayLokoName() {
+        return this.userLokoName + " : " + this.mark;
+    }
+
 
     public String setDirection(boolean direction) {
         this.direction = direction;

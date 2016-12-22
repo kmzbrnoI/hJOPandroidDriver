@@ -7,4 +7,6 @@
     <string name="action_settings">Nastavení</string>
     <string name="title_activity_train_handler">TrainHandler</string>
     <string name="title_activity_settings">nastavení</string>
+    <string name="title_activity_ack_trains">Autorizované soupravy</string>
+    <string name="controlArea">Oblasti řízení</string>
 </resources>

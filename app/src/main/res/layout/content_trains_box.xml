@@ -19,16 +19,6 @@
         android:layout_height="match_parent"
         android:weightSum="1">
 
-        <TextView
-            android:text="oblasti řízení"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/areaLabel"
-            tools:text="Oblasti řízení"
-            android:gravity="top|center_vertical|center_horizontal"
-            android:background="@android:color/darker_gray"
-            android:textColor="@android:color/holo_red_dark" />
-
         <ListView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -42,22 +32,6 @@
             android:id="@+id/progressBar"
             android:indeterminate="false"
             tools:visibility="gone" />
-
-        <TextView
-            android:text="přiřaztené soupravy"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/ackquiredLabel"
-            android:background="@android:color/darker_gray"
-            android:textColor="@android:color/holo_red_dark"
-            android:gravity="center_vertical|center_horizontal|center" />
-
-        <ListView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/acquiredTrains"
-            android:choiceMode="singleChoice"
-            android:longClickable="true" />
 
         <TableRow
             android:layout_width="wrap_content"

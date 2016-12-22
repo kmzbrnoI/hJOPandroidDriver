@@ -324,14 +324,35 @@ public class MainActivity extends AppCompatActivity
             Intent intent = new Intent(this, Settings.class);
             startActivity(intent);
         } else if (id == R.id.nav_train_manage) {
-            Intent intent = new Intent(this, TrainHandler.class);
-            startActivity(intent);
+            if(ServerList.getInstance().getActiveServer() == null) {
+                Toast.makeText(getApplicationContext(),
+                        "Nebyl autorizován žádný server",
+                        Toast.LENGTH_LONG).show();
+            } else {
+                Intent intent = new Intent(this, TrainHandler.class);
+                startActivity(intent);
+            }
         } else if (id == R.id.nav_trains) {
-            Intent intent = new Intent(this, Trains_box.class);
-            startActivity(intent);
+            if(ServerList.getInstance().getActiveServer() == null) {
+                Toast.makeText(getApplicationContext(),
+                        "Nebyl autorizován žádný server",
+                        Toast.LENGTH_LONG).show();
+            } else {
+                Intent intent = new Intent(this, Trains_box.class);
+                startActivity(intent);
+            }
         } else if (id == R.id.nav_view) {
             Intent intent = new Intent(this, Servers.class);
             startActivity(intent);
+        }else if (id == R.id.nav_ack_trains) {
+            if(ServerList.getInstance().getActiveServer() == null) {
+                Toast.makeText(getApplicationContext(),
+                        "Nebyl autorizován žádný server",
+                        Toast.LENGTH_LONG).show();
+            } else {
+                Intent intent = new Intent(this, AckTrains.class);
+                startActivity(intent);
+            }
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);

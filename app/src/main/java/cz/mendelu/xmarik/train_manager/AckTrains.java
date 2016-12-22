@@ -36,7 +36,7 @@ import cz.mendelu.xmarik.train_manager.events.FreeEvent;
 import cz.mendelu.xmarik.train_manager.events.RefuseEvent;
 import cz.mendelu.xmarik.train_manager.events.TrainReloadEvent;
 
-public class Trains_box extends AppCompatActivity
+public class AckTrains extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     Server active;
@@ -44,20 +44,19 @@ public class Trains_box extends AppCompatActivity
     String ipAdr;
     String serverResponse = "-;LOK;G:PLEASE-RESP;";
     Context context;
-    ProgressBar mProgressBar;
     ArrayList<String> array;
     ArrayAdapter<String> lAdapter;
     Button sendButton;
-    EditText messageForServer;
     int focused;
     private ListView trains;
+    private ListView ackTrains;
     private List<String> lokos;
     AlertDialog.Builder connectionDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_trains_box);
+        setContentView(R.layout.activity_ack_trains);
 
         connectionDialog = new AlertDialog.Builder(this);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -71,18 +70,15 @@ public class Trains_box extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
         lokos = new LinkedList<>();
         context = this;
-        mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
-        trains = (ListView) findViewById(R.id.nav_trains);
+        trains = (ListView) findViewById(R.id.acquiredTrains);
         sendButton = (Button) findViewById(R.id.trainBoxButton);
-        messageForServer = (EditText) findViewById(R.id.authMessage);
         focused = -1;
         active = ServerList.getInstance().getActiveServer();
         EventBus.getDefault().register(this);
-        mProgressBar.setVisibility(View.GONE);
         if (active != null) {
             port = active.port;
             ipAdr = active.ipAdr;
-            array = active.getUnAuthorizedAreas();
+            array = active.getAuthorizedTrainsString();
         } else {
             array = new ArrayList<>();
             Toast.makeText(getApplicationContext(),
@@ -90,9 +86,11 @@ public class Trains_box extends AppCompatActivity
                     .show();
             sendButton.setEnabled(false);
             trains.setEnabled(false);
+            ackTrains.setEnabled(false);
         }
         lAdapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_list_item_1, android.R.id.text1, array);
+        trains.setAdapter(lAdapter);
         trains.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override
@@ -110,15 +108,6 @@ public class Trains_box extends AppCompatActivity
             }
 
         });
-
-        messageForServer.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean b) {
-                if (messageForServer.isFocused()) messageForServer.setText("");
-            }
-        });
-
-        trains.setAdapter(lAdapter);
     }
 
     private void sendNext(String message) {
@@ -126,7 +115,6 @@ public class Trains_box extends AppCompatActivity
         if (TCPClientApplication.getInstance().getClient() != null) {
             TCPClientApplication.getInstance().getClient().sendMessage(message);
             Log.e("tcp", "odeslano:" + message + " \n");
-            mProgressBar.setVisibility(View.VISIBLE);
         }
     }
 
@@ -134,7 +122,7 @@ public class Trains_box extends AppCompatActivity
     public void onEvent(TrainReloadEvent event) {
         // your implementation
         reloadEventHelper();
-        if (this.sendButton.getText().equals("zrusit")) this.sendButton.setText("poslat");
+        if (this.sendButton.getText().equals("zrusit")) this.sendButton.setText("uvolnit");
         Toast.makeText(getApplicationContext(),
                 "Zářízení autorizováno", Toast.LENGTH_LONG)
                 .show();
@@ -156,9 +144,7 @@ public class Trains_box extends AppCompatActivity
                 });
         AlertDialog alert = builder.create();
         alert.show();
-
-        mProgressBar.setVisibility(View.GONE);
-        this.sendButton.setText("poslat");
+        this.sendButton.setText("uvolnit");
     }
 
     @Subscribe
@@ -167,78 +153,29 @@ public class Trains_box extends AppCompatActivity
                 "loko uvolneno", Toast.LENGTH_LONG)
                 .show();
         reloadEventHelper();
-        this.sendButton.setText("poslat");
+        this.sendButton.setText("uvolnit");
     }
 
-
-    @Override
-    public void onCreateContextMenu(ContextMenu menu, View v,
-                                    ContextMenu.ContextMenuInfo menuInfo) {
-        if (v.getId() == R.id.farServers) {
-            AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
-            String[] menuItems = {"info", "přejít k řízení", "uvolnit"};
-            for (int i = 0; i < menuItems.length; i++) {
-                menu.add(Menu.NONE, i, i, menuItems[i]);
-            }
-        }
-    }
-
-
-    public void messagePressed(View v) {
-        if (this.sendButton.getText().equals("poslat")) {
+    public void release(View v) {
+        if (this.sendButton.getText().equals("uvolnit")) {
             final String itemValue = (String) trains.getItemAtPosition(focused);
             final Server s = ServerList.getInstance().getActiveServer();
-            final String[] serverMessage = {s.getAreaServerString(itemValue)};
-            String msg = messageForServer.getText().toString();
-            Log.e("tcp", "zadáno:" + msg + " \n");
-            serverMessage[0] = serverMessage[0] + "{" + msg + "}\n";
-            sendNext(serverMessage[0]);
-            lAdapter.notifyDataSetChanged();
-            mProgressBar.setVisibility(View.VISIBLE);
-            this.sendButton.setText("zrusit");
-            this.trains.setClickable(false);
+            Train train = s.getTrain(itemValue.substring(0,itemValue.indexOf("\n")));
+            String message = "-;LOK;"+train.getName()+";RELEASE";
+            sendNext(message);
+            ServerList.getInstance()
+                    .getActiveServer().removeTrain(train);
 
-            connectionDialog.setMessage("Probíhá žádost o loko");
-            connectionDialog.setNegativeButton("Zrušit", new DialogInterface.OnClickListener()
-            {
-                public void onClick(DialogInterface dialog, int id)
-                {
-                    dialog.dismiss();
-                }
-            });
-            connectionDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                @Override
-                public void onDismiss(DialogInterface dialogInterface) {
-                    cancelMessage();
-                }
-            });
-            connectionDialog.show();
-
-        } else {
-            cancelMessage();
+            reloadEventHelper();
         }
     }
 
-    private void cancelMessage() {
-        sendNext("-;LOK;G;CANCEL;\n");
-        mProgressBar.setVisibility(View.GONE);
-        this.sendButton.setText("poslat");
-        this.trains.setClickable(true);
-    }
-
-
     private void reloadEventHelper() {
-        mProgressBar.setVisibility(View.GONE);
-        final ArrayList<String> array;
         final ArrayList<String> acquired;
-        array = active.getUnAuthorizedAreas();
         acquired = active.getAuthorizedTrainsString();
+
         final ArrayAdapter<String> lAdapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_list_item_1, android.R.id.text1, array);
-
-        final ArrayAdapter<String> ackAdapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_list_item_1, android.R.id.text1, acquired);
-
         trains.setAdapter(lAdapter);
     }
 
@@ -289,7 +226,7 @@ public class Trains_box extends AppCompatActivity
             Intent intent = new Intent(this, TrainHandler.class);
             startActivity(intent);
 
-        } else if (id == R.id.nav_trains) {
+        } else if (id == R.id.nav_ack_trains) {
             DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
             drawer.closeDrawer(GravityCompat.START);
 
@@ -297,8 +234,8 @@ public class Trains_box extends AppCompatActivity
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
 
-        } else if (id == R.id.nav_ack_trains) {
-            Intent intent = new Intent(this, AckTrains.class);
+        } else if (id == R.id.nav_trains) {
+            Intent intent = new Intent(this, Trains_box.class);
             startActivity(intent);
 
         }

@@ -222,7 +222,7 @@ public class TrainHandler extends AppCompatActivity
                     if (itemValue != null) {
                         train1 = activeServer.getTrain(itemValue);
                         active1 = itemValue;
-                        name1.setText(train1.getUserLokoName());
+                        name1.setText(train1.getDisplayLokoName());
                         speed1.setProgress(train1.getSpeed());
                         direction1.setChecked(train1.isDirection());
 
@@ -382,7 +382,7 @@ public class TrainHandler extends AppCompatActivity
                         if (itemValue != null) {
                             train2 = activeServer.getTrain(itemValue);
                             active2 = itemValue;
-                            name2.setText(train2.getUserLokoName());
+                            name2.setText(train2.getDisplayLokoName());
                             speed2.setProgress(train2.getSpeed());
                             direction2.setChecked(train2.isDirection());
 
@@ -542,7 +542,7 @@ public class TrainHandler extends AppCompatActivity
         update = true;
         if (train1 != null) {
             train1 = activeServer.getTrain(train1.getName());
-            name1.setText(train1.getUserLokoName());
+            name1.setText(train1.getDisplayLokoName());
             if (train1.getSpeed() != speed1.getProgress()) speed1.setProgress(train1.getSpeed());
             direction1.setChecked(train1.isDirection());
             group1.setChecked(managed.contains(train1));
@@ -557,7 +557,7 @@ public class TrainHandler extends AppCompatActivity
         if (landscape) {
             if (train2 != null) {
                 train2 = activeServer.getTrain(train2.getName());
-                name2.setText(train2.getUserLokoName());
+                name2.setText(train2.getDisplayLokoName());
                 speed2.setProgress(train2.getSpeed());
                 direction2.setChecked(train2.isDirection());
                 group2.setChecked(managed.contains(train2));
@@ -738,6 +738,10 @@ public class TrainHandler extends AppCompatActivity
 
         } else if (id == R.id.nav_view) {
             Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
+
+        }else if (id == R.id.nav_ack_trains) {
+            Intent intent = new Intent(this, AckTrains.class);
             startActivity(intent);
 
         }

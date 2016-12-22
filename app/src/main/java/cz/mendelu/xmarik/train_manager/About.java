@@ -11,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 public class About extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -38,6 +39,11 @@ public class About extends AppCompatActivity
         } else {
             super.onBackPressed();
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
     }
 
     @Override
@@ -70,11 +76,23 @@ public class About extends AppCompatActivity
             Intent intent = new Intent(this, Settings.class);
             startActivity(intent);
         } else if (id == R.id.nav_train_manage) {
-            Intent intent = new Intent(this, TrainHandler.class);
-            startActivity(intent);
+            if(ServerList.getInstance().getActiveServer() == null) {
+                Toast.makeText(getApplicationContext(),
+                        "Nebyl autorizován žádný server",
+                        Toast.LENGTH_LONG).show();
+            } else {
+                Intent intent = new Intent(this, TrainHandler.class);
+                startActivity(intent);
+            }
         } else if (id == R.id.nav_trains) {
-            Intent intent = new Intent(this, Trains_box.class);
-            startActivity(intent);
+            if(ServerList.getInstance().getActiveServer() == null) {
+                Toast.makeText(getApplicationContext(),
+                        "Nebyl autorizován žádný server",
+                        Toast.LENGTH_LONG).show();
+            } else {
+                Intent intent = new Intent(this, Trains_box.class);
+                startActivity(intent);
+            }
         } else if (id == R.id.nav_view) {
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
