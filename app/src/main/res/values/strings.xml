@@ -14,4 +14,8 @@
     <string name="DirFor">vpřed</string>
     <string name="DirBack">vzad</string>
     <string name="zastav">Idle</string>
+    <string name="poslat">poslat</string>
+    <string name="poslatZ">Odeslat žádost</string>
+    <string name="žádost">Žádost</string>
+    <string name="zadostOdeslana">Žádost odeslána</string>
 </resources>

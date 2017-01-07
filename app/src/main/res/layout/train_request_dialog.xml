@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content" ><![CDATA[
+
+    />
+
+
+
+    ]]>
+
+    <Button
+        android:id="@+id/cancelButton"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Zrušit"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/dialogMessage"
+        android:layout_alignParentEnd="true"
+        android:textAlignment="center"
+        android:textSize="@android:dimen/notification_large_icon_height" />
+
+    <ProgressBar
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/dialogMessage"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="175dp"
+        android:id="@+id/trainBoxBar" />
+
+</RelativeLayout>

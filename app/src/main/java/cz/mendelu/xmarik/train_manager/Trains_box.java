@@ -1,10 +1,12 @@
 package cz.mendelu.xmarik.train_manager;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -23,6 +25,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.greenrobot.eventbus.EventBus;
@@ -51,13 +54,32 @@ public class Trains_box extends AppCompatActivity
     EditText messageForServer;
     int focused;
     private ListView trains;
-    private List<String> lokos;
     AlertDialog.Builder connectionDialog;
+    final Dialog dialog = new Dialog(this);
+    TextView dialogMessage;
+    Button dialogButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_trains_box);
+
+        dialog.setContentView(R.layout.train_request_dialog);
+        dialog.setTitle(R.string.žádost);
+        dialogMessage = (TextView) dialog.findViewById(R.id.dialogMessage);
+        dialogButton = (Button) dialog.findViewById(R.id.cancelButton);
+        dialogButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialogInterface) {
+                cancelMessage();
+            }
+        });
 
         connectionDialog = new AlertDialog.Builder(this);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -69,7 +91,6 @@ public class Trains_box extends AppCompatActivity
         toggle.syncState();
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-        lokos = new LinkedList<>();
         context = this;
         mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
         trains = (ListView) findViewById(R.id.nav_trains);
@@ -99,7 +120,6 @@ public class Trains_box extends AppCompatActivity
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
                 // ListView Clicked item index
-                int itemPosition = position;
                 final String[] srt = new String[1];
                 for (int i = 0; i < array.size(); i++) {
                     if (i != position) {
@@ -134,19 +154,20 @@ public class Trains_box extends AppCompatActivity
     public void onEvent(TrainReloadEvent event) {
         // your implementation
         reloadEventHelper();
-        if (this.sendButton.getText().equals("zrusit")) this.sendButton.setText("Odeslat žádost");
+        if (this.sendButton.getText().equals("zrusit")) this.sendButton.setText(R.string.poslatZ);
         Toast.makeText(getApplicationContext(),
                 "přijata nová lokomotíva", Toast.LENGTH_LONG)
                 .show();
         //TODO podminka s automatickym prechodem
         EventBus.getDefault().unregister(this);
+        dialog.dismiss();
         Intent intent = new Intent(this, TrainHandler.class);
         startActivity(intent);
     }
 
     @Subscribe
     public void onEvent(RefuseEvent event) {
-        //connectionDialog.dismiss();
+        dialog.dismiss();
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage(event.getMessage())
                 .setCancelable(false)
@@ -159,7 +180,7 @@ public class Trains_box extends AppCompatActivity
         alert.show();
 
         mProgressBar.setVisibility(View.GONE);
-        this.sendButton.setText("poslat");
+        this.sendButton.setText(R.string.poslatZ);
     }
 
     @Subscribe
@@ -168,7 +189,7 @@ public class Trains_box extends AppCompatActivity
                 "loko uvolneno", Toast.LENGTH_LONG)
                 .show();
         reloadEventHelper();
-        this.sendButton.setText("Odeslat žádost");
+        this.sendButton.setText(R.string.poslatZ);
     }
 
 
@@ -189,7 +210,7 @@ public class Trains_box extends AppCompatActivity
      * @param v
      */
     public void messagePressed(View v) {
-        if (this.sendButton.getText().equals("Odeslat žádost")) {
+        if (this.sendButton.getText().equals(R.string.poslatZ)) {
             if (trains.getItemAtPosition(focused)!=null) {
                 final String itemValue = (String) trains.getItemAtPosition(focused);
                 final Server s = ServerList.getInstance().getActiveServer();
@@ -203,21 +224,8 @@ public class Trains_box extends AppCompatActivity
                 this.sendButton.setText("zrusit");
                 this.trains.setClickable(false);
 
-                connectionDialog.setMessage("Probíhá žádost o loko");
-                connectionDialog.setNegativeButton("Zrušit", new DialogInterface.OnClickListener()
-                {
-                    public void onClick(DialogInterface dialog, int id)
-                    {
-                        dialog.dismiss();
-                    }
-                });
-                connectionDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                    @Override
-                    public void onDismiss(DialogInterface dialogInterface) {
-                        cancelMessage();
-                    }
-                });
-                connectionDialog.show();
+                dialogMessage.setText(R.string.zadostOdeslana);
+                dialog.show();
             }
         } else {
             cancelMessage();
@@ -227,7 +235,7 @@ public class Trains_box extends AppCompatActivity
     private void cancelMessage() {
         sendNext("-;LOK;G;CANCEL;\n");
         mProgressBar.setVisibility(View.GONE);
-        this.sendButton.setText("Odeslat žádost");
+        this.sendButton.setText(R.string.poslatZ);
         this.trains.setClickable(true);
     }
 
@@ -255,11 +263,12 @@ public class Trains_box extends AppCompatActivity
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
             if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            EventBus.getDefault().unregister(this);
-            super.onBackPressed();
-        }
+                drawer.closeDrawer(GravityCompat.START);
+            } else {
+                EventBus.getDefault().unregister(this);
+                dialog.dismiss();
+                super.onBackPressed();
+            }
     }
 
     @Override
@@ -276,7 +285,7 @@ public class Trains_box extends AppCompatActivity
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
@@ -316,6 +325,7 @@ public class Trains_box extends AppCompatActivity
     @Override
     public void onPause() {
         super.onPause();
+        dialog.dismiss();
         if(EventBus.getDefault().isRegistered(this))EventBus.getDefault().unregister(this);
     }
 
@@ -331,4 +341,5 @@ public class Trains_box extends AppCompatActivity
         super.onDestroy();
         if(EventBus.getDefault().isRegistered(this))EventBus.getDefault().unregister(this);
     }
+
 }
