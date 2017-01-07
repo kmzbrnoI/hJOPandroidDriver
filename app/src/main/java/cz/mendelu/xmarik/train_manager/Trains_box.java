@@ -55,7 +55,7 @@ public class Trains_box extends AppCompatActivity
     int focused;
     private ListView trains;
     AlertDialog.Builder connectionDialog;
-    final Dialog dialog = new Dialog(this);
+    Dialog dialog;
     TextView dialogMessage;
     Button dialogButton;
 
@@ -63,7 +63,7 @@ public class Trains_box extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_trains_box);
-
+        dialog = new Dialog(this);
         dialog.setContentView(R.layout.train_request_dialog);
         dialog.setTitle(R.string.žádost);
         dialogMessage = (TextView) dialog.findViewById(R.id.dialogMessage);
@@ -218,6 +218,7 @@ public class Trains_box extends AppCompatActivity
                 String msg = messageForServer.getText().toString();
                 Log.e("tcp", "zadáno:" + msg + " \n");
                 serverMessage = serverMessage + "{" + msg + "}\n";
+                dialog.setTitle(getString(R.string.dialogAreaTitle) + msg);
                 sendNext(serverMessage);
                 lAdapter.notifyDataSetChanged();
                 mProgressBar.setVisibility(View.VISIBLE);

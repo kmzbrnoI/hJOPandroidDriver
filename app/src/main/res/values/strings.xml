@@ -18,4 +18,6 @@
     <string name="poslatZ">Odeslat žádost</string>
     <string name="žádost">Žádost</string>
     <string name="zadostOdeslana">Žádost odeslána</string>
+    <string name="title_activity_main">vyberte server</string>
+    <string name="dialogAreaTitle">"Probíhá žádost do oblasti: "</string>
 </resources>
