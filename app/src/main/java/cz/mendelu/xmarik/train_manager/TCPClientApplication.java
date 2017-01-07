@@ -28,6 +28,7 @@ public class TCPClientApplication extends Application {
     Server server;
     private String tCPAnswer;
     private ArrayList<TCPAnswer> serverResponses;
+    private ConnectTask connectTask;
 
     TCPClientApplication() {
         serverResponses = new ArrayList<>();
@@ -64,7 +65,8 @@ public class TCPClientApplication extends Application {
     }
 
     public void start() {
-        new connectTask().execute();
+        connectTask =new ConnectTask();
+        connectTask.execute();
     }
 
     public void sendToServer(String message) {
@@ -74,8 +76,13 @@ public class TCPClientApplication extends Application {
             mTcpClient.sendMessage(message);
         }
     }
+//TODO dokoncit
+    public void stop() {
+        mTcpClient.stopClient();
+        connectTask.cancel(true);
+    }
 
-    public class connectTask extends AsyncTask<String, String, TCPClient> {
+    public class ConnectTask extends AsyncTask<String, String, TCPClient> {
 
         @Override
         protected TCPClient doInBackground(String... message) {
@@ -110,9 +117,9 @@ public class TCPClientApplication extends Application {
                 EventBus.getDefault().post(new HandShakeEvent(serverMessage));
             } else if (serverMessage.startsWith("-;LOK;G;AUTH;ok;")) {
                 EventBus.getDefault().post(new HandShakeEvent(serverMessage));
-            } else if (serverMessage.startsWith("-;LOK;G;AUTH;")) {
+            } else if (serverMessage.startsWith("-;LOK;G;AUTH;err")) {
                 EventBus.getDefault().post(new ErrorEvent(serverMessage));
-            } else if (serverMessage.startsWith("-;OR-LIST;err")) {
+            } else if (serverMessage.startsWith("-;OR-LIST;")) {
                 EventBus.getDefault().post(new AreasEvent(serverMessage));
             } else if (serverMessage.startsWith("-;LOK;") && !auth) {
                 serverMessage = serverMessage.substring("-;LOK;".length());
@@ -142,10 +149,6 @@ public class TCPClientApplication extends Application {
                                 }
                                 break;
                             case "total":
-                                //TODO pri testovani spadlo, prislo
-                                /*4310;AUTH;total;{413.0|Mendelova univerzita|413.0|{}|4310|0|804310|0|00000000000000000000000000000|0|0|1|Bs|||{{světla};;{zvuk};;;{píšťala dlouhá};{zvon};{spřáhlo};;;;;;;;;;;;;;;;;;;;;;}|}'
-                                * received: -;LOK;4310;F;0-28;10000000000000000000000000000;
-                                * */
                                 tmp = HelpServices.trainParseHelper(serverMessage);
                                 if (tmp.length > 3) {
                                     lokoData = tmp[3].split("\\|");
@@ -169,7 +172,7 @@ public class TCPClientApplication extends Application {
                                 EventBus.getDefault().post(new ReloadEvent(serverMessage));
                                 break;
                             case "release":
-                                t.setAuthorized(false);
+                                //t.setAuthorized(false);
                                 EventBus.getDefault().post(new FreeEvent(serverMessage));
                                 break;
                             case "stolen":
@@ -201,7 +204,7 @@ public class TCPClientApplication extends Application {
                         train.setErr(null);
                         EventBus.getDefault().post(new ReloadEvent(serverMessage));
                     } else if (tmp[1].equals("PLEASE-RESP")) {
-                        if (tmp[2].equals("ERR"))
+                        if (tmp[2].equals("ERR")||tmp[2].equals("err"))
                             EventBus.getDefault().post(new RefuseEvent(tmp[3]));
                     } else if (tmp[1].equals("F")) {
                         String borders[] = tmp[2].split("-");

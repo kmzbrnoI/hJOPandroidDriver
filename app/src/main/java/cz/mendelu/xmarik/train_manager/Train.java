@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 /**
  * Created by ja on 29. 5. 2016.
+ * Class for train object description
  */
 public class Train {
     public boolean statusOk;
@@ -26,6 +27,16 @@ public class Train {
     private String trainSet;
     private ArrayList<String> functionNames;
 
+    /**
+     * test constructor
+     * is not necessary in other cases
+     * @param name
+     * @param controled
+     * @param function
+     * @param speed
+     * @param direction
+     * @param id
+     */
     public Train(String name, boolean controled, boolean[] function, int speed, boolean direction, String id) {
         this.name = name;
         this.base = "-;LOK;" + id;
@@ -42,6 +53,18 @@ public class Train {
         functionNames = new ArrayList<>();
     }
 
+    /**
+     *
+     * @param s nazev
+     * @param s1 majitel
+     * @param s2 oznaceni
+     * @param s3 poznamka
+     * @param s4 adresa
+     * @param s5 trida
+     * @param s6 souprava
+     * @param s7 stanoviste
+     * @param s8 funkce
+     */
     //string nazev|majitel|oznaceni|poznamka|adresa|trida|souprava|stanovisteA|funkce
     public Train(String s, String s1, String s2, String s3, String s4, String s5, String s6, String s7, String s8) {
         this.userLokoName = s;
@@ -63,6 +86,16 @@ public class Train {
         }
     }
 
+    /**
+     * other test costructor do not use at normal application work
+     * @param name
+     * @param controled
+     * @param function
+     * @param speed
+     * @param direction
+     * @param lokoName
+     * @param kmhSpeed
+     */
     public Train(String name, boolean controled, boolean[] function, int speed, boolean direction, String lokoName, int kmhSpeed) {
         this.name = name;
         this.base = "-;LOK;test;";
@@ -79,6 +112,7 @@ public class Train {
         functionNames = new ArrayList<>();
         this.userLokoName = lokoName;
         this.kmhSpeed = kmhSpeed;
+        this.mark = "zančení";
     }
 
     public ArrayList<String> getFunctionNames() {
@@ -176,15 +210,15 @@ public class Train {
         return kmhSpeed;
     }
 
-    public void setKmhSpeed(int kmhSpeed) {
+    void setKmhSpeed(int kmhSpeed) {
         this.kmhSpeed = kmhSpeed;
     }
 
-    public String getUserLokoName() {
+    String getUserLokoName() {
         return userLokoName;
     }
 
-    public String getDisplayLokoName() {
+    String getDisplayLokoName() {
         return this.userLokoName + " : " + this.mark;
     }
 

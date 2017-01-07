@@ -15,6 +15,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -179,11 +180,12 @@ public class TrainHandler extends AppCompatActivity
                 }
             });
 
-            direction1.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+            direction1.setOnClickListener(new CompoundButton.OnClickListener() {
+                @Override
+                public void onClick(View view) {
                     if(!update) {
                         if (direction1.isChecked()) {
-                            direction1.setText("vpřed");
+                            direction1.setText(R.string.DirFor);
                         } else direction1.setText("vzad");
                         if (managed.contains(train1)) {
                             for (Train s : managed) {
@@ -197,8 +199,31 @@ public class TrainHandler extends AppCompatActivity
                             }
                         }
                     }
-
                 }
+            });
+
+            direction1.setOnGenericMotionListener(new CompoundButton.OnGenericMotionListener() {
+                @Override
+                public boolean onGenericMotion(View view, MotionEvent motionEvent) {
+                    if(!update) {
+                        if (direction1.isChecked()) {
+                            direction1.setText(R.string.DirFor);
+                        } else direction1.setText("vzad");
+                        if (managed.contains(train1)) {
+                            for (Train s : managed) {
+                                String text = s.changeDirection();
+                                sendNext(text);
+                            }
+                        } else {
+                            if (train1 != null) {
+                                String text = train1.changeDirection();
+                                sendNext(text);
+                            }
+                        }
+                    }
+                    return false;
+                }
+
             });
 
             spinner1.setOnItemSelectedListener(new Spinner.OnItemSelectedListener() {
@@ -227,7 +252,7 @@ public class TrainHandler extends AppCompatActivity
                         direction1.setChecked(train1.isDirection());
 
                         if (direction1.isChecked()) {
-                            direction1.setText("vpřed");
+                            direction1.setText(R.string.DirFor);
                         } else direction1.setText("vzad");
 
                         group1.setChecked(train1.isControled());
@@ -258,10 +283,13 @@ public class TrainHandler extends AppCompatActivity
                 public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                     if (train1 != null)
                         if (b) {
-                            managed.add(train1);
-                            train1.setControled(true);
+                            if(!managed.contains(train1)) {
+                                managed.add(train1);
+                                train1.setControled(true);
+                            }
                         } else {
                             train1.setControled(false);
+                            group1.setChecked(false);
                             managed.remove(train1);
                         }
                 }
@@ -387,8 +415,8 @@ public class TrainHandler extends AppCompatActivity
                             direction2.setChecked(train2.isDirection());
 
                             if (direction2.isChecked()) {
-                                direction2.setText("vpřed");
-                            } else direction2.setText("vzad");
+                                direction2.setText(R.string.DirFor);
+                            } else direction2.setText(R.string.DirBack);
 
                             group2.setChecked(train2.isControled());
                             kmhSpeed2.setText(Integer.toString(train2.getKmhSpeed()) + " km/h");
@@ -416,8 +444,10 @@ public class TrainHandler extends AppCompatActivity
                     public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                         if (train2 != null)
                             if (b) {
-                                managed.add(train2);
-                                train2.setControled(true);
+                                if (!managed.contains(train2)) {
+                                    managed.add(train2);
+                                    train2.setControled(true);
+                                }
                             } else {
                                 train2.setControled(false);
                                 managed.remove(train2);
@@ -434,11 +464,11 @@ public class TrainHandler extends AppCompatActivity
         if(!update)
             if (direction == 1) {
                 if (direction1.isChecked()) {
-                    direction1.setText("vpřed");
+                    direction1.setText(R.string.DirFor);
                 } else direction1.setText("vzad");
             }else {
                 if (direction2.isChecked()) {
-                    direction2.setText("vpřed");
+                    direction2.setText(R.string.DirFor);
                 } else direction2.setText("vzad");
             }
     }
@@ -469,8 +499,7 @@ public class TrainHandler extends AppCompatActivity
         if (train1 != null)
             if (managed.contains(train1)) {
                 for (Train s : managed) {
-                    Train t = s;
-                    String text = t.emergencyStop();
+                    String text = s.emergencyStop();
                     sendNext(text);
                 }
             } else {
@@ -546,7 +575,7 @@ public class TrainHandler extends AppCompatActivity
             if (train1.getSpeed() != speed1.getProgress()) speed1.setProgress(train1.getSpeed());
             direction1.setChecked(train1.isDirection());
             group1.setChecked(managed.contains(train1));
-            kmhSpeed1.setText(Double.toString(train1.getKmhSpeed()) + "km/h");
+            kmhSpeed1.setText(Integer.toString(train1.getKmhSpeed()) + " km/h");
             totalManaged.setChecked(train1.getTotalManaged());
 
             setDirectionText(1);
@@ -561,7 +590,7 @@ public class TrainHandler extends AppCompatActivity
                 speed2.setProgress(train2.getSpeed());
                 direction2.setChecked(train2.isDirection());
                 group2.setChecked(managed.contains(train2));
-                kmhSpeed2.setText(Double.toString(train2.getKmhSpeed()));
+                kmhSpeed2.setText(Integer.toString(train2.getKmhSpeed())+" km/h");
                 totalManaged2.setChecked(train2.getTotalManaged());
 
                 setDirectionText(2);
@@ -704,9 +733,6 @@ public class TrainHandler extends AppCompatActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
 
         return super.onOptionsItemSelected(item);
     }
@@ -779,6 +805,27 @@ public class TrainHandler extends AppCompatActivity
         } else {
             stopTrains();
             super.onBackPressed();
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (spinner1 != null) {
+            array = activeServer.getTrainString();
+
+            ArrayAdapter<String> lAdapter = new ArrayAdapter<String>(this,
+                    android.R.layout.simple_list_item_1, android.R.id.text1, array);
+
+            spinner1.setAdapter(lAdapter);
+        }
+        if (spinner2 != null) {
+            array = activeServer.getTrainString();
+
+            ArrayAdapter<String> lAdapter = new ArrayAdapter<String>(this,
+                    android.R.layout.simple_list_item_1, android.R.id.text1, array);
+
+            spinner2.setAdapter(lAdapter);
         }
     }
 

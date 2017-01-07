@@ -47,12 +47,16 @@ public class TCPClient {
      * @param message text entered by client
      */
     public void sendMessage(String message) {
+        Log.e("", "odeslano:" + message);
         if (out != null && !out.checkError()) {
             out.println(message);
             out.flush();
         }
     }
 
+    /**
+     * close tcp klient
+     */
     public void stopClient() {
         mRun = false;
         if (socket != null) try {

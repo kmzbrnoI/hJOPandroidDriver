@@ -103,8 +103,8 @@ public class Trains_box extends AppCompatActivity
                 final String[] srt = new String[1];
                 for (int i = 0; i < array.size(); i++) {
                     if (i != position) {
-                        trains.getChildAt(i).setBackgroundColor(Color.WHITE);
-                    } else trains.getChildAt(i).setBackgroundColor(Color.CYAN);
+                        trains.getChildAt(i).setBackgroundColor(Color.BLUE);
+                    } else trains.getChildAt(i).setBackgroundColor(Color.argb(250,250,250,250));
                 }
                 focused = position;
             }
@@ -134,9 +134,9 @@ public class Trains_box extends AppCompatActivity
     public void onEvent(TrainReloadEvent event) {
         // your implementation
         reloadEventHelper();
-        if (this.sendButton.getText().equals("zrusit")) this.sendButton.setText("poslat");
+        if (this.sendButton.getText().equals("zrusit")) this.sendButton.setText("Odeslat žádost");
         Toast.makeText(getApplicationContext(),
-                "Zářízení autorizováno", Toast.LENGTH_LONG)
+                "přijata nová lokomotíva", Toast.LENGTH_LONG)
                 .show();
         //TODO podminka s automatickym prechodem
         EventBus.getDefault().unregister(this);
@@ -146,6 +146,7 @@ public class Trains_box extends AppCompatActivity
 
     @Subscribe
     public void onEvent(RefuseEvent event) {
+        //connectionDialog.dismiss();
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage(event.getMessage())
                 .setCancelable(false)
@@ -167,7 +168,7 @@ public class Trains_box extends AppCompatActivity
                 "loko uvolneno", Toast.LENGTH_LONG)
                 .show();
         reloadEventHelper();
-        this.sendButton.setText("poslat");
+        this.sendButton.setText("Odeslat žádost");
     }
 
 
@@ -183,37 +184,41 @@ public class Trains_box extends AppCompatActivity
         }
     }
 
-
+    /**
+     * method for handl send button event pressed
+     * @param v
+     */
     public void messagePressed(View v) {
-        if (this.sendButton.getText().equals("poslat")) {
-            final String itemValue = (String) trains.getItemAtPosition(focused);
-            final Server s = ServerList.getInstance().getActiveServer();
-            final String[] serverMessage = {s.getAreaServerString(itemValue)};
-            String msg = messageForServer.getText().toString();
-            Log.e("tcp", "zadáno:" + msg + " \n");
-            serverMessage[0] = serverMessage[0] + "{" + msg + "}\n";
-            sendNext(serverMessage[0]);
-            lAdapter.notifyDataSetChanged();
-            mProgressBar.setVisibility(View.VISIBLE);
-            this.sendButton.setText("zrusit");
-            this.trains.setClickable(false);
+        if (this.sendButton.getText().equals("Odeslat žádost")) {
+            if (trains.getItemAtPosition(focused)!=null) {
+                final String itemValue = (String) trains.getItemAtPosition(focused);
+                final Server s = ServerList.getInstance().getActiveServer();
+                String serverMessage = s.getAreaServerString(itemValue);
+                String msg = messageForServer.getText().toString();
+                Log.e("tcp", "zadáno:" + msg + " \n");
+                serverMessage = serverMessage + "{" + msg + "}\n";
+                sendNext(serverMessage);
+                lAdapter.notifyDataSetChanged();
+                mProgressBar.setVisibility(View.VISIBLE);
+                this.sendButton.setText("zrusit");
+                this.trains.setClickable(false);
 
-            connectionDialog.setMessage("Probíhá žádost o loko");
-            connectionDialog.setNegativeButton("Zrušit", new DialogInterface.OnClickListener()
-            {
-                public void onClick(DialogInterface dialog, int id)
+                connectionDialog.setMessage("Probíhá žádost o loko");
+                connectionDialog.setNegativeButton("Zrušit", new DialogInterface.OnClickListener()
                 {
-                    dialog.dismiss();
-                }
-            });
-            connectionDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                @Override
-                public void onDismiss(DialogInterface dialogInterface) {
-                    cancelMessage();
-                }
-            });
-            connectionDialog.show();
-
+                    public void onClick(DialogInterface dialog, int id)
+                    {
+                        dialog.dismiss();
+                    }
+                });
+                connectionDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                    @Override
+                    public void onDismiss(DialogInterface dialogInterface) {
+                        cancelMessage();
+                    }
+                });
+                connectionDialog.show();
+            }
         } else {
             cancelMessage();
         }
@@ -222,11 +227,15 @@ public class Trains_box extends AppCompatActivity
     private void cancelMessage() {
         sendNext("-;LOK;G;CANCEL;\n");
         mProgressBar.setVisibility(View.GONE);
-        this.sendButton.setText("poslat");
+        this.sendButton.setText("Odeslat žádost");
         this.trains.setClickable(true);
     }
 
 
+    /**
+     * when there is new loko in server answer, this method will be called
+     * purpose is reload all list adapter and make progress bar invisible
+     */
     private void reloadEventHelper() {
         mProgressBar.setVisibility(View.GONE);
         final ArrayList<String> array;
@@ -261,9 +270,6 @@ public class Trains_box extends AppCompatActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
 
         return super.onOptionsItemSelected(item);
     }
@@ -316,6 +322,7 @@ public class Trains_box extends AppCompatActivity
     @Override
     public void onResume() {
         super.onResume();
+        //connectionDialog.dismiss();
         if(!EventBus.getDefault().isRegistered(this))EventBus.getDefault().register(this);
     }
 

@@ -74,7 +74,6 @@ public class MainActivity extends AppCompatActivity
         if (mWifi.isConnected()) {
             UdpDiscover udp = new UdpDiscover(context, port, this);
             System.out.print("button activated");
-            //udp.run();
             udp.execute();
             this.lButton.setClickable(false);
             Toast.makeText(getApplicationContext(),
@@ -156,6 +155,10 @@ public class MainActivity extends AppCompatActivity
         });
     }
 
+    /**
+     * metoda vyvolaná pokud je nalezen server na lokální síti
+     * slouží k znovu načtení dat
+     */
     public void dataReload() {
         lButton.setClickable(true);
         ServerList serverList = ServerList.getInstance();
@@ -192,6 +195,12 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    /**
+     * kontextové menu zobrazené pří dlouhém stisku na položku uložených serverů
+     * pořadí vybraného serveru je zjišťováno díky indexu prvku, který událost vyvolal
+     * @param item
+     * @return
+     */
     @Override
     public boolean onContextItemSelected(MenuItem item) {
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
@@ -251,6 +260,13 @@ public class MainActivity extends AppCompatActivity
         startActivityForResult(intent, 2);
     }
 
+    /**
+     * metoda je vyvolána pokud je ukončena aktivita, která byla vyvolána pro výsledek
+     * metoda slouží k obsloužení výsledku
+     * @param requestCode číslo pro identifikaci volní (určí o kterou aktivitu se jedná)
+     * @param resultCode hodnota vyjadřující zda aktivita zkončila úspěchem či nikoli
+     * @param data případné návratové hodnoty
+     */
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == 1) {
             array1 = ServerList.getInstance().getStoredServersString();
@@ -303,12 +319,15 @@ public class MainActivity extends AppCompatActivity
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
+
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Metoda sloužící k obsluze hambuger menu
+     * @param item
+     * @return
+     */
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -449,5 +468,5 @@ public class MainActivity extends AppCompatActivity
                 "servery byly smazány",
                 Toast.LENGTH_LONG).show();
     }
-    //TODO dodelat nacteni save veci
+
 }

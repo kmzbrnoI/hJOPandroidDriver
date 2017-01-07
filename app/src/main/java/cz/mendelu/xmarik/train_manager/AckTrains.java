@@ -101,8 +101,8 @@ public class AckTrains extends AppCompatActivity
                 final String[] srt = new String[1];
                 for (int i = 0; i < array.size(); i++) {
                     if (i != position) {
-                        trains.getChildAt(i).setBackgroundColor(Color.WHITE);
-                    } else trains.getChildAt(i).setBackgroundColor(Color.CYAN);
+                        trains.getChildAt(i).setBackgroundColor(Color.argb(250,250,250,250));
+                    } else trains.getChildAt(i).setBackgroundColor(Color.BLUE);
                 }
                 focused = position;
             }
@@ -157,7 +157,7 @@ public class AckTrains extends AppCompatActivity
     }
 
     public void release(View v) {
-        if (this.sendButton.getText().equals("uvolnit")) {
+        if ( trains.getItemAtPosition(focused) !=null ) {
             final String itemValue = (String) trains.getItemAtPosition(focused);
             final Server s = ServerList.getInstance().getActiveServer();
             Train train = s.getTrain(itemValue.substring(0,itemValue.indexOf("\n")));
@@ -174,7 +174,7 @@ public class AckTrains extends AppCompatActivity
         final ArrayList<String> acquired;
         acquired = active.getAuthorizedTrainsString();
 
-        final ArrayAdapter<String> lAdapter = new ArrayAdapter<String>(this,
+        lAdapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_list_item_1, android.R.id.text1, acquired);
         trains.setAdapter(lAdapter);
     }
@@ -196,12 +196,6 @@ public class AckTrains extends AppCompatActivity
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -254,6 +248,12 @@ public class AckTrains extends AppCompatActivity
     public void onResume() {
         super.onResume();
         if(!EventBus.getDefault().isRegistered(this))EventBus.getDefault().register(this);
+        if(lAdapter != null) {
+            array = active.getAuthorizedTrainsString();
+            lAdapter = new ArrayAdapter<>(this,
+                    android.R.layout.simple_list_item_1, android.R.id.text1, array);
+            trains.setAdapter(lAdapter);
+        }
     }
 
     @Override

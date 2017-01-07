@@ -7,6 +7,7 @@ import java.util.Set;
 
 /**
  * Created by ja on 15. 6. 2016.
+ * Class for in memmory store servers, during run
  */
 public class ServerList {
 
@@ -188,12 +189,15 @@ public class ServerList {
         }
     }
 
-    public void clearLocalServers() {
+    void clearLocalServers() {
         this.servers = new ArrayList<>();
     }
 
+    /**
+     * enum type for loko engine
+     */
     enum TRAINTYPE {
-        PARNI, DIESEL, MOTOROVÁ, ELEKTRICKÁ
+        parní, dieslová, motorová, elektrická
     }
 
 }

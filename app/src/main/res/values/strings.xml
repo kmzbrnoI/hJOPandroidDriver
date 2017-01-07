@@ -5,8 +5,13 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="action_settings">Nastavení</string>
-    <string name="title_activity_train_handler">TrainHandler</string>
-    <string name="title_activity_settings">nastavení</string>
+    <string name="title_activity_train_handler">Řízení lokomotívy</string>
+    <string name="title_activity_settings">Nastavení</string>
     <string name="title_activity_ack_trains">Autorizované soupravy</string>
-    <string name="controlArea">Oblasti řízení</string>
+    <string name="controlArea">Žádost oblasti řízení</string>
+    <string name="multitrakce">Multitrakce</string>
+    <string name="total">Ruční ř.</string>
+    <string name="DirFor">vpřed</string>
+    <string name="DirBack">vzad</string>
+    <string name="zastav">Idle</string>
 </resources>

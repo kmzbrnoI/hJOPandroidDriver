@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -44,6 +46,13 @@ public class ServerConnector extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_server_connector);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if(EventBus.getDefault().isRegistered(this))EventBus.getDefault().unregister(this);
+        TCPClientApplication.getInstance().stop();
+        super.onBackPressed();
     }
 
     public void setData(String name, String tmpPass, boolean save) {
@@ -172,7 +181,7 @@ public class ServerConnector extends Activity {
         // your implementation
         Log.e("", "Area event : " + event.getMessage());
         addControlAreas(event.getMessage().substring("-;OR-LIST;".length()));
-        arrayList.add("Data načteny, aktivace serveru dokončena");
+        arrayList.add("Data načtena, aktivace serveru dokončena");
         Intent returnIntent = new Intent();
         //TODO dodelat nejakou chybu
         server.setTcpClient(TCPClientApplication.getInstance().getClient());

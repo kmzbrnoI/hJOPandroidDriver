@@ -47,18 +47,29 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <EditText
+            <TextView
+                android:text="Volitelná zpráva pro dispečera"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="textPersonName"
-                android:text="Name"
+                android:id="@+id/textView11"
+                android:layout_weight="1" />
+
+            <EditText
+                android:inputType="textMultiLine"
+                android:layout_height="wrap_content"
                 android:ems="10"
+                android:lines="5"
+                android:minLines="3"
+                android:gravity="top|left"
+                android:maxLines="6"
                 android:layout_weight="1"
                 android:id="@+id/authMessage"
+                android:layout_width="fill_parent"
+                android:scrollbars="vertical"
                 android:editable="true" />
 
             <Button
-                android:text="poslat"
+                android:text="Odeslat žádost"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/trainBoxButton"

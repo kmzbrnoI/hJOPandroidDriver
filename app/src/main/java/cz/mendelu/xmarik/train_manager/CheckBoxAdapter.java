@@ -62,7 +62,7 @@ public class CheckBoxAdapter extends ArrayAdapter<TrainFunction> {
             holder.code.setText(tmpName);
         } else if (names == 3) {
 
-            holder.code.setText(tmpName != null ?
+            holder.code.setText(tmpName != null && !tmpName.equals("") ?
                     function.getCode() + ": " + tmpName : function.getCode());
         }
         holder.name.setText("");
