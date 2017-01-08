@@ -20,4 +20,9 @@
     <string name="zadostOdeslana">Žádost odeslána</string>
     <string name="title_activity_main">vyberte server</string>
     <string name="dialogAreaTitle">"Probíhá žádost do oblasti: "</string>
+    <string name="nedostupnaWifi">Wifi připojení není dostupné</string>
+    <string name="autorizaceOk">Server autorizován a připojen</string>
+    <string name="autorizaceErr">Nezdařilo se připojit k serveru</string>
+    <string name="neniServer">Nebyl autorizován žádný server</string>
+    <string name="smazanoServer">servery byly smazány</string>
 </resources>

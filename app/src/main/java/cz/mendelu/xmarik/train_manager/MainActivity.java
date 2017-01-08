@@ -73,14 +73,10 @@ public class MainActivity extends AppCompatActivity
         NetworkInfo mWifi = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
         if (mWifi.isConnected()) {
             UdpDiscover udp = new UdpDiscover(context, port, this);
-            System.out.print("button activated");
             udp.execute();
             this.lButton.setClickable(false);
-            Toast.makeText(getApplicationContext(),
-                    "server discover method start", Toast.LENGTH_LONG)
-                    .show();
         } else Toast.makeText(getApplicationContext(),
-                "Wifi připojení není dostupné", Toast.LENGTH_LONG)
+                R.string.nedostupnaWifi, Toast.LENGTH_LONG)
                 .show();
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -133,7 +129,7 @@ public class MainActivity extends AppCompatActivity
                             float deg = lButton.getRotation() + 720F;
                             lButton.animate().rotation(deg).setInterpolator(new AccelerateDecelerateInterpolator());
                         } else Toast.makeText(getApplicationContext(),
-                                "Wifi připojení není dostupné", Toast.LENGTH_LONG)
+                                R.string.nedostupnaWifi, Toast.LENGTH_LONG)
                                 .show();
                         float deg = lButton.getRotation() + 360F;
                         lButton.animate().rotation(deg).setInterpolator(new AccelerateDecelerateInterpolator());
@@ -285,18 +281,17 @@ public class MainActivity extends AppCompatActivity
             if (resultCode == RESULT_OK) {
                 array1 = ServerList.getInstance().getStoredServersString();
                 fAdapter.notifyDataSetChanged();
-            }
-            if (resultCode == RESULT_CANCELED) {
+            }else if (resultCode == RESULT_CANCELED) {
                 //Do nothing?
             }
         } else if (requestCode == 2) {
             if (resultCode == RESULT_OK) {
                 Toast.makeText(getApplicationContext(),
-                        "Server authorized and connected", Toast.LENGTH_LONG)
+                        R.string.autorizaceOk, Toast.LENGTH_LONG)
                         .show();
             } else {
                 Toast.makeText(getApplicationContext(),
-                        "Server authorization failed", Toast.LENGTH_LONG)
+                        R.string.autorizaceErr, Toast.LENGTH_LONG)
                         .show();
             }
         }
@@ -345,7 +340,7 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_train_manage) {
             if(ServerList.getInstance().getActiveServer() == null) {
                 Toast.makeText(getApplicationContext(),
-                        "Nebyl autorizován žádný server",
+                        R.string.neniServer,
                         Toast.LENGTH_LONG).show();
             } else {
                 Intent intent = new Intent(this, TrainHandler.class);
@@ -354,7 +349,7 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_trains) {
             if(ServerList.getInstance().getActiveServer() == null) {
                 Toast.makeText(getApplicationContext(),
-                        "Nebyl autorizován žádný server",
+                        R.string.neniServer,
                         Toast.LENGTH_LONG).show();
             } else {
                 Intent intent = new Intent(this, Trains_box.class);
@@ -465,7 +460,7 @@ public class MainActivity extends AppCompatActivity
         editor.remove("StoredServers");
         editor.commit();
         Toast.makeText(getApplicationContext(),
-                "servery byly smazány",
+                R.string.smazanoServer,
                 Toast.LENGTH_LONG).show();
     }
 
