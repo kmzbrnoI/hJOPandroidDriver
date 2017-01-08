@@ -51,7 +51,6 @@ public class About extends AppCompatActivity
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
         //noinspection SimplifiableIfStatement
         return super.onOptionsItemSelected(item);
     }
@@ -74,7 +73,7 @@ public class About extends AppCompatActivity
         } else if (id == R.id.nav_train_manage) {
             if(ServerList.getInstance().getActiveServer() == null) {
                 Toast.makeText(getApplicationContext(),
-                        "Nebyl autorizován žádný server",
+                        R.string.neniServer,
                         Toast.LENGTH_LONG).show();
             } else {
                 Intent intent = new Intent(this, TrainHandler.class);
@@ -83,7 +82,7 @@ public class About extends AppCompatActivity
         } else if (id == R.id.nav_trains) {
             if(ServerList.getInstance().getActiveServer() == null) {
                 Toast.makeText(getApplicationContext(),
-                        "Nebyl autorizován žádný server",
+                        R.string.neniServer,
                         Toast.LENGTH_LONG).show();
             } else {
                 Intent intent = new Intent(this, Trains_box.class);

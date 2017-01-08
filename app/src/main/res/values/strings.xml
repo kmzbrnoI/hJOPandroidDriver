@@ -25,4 +25,6 @@
     <string name="autorizaceErr">Nezdařilo se připojit k serveru</string>
     <string name="neniServer">Nebyl autorizován žádný server</string>
     <string name="smazanoServer">servery byly smazány</string>
+    <string name="novaLoko">přijata nová lokomotíva</string>
+    <string name="lokoUvolneno">loko uvolneno</string>
 </resources>

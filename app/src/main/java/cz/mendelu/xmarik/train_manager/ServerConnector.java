@@ -190,7 +190,7 @@ public class ServerConnector extends Activity {
         TCPClientApplication.getInstance().auth = false;
         if (ok) {
             Toast.makeText(getApplicationContext(),
-                    "Server authorized and connected", Toast.LENGTH_LONG)
+                    R.string.autorizaceOk, Toast.LENGTH_LONG)
                     .show();
             progressBar.setVisibility(View.GONE);
             Intent intent = new Intent(this, Trains_box.class);

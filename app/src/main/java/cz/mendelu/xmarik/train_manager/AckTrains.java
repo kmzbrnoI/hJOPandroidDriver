@@ -20,9 +20,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import org.greenrobot.eventbus.EventBus;
@@ -150,7 +148,7 @@ public class AckTrains extends AppCompatActivity
     @Subscribe
     public void onEvent(FreeEvent event) {
         Toast.makeText(getApplicationContext(),
-                "loko uvolneno", Toast.LENGTH_LONG)
+                R.string.lokoUvolneno, Toast.LENGTH_LONG)
                 .show();
         reloadEventHelper();
         this.sendButton.setText("uvolnit");

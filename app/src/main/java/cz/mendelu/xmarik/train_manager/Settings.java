@@ -182,7 +182,7 @@ public class Settings extends AppCompatActivity
         } else if (id == R.id.nav_train_manage) {
             if(ServerList.getInstance().getActiveServer() == null) {
                 Toast.makeText(getApplicationContext(),
-                        "Nebyl autorizován žádný server",
+                        R.string.neniServer,
                         Toast.LENGTH_LONG).show();
             } else {
                 Intent intent = new Intent(this, TrainHandler.class);
@@ -191,7 +191,7 @@ public class Settings extends AppCompatActivity
         } else if (id == R.id.nav_trains) {
             if(ServerList.getInstance().getActiveServer() == null) {
                 Toast.makeText(getApplicationContext(),
-                        "Nebyl autorizován žádný server",
+                        R.string.neniServer,
                         Toast.LENGTH_LONG).show();
             } else {
                 Intent intent = new Intent(this, Trains_box.class);
@@ -204,7 +204,7 @@ public class Settings extends AppCompatActivity
         }else if (id == R.id.nav_ack_trains) {
             if(ServerList.getInstance().getActiveServer() == null) {
                 Toast.makeText(getApplicationContext(),
-                        "Nebyl autorizován žádný server",
+                        R.string.neniServer,
                         Toast.LENGTH_LONG).show();
             } else {
                 Intent intent = new Intent(this, AckTrains.class);

@@ -156,7 +156,7 @@ public class Trains_box extends AppCompatActivity
         reloadEventHelper();
         if (this.sendButton.getText().equals("zrusit")) this.sendButton.setText(R.string.poslatZ);
         Toast.makeText(getApplicationContext(),
-                "přijata nová lokomotíva", Toast.LENGTH_LONG)
+                R.string.novaLoko, Toast.LENGTH_LONG)
                 .show();
         //TODO podminka s automatickym prechodem
         EventBus.getDefault().unregister(this);

@@ -227,7 +227,6 @@ public class TrainHandler extends AppCompatActivity
             });
 
             spinner1.setOnItemSelectedListener(new Spinner.OnItemSelectedListener() {
-
                 @Override
                 public void onNothingSelected(AdapterView<?> adapterView) {
 
@@ -235,10 +234,8 @@ public class TrainHandler extends AppCompatActivity
 
                 @Override
                 public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
-
                     // ListView Clicked item index
                     int itemPosition = position;
-
                     // ListView Clicked item value
                     String value = spinner1.getItemAtPosition(position).toString();
                     String lokoName = value.substring(0, value.indexOf(":"));
@@ -250,15 +247,12 @@ public class TrainHandler extends AppCompatActivity
                         name1.setText(train1.getDisplayLokoName());
                         speed1.setProgress(train1.getSpeed());
                         direction1.setChecked(train1.isDirection());
-
                         if (direction1.isChecked()) {
                             direction1.setText(R.string.DirFor);
                         } else direction1.setText("vzad");
-
                         group1.setChecked(train1.isControled());
                         kmhSpeed1.setText(Integer.toString(train1.getKmhSpeed()) + " km/h");
                         totalManaged.setChecked(train1.getTotalManaged());
-
                         syncStatus(train1, status1);
 
                         if (train1.getTotalManaged()) {
@@ -266,7 +260,6 @@ public class TrainHandler extends AppCompatActivity
                         } else {
                             clicableManager(true, false);
                         }
-
                         //set custom adapter with check boxes to list view
                         CheckBoxAdapter dataAdapter = new CheckBoxAdapter(context,
                                 R.layout.trainfunctioninfo, new ArrayList<TrainFunction>(Arrays.asList(train1.getFunction())));
@@ -771,7 +764,6 @@ public class TrainHandler extends AppCompatActivity
             startActivity(intent);
 
         }
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
