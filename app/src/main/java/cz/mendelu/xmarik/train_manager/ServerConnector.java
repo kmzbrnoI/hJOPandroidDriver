@@ -2,6 +2,7 @@ package cz.mendelu.xmarik.train_manager;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.GravityCompat;
@@ -13,6 +14,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.greenrobot.eventbus.EventBus;
@@ -132,7 +134,7 @@ public class ServerConnector extends Activity {
     public void changeUserData(View view) {
         final Dialog dialog = new Dialog(this);
         dialog.setContentView(R.layout.user_dialog);
-        dialog.setTitle("Title...");
+        dialog.setTitle("Zadejte příhlašovací údaje");
         //set dialog component
         final EditText mName = (EditText) dialog.findViewById(R.id.dialogName);
         final EditText mPasswd = (EditText) dialog.findViewById(R.id.dialogPasswd);
@@ -255,6 +257,7 @@ public class ServerConnector extends Activity {
                 arrayList.add(error);
                 mAdapter.notifyDataSetChanged();
                 progressBar.setVisibility(View.GONE);
+                showDialog("nastala chyba", error);
             }
         });
     }
@@ -286,40 +289,7 @@ public class ServerConnector extends Activity {
             passwd = server.getUserPassword();
             messges[1] = "-;LOK;G;AUTH;{" + user + "};" + passwd + "\n";
         } else {
-            final Dialog dialog = new Dialog(this);
-            dialog.setContentView(R.layout.user_dialog);
-            dialog.setTitle("Title...");
-            //set dialog component
-            final EditText mName = (EditText) dialog.findViewById(R.id.dialogName);
-            final EditText mPasswd = (EditText) dialog.findViewById(R.id.dialogPasswd);
-            Button dialogButton = (Button) dialog.findViewById(R.id.dialogButtonOK);
-            final CheckBox save = (CheckBox) dialog.findViewById(R.id.dialogSaveData);
-            mName.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-                @Override
-                public void onFocusChange(View view, boolean b) {
-                    if (mName.isFocused()) mName.setText("");
-                }
-            });
-            mPasswd.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-                @Override
-                public void onFocusChange(View view, boolean b) {
-                    if (mPasswd.isFocused()) mPasswd.setText("");
-                }
-            });
-            // if button is clicked, close the custom dialog
-            dialogButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    user = mName.getText().toString();
-                    passwd = HelpServices.hashPasswd(mPasswd.getText().toString());
-                    if (save.isChecked()) {
-                        setData(user, passwd, true);
-                    } else setData(user, passwd, false);
-                    messges[1] = "-;LOK;G;AUTH;{" + user + "};" + passwd + "\n";
-                    dialog.dismiss();
-                }
-            });
-            dialog.show();
+            showDialog("Zadejte přihlašovací údaje", null);
         }
         messges[2] = "-;OR-LIST;" + "\n";
         arrayList = new ArrayList<>();
@@ -343,6 +313,54 @@ public class ServerConnector extends Activity {
     }
 
     public static class MonitorObject{
+    }
+
+    public void showDialog(String title, String chyba) {
+        final Dialog dialog = new Dialog(this);
+        dialog.setContentView(R.layout.user_dialog);
+        dialog.setTitle(title);
+        //set dialog component
+        final EditText mName = (EditText) dialog.findViewById(R.id.dialogName);
+        final EditText mPasswd = (EditText) dialog.findViewById(R.id.dialogPasswd);
+        Button dialogButton = (Button) dialog.findViewById(R.id.dialogButtonOK);
+        final CheckBox save = (CheckBox) dialog.findViewById(R.id.dialogSaveData);
+        TextView error = (TextView) dialog.findViewById(R.id.errorMessage);
+        if(chyba != null) {
+            error.setText(chyba);
+        } else {
+            error.setText("");
+        }
+        mName.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean b) {
+                if (mName.isFocused()) mName.setText("");
+            }
+        });
+        mPasswd.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean b) {
+                if (mPasswd.isFocused()) mPasswd.setText("");
+            }
+        });
+        // if button is clicked, close the custom dialog
+        dialogButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialogInterface) {
+                user = mName.getText().toString();
+                passwd = HelpServices.hashPasswd(mPasswd.getText().toString());
+                if (save.isChecked()) {
+                    setData(user, passwd, true);
+                } else setData(user, passwd, false);
+                messges[1] = "-;LOK;G;AUTH;{" + user + "};" + passwd + "\n";
+            }
+        });
+        dialog.show();
     }
 
 }

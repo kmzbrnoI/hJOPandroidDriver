@@ -10,6 +10,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 /**
  * Created by ja on 15. 6. 2016.
  */
+@SuppressWarnings("ALL")
 public class Server {
     public static AtomicInteger id = new AtomicInteger(0);
     public int serverId;
@@ -32,6 +33,7 @@ public class Server {
         this.name = name;
         this.port = port;
         this.about = about;
+        fixAbout();
         this.areas = new ArrayList<>();
         this.status = status;
         this.active = false;
@@ -50,6 +52,7 @@ public class Server {
         this.name = name;
         this.port = port;
         this.about = about;
+        fixAbout();
         this.areas = new ArrayList<>();
         this.status = status;
         this.active = false;
@@ -63,8 +66,18 @@ public class Server {
         this.ipAdr = attribute1;
         this.port = Integer.parseInt(attribute2);
         this.about = attribute3;
+        fixAbout();
         this.userName = attribute4;
         this.userPassword = attribute5;
+    }
+
+    private void fixAbout() {
+        if (this.about.startsWith("{")) {
+            this.about = this.about.substring(1);
+        }
+        if (this.about.endsWith("}")) {
+            this.about = this.about.substring(0, this.about.length()-1);
+        }
     }
 
     public String GetLoko(String token, String adr) {
