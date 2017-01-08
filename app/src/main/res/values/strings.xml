@@ -27,4 +27,5 @@
     <string name="smazanoServer">servery byly smazány</string>
     <string name="novaLoko">přijata nová lokomotíva</string>
     <string name="lokoUvolneno">loko uvolneno</string>
+    <string name="dirBac">vzad</string>
 </resources>

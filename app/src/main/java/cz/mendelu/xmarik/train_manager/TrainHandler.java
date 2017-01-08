@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -42,7 +43,7 @@ import cz.mendelu.xmarik.train_manager.events.ReloadEvent;
 public class TrainHandler extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     String err;
-    private ArrayList<String> activeTrains;
+    //private ArrayList<String> activeTrains;
     private Server activeServer;
     private List<String> array;
     private List<Train> managed;
@@ -77,6 +78,7 @@ public class TrainHandler extends AppCompatActivity
     private boolean update;
     private Long timer;
 
+    @SuppressWarnings("deprecation")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -94,7 +96,7 @@ public class TrainHandler extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        activeTrains = new ArrayList<String>();
+        //activeTrains = new ArrayList<>();
         managed = new ArrayList<>();
         context = this;
         err = null;
@@ -115,9 +117,9 @@ public class TrainHandler extends AppCompatActivity
         active2 = "";
 
         //makes all controls inactive before train is chosen
-        this.clicableManager(true, false);
+        this.clickableManager(true, false);
 
-        final ArrayAdapter<String> funcAdapter1 = new ArrayAdapter<String>(this,
+        final ArrayAdapter<String> funcAdapter1 = new ArrayAdapter<>(this,
                 android.R.layout.simple_list_item_1, ServerList.FUNCTION);
 
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
@@ -143,7 +145,7 @@ public class TrainHandler extends AppCompatActivity
             spinner1 = (Spinner) findViewById(R.id.spinner1);
             array = activeServer.getTrainString();
 
-            ArrayAdapter<String> lAdapter = new ArrayAdapter<String>(this,
+            ArrayAdapter<String> lAdapter = new ArrayAdapter<>(this,
                     android.R.layout.simple_list_item_1, android.R.id.text1, array);
 
             spinner1.setAdapter(lAdapter);
@@ -186,7 +188,7 @@ public class TrainHandler extends AppCompatActivity
                     if(!update) {
                         if (direction1.isChecked()) {
                             direction1.setText(R.string.DirFor);
-                        } else direction1.setText("vzad");
+                        } else direction1.setText(R.string.dirBac);
                         if (managed.contains(train1)) {
                             for (Train s : managed) {
                                 String text = s.changeDirection();
@@ -208,7 +210,7 @@ public class TrainHandler extends AppCompatActivity
                     if(!update) {
                         if (direction1.isChecked()) {
                             direction1.setText(R.string.DirFor);
-                        } else direction1.setText("vzad");
+                        } else direction1.setText(R.string.dirBac);
                         if (managed.contains(train1)) {
                             for (Train s : managed) {
                                 String text = s.changeDirection();
@@ -234,8 +236,6 @@ public class TrainHandler extends AppCompatActivity
 
                 @Override
                 public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
-                    // ListView Clicked item index
-                    int itemPosition = position;
                     // ListView Clicked item value
                     String value = spinner1.getItemAtPosition(position).toString();
                     String lokoName = value.substring(0, value.indexOf(":"));
@@ -249,26 +249,30 @@ public class TrainHandler extends AppCompatActivity
                         direction1.setChecked(train1.isDirection());
                         if (direction1.isChecked()) {
                             direction1.setText(R.string.DirFor);
-                        } else direction1.setText("vzad");
+                        } else direction1.setText(R.string.dirBac);
                         group1.setChecked(train1.isControled());
-                        kmhSpeed1.setText(Integer.toString(train1.getKmhSpeed()) + " km/h");
+                        kmhSpeed1.setText(String.format("%s km/h", Integer.toString(train1.getKmhSpeed())));
                         totalManaged.setChecked(train1.getTotalManaged());
                         syncStatus(train1, status1);
 
                         if (train1.getTotalManaged()) {
-                            clicableManager(true, true);
+                            clickableManager(true, true);
                         } else {
-                            clicableManager(true, false);
+                            clickableManager(true, false);
                         }
                         //set custom adapter with check boxes to list view
                         CheckBoxAdapter dataAdapter = new CheckBoxAdapter(context,
-                                R.layout.trainfunctioninfo, new ArrayList<TrainFunction>(Arrays.asList(train1.getFunction())));
+                                R.layout.trainfunctioninfo, new ArrayList<>(Arrays.asList(train1.getFunction())));
                         checkBoxView1.setAdapter(dataAdapter);
 
                     }
                 }
 
             });
+
+            if (array.size() <= 1) {
+                group1.setEnabled(false);
+            } else group1.setEnabled(true);
 
             group1.setOnCheckedChangeListener(new CheckBox.OnCheckedChangeListener() {
 
@@ -353,6 +357,10 @@ public class TrainHandler extends AppCompatActivity
                     }
                 });
 
+                if (array.size() <= 1) {
+                    group2.setEnabled(false);
+                } else group2.setEnabled(true);
+
                 direction2.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                         setDirectionText(2);
@@ -395,7 +403,6 @@ public class TrainHandler extends AppCompatActivity
                     @Override
                     public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
                         // ListView Clicked item index
-                        int itemPosition = position;
                         String value = spinner2.getItemAtPosition(position).toString();
                         String lokoName = value.substring(0, value.indexOf(":"));
                         Train t = activeServer.getTrain(lokoName);
@@ -412,20 +419,20 @@ public class TrainHandler extends AppCompatActivity
                             } else direction2.setText(R.string.DirBack);
 
                             group2.setChecked(train2.isControled());
-                            kmhSpeed2.setText(Integer.toString(train2.getKmhSpeed()) + " km/h");
+                            kmhSpeed2.setText(String.format("%s km/h", Integer.toString(train2.getKmhSpeed())));
                             totalManaged.setChecked(train2.getTotalManaged());
 
                             if (train2.getTotalManaged()) {
-                                clicableManager(false, true);
+                                clickableManager(false, true);
                             } else {
-                                clicableManager(false, false);
+                                clickableManager(false, false);
                             }
 
                             syncStatus(train2, status2);
 
                             //set custom adapter with check boxes to list view
                             CheckBoxAdapter dataAdapter = new CheckBoxAdapter(context,
-                                    R.layout.trainfunctioninfo, new ArrayList<TrainFunction>(Arrays.asList(train2.getFunction())));
+                                    R.layout.trainfunctioninfo, new ArrayList<>(Arrays.asList(train2.getFunction())));
                             checkBoxView2.setAdapter(dataAdapter);
                         }
                     }
@@ -458,24 +465,21 @@ public class TrainHandler extends AppCompatActivity
             if (direction == 1) {
                 if (direction1.isChecked()) {
                     direction1.setText(R.string.DirFor);
-                } else direction1.setText("vzad");
+                } else direction1.setText(R.string.dirBac);
             }else {
                 if (direction2.isChecked()) {
                     direction2.setText(R.string.DirFor);
-                } else direction2.setText("vzad");
+                } else direction2.setText(R.string.dirBac);
             }
     }
 
     public void setSpeed(int spd, Train train) {
 
-        int speed = spd;
-
         if (train != null && !update) {
             if (managed.contains(train)) {
                 for (Train s : managed) {
-                    Train t = s;
-                    t.setSpeed(speed);
-                    String text = t.GetSpeedSTxt();
+                    s.setSpeed(spd);
+                    String text = s.GetSpeedSTxt();
                     sendNext(text);
                 }
             } else {
@@ -506,8 +510,7 @@ public class TrainHandler extends AppCompatActivity
         if (train2 != null)
             if (managed.contains(train2)) {
                 for (Train s : managed) {
-                    Train t = s;
-                    String text = t.emergencyStop();
+                    String text = s.emergencyStop();
                     sendNext(text);
                 }
             } else {
@@ -568,12 +571,12 @@ public class TrainHandler extends AppCompatActivity
             if (train1.getSpeed() != speed1.getProgress()) speed1.setProgress(train1.getSpeed());
             direction1.setChecked(train1.isDirection());
             group1.setChecked(managed.contains(train1));
-            kmhSpeed1.setText(Integer.toString(train1.getKmhSpeed()) + " km/h");
+            kmhSpeed1.setText(String.format("%s km/h", Integer.toString(train1.getKmhSpeed())));
             totalManaged.setChecked(train1.getTotalManaged());
 
             setDirectionText(1);
             syncStatus(train1, status1);
-            clicableManager(true, train1.getTotalManaged());
+            clickableManager(true, train1.getTotalManaged());
         }
 
         if (landscape) {
@@ -583,7 +586,7 @@ public class TrainHandler extends AppCompatActivity
                 speed2.setProgress(train2.getSpeed());
                 direction2.setChecked(train2.isDirection());
                 group2.setChecked(managed.contains(train2));
-                kmhSpeed2.setText(Integer.toString(train2.getKmhSpeed())+" km/h");
+                kmhSpeed2.setText(String.format("%s km/h", Integer.toString(train2.getKmhSpeed())));
                 totalManaged2.setChecked(train2.getTotalManaged());
 
                 setDirectionText(2);
@@ -625,9 +628,6 @@ public class TrainHandler extends AppCompatActivity
                     });
             AlertDialog alert = builder.create();
             alert.show();
-            /*Toast.makeText(getApplicationContext(),
-                    message,
-                    Toast.LENGTH_LONG).show();*/
         }
     }
 
@@ -657,6 +657,7 @@ public class TrainHandler extends AppCompatActivity
                 TCPClientApplication.getInstance().getClient().sendMessage(message);
                 Log.e("data", "C: Odeslana zpráva: " + message + "");
             } else {
+                Log.e("data", "C: Neodeslána zpráva: " + message + " Tcp není navázáno");
                 //TODO error
             }
         }
@@ -668,13 +669,15 @@ public class TrainHandler extends AppCompatActivity
         dataChangeNotify();
     }
 
-    private void clicableManager(boolean firstTrain, boolean state) {
+    private void clickableManager(boolean firstTrain, boolean state) {
         if (firstTrain) {
             direction1.setEnabled(state);
             speed1.setEnabled(state);
             stopButton1.setEnabled(state);
             idleButton1.setEnabled(state);
-            group1.setEnabled(state);
+            if (array.size() <= 1) {
+                group1.setEnabled(state);
+            } else group1.setEnabled(false);
             speed1.setEnabled(state);
 
             if (!state) {
@@ -689,7 +692,9 @@ public class TrainHandler extends AppCompatActivity
             stopButton2.setClickable(state);
             idleButton2.setClickable(state);
             speed2.setEnabled(state);
-            group2.setEnabled(state);
+            if (array.size() <= 1) {
+                group2.setEnabled(state);
+            } else group2.setEnabled(false);
 
             if (!state) {
                 if (group2.isChecked()) {
@@ -723,8 +728,6 @@ public class TrainHandler extends AppCompatActivity
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
         //noinspection SimplifiableIfStatement
 
         return super.onOptionsItemSelected(item);
@@ -732,7 +735,7 @@ public class TrainHandler extends AppCompatActivity
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
@@ -806,7 +809,7 @@ public class TrainHandler extends AppCompatActivity
         if (spinner1 != null) {
             array = activeServer.getTrainString();
 
-            ArrayAdapter<String> lAdapter = new ArrayAdapter<String>(this,
+            ArrayAdapter<String> lAdapter = new ArrayAdapter<>(this,
                     android.R.layout.simple_list_item_1, android.R.id.text1, array);
 
             spinner1.setAdapter(lAdapter);
@@ -814,7 +817,7 @@ public class TrainHandler extends AppCompatActivity
         if (spinner2 != null) {
             array = activeServer.getTrainString();
 
-            ArrayAdapter<String> lAdapter = new ArrayAdapter<String>(this,
+            ArrayAdapter<String> lAdapter = new ArrayAdapter<>(this,
                     android.R.layout.simple_list_item_1, android.R.id.text1, array);
 
             spinner2.setAdapter(lAdapter);
