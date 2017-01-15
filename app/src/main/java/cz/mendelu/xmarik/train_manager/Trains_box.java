@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -37,6 +39,7 @@ import java.util.List;
 
 import cz.mendelu.xmarik.train_manager.events.FreeEvent;
 import cz.mendelu.xmarik.train_manager.events.RefuseEvent;
+import cz.mendelu.xmarik.train_manager.events.ServerOkEvent;
 import cz.mendelu.xmarik.train_manager.events.TrainReloadEvent;
 
 public class Trains_box extends AppCompatActivity
@@ -58,6 +61,7 @@ public class Trains_box extends AppCompatActivity
     Dialog dialog;
     TextView dialogMessage;
     Button dialogButton;
+    int background;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -123,8 +127,8 @@ public class Trains_box extends AppCompatActivity
                 final String[] srt = new String[1];
                 for (int i = 0; i < array.size(); i++) {
                     if (i != position) {
-                        trains.getChildAt(i).setBackgroundColor(Color.BLUE);
-                    } else trains.getChildAt(i).setBackgroundColor(Color.argb(250,250,250,250));
+                        trains.getChildAt(i).setBackgroundColor(Color.rgb(238,238,238));
+                    } else trains.getChildAt(i).setBackgroundColor(Color.rgb(153,204,255));
                 }
                 focused = position;
             }
@@ -183,13 +187,18 @@ public class Trains_box extends AppCompatActivity
         this.sendButton.setText(R.string.poslatZ);
     }
 
-    @Subscribe
+   /* @Subscribe
     public void onEvent(FreeEvent event) {
         Toast.makeText(getApplicationContext(),
                 "loko uvolneno", Toast.LENGTH_LONG)
                 .show();
         reloadEventHelper();
         this.sendButton.setText(R.string.poslatZ);
+    }*/
+
+    @Subscribe
+    public void onEvent(ServerOkEvent event) {
+        dialogMessage.setText("Žádost odeslána, čekám na dispečera");
     }
 
 
@@ -210,7 +219,6 @@ public class Trains_box extends AppCompatActivity
      * @param v
      */
     public void messagePressed(View v) {
-        if (this.sendButton.getText().equals(R.string.poslatZ)) {
             if (trains.getItemAtPosition(focused)!=null) {
                 final String itemValue = (String) trains.getItemAtPosition(focused);
                 final Server s = ServerList.getInstance().getActiveServer();
@@ -222,15 +230,11 @@ public class Trains_box extends AppCompatActivity
                 sendNext(serverMessage);
                 lAdapter.notifyDataSetChanged();
                 mProgressBar.setVisibility(View.VISIBLE);
-                this.sendButton.setText("zrusit");
                 this.trains.setClickable(false);
 
                 dialogMessage.setText(R.string.zadostOdeslana);
                 dialog.show();
             }
-        } else {
-            cancelMessage();
-        }
     }
 
     private void cancelMessage() {

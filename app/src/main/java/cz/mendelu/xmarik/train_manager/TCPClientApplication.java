@@ -14,6 +14,7 @@ import cz.mendelu.xmarik.train_manager.events.FreeEvent;
 import cz.mendelu.xmarik.train_manager.events.HandShakeEvent;
 import cz.mendelu.xmarik.train_manager.events.RefuseEvent;
 import cz.mendelu.xmarik.train_manager.events.ReloadEvent;
+import cz.mendelu.xmarik.train_manager.events.ServerOkEvent;
 import cz.mendelu.xmarik.train_manager.events.TrainReloadEvent;
 
 /**
@@ -204,8 +205,9 @@ public class TCPClientApplication extends Application {
                         train.setErr(null);
                         EventBus.getDefault().post(new ReloadEvent(serverMessage));
                     } else if (tmp[1].equals("PLEASE-RESP")) {
-                        if (tmp[2].equals("ERR")||tmp[2].equals("err"))
+                        if (tmp[2].equals("ERR")||tmp[2].equals("err")) {
                             EventBus.getDefault().post(new RefuseEvent(tmp[3]));
+                        } else EventBus.getDefault().post(new ServerOkEvent("ok"));
                     } else if (tmp[1].equals("F")) {
                         String borders[] = tmp[2].split("-");
                         int left = Integer.parseInt(borders[1]);

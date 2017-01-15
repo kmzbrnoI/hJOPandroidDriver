@@ -238,33 +238,35 @@ public class TrainHandler extends AppCompatActivity
                 public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
                     // ListView Clicked item value
                     String value = spinner1.getItemAtPosition(position).toString();
-                    String lokoName = value.substring(0, value.indexOf(":"));
-                    Train t = activeServer.getTrain(lokoName);
-                    String itemValue = t!=null ? t.getName() : null;
-                    if (itemValue != null) {
-                        train1 = activeServer.getTrain(itemValue);
-                        active1 = itemValue;
-                        name1.setText(train1.getDisplayLokoName());
-                        speed1.setProgress(train1.getSpeed());
-                        direction1.setChecked(train1.isDirection());
-                        if (direction1.isChecked()) {
-                            direction1.setText(R.string.DirFor);
-                        } else direction1.setText(R.string.dirBac);
-                        group1.setChecked(train1.isControled());
-                        kmhSpeed1.setText(String.format("%s km/h", Integer.toString(train1.getKmhSpeed())));
-                        totalManaged.setChecked(train1.getTotalManaged());
-                        syncStatus(train1, status1);
+                    if(spinner1.getCount() > 0 && value.contains(":") ) {
+                        String lokoName = value.substring(0, value.indexOf(":"));
+                        Train t = activeServer.getTrain(lokoName);
+                        String itemValue = t!=null ? t.getName() : null;
+                        if (itemValue != null) {
+                            train1 = activeServer.getTrain(itemValue);
+                            active1 = itemValue;
+                            name1.setText(train1.getDisplayLokoName());
+                            speed1.setProgress(train1.getSpeed());
+                            direction1.setChecked(train1.isDirection());
+                            if (direction1.isChecked()) {
+                                direction1.setText(R.string.DirFor);
+                            } else direction1.setText(R.string.dirBac);
+                            group1.setChecked(train1.isControled());
+                            kmhSpeed1.setText(String.format("%s km/h", Integer.toString(train1.getKmhSpeed())));
+                            totalManaged.setChecked(train1.getTotalManaged());
+                            syncStatus(train1, status1);
 
-                        if (train1.getTotalManaged()) {
-                            clickableManager(true, true);
-                        } else {
-                            clickableManager(true, false);
+                            if (train1.getTotalManaged()) {
+                                clickableManager(true, true);
+                            } else {
+                                clickableManager(true, false);
+                            }
+                            //set custom adapter with check boxes to list view
+                            CheckBoxAdapter dataAdapter = new CheckBoxAdapter(context,
+                                    R.layout.trainfunctioninfo, new ArrayList<>(Arrays.asList(train1.getFunction())));
+                            checkBoxView1.setAdapter(dataAdapter);
+
                         }
-                        //set custom adapter with check boxes to list view
-                        CheckBoxAdapter dataAdapter = new CheckBoxAdapter(context,
-                                R.layout.trainfunctioninfo, new ArrayList<>(Arrays.asList(train1.getFunction())));
-                        checkBoxView1.setAdapter(dataAdapter);
-
                     }
                 }
 
@@ -675,7 +677,7 @@ public class TrainHandler extends AppCompatActivity
             speed1.setEnabled(state);
             stopButton1.setEnabled(state);
             idleButton1.setEnabled(state);
-            if (array.size() <= 1) {
+            if (array != null && array.size() <= 1) {
                 group1.setEnabled(state);
             } else group1.setEnabled(false);
             speed1.setEnabled(state);

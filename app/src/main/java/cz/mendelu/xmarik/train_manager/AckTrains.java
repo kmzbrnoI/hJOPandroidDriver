@@ -99,8 +99,8 @@ public class AckTrains extends AppCompatActivity
                 final String[] srt = new String[1];
                 for (int i = 0; i < array.size(); i++) {
                     if (i != position) {
-                        trains.getChildAt(i).setBackgroundColor(Color.argb(250,250,250,250));
-                    } else trains.getChildAt(i).setBackgroundColor(Color.BLUE);
+                        trains.getChildAt(i).setBackgroundColor(Color.rgb(238,238,238));
+                    } else trains.getChildAt(i).setBackgroundColor(Color.rgb(153,204,255));
                 }
                 focused = position;
             }

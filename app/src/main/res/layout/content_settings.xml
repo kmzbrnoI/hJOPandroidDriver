@@ -119,23 +119,22 @@
                         android:layout_marginTop="45dp" />
 
                     <Button
-                        android:text="Vymazat vše"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:id="@+id/button"
-                        android:layout_alignTop="@+id/deletPrivateData"
-                        android:layout_alignStart="@+id/saveButton"
-                        android:layout_marginTop="51dp" />
-
-                    <Button
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="saveButton"
+                        android:text="uložit"
                         android:id="@+id/saveButton"
                         android:onClick="save"
                         android:layout_below="@+id/button"
                         android:layout_centerHorizontal="true"
                         android:layout_marginTop="48dp" />
+
+                    <Button
+                        android:text="Vymazat vše"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/button"
+                        android:layout_below="@+id/deletPrivateData"
+                        android:layout_centerHorizontal="true" />
 
                 </RelativeLayout>
             </LinearLayout>

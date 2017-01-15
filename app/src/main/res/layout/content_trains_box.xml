@@ -48,7 +48,7 @@
             android:layout_height="wrap_content">
 
             <TextView
-                android:text="Volitelná zpráva pro dispečera"
+                android:text="Volitelná zpráva pro dispečera:"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/textView11"

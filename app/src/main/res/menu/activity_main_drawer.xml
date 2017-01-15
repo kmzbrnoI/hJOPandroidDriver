@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <group android:checkableBehavior="single">
+    <group>
         <item
             android:id="@+id/nav_train_manage"
             android:icon="@drawable/ic_menu_send"
@@ -12,10 +12,8 @@
             android:title="Výběr vlaků" />
         <item
             android:id="@+id/nav_ack_trains"
-            android:icon="@drawable/ic_train"
+            android:icon="@drawable/ic_train_black"
             android:title="uvolnění vlaků" />
-
-
 
         <item android:title="Nastavení">
             <menu>
@@ -35,7 +33,7 @@
             <item
                 android:id="@+id/nav_about"
                 android:icon="@drawable/ic_menu_share"
-                android:title="about" />
+                android:title="O aplikaci" />
 
         </menu>
     </item>

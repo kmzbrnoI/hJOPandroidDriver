@@ -253,11 +253,11 @@ public class ServerConnector extends Activity {
             public void run() {
                 i = 0;
                 send.setClickable(true);
-                send.setText("opakovat");
+                send.setText(R.string.opakovat);
                 arrayList.add(error);
                 mAdapter.notifyDataSetChanged();
                 progressBar.setVisibility(View.GONE);
-                showDialog("nastala chyba", error);
+                showDialog("Nastala chyba", error);
             }
         });
     }
@@ -316,6 +316,8 @@ public class ServerConnector extends Activity {
     }
 
     public void showDialog(String title, String chyba) {
+        if (chyba != null && chyba.startsWith(";"))
+            chyba = chyba.substring(1);
         final Dialog dialog = new Dialog(this);
         dialog.setContentView(R.layout.user_dialog);
         dialog.setTitle(title);

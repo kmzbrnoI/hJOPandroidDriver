@@ -23,15 +23,14 @@
         android:id="@+id/dialogMessage"
         android:layout_alignParentEnd="true"
         android:textAlignment="center"
-        android:textSize="@android:dimen/notification_large_icon_height" />
+        android:textSize="50dp" />
 
     <ProgressBar
         style="?android:attr/progressBarStyleLarge"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/dialogMessage"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="175dp"
-        android:id="@+id/trainBoxBar" />
+        android:id="@+id/trainBoxBar"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true" />
 
 </RelativeLayout>
