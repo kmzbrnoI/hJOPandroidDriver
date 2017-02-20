@@ -15,20 +15,16 @@
             android:icon="@drawable/ic_train_black"
             android:title="uvolnění vlaků" />
 
-        <item android:title="Nastavení">
+        <item android:title="Správa serveru">
             <menu>
                 <item
                     android:id="@+id/nav_server"
                     android:icon="@drawable/ic_menu_slideshow"
                     android:title="Výběr serveru" />
-                <item
-                    android:id="@+id/nav_settings"
-                    android:icon="@drawable/ic_menu_manage"
-                    android:title="Nastavení" />
             </menu>
         </item>
     </group>
-    <item android:title="about">
+    <item android:title="About">
         <menu>
             <item
                 android:id="@+id/nav_about"

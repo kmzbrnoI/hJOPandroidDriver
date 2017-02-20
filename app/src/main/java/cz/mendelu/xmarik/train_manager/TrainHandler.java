@@ -748,10 +748,6 @@ public class TrainHandler extends AppCompatActivity
             Intent intent = new Intent(this, About.class);
             startActivity(intent);
 
-        } else if (id == R.id.nav_settings) {
-            Intent intent = new Intent(this, Settings.class);
-            startActivity(intent);
-
         } else if (id == R.id.nav_train_manage) {
             DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
             drawer.closeDrawer(GravityCompat.START);

@@ -120,7 +120,7 @@ public class AckTrains extends AppCompatActivity
     public void onEvent(TrainReloadEvent event) {
         // your implementation
         reloadEventHelper();
-        if (this.sendButton.getText().equals("zrusit")) this.sendButton.setText("uvolnit");
+        if (this.sendButton.getText().equals("zrusit")) this.sendButton.setText("@string/uvolnit");
         Toast.makeText(getApplicationContext(),
                 "Zářízení autorizováno", Toast.LENGTH_LONG)
                 .show();
@@ -142,7 +142,7 @@ public class AckTrains extends AppCompatActivity
                 });
         AlertDialog alert = builder.create();
         alert.show();
-        this.sendButton.setText("uvolnit");
+        this.sendButton.setText(R.string.uvolnit);
     }
 
     @Subscribe
@@ -151,7 +151,7 @@ public class AckTrains extends AppCompatActivity
                 R.string.lokoUvolneno, Toast.LENGTH_LONG)
                 .show();
         reloadEventHelper();
-        this.sendButton.setText("uvolnit");
+        this.sendButton.setText(R.string.uvolnit);
     }
 
     public void release(View v) {
@@ -208,10 +208,6 @@ public class AckTrains extends AppCompatActivity
             startActivity(intent);
         } else if (id == R.id.nav_about) {
             Intent intent = new Intent(this, About.class);
-            startActivity(intent);
-
-        } else if (id == R.id.nav_settings) {
-            Intent intent = new Intent(this, Settings.class);
             startActivity(intent);
 
         } else if (id == R.id.nav_train_manage) {

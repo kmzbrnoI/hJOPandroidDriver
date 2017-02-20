@@ -67,9 +67,6 @@ public class About extends AppCompatActivity
         } else if (id == R.id.nav_about) {
             DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
             drawer.closeDrawer(GravityCompat.START);
-        } else if (id == R.id.nav_settings) {
-            Intent intent = new Intent(this, Settings.class);
-            startActivity(intent);
         } else if (id == R.id.nav_train_manage) {
             if(ServerList.getInstance().getActiveServer() == null) {
                 Toast.makeText(getApplicationContext(),

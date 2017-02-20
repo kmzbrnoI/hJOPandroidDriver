@@ -207,7 +207,7 @@ public class Trains_box extends AppCompatActivity
                                     ContextMenu.ContextMenuInfo menuInfo) {
         if (v.getId() == R.id.farServers) {
             AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
-            String[] menuItems = {"info", "přejít k řízení", "uvolnit"};
+            String[] menuItems = {"info", "přejít k řízení", "Uvolnit"};
             for (int i = 0; i < menuItems.length; i++) {
                 menu.add(Menu.NONE, i, i, menuItems[i]);
             }
@@ -299,10 +299,6 @@ public class Trains_box extends AppCompatActivity
             startActivity(intent);
         } else if (id == R.id.nav_about) {
             Intent intent = new Intent(this, About.class);
-            startActivity(intent);
-
-        } else if (id == R.id.nav_settings) {
-            Intent intent = new Intent(this, Settings.class);
             startActivity(intent);
 
         } else if (id == R.id.nav_train_manage) {

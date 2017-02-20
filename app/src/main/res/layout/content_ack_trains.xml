@@ -27,7 +27,7 @@
             android:longClickable="true" />
 
         <Button
-            android:text="uvolnit"
+            android:text="@string/uvolnit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/trainBoxButton"

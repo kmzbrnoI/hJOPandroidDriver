@@ -334,9 +334,6 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_about) {
             Intent intent = new Intent(this, About.class);
             startActivity(intent);
-        } else if (id == R.id.nav_settings) {
-            Intent intent = new Intent(this, Settings.class);
-            startActivity(intent);
         } else if (id == R.id.nav_train_manage) {
             if(ServerList.getInstance().getActiveServer() == null) {
                 Toast.makeText(getApplicationContext(),
