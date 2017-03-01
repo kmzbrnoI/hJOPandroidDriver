@@ -35,7 +35,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="Název Serveru"
+            android:text="Název serveru"
             android:id="@+id/textView4"
             android:layout_gravity="center_horizontal" />
 
@@ -49,7 +49,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="IP Serveru"
+            android:text="IP/DNS serveru  "
             android:id="@+id/textView5"
             android:layout_gravity="center_horizontal" />
 
@@ -63,7 +63,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="Port Pro Komunikaci"
+            android:text="Port "
             android:id="@+id/textView6"
             android:layout_gravity="center_horizontal" />
 
@@ -72,7 +72,8 @@
             android:layout_height="wrap_content"
             android:id="@+id/portText"
             android:inputType="number"
-            android:layout_gravity="center_horizontal" />
+            android:layout_gravity="center_horizontal"
+            tools:text="5896" />
 
         <TextView
             android:layout_width="wrap_content"

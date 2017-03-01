@@ -56,13 +56,12 @@
 
             <EditText
                 android:inputType="textMultiLine"
-                android:layout_height="wrap_content"
+                android:layout_height="206dp"
                 android:ems="10"
                 android:lines="5"
                 android:minLines="3"
                 android:gravity="top|left"
                 android:maxLines="6"
-                android:layout_weight="1"
                 android:id="@+id/authMessage"
                 android:layout_width="fill_parent"
                 android:scrollbars="vertical"
