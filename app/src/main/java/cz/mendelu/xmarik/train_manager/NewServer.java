@@ -30,7 +30,7 @@ public class NewServer extends AppCompatActivity {
             server = ServerList.getInstance().getServer(tmp[0]);
             nameText.setText(server.name);
             ipAdrText.setText(server.ipAdr);
-            portText.setText(server.port);
+            portText.setText(String.valueOf(server.port));
             aboutText.setText(server.about);
         }
     }
