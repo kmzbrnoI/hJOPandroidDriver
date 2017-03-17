@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -122,10 +123,8 @@ public class MainActivity extends AppCompatActivity
                         ConnectivityManager connManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
                         NetworkInfo mWifi = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
                         if (mWifi.isConnected()) {
-                            UdpDiscover udp = new UdpDiscover(context, port, (MainActivity) obj);
+                            new UdpDiscover(context, port, (MainActivity) obj).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, null);
                             System.out.print("button activated");
-                            //udp.run();
-                            udp.execute();
                             float deg = lButton.getRotation() + 720F;
                             lButton.animate().rotation(deg).setInterpolator(new AccelerateDecelerateInterpolator());
                         } else Toast.makeText(getApplicationContext(),
