@@ -104,6 +104,8 @@ public class ServerConnector extends Activity {
     public void onResume() {
         i = 0;
         tcpOK = false;
+        if (TCPClientApplication.getInstance() != null)
+            TCPClientApplication.getInstance().stop();
         super.onResume();
         if (!EventBus.getDefault().isRegistered(this)) EventBus.getDefault().register(this);
         startMethod();
@@ -241,9 +243,14 @@ public class ServerConnector extends Activity {
 
     @Subscribe
     public void onEvent(ErrorEvent event) {
-        String message = event.getMessage()
+        if (event.getMessage().equals("error - connection refused")) {
+            raiseErrorState(event.getMessage());
+        } else {
+            Log.e("connector", "error nastal " + event.toString());
+            String message = event.getMessage()
                 .substring(event.getMessage().lastIndexOf(";"));
         raiseErrorState(message);
+        }
     }
 
 
@@ -272,8 +279,6 @@ public class ServerConnector extends Activity {
             String value = extras.getString("server");
             String[] tmp = value.split("\t");
             server = ServerList.getInstance().getServer(tmp[0]);
-            Log.e("", "server" + server.getDnsName());
-            Log.e("services", "ulozene jmeno a heslo: " + server.getUserName() + "  " + server.getUserPassword());
             tcp.server = server;
             tcp.auth = true;
             tcp.start();

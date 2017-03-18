@@ -21,7 +21,7 @@
 
         <ListView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="243dp"
             android:id="@+id/nav_trains"
             android:scrollbars="horizontal|vertical" />
 
@@ -56,7 +56,7 @@
 
             <EditText
                 android:inputType="textMultiLine"
-                android:layout_height="206dp"
+                android:layout_height="139dp"
                 android:ems="10"
                 android:lines="5"
                 android:minLines="3"
@@ -70,9 +70,8 @@
             <Button
                 android:text="Odeslat žádost"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="68dp"
                 android:id="@+id/trainBoxButton"
-                android:layout_weight="1"
                 android:onClick="messagePressed" />
         </LinearLayout>
 

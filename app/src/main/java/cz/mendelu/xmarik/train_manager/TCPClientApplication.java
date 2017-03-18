@@ -66,7 +66,7 @@ public class TCPClientApplication extends Application {
     }
 
     public void start() {
-        connectTask =new ConnectTask();
+        connectTask = new ConnectTask();
         connectTask.execute();
     }
 
@@ -77,10 +77,14 @@ public class TCPClientApplication extends Application {
             mTcpClient.sendMessage(message);
         }
     }
-//TODO dokoncit
+
     public void stop() {
-        mTcpClient.stopClient();
-        connectTask.cancel(true);
+        if (mTcpClient != null)
+            mTcpClient.stopClient();
+        if (connectTask != null)
+            connectTask.cancel(true);
+        instance = null;
+        ServerList.getInstance().deactivateServer();
     }
 
     public class ConnectTask extends AsyncTask<String, String, TCPClient> {
@@ -118,7 +122,11 @@ public class TCPClientApplication extends Application {
                 EventBus.getDefault().post(new HandShakeEvent(serverMessage));
             } else if (serverMessage.startsWith("-;LOK;G;AUTH;ok;")) {
                 EventBus.getDefault().post(new HandShakeEvent(serverMessage));
-            } else if (serverMessage.startsWith("-;LOK;G;AUTH;err")) {
+            /*} else if (serverMessage.startsWith("-;LOK;G;AUTH;err")) {
+                EventBus.getDefault().post(new ErrorEvent(serverMessage));*/
+            } else if (serverMessage.startsWith("-;LOK;G;AUTH;not")) {
+                //todo consumery kdyz bude na jine nez prihlasovaci obrazovce
+                // byli ste odhlaseni- error message -
                 EventBus.getDefault().post(new ErrorEvent(serverMessage));
             } else if (serverMessage.startsWith("-;OR-LIST;")) {
                 EventBus.getDefault().post(new AreasEvent(serverMessage));

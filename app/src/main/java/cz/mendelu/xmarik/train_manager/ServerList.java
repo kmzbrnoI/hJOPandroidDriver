@@ -189,6 +189,19 @@ public class ServerList {
         }
     }
 
+    void deactivateServer() {
+        for (Server s : this.servers) {
+            if ((s.getActive())) {
+                s.setActive(false);
+            }
+        }
+        for (Server s : this.storedServers) {
+            if ((s.getActive())) {
+                s.setActive(false);
+            }
+        }
+    }
+
     void clearLocalServers() {
         this.servers = new ArrayList<>();
     }

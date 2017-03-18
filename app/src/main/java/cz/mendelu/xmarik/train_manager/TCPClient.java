@@ -93,6 +93,7 @@ public class TCPClient {
                     //in this while the client listens for the messages sent by the server
                     EventBus.getDefault().post(new ReloadEvent(""));
                     while (mRun) {
+                        //TODO socket close odeslat error event
                         serverMessage = in.readLine();
                         if (serverMessage != null && mMessageListener != null) {
                             //call the method messageReceived from MyActivity class
