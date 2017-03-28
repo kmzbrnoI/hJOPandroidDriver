@@ -9,6 +9,7 @@ import org.greenrobot.eventbus.EventBus;
 import java.util.ArrayList;
 
 import cz.mendelu.xmarik.train_manager.events.AreasEvent;
+import cz.mendelu.xmarik.train_manager.events.CriticalErrorEvent;
 import cz.mendelu.xmarik.train_manager.events.ErrorEvent;
 import cz.mendelu.xmarik.train_manager.events.FreeEvent;
 import cz.mendelu.xmarik.train_manager.events.HandShakeEvent;
@@ -55,10 +56,6 @@ public class TCPClientApplication extends Application {
 
     public void setClient(TCPClient client) {
         this.mTcpClient = client;
-    }
-
-    public void customAppMethod() {
-        // Custom application method
     }
 
     public void connect(Server server) {
@@ -122,11 +119,10 @@ public class TCPClientApplication extends Application {
                 EventBus.getDefault().post(new HandShakeEvent(serverMessage));
             } else if (serverMessage.startsWith("-;LOK;G;AUTH;ok;")) {
                 EventBus.getDefault().post(new HandShakeEvent(serverMessage));
-            /*} else if (serverMessage.startsWith("-;LOK;G;AUTH;err")) {
-                EventBus.getDefault().post(new ErrorEvent(serverMessage));*/
             } else if (serverMessage.startsWith("-;LOK;G;AUTH;not")) {
+                EventBus.getDefault().post(new CriticalErrorEvent(
+                        serverMessage.substring("-;LOK;G;AUTH;not".length())));
                 //todo consumery kdyz bude na jine nez prihlasovaci obrazovce
-                // byli ste odhlaseni- error message -
                 EventBus.getDefault().post(new ErrorEvent(serverMessage));
             } else if (serverMessage.startsWith("-;OR-LIST;")) {
                 EventBus.getDefault().post(new AreasEvent(serverMessage));
@@ -217,9 +213,6 @@ public class TCPClientApplication extends Application {
                             EventBus.getDefault().post(new RefuseEvent(tmp[3]));
                         } else EventBus.getDefault().post(new ServerOkEvent("ok"));
                     } else if (tmp[1].equals("F")) {
-                        String borders[] = tmp[2].split("-");
-                        int left = Integer.parseInt(borders[1]);
-                        int right = Integer.parseInt(borders[2]);
                         boolean[] func = new boolean[tmp[3].length()];
                         char[] charArray = tmp[3].toCharArray();
                         for (int i = 0; i < charArray.length; i++) {

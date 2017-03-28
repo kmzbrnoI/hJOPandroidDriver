@@ -31,6 +31,7 @@
             android:name=".AckTrains"
             android:launchMode="singleInstance"
             android:label="@string/title_activity_ack_trains"
+            android:screenOrientation="locked"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".Settings"
@@ -43,6 +44,7 @@
             android:theme="@style/AppTheme.NoActionBar"
         />
         <activity android:name=".Trains_box"
+            android:screenOrientation="locked"
             android:launchMode="singleInstance"
             android:label="@string/controlArea"
             android:theme="@style/AppTheme.NoActionBar"

@@ -153,7 +153,7 @@
                         android:layout_height="wrap_content"
                         android:id="@+id/speedkBar1"
                         android:layout_weight="1"
-                        android:max="30"
+                        android:max="28"
                         android:indeterminate="false"
                         android:layout_gravity="center_vertical" />
                 </LinearLayout>

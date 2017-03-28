@@ -45,11 +45,12 @@ public class AckTrains extends AppCompatActivity
     ArrayList<String> array;
     ArrayAdapter<String> lAdapter;
     Button sendButton;
-    int focused;
+    Integer focused;
     private ListView trains;
     private ListView ackTrains;
     private List<String> lokos;
     AlertDialog.Builder connectionDialog;
+    View lastSelected;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,13 +96,11 @@ public class AckTrains extends AppCompatActivity
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
                 // ListView Clicked item index
-                int itemPosition = position;
-                final String[] srt = new String[1];
-                for (int i = 0; i < array.size(); i++) {
-                    if (i != position) {
-                        trains.getChildAt(i).setBackgroundColor(Color.rgb(238,238,238));
-                    } else trains.getChildAt(i).setBackgroundColor(Color.rgb(153,204,255));
+                view.setBackgroundColor(Color.rgb(153,204,255));
+                if (lastSelected != null && !lastSelected.equals(view)) {
+                    lastSelected.setBackgroundColor(Color.rgb(238,238,238));
                 }
+                lastSelected = view;
                 focused = position;
             }
 
@@ -155,7 +154,7 @@ public class AckTrains extends AppCompatActivity
     }
 
     public void release(View v) {
-        if ( trains.getItemAtPosition(focused) !=null ) {
+        if ( focused != null && trains.getItemAtPosition(focused) != null ) {
             final String itemValue = (String) trains.getItemAtPosition(focused);
             final Server s = ServerList.getInstance().getActiveServer();
             Train train = s.getTrain(itemValue.substring(0,itemValue.indexOf("\n")));
@@ -170,9 +169,10 @@ public class AckTrains extends AppCompatActivity
 
     private void reloadEventHelper() {
         final ArrayList<String> acquired;
+        this.focused = null;
         acquired = active.getAuthorizedTrainsString();
 
-        lAdapter = new ArrayAdapter<String>(this,
+        lAdapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_list_item_1, android.R.id.text1, acquired);
         trains.setAdapter(lAdapter);
     }

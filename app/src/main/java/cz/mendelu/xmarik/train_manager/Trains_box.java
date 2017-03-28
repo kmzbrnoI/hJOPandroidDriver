@@ -61,7 +61,7 @@ public class Trains_box extends AppCompatActivity
     Dialog dialog;
     TextView dialogMessage;
     Button dialogButton;
-    int background;
+    View lastSelected;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -123,16 +123,14 @@ public class Trains_box extends AppCompatActivity
             @Override
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
-                // ListView Clicked item index
-                final String[] srt = new String[1];
-                for (int i = 0; i < array.size(); i++) {
-                    if (i != position) {
-                        trains.getChildAt(i).setBackgroundColor(Color.rgb(238,238,238));
-                    } else trains.getChildAt(i).setBackgroundColor(Color.rgb(153,204,255));
+                view.setBackgroundColor(Color.rgb(153,204,255));
+                if (lastSelected != null && !lastSelected.equals(view)) {
+                    lastSelected.setBackgroundColor(Color.rgb(238,238,238));
                 }
+                lastSelected = view;
+
                 focused = position;
             }
-
         });
 
         messageForServer.setOnFocusChangeListener(new View.OnFocusChangeListener() {

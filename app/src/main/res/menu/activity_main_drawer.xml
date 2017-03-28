@@ -9,11 +9,11 @@
         <item
             android:id="@+id/nav_trains"
             android:icon="@drawable/ic_menu_gallery"
-            android:title="Výběr vlaků" />
+            android:title="Žádost o vlak" />
         <item
             android:id="@+id/nav_ack_trains"
             android:icon="@drawable/ic_train_black"
-            android:title="uvolnění vlaků" />
+            android:title="Uvolnění vlak" />
 
         <item android:title="Správa serveru">
             <menu>

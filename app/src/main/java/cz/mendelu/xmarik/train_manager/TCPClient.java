@@ -13,7 +13,9 @@ import java.io.PrintWriter;
 import java.net.ConnectException;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.net.SocketException;
 
+import cz.mendelu.xmarik.train_manager.events.CriticalErrorEvent;
 import cz.mendelu.xmarik.train_manager.events.ErrorEvent;
 import cz.mendelu.xmarik.train_manager.events.ReloadEvent;
 
@@ -93,8 +95,11 @@ public class TCPClient {
                     //in this while the client listens for the messages sent by the server
                     EventBus.getDefault().post(new ReloadEvent(""));
                     while (mRun) {
-                        //TODO socket close odeslat error event
-                        serverMessage = in.readLine();
+                        try {
+                            serverMessage = in.readLine();
+                        } catch (SocketException e) {
+                            EventBus.getDefault().post(new CriticalErrorEvent("Spojení ukončeno"));
+                        }
                         if (serverMessage != null && mMessageListener != null) {
                             //call the method messageReceived from MyActivity class
                             Log.e("TCP Client", "C: message received: " + serverMessage);
