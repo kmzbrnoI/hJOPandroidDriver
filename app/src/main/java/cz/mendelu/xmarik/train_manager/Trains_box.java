@@ -5,8 +5,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -34,10 +32,8 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
 
-import cz.mendelu.xmarik.train_manager.events.FreeEvent;
+import cz.mendelu.xmarik.train_manager.events.CriticalErrorEvent;
 import cz.mendelu.xmarik.train_manager.events.RefuseEvent;
 import cz.mendelu.xmarik.train_manager.events.ServerOkEvent;
 import cz.mendelu.xmarik.train_manager.events.TrainReloadEvent;
@@ -56,12 +52,12 @@ public class Trains_box extends AppCompatActivity
     Button sendButton;
     EditText messageForServer;
     int focused;
-    private ListView trains;
     AlertDialog.Builder connectionDialog;
     Dialog dialog;
     TextView dialogMessage;
     Button dialogButton;
     View lastSelected;
+    private ListView trains;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -123,9 +119,9 @@ public class Trains_box extends AppCompatActivity
             @Override
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
-                view.setBackgroundColor(Color.rgb(153,204,255));
+                view.setBackgroundColor(Color.rgb(153, 204, 255));
                 if (lastSelected != null && !lastSelected.equals(view)) {
-                    lastSelected.setBackgroundColor(Color.rgb(238,238,238));
+                    lastSelected.setBackgroundColor(Color.rgb(238, 238, 238));
                 }
                 lastSelected = view;
 
@@ -214,25 +210,26 @@ public class Trains_box extends AppCompatActivity
 
     /**
      * method for handl send button event pressed
+     *
      * @param v
      */
     public void messagePressed(View v) {
-            if (trains.getItemAtPosition(focused)!=null) {
-                final String itemValue = (String) trains.getItemAtPosition(focused);
-                final Server s = ServerList.getInstance().getActiveServer();
-                String serverMessage = s.getAreaServerString(itemValue);
-                String msg = messageForServer.getText().toString();
-                Log.e("tcp", "zadáno:" + msg + " \n");
-                serverMessage = serverMessage + "{" + msg + "}\n";
-                dialog.setTitle(getString(R.string.dialogAreaTitle) + msg);
-                sendNext(serverMessage);
-                lAdapter.notifyDataSetChanged();
-                mProgressBar.setVisibility(View.VISIBLE);
-                this.trains.setClickable(false);
+        if (trains.getItemAtPosition(focused) != null) {
+            final String itemValue = (String) trains.getItemAtPosition(focused);
+            final Server s = ServerList.getInstance().getActiveServer();
+            String serverMessage = s.getAreaServerString(itemValue);
+            String msg = messageForServer.getText().toString();
+            Log.e("tcp", "zadáno:" + msg + " \n");
+            serverMessage = serverMessage + "{" + msg + "}\n";
+            dialog.setTitle(getString(R.string.dialogAreaTitle) + msg);
+            sendNext(serverMessage);
+            lAdapter.notifyDataSetChanged();
+            mProgressBar.setVisibility(View.VISIBLE);
+            this.trains.setClickable(false);
 
-                dialogMessage.setText(R.string.zadostOdeslana);
-                dialog.show();
-            }
+            dialogMessage.setText(R.string.zadostOdeslana);
+            dialog.show();
+        }
     }
 
     private void cancelMessage() {
@@ -253,7 +250,7 @@ public class Trains_box extends AppCompatActivity
         final ArrayList<String> acquired;
         array = active.getUnAuthorizedAreas();
         acquired = active.getAuthorizedTrainsString();
-        final ArrayAdapter<String> lAdapter = new ArrayAdapter<String>(this,
+        final ArrayAdapter<String> lAdapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_list_item_1, android.R.id.text1, array);
 
         final ArrayAdapter<String> ackAdapter = new ArrayAdapter<String>(this,
@@ -265,13 +262,13 @@ public class Trains_box extends AppCompatActivity
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-            if (drawer.isDrawerOpen(GravityCompat.START)) {
-                drawer.closeDrawer(GravityCompat.START);
-            } else {
-                EventBus.getDefault().unregister(this);
-                dialog.dismiss();
-                super.onBackPressed();
-            }
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            EventBus.getDefault().unregister(this);
+            dialog.dismiss();
+            super.onBackPressed();
+        }
     }
 
     @Override
@@ -325,20 +322,36 @@ public class Trains_box extends AppCompatActivity
     public void onPause() {
         super.onPause();
         dialog.dismiss();
-        if(EventBus.getDefault().isRegistered(this))EventBus.getDefault().unregister(this);
+        if (EventBus.getDefault().isRegistered(this)) EventBus.getDefault().unregister(this);
     }
 
     @Override
     public void onResume() {
         super.onResume();
         //connectionDialog.dismiss();
-        if(!EventBus.getDefault().isRegistered(this))EventBus.getDefault().register(this);
+        if (!EventBus.getDefault().isRegistered(this)) EventBus.getDefault().register(this);
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if(EventBus.getDefault().isRegistered(this))EventBus.getDefault().unregister(this);
+        if (EventBus.getDefault().isRegistered(this)) EventBus.getDefault().unregister(this);
+    }
+
+    @Subscribe
+    public void criticalError(CriticalErrorEvent event) {
+        ServerList.getInstance().deactivateServer();
+        if (event.getMessage().startsWith("connection")) {
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
+        } else {
+            Toast.makeText(getApplicationContext(),
+                    event.getMessage(),
+                    Toast.LENGTH_LONG).show();
+            //possibility of another activity, but need additional analyze
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
+        }
     }
 
 }

@@ -24,7 +24,11 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import org.greenrobot.eventbus.Subscribe;
+
 import java.util.ArrayList;
+
+import cz.mendelu.xmarik.train_manager.events.CriticalErrorEvent;
 
 import static android.preference.PreferenceManager.getDefaultSharedPreferences;
 
@@ -324,5 +328,21 @@ public class Servers extends AppCompatActivity
         Toast.makeText(getApplicationContext(),
                 "servery byly smazány",
                 Toast.LENGTH_LONG).show();
+    }
+
+    @Subscribe
+    public void criticalError(CriticalErrorEvent event) {
+        ServerList.getInstance().deactivateServer();
+        if (event.getMessage().startsWith("connection")) {
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
+        }else {
+            Toast.makeText(getApplicationContext(),
+                    event.getMessage(),
+                    Toast.LENGTH_LONG).show();
+            //possibility of another activity, but need additional analyze
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
+        }
     }
 }

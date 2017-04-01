@@ -35,6 +35,7 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.util.ArrayList;
 
+import cz.mendelu.xmarik.train_manager.events.CriticalErrorEvent;
 import cz.mendelu.xmarik.train_manager.events.ReloadEvent;
 
 import static android.preference.PreferenceManager.getDefaultSharedPreferences;
@@ -458,6 +459,22 @@ public class MainActivity extends AppCompatActivity
         Toast.makeText(getApplicationContext(),
                 R.string.smazanoServer,
                 Toast.LENGTH_LONG).show();
+    }
+
+    @Subscribe
+    public void criticalError(CriticalErrorEvent event) {
+        ServerList.getInstance().deactivateServer();
+        if (event.getMessage().startsWith("connection")) {
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
+        }else {
+            Toast.makeText(getApplicationContext(),
+                    event.getMessage(),
+                    Toast.LENGTH_LONG).show();
+
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
+        }
     }
 
 }

@@ -38,6 +38,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import cz.mendelu.xmarik.train_manager.events.CriticalErrorEvent;
 import cz.mendelu.xmarik.train_manager.events.ReloadEvent;
 
 public class TrainHandler extends AppCompatActivity
@@ -185,7 +186,7 @@ public class TrainHandler extends AppCompatActivity
             direction1.setOnClickListener(new CompoundButton.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if(!update) {
+                    if (!update) {
                         if (direction1.isChecked()) {
                             direction1.setText(R.string.DirFor);
                         } else direction1.setText(R.string.dirBac);
@@ -207,7 +208,7 @@ public class TrainHandler extends AppCompatActivity
             direction1.setOnGenericMotionListener(new CompoundButton.OnGenericMotionListener() {
                 @Override
                 public boolean onGenericMotion(View view, MotionEvent motionEvent) {
-                    if(!update) {
+                    if (!update) {
                         if (direction1.isChecked()) {
                             direction1.setText(R.string.DirFor);
                         } else direction1.setText(R.string.dirBac);
@@ -238,10 +239,10 @@ public class TrainHandler extends AppCompatActivity
                 public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
                     // ListView Clicked item value
                     String value = spinner1.getItemAtPosition(position).toString();
-                    if(spinner1.getCount() > 0 && value.contains(":") ) {
+                    if (spinner1.getCount() > 0 && value.contains(":")) {
                         String lokoName = value.substring(0, value.indexOf(":"));
                         Train t = activeServer.getTrain(lokoName);
-                        String itemValue = t!=null ? t.getName() : null;
+                        String itemValue = t != null ? t.getName() : null;
                         if (itemValue != null) {
                             train1 = activeServer.getTrain(itemValue);
                             active1 = itemValue;
@@ -282,7 +283,7 @@ public class TrainHandler extends AppCompatActivity
                 public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                     if (train1 != null)
                         if (b) {
-                            if(!managed.contains(train1)) {
+                            if (!managed.contains(train1)) {
                                 managed.add(train1);
                                 train1.setControled(true);
                             }
@@ -312,10 +313,10 @@ public class TrainHandler extends AppCompatActivity
                 @Override
                 public void onProgressChanged(SeekBar seekBar, int progress,
                                               boolean fromUser) {
-                    if ( timer < System.currentTimeMillis() )
+                    if (timer < System.currentTimeMillis())
                         if (train1 != null) {
                             //because server cant handle as mutch packet as client possible could send
-                            timer=System.currentTimeMillis() + 200;
+                            timer = System.currentTimeMillis() + 200;
                             train1.setSpeed(progress);
                             setSpeed(progress, train1);
                         }
@@ -339,10 +340,10 @@ public class TrainHandler extends AppCompatActivity
                     @Override
                     public void onProgressChanged(SeekBar seekBar, int progress,
                                                   boolean fromUser) {
-                        if ( timer < System.currentTimeMillis() )
+                        if (timer < System.currentTimeMillis())
                             if (train2 != null) {
                                 //because server cant handle as mutch packet as client possible could send
-                                timer=System.currentTimeMillis() + 200;
+                                timer = System.currentTimeMillis() + 200;
                                 train2.setSpeed(progress);
                                 setSpeed(progress, train2);
                             }
@@ -408,7 +409,7 @@ public class TrainHandler extends AppCompatActivity
                         String value = spinner2.getItemAtPosition(position).toString();
                         String lokoName = value.substring(0, value.indexOf(":"));
                         Train t = activeServer.getTrain(lokoName);
-                        String itemValue = t!=null ? t.getName() : null;
+                        String itemValue = t != null ? t.getName() : null;
                         if (itemValue != null) {
                             train2 = activeServer.getTrain(itemValue);
                             active2 = itemValue;
@@ -463,12 +464,12 @@ public class TrainHandler extends AppCompatActivity
     }
 
     private void setDirectionText(int direction) {
-        if(!update)
+        if (!update)
             if (direction == 1) {
                 if (direction1.isChecked()) {
                     direction1.setText(R.string.DirFor);
                 } else direction1.setText(R.string.dirBac);
-            }else {
+            } else {
                 if (direction2.isChecked()) {
                     direction2.setText(R.string.DirFor);
                 } else direction2.setText(R.string.dirBac);
@@ -654,7 +655,7 @@ public class TrainHandler extends AppCompatActivity
 
     private void sendNext(String message) {
 
-        if(!update) {
+        if (!update) {
             if (TCPClientApplication.getInstance().getClient() != null) {
                 TCPClientApplication.getInstance().getClient().sendMessage(message);
                 Log.e("data", "C: Odeslana zpráva: " + message + "");
@@ -760,7 +761,7 @@ public class TrainHandler extends AppCompatActivity
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
 
-        }else if (id == R.id.nav_ack_trains) {
+        } else if (id == R.id.nav_ack_trains) {
             Intent intent = new Intent(this, AckTrains.class);
             startActivity(intent);
 
@@ -827,6 +828,22 @@ public class TrainHandler extends AppCompatActivity
         // set trains speed to 0
         stopTrains();
         super.onDestroy();
+    }
+
+    @Subscribe
+    public void criticalError(CriticalErrorEvent event) {
+        ServerList.getInstance().deactivateServer();
+        if (event.getMessage().startsWith("connection")) {
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
+        } else {
+            Toast.makeText(getApplicationContext(),
+                    event.getMessage(),
+                    Toast.LENGTH_LONG).show();
+            //possibility of another activity, but need additional analyze
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
+        }
     }
 
 

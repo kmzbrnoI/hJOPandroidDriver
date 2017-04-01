@@ -13,6 +13,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import org.greenrobot.eventbus.Subscribe;
+
+import cz.mendelu.xmarik.train_manager.events.CriticalErrorEvent;
+
 public class About extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -92,6 +96,22 @@ public class About extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Subscribe
+    public void criticalError(CriticalErrorEvent event) {
+        ServerList.getInstance().deactivateServer();
+        if (event.getMessage().startsWith("connection")) {
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
+        }else {
+            Toast.makeText(getApplicationContext(),
+                    event.getMessage(),
+                    Toast.LENGTH_LONG).show();
+            //possibility of another activity, but need additional analyze
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
+        }
     }
 
 }
