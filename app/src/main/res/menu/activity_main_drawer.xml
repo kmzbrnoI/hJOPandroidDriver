@@ -5,7 +5,7 @@
         <item
             android:id="@+id/nav_train_manage"
             android:icon="@drawable/ic_menu_send"
-            android:title="Rozhraní vlaku" />
+            android:title="Řízení vlaku" />
         <item
             android:id="@+id/nav_trains"
             android:icon="@drawable/ic_menu_gallery"
@@ -13,9 +13,9 @@
         <item
             android:id="@+id/nav_ack_trains"
             android:icon="@drawable/ic_train_black"
-            android:title="Uvolnění vlak" />
+            android:title="Uvolnění vlaku" />
 
-        <item android:title="Správa serveru">
+        <item android:title="Správa serverů">
             <menu>
                 <item
                     android:id="@+id/nav_server"
@@ -24,7 +24,7 @@
             </menu>
         </item>
     </group>
-    <item android:title="About">
+    <item android:title="O aplikaci">
         <menu>
             <item
                 android:id="@+id/nav_about"

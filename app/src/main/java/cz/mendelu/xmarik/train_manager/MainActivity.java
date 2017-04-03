@@ -174,7 +174,7 @@ public class MainActivity extends AppCompatActivity
         lAdapter.notifyDataSetChanged();
         Log.e("reload", "S: reoad done size '" + array.size() + "'");
         Toast.makeText(getApplicationContext(),
-                "vyhledávání serveru skončilo", Toast.LENGTH_LONG)
+                "Vyhledávání serverů dokončeno.", Toast.LENGTH_LONG)
                 .show();
     }
 

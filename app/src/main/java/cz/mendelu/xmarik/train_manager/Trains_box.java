@@ -192,7 +192,7 @@ public class Trains_box extends AppCompatActivity
 
     @Subscribe
     public void onEvent(ServerOkEvent event) {
-        dialogMessage.setText("Žádost odeslána, čekám na dispečera");
+        dialogMessage.setText("Žádost odeslána, čekám na dispečera.");
     }
 
 

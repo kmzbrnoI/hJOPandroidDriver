@@ -5,7 +5,7 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="action_settings">Nastavení</string>
-    <string name="title_activity_train_handler">Řízení lokomotívy</string>
+    <string name="title_activity_train_handler">Řízení vlaku</string>
     <string name="title_activity_settings">Nastavení</string>
     <string name="title_activity_ack_trains">Autorizované soupravy</string>
     <string name="controlArea">Vyberte cílovou oblast řízení</string>
@@ -14,19 +14,18 @@
     <string name="DirFor">vpřed</string>
     <string name="DirBack">vzad</string>
     <string name="zastav">Idle</string>
-    <string name="poslat">poslat</string>
     <string name="poslatZ">Odeslat žádost</string>
     <string name="žádost">Žádost</string>
-    <string name="zadostOdeslana">Žádost odeslána čekám na server</string>
+    <string name="zadostOdeslana">Žádost odeslána, čekám na server.</string>
     <string name="title_activity_main">Vyberte server</string>
-    <string name="dialogAreaTitle">"Probíhá žádost do oblasti: "</string>
-    <string name="nedostupnaWifi">Wifi připojení není dostupné</string>
-    <string name="autorizaceOk">Server autorizován a připojen</string>
-    <string name="autorizaceErr">Nezdařilo se připojit k serveru</string>
-    <string name="neniServer">Nebyl autorizován žádný server</string>
-    <string name="smazanoServer">servery byly smazány</string>
-    <string name="novaLoko">přijata nová lokomotíva</string>
-    <string name="lokoUvolneno">loko uvolneno</string>
+    <string name="dialogAreaTitle">"Probíhá žádost do stanice "</string>
+    <string name="nedostupnaWifi">Wifi připojení není dostupné.</string>
+    <string name="autorizaceOk">Připojeno a autorizováno.</string>
+    <string name="autorizaceErr">Připojení k serveru se nezdařilo.</string>
+    <string name="neniServer">Nebyl autorizován žádný server.</string>
+    <string name="smazanoServer">Všechny servery byly smazány.</string>
+    <string name="novaLoko">Přijata nová lokomotiva.</string>
+    <string name="lokoUvolneno">Lokomotiva uvolněna.</string>
     <string name="dirBac">vzad</string>
     <string name="opakovat">opakovat</string>
     <string name="uvolnit">Uvolnit</string>

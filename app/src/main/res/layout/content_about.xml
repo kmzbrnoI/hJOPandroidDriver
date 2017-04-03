@@ -22,7 +22,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/editText2"
             android:layout_weight="0.66"
-            android:text="aplikace sloužící k ovládání kolejových vozidel mobilním zařízením"
+            android:text="Aplikace sloužící k ovládání kolejových vozidel mobilním zařízením."
             android:editable="false" />
 
     </LinearLayout>
