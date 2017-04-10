@@ -220,7 +220,7 @@ public class Trains_box extends AppCompatActivity
             String serverMessage = s.getAreaServerString(itemValue);
             String msg = messageForServer.getText().toString();
             Log.e("tcp", "zadáno:" + msg + " \n");
-            serverMessage = serverMessage + "{" + msg + "}\n";
+            serverMessage = serverMessage + "{" + msg + "}";
             dialog.setTitle(getString(R.string.dialogAreaTitle) + msg);
             sendNext(serverMessage);
             lAdapter.notifyDataSetChanged();
@@ -233,7 +233,7 @@ public class Trains_box extends AppCompatActivity
     }
 
     private void cancelMessage() {
-        sendNext("-;LOK;G;CANCEL;\n");
+        sendNext("-;LOK;G;CANCEL");
         mProgressBar.setVisibility(View.GONE);
         this.sendButton.setText(R.string.poslatZ);
         this.trains.setClickable(true);

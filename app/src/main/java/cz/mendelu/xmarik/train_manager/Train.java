@@ -139,12 +139,12 @@ public class Train {
         String classString = this.lokoClass != null
                 ? ServerList.TRAINTYPE.values()
                 [Integer.parseInt(this.lokoClass)].toString() : "nezadáno";
-        return "název: " + this.userLokoName + "\n" +
-                "majitel: " + this.owner + "\n" +
-                "označení: " + this.mark + "\n" +
-                "poznámka: " + this.note + "\n" +
-                "třída: " + classString + "\n" +
-                "souprava: " + this.trainSet + "\n";
+        return "Název: " + this.userLokoName + "\n" +
+                "Majitel: " + this.owner + "\n" +
+                "Označení: " + this.mark + "\n" +
+                "Poznámka: " + this.note + "\n" +
+                "Třída: " + classString + "\n" +
+                "Souprava: " + this.trainSet + "\n";
     }
 
     public String toString() {
@@ -226,18 +226,18 @@ public class Train {
     public String setDirection(boolean direction) {
         this.direction = direction;
         String tmp = direction ? "0" : "1";
-        return base + ";D;" + tmp + "\n";
+        return base + ";D;" + tmp;
     }
 
     public String changeDirection() {
         this.direction = !this.direction;
         String tmp = direction ? "0" : "1";
-        return base + ";D;" + tmp + "\n";
+        return base + ";D;" + tmp;
     }
 
     public String Release() {
         String text = null;
-        text = base + "RELEASE" + "\n";
+        text = base + "RELEASE";
         return text;
     }
 
@@ -247,7 +247,7 @@ public class Train {
      * @return
      */
     public String GetSpeedTxt() {
-        return base + ";SP;" + kmhSpeed + "\n";
+        return base + ";SP;" + kmhSpeed;
     }
 
     /**
@@ -258,7 +258,7 @@ public class Train {
      */
     public String GetSpeedTxt(boolean dir) {
         this.direction = dir;
-        return base + ";SPD;" + kmhSpeed + ";" + direction + "\n";
+        return base + ";SPD;" + kmhSpeed + ";" + direction;
     }
 
     /**
@@ -278,7 +278,7 @@ public class Train {
                         fce = fce + "1";
                     } else fce = fce + "0";
                 }
-                return base + ";F;" + left + "-" + right + ";" + fce + "\n";
+                return base + ";F;" + left + "-" + right + ";" + fce;
             }
         return null;
     }
@@ -300,7 +300,7 @@ public class Train {
     public String setTotalManged(boolean totalManaged) {
         this.totalManaged = totalManaged;
 
-        return this.totalManaged ? base + ";TOTAL;1\n" : base + ";TOTAL;0\n";
+        return this.totalManaged ? base + ";TOTAL;1" : base + ";TOTAL;0";
     }
 
     /**
@@ -311,7 +311,7 @@ public class Train {
     public String emergencyStop() {
         this.speed = 0;
         this.kmhSpeed = 0;
-        return base + ";STOP;" + "\n";
+        return base + ";STOP;";
     }
 
     /**
@@ -320,7 +320,7 @@ public class Train {
      * @return
      */
     public String GetSpeedSTxt() {
-        return base + ";SP-S;" + speed + "\n";
+        return base + ";SP-S;" + speed;
     }
 
     /**
@@ -331,7 +331,7 @@ public class Train {
      */
     public String GetSpeedSTxt(boolean dir) {
         this.direction = dir;
-        return base + ";SPD-S;" + speed + ";" + direction + "\n";
+        return base + ";SPD-S;" + speed + ";" + direction;
     }
 
     public String getToken() {

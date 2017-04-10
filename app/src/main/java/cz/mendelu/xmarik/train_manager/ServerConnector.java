@@ -163,7 +163,7 @@ public class ServerConnector extends Activity {
                 user = mName.getText().toString();
                 passwd = HelpServices.hashPasswd(mPasswd.getText().toString());
                 setData(user, passwd, savebox.isChecked());
-                messges[1] = "-;LOK;G;AUTH;{" + user + "};" + passwd + "\n";
+                messges[1] = "-;LOK;G;AUTH;{" + user + "};" + passwd;
                 initialize();
                 dialog.dismiss();
             }
@@ -288,15 +288,15 @@ public class ServerConnector extends Activity {
             tcp.auth = true;
             tcp.start();
         } else finish();
-        messges[0] = "-;HELLO;1.0\n";
+        messges[0] = "-;HELLO;1.0";
         if (server.getUserName() != null && server.getUserPassword() != null) {
             user = server.getUserName();
             passwd = server.getUserPassword();
-            messges[1] = "-;LOK;G;AUTH;{" + user + "};" + passwd + "\n";
+            messges[1] = "-;LOK;G;AUTH;{" + user + "};" + passwd;
         } else {
             showDialog("Zadejte přihlašovací údaje", null);
         }
-        messges[2] = "-;OR-LIST;" + "\n";
+        messges[2] = "-;OR-LIST;";
         arrayList = new ArrayList<>();
         send = (Button) findViewById(R.id.send_button);
         progressBar = (ProgressBar) findViewById(R.id.serverLoadBar);
@@ -364,7 +364,7 @@ public class ServerConnector extends Activity {
                 if (save.isChecked()) {
                     setData(user, passwd, true);
                 } else setData(user, passwd, false);
-                messges[1] = "-;LOK;G;AUTH;{" + user + "};" + passwd + "\n";
+                messges[1] = "-;LOK;G;AUTH;{" + user + "};" + passwd;
             }
         });
         dialog.show();
