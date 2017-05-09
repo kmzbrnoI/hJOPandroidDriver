@@ -40,7 +40,7 @@ import cz.mendelu.xmarik.train_manager.events.ReloadEvent;
 
 import static android.preference.PreferenceManager.getDefaultSharedPreferences;
 
-public class MainActivity extends AppCompatActivity
+public class ServerSelect extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private final int port = 5880;
@@ -124,7 +124,7 @@ public class MainActivity extends AppCompatActivity
                         ConnectivityManager connManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
                         NetworkInfo mWifi = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
                         if (mWifi.isConnected()) {
-                            new UdpDiscover(context, port, (MainActivity) obj).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                            new UdpDiscover(context, port, (ServerSelect) obj).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                             System.out.print("button activated");
                             float deg = lButton.getRotation() + 720F;
                             lButton.animate().rotation(deg).setInterpolator(new AccelerateDecelerateInterpolator());
@@ -464,14 +464,14 @@ public class MainActivity extends AppCompatActivity
     public void criticalError(CriticalErrorEvent event) {
         ServerList.getInstance().deactivateServer();
         if (event.getMessage().startsWith("connection")) {
-            Intent intent = new Intent(this, MainActivity.class);
+            Intent intent = new Intent(this, ServerSelect.class);
             startActivity(intent);
         }else {
             Toast.makeText(getApplicationContext(),
                     event.getMessage(),
                     Toast.LENGTH_LONG).show();
 
-            Intent intent = new Intent(this, MainActivity.class);
+            Intent intent = new Intent(this, ServerSelect.class);
             startActivity(intent);
         }
     }

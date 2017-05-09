@@ -202,7 +202,7 @@ public class AckTrains extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_server) {
-            Intent intent = new Intent(this, MainActivity.class);
+            Intent intent = new Intent(this, ServerSelect.class);
             startActivity(intent);
         } else if (id == R.id.nav_about) {
             Intent intent = new Intent(this, About.class);
@@ -217,7 +217,7 @@ public class AckTrains extends AppCompatActivity
             drawer.closeDrawer(GravityCompat.START);
 
         } else if (id == R.id.nav_view) {
-            Intent intent = new Intent(this, MainActivity.class);
+            Intent intent = new Intent(this, ServerSelect.class);
             startActivity(intent);
 
         } else if (id == R.id.nav_trains) {

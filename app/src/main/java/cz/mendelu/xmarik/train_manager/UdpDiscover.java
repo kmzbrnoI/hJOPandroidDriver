@@ -32,11 +32,11 @@ public class UdpDiscover extends AsyncTask<String, Void, String> {
     String message;
     int DISCOVERY_PORT;
     ServerList reciver;
-    MainActivity main;
+    ServerSelect main;
     private WifiManager mWifi;
 
 
-    UdpDiscover(Context context, int port, MainActivity mainActivity) {
+    UdpDiscover(Context context, int port, ServerSelect mainActivity) {
         mWifi = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
         String zprava = "hJOP;1.0;regulator;mobileManager;";
         message = zprava + this.getIPAddress(true) + ";" + "\n";

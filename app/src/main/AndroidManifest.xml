@@ -13,8 +13,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".MainActivity"
-            android:label="@string/title_activity_main"
+            android:name=".ServerSelect"
+            android:label="@string/activity_server_select_title"
             android:screenOrientation="locked"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter android:label="@string/app_name">

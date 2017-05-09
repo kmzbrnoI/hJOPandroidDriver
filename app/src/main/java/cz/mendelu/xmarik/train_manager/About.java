@@ -65,7 +65,7 @@ public class About extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_server) {
-            Intent intent = new Intent(this, MainActivity.class);
+            Intent intent = new Intent(this, ServerSelect.class);
             startActivity(intent);
         } else if (id == R.id.nav_about) {
             DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -89,7 +89,7 @@ public class About extends AppCompatActivity
                 startActivity(intent);
             }
         } else if (id == R.id.nav_view) {
-            Intent intent = new Intent(this, MainActivity.class);
+            Intent intent = new Intent(this, ServerSelect.class);
             startActivity(intent);
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -101,14 +101,14 @@ public class About extends AppCompatActivity
     public void criticalError(CriticalErrorEvent event) {
         ServerList.getInstance().deactivateServer();
         if (event.getMessage().startsWith("connection")) {
-            Intent intent = new Intent(this, MainActivity.class);
+            Intent intent = new Intent(this, ServerSelect.class);
             startActivity(intent);
         }else {
             Toast.makeText(getApplicationContext(),
                     event.getMessage(),
                     Toast.LENGTH_LONG).show();
             //possibility of another activity, but need additional analyze
-            Intent intent = new Intent(this, MainActivity.class);
+            Intent intent = new Intent(this, ServerSelect.class);
             startActivity(intent);
         }
     }
