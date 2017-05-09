@@ -24,7 +24,7 @@
             android:layout_height="wrap_content">
 
             <TextView
-                android:text="Nalezené servery"
+                android:text="@string/conn_servers_discovered"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/textView9"
@@ -59,7 +59,7 @@
             android:weightSum="1" >
 
             <TextView
-                android:text="Uložené servery"
+                android:text="@string/conn_servers_saved"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/textView10"

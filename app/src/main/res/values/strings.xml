@@ -33,6 +33,8 @@
     <string name="trl_release">Uvolnit</string>
     <string name="trl_loko_released">Lokomotiva uvolněna.</string>
 
+    <string name="conn_servers_discovered">Nalezené servery</string>
+    <string name="conn_servers_saved">Uložené servery</string>
     <string name="conn_wifi_unavailable">Wifi připojení není dostupné.</string>
     <string name="conn_connected">Připojeno a autorizováno.</string>
     <string name="conn_connection_error">Připojení k serveru se nezdařilo.</string>
