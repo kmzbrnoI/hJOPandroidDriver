@@ -37,11 +37,6 @@
             android:screenOrientation="locked"
             android:theme="@style/AppTheme.NoActionBar" />
 
-        <activity android:name=".activities.Servers"
-            android:launchMode="singleInstance"
-            android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar" />
-
         <activity android:name=".activities.TrainRequest"
             android:screenOrientation="locked"
             android:launchMode="singleInstance"

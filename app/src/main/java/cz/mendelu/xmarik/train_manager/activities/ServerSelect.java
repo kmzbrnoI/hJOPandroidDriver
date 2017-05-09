@@ -65,7 +65,7 @@ public class ServerSelect extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         //tady nacist ulozeny data
         super.onCreate(savedInstanceState);
-        // setContentView(R.layout.activity_main); REMOVED BY JOHN
+        setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         get();
@@ -357,9 +357,6 @@ public class ServerSelect extends AppCompatActivity
                 Intent intent = new Intent(this, TrainRequest.class);
                 startActivity(intent);
             }
-        } else if (id == R.id.nav_view) {
-            Intent intent = new Intent(this, Servers.class);
-            startActivity(intent);
         }else if (id == R.id.nav_ack_trains) {
             if(ServerList.getInstance().getActiveServer() == null) {
                 Toast.makeText(getApplicationContext(),
