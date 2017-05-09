@@ -1,12 +1,12 @@
 # Android Driver for hJOP
 
-hJOPandroidDriver is a simple application, which allows user to became an
+hJOPandroidDriver is a simple application, which allows user to become an
 engine driver and control one or more engines on the model railroad. It fully
 cooperates with [hJOP](http://hjop.kmz-brno.cz) (in Czech). Importantly,
 hJOP is required for this application to work.
 
-Application connect to the main hJOPserver via WiFi and requests engines from
-railroad dispatchers.
+Application connects directly to the main hJOPserver via WiFi and requests
+engines from railroad dispatchers.
 
 ## Contributors
 
