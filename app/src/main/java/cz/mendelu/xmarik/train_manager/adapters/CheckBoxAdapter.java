@@ -1,4 +1,4 @@
-package cz.mendelu.xmarik.train_manager;
+package cz.mendelu.xmarik.train_manager.adapters;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -11,6 +11,9 @@ import android.widget.CheckBox;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+
+import cz.mendelu.xmarik.train_manager.R;
+import cz.mendelu.xmarik.train_manager.TrainFunction;
 
 /**
  * Created by ja on 5. 9. 2016.
