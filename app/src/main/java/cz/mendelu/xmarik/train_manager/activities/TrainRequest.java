@@ -147,7 +147,7 @@ public class TrainRequest extends AppCompatActivity
         //sends the message to the server
         if (TCPClientApplication.getInstance().getClient() != null) {
             TCPClientApplication.getInstance().getClient().sendMessage(message);
-            Log.e("tcp", "odeslano:" + message + " \n");
+            Log.v("TCP", "odeslano:" + message + " \n");
             mProgressBar.setVisibility(View.VISIBLE);
         }
     }
@@ -223,7 +223,7 @@ public class TrainRequest extends AppCompatActivity
             final Server s = ServerList.getInstance().getActiveServer();
             String serverMessage = s.getAreaServerString(itemValue);
             String msg = messageForServer.getText().toString();
-            Log.e("tcp", "zadáno:" + msg + " \n");
+            Log.v("tcp", "zadáno:" + msg + " \n");
             serverMessage = serverMessage + "{" + msg + "}";
             dialog.setTitle(getString(R.string.tr_info_request_requesting) + msg);
             sendNext(serverMessage);

@@ -114,7 +114,7 @@ public class TrainRelease extends AppCompatActivity
         //sends the message to the server
         if (TCPClientApplication.getInstance().getClient() != null) {
             TCPClientApplication.getInstance().getClient().sendMessage(message);
-            Log.e("tcp", "odeslano:" + message + " \n");
+            Log.v("TCP", "odeslano:" + message + " \n");
         }
     }
 

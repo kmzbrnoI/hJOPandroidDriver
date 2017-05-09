@@ -15,7 +15,7 @@ import java.util.Collections;
 public class HelpServices {
 
     public static String[] parseHelper(String s) {
-        Log.e("parse helper ", "start with : " + s + "'");
+        Log.v("Parse", s);
         String splitByBrecket[] = s.split("\\{.*\\}");
         ArrayList<String> response = new ArrayList<>();
         for (String tmp : splitByBrecket) {

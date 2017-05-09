@@ -123,7 +123,7 @@ public class ServerConnector extends Activity {
 
         if (TCPClientApplication.getInstance().getClient() != null && message != null) {
             TCPClientApplication.getInstance().getClient().sendMessage(message);
-            Log.e("", "Send odeslano:" + message);
+            Log.v("TCP", "Send odeslano:" + message);
         }
         //refresh the list
         mAdapter.notifyDataSetChanged();
@@ -240,8 +240,6 @@ public class ServerConnector extends Activity {
             s = s.replace("]", "");
             s = s.replace("];", "");
             String[] area = s.split(",");
-            if (area.length > 1)
-                Log.e("", "area : " + area.toString());
             server.addArea(new ControlArea(area[0], area[1]));
         }
     }

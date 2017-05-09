@@ -70,7 +70,7 @@ public class TCPClientApplication extends Application {
     }
 
     public void sendToServer(String message) {
-        Log.e("", "odeslano:" + message);
+        Log.v("TCP", "odeslano:" + message);
         //sends the message to the server
         if (mTcpClient != null) {
             mTcpClient.sendMessage(message);
@@ -114,7 +114,7 @@ public class TCPClientApplication extends Application {
             super.onProgressUpdate(values);
             String serverMessage = values[0];
             //parsovat odpoved od serveru je ve values 0
-            Log.e("", "zprava :" + serverMessage);
+            Log.v("TCP", "zprava :" + serverMessage);
             if (serverMessage.startsWith("-;MOD-CAS") || serverMessage.startsWith("-;DCC")) {
 
             } else if (serverMessage.startsWith("-;HELLO;")) {

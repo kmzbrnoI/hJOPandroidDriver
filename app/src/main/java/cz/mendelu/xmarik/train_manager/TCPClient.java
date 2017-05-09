@@ -39,8 +39,8 @@ public class TCPClient {
         this.SERVERIP = ip;
         this.SERVERPORT = port;
         mMessageListener = listener;
-        Log.e("TCP Client", "port: " + port);
-        Log.e("TCP Client", "ip: " + ip);
+        Log.i("TCP Client", "port: " + port);
+        Log.i("TCP Client", "ip: " + ip);
     }
 
     /**
@@ -49,7 +49,7 @@ public class TCPClient {
      * @param message text entered by client
      */
     public void sendMessage(String message) {
-        Log.e("", "odeslano:" + message);
+        Log.v("TCP", "odeslano:" + message);
         if (out != null && !out.checkError()) {
             out.println(message);
             out.flush();
@@ -74,7 +74,7 @@ public class TCPClient {
 
         try {
             InetAddress serverAddr = InetAddress.getByName(SERVERIP);
-            Log.e("TCP Client", "C: Connecting...");
+            Log.d("TCP Client", "C: Connecting...");
             //create a socket to make the connection with the server
 
             try {
@@ -88,8 +88,7 @@ public class TCPClient {
                 //send the message to the server
                 if (socket != null) {
                     out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(socket.getOutputStream())), true);
-                    Log.e("TCP Client", "C: Sent.");
-                    Log.e("TCP Client", "C: Done.");
+                    Log.d("TCP Client", "C: Sent.");
                     //receive the message which the server sends back
                     in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                     //in this while the client listens for the messages sent by the server
@@ -102,12 +101,12 @@ public class TCPClient {
                         }
                         if (serverMessage != null && mMessageListener != null) {
                             //call the method messageReceived from MyActivity class
-                            Log.e("TCP Client", "C: message received: " + serverMessage);
+                            Log.d("TCP Client", "C: message received: " + serverMessage);
                             mMessageListener.messageReceived(serverMessage);
                         }
                         serverMessage = null;
                     }
-                    Log.e("RESPONSE FROM SERVER", "S: Received Message: '" + serverMessage + "'");
+                    Log.d("RESPONSE FROM SERVER", "S: Received Message: '" + serverMessage + "'");
                 } else {
                     Log.e("TCP", "S: Error - server is unreachable");
                     serverMessage = "error - server is unreachable";

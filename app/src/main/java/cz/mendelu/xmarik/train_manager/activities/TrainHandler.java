@@ -663,9 +663,9 @@ public class TrainHandler extends AppCompatActivity
         if (!update) {
             if (TCPClientApplication.getInstance().getClient() != null) {
                 TCPClientApplication.getInstance().getClient().sendMessage(message);
-                Log.e("data", "C: Odeslana zpráva: " + message + "");
+                Log.v("data", "C: Odeslana zpráva: " + message + "");
             } else {
-                Log.e("data", "C: Neodeslána zpráva: " + message + " Tcp není navázáno");
+                Log.v("data", "C: Neodeslána zpráva: " + message + " Tcp není navázáno");
                 //TODO error
             }
         }

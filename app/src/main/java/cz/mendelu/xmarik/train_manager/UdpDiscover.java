@@ -44,7 +44,6 @@ public class UdpDiscover extends AsyncTask<String, Void, String> {
         message = zprava + this.getIPAddress(true) + ";" + "\n";
         DISCOVERY_PORT = port;
         reciver = ServerList.getInstance();
-        Log.e("", "udp create");
         main = mainActivity;
     }
 
@@ -59,7 +58,6 @@ public class UdpDiscover extends AsyncTask<String, Void, String> {
      * @throws IOException
      */
     private void sendDiscoveryRequest(DatagramSocket socket) throws IOException {
-        Log.e("", "udp sending");
         DatagramPacket packet = new DatagramPacket(message.getBytes(), message
                 .length(), getBroadcastAddress(), DISCOVERY_PORT);
         socket.send(packet);
@@ -97,7 +95,6 @@ public class UdpDiscover extends AsyncTask<String, Void, String> {
         long start = System.currentTimeMillis();
         byte[] buf = new byte[1024];
         ArrayList<Server> servers = new ArrayList<>();
-        Log.e("response", "S: start listening socket '" + socket.toString() + "'");
 
         // Loop and try to receive responses until the timeout elapses. We'll
         // get
@@ -130,7 +127,6 @@ public class UdpDiscover extends AsyncTask<String, Void, String> {
     private Server parseServerMessage(String message) {
         //"hJOP";verze_protokolu;typ_zarizeni;server_nazev;server_ip;server_port;
         //server_status;server_popis
-        Log.e("parse message", "start message parsing: " + message + "'");
         String[] tmp = HelpServices.parseHelper(message);
         Server server = null;
 
@@ -193,15 +189,12 @@ public class UdpDiscover extends AsyncTask<String, Void, String> {
             sendDiscoveryRequest(socket);
             servers = listenForResponses(socket);
             socket.close();
-            Log.e("socket end", "S: ok: ");
         } catch (Exception e) {
             servers = new ArrayList<Server>(); // use an empty one
             Log.e("exception", "S: Received Message: '" + e + "'");
             //"Could not send discovery request", e);
         }
         reciver.addServer(servers);
-        Log.e("RESPONSE FROM SERVER", "S: Received Message: '" + servers + "'");
-        //main.dataReload();
 
         return null;
     }
@@ -209,7 +202,6 @@ public class UdpDiscover extends AsyncTask<String, Void, String> {
     @Override
     protected void onPostExecute(String result) {
         super.onPostExecute(result);
-        Log.e("RESPONSE FROM SERVER", "S: response here: '");
         EventBus.getDefault().post(new ReloadEvent(""));
     }
 

@@ -177,7 +177,6 @@ public class ServerSelect extends AppCompatActivity
                 android.R.layout.simple_list_item_1, android.R.id.text1, array);
         lServers.setAdapter(lAdapter);
         lAdapter.notifyDataSetChanged();
-        Log.e("reload", "S: reoad done size '" + array.size() + "'");
         Toast.makeText(getApplicationContext(),
                 getString(R.string.conn_search_finished), Toast.LENGTH_LONG)
                 .show();
