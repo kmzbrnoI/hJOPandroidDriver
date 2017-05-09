@@ -22,7 +22,7 @@ public class NewServer extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_new_server);
+        setContentView(R.layout.activity_server_new);
         nameText = (EditText) findViewById(R.id.nameText);
         ipAdrText = (EditText) findViewById(R.id.ipText);
         portText = (EditText) findViewById(R.id.portText);

@@ -66,7 +66,7 @@ public class TrainRequest extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_trains_box);
+        setContentView(R.layout.activity_train_request);
         dialog = new Dialog(this);
         dialog.setContentView(R.layout.train_request_dialog);
         dialog.setTitle(R.string.tr_request);
