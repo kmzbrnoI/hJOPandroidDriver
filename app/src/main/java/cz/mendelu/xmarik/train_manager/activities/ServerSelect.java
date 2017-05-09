@@ -65,7 +65,7 @@ public class ServerSelect extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         //tady nacist ulozeny data
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_server_select);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         get();
