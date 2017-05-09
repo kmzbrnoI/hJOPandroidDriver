@@ -21,7 +21,7 @@ import cz.mendelu.xmarik.train_manager.TrainFunction;
 public class CheckBoxAdapter extends ArrayAdapter<TrainFunction> {
     private LayoutInflater vi;
     private ArrayList<TrainFunction> trainList;
-    private int names;
+
     public CheckBoxAdapter(Context context, int textViewResourceId,
                            ArrayList<TrainFunction> trainList) {
         super(context, textViewResourceId, trainList);
@@ -57,15 +57,10 @@ public class CheckBoxAdapter extends ArrayAdapter<TrainFunction> {
         if (function.getName().equals("")) {
             tmpName = "";
         } else tmpName = function.getName();
-        if (names == 1) {
-            holder.code.setText(" (" + function.getCode() + ")");
-        } else if (names == 2) {
-            holder.code.setText(tmpName);
-        } else if (names == 3) {
 
-            holder.code.setText(tmpName != null && !tmpName.equals("") ?
-                    function.getCode() + ": " + tmpName : function.getCode());
-        }
+        holder.code.setText(tmpName != null && !tmpName.equals("") ?
+             function.getCode() + ": " + tmpName : function.getCode());
+
         holder.name.setText("");
         holder.name.setChecked(function.isSelected());
         holder.name.setTag(function);

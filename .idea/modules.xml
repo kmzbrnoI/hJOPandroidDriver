@@ -3,7 +3,6 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/hJOPdriver.iml" filepath="$PROJECT_DIR$/hJOPdriver.iml" />
       <module fileurl="file://$PROJECT_DIR$/train_manager.iml" filepath="$PROJECT_DIR$/train_manager.iml" />
     </modules>
