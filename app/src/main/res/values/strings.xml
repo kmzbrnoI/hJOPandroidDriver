@@ -71,4 +71,9 @@
 
     <string name="save">Save</string>
     <string name="cancel">Cancel</string>
+
+    <string name="about">hJOP Driver allows you to become an engine driver and control one or more
+        engines on the model railroad. It fully cooperates with hJOP.\nhttp://hjop.kmz-brno.cz/"</string>
+    <string name="contributors">This application was created as a master thesis by Miroslav Marik at the
+        Mendel University in Brno, Czech Republic.\nCurrent maintainer is Jan Horacek.</string>
 </resources>

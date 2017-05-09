@@ -1,6 +1,7 @@
 package cz.mendelu.xmarik.train_manager.activities;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -10,6 +11,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -114,4 +116,9 @@ public class About extends AppCompatActivity
         }
     }
 
+    public void linkhJOP(View v) {
+        Uri uriUrl = Uri.parse("http://hjop.kmz-brno.cz/");
+        Intent launchBrowser = new Intent(Intent.ACTION_VIEW, uriUrl);
+        startActivity(launchBrowser);
+    }
 }

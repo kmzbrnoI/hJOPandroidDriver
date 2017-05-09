@@ -12,19 +12,66 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="cz.mendelu.xmarik.train_manager.activities.About"
     tools:showIn="@layout/app_bar_about">
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:orientation="vertical" android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:weightSum="1">
 
-        <EditText
+    <ScrollView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/scroll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/editText2"
-            android:layout_weight="0.66"
-            android:text="Aplikace sloužící k ovládání kolejových vozidel mobilním zařízením."
-            android:editable="false" />
+            android:layout_height="match_parent"
+            android:weightSum="1">
 
-    </LinearLayout>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/editText2"
+                android:textSize="20sp"
+                android:autoLink="web"
+                android:text="@string/about" />
+
+            <TextView
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:lines="2" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/editText2"
+                android:textSize="20sp"
+                android:autoLink="web"
+                android:text="@string/contributors" />
+
+            <TextView
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:lines="3" />
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="100dp"
+                android:id="@+id/ib_about"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_hjop_icon"
+                android:onClick="linkhJOP"
+                android:background="@null"
+                android:scaleType="fitCenter" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/editText2"
+                android:textSize="20sp"
+                android:autoLink="web"
+                android:gravity="center"
+                android:text="hJOP" />
+
+        </LinearLayout>
+
+    </ScrollView>
 
 </RelativeLayout>
