@@ -13,7 +13,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".ServerSelect"
+            android:name=".activities.ServerSelect"
             android:label="@string/activity_server_select_title"
             android:screenOrientation="locked"
             android:theme="@style/AppTheme.NoActionBar">
@@ -23,37 +23,37 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".TrainHandler"
+            android:name=".activities.TrainHandler"
             android:launchMode="singleInstance"
             android:label="@string/activity_train_handler_title"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".AckTrains"
+            android:name=".activities.AckTrains"
             android:launchMode="singleInstance"
             android:label="@string/activity_ack_trains_title"
             android:screenOrientation="locked"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".Servers"
+        <activity android:name=".activities.Servers"
             android:launchMode="singleInstance"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar"
         />
-        <activity android:name=".TrainRequest"
+        <activity android:name=".activities.TrainRequest"
             android:screenOrientation="locked"
             android:launchMode="singleInstance"
             android:label="@string/activity_train_request_title"
             android:theme="@style/AppTheme.NoActionBar"
         />
-        <activity android:name=".ServerConnector"
+        <activity android:name=".activities.ServerConnector"
             android:label="@string/app_name"
             android:launchMode="singleInstance"
             android:noHistory="true"
             android:theme="@style/AppTheme.NoActionBar"
             />
-        <activity android:name=".NewServer" />
-        <activity android:name=".RemoveServer" />
+        <activity android:name=".activities.NewServer" />
+        <activity android:name=".activities.RemoveServer" />
 
-        <activity android:name=".About"
+        <activity android:name=".activities.About"
             android:launchMode="singleInstance"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">

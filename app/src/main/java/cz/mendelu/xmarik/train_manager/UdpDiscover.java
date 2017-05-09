@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import cz.mendelu.xmarik.train_manager.activities.ServerSelect;
 import cz.mendelu.xmarik.train_manager.events.ReloadEvent;
 
 
@@ -36,7 +37,7 @@ public class UdpDiscover extends AsyncTask<String, Void, String> {
     private WifiManager mWifi;
 
 
-    UdpDiscover(Context context, int port, ServerSelect mainActivity) {
+    public UdpDiscover(Context context, int port, ServerSelect mainActivity) {
         mWifi = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
         String zprava = "hJOP;1.0;regulator;mobileManager;";
         message = zprava + this.getIPAddress(true) + ";" + "\n";

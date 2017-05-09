@@ -1,4 +1,4 @@
-package cz.mendelu.xmarik.train_manager;
+package cz.mendelu.xmarik.train_manager.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,6 +14,8 @@ import android.widget.Toast;
 
 import org.greenrobot.eventbus.Subscribe;
 
+import cz.mendelu.xmarik.train_manager.R;
+import cz.mendelu.xmarik.train_manager.ServerList;
 import cz.mendelu.xmarik.train_manager.events.CriticalErrorEvent;
 
 public class About extends AppCompatActivity

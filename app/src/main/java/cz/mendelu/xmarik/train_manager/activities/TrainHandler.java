@@ -1,4 +1,4 @@
-package cz.mendelu.xmarik.train_manager;
+package cz.mendelu.xmarik.train_manager.activities;
 
 import android.content.Context;
 import android.content.DialogInterface;
@@ -38,6 +38,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import cz.mendelu.xmarik.train_manager.CheckBoxAdapter;
+import cz.mendelu.xmarik.train_manager.R;
+import cz.mendelu.xmarik.train_manager.Server;
+import cz.mendelu.xmarik.train_manager.ServerList;
+import cz.mendelu.xmarik.train_manager.TCPClientApplication;
+import cz.mendelu.xmarik.train_manager.Train;
 import cz.mendelu.xmarik.train_manager.events.CriticalErrorEvent;
 import cz.mendelu.xmarik.train_manager.events.ReloadEvent;
 

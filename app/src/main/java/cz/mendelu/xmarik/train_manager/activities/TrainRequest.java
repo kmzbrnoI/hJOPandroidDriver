@@ -1,4 +1,4 @@
-package cz.mendelu.xmarik.train_manager;
+package cz.mendelu.xmarik.train_manager.activities;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -33,6 +33,14 @@ import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 
+import cz.mendelu.xmarik.train_manager.R;
+import cz.mendelu.xmarik.train_manager.Server;
+import cz.mendelu.xmarik.train_manager.ServerList;
+import cz.mendelu.xmarik.train_manager.TCPClientApplication;
+import cz.mendelu.xmarik.train_manager.activities.About;
+import cz.mendelu.xmarik.train_manager.activities.AckTrains;
+import cz.mendelu.xmarik.train_manager.activities.ServerSelect;
+import cz.mendelu.xmarik.train_manager.activities.TrainHandler;
 import cz.mendelu.xmarik.train_manager.events.CriticalErrorEvent;
 import cz.mendelu.xmarik.train_manager.events.RefuseEvent;
 import cz.mendelu.xmarik.train_manager.events.ServerOkEvent;

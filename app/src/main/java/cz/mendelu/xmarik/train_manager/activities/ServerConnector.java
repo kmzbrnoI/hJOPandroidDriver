@@ -1,4 +1,4 @@
-package cz.mendelu.xmarik.train_manager;
+package cz.mendelu.xmarik.train_manager.activities;
 
 import android.app.Activity;
 import android.app.Dialog;
@@ -20,6 +20,13 @@ import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 
+import cz.mendelu.xmarik.train_manager.ControlArea;
+import cz.mendelu.xmarik.train_manager.HelpServices;
+import cz.mendelu.xmarik.train_manager.MyCustomAdapter;
+import cz.mendelu.xmarik.train_manager.R;
+import cz.mendelu.xmarik.train_manager.Server;
+import cz.mendelu.xmarik.train_manager.ServerList;
+import cz.mendelu.xmarik.train_manager.TCPClientApplication;
 import cz.mendelu.xmarik.train_manager.events.AreasEvent;
 import cz.mendelu.xmarik.train_manager.events.ErrorEvent;
 import cz.mendelu.xmarik.train_manager.events.HandShakeEvent;

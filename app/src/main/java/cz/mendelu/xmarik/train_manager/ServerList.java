@@ -40,7 +40,7 @@ public class ServerList {
         return instance;
     }
 
-    void setPassword(Server server) {
+    public void setPassword(Server server) {
         if (storedServers.contains(server)) {
             for (Server s : storedServers) {
                 if (s.equals(server)) {
@@ -51,7 +51,7 @@ public class ServerList {
         } else storedServers.add(server);
     }
 
-    String getSaveString() {
+    public String getSaveString() {
         String saveString = "";
         for (Server s : this.storedServers) {
             saveString = saveString + s.getSaveDataString() + "|";
@@ -59,7 +59,7 @@ public class ServerList {
         return saveString;
     }
 
-    void loadServers(String servers) {
+    public void loadServers(String servers) {
         String[] serverString = servers.split("\\|");
         for (String tmpS : serverString) {
             String[] attributes = tmpS.split(";");
@@ -71,28 +71,28 @@ public class ServerList {
         }
     }
 
-    void clearCustomServer() {
+    public void clearCustomServer() {
         Server tmp = this.getActiveServer();
         this.storedServers.clear();
         if (tmp != null) this.storedServers.add(tmp);
     }
 
 
-    void addServer(ArrayList<Server> servers) {
+    public void addServer(ArrayList<Server> servers) {
         for(Server s : servers) {
             if(!this.servers.contains(s))
                 this.servers.add(s);
         }
     }
 
-    void clear() {
+    public void clear() {
         Set<Server> hs = new HashSet<>();
         hs.addAll(servers);
         servers.clear();
         servers.addAll(hs);
     }
 
-    void addCustomServer(Server server) {
+    public void addCustomServer(Server server) {
         if (!this.storedServers.contains(server)) {
                 this.storedServers.add(server);
                 Collections.sort(storedServers, new CustomServerComparator());
@@ -103,7 +103,7 @@ public class ServerList {
         return this.servers;
     }
 
-    ArrayList<String> getServersString() {
+    public ArrayList<String> getServersString() {
         ArrayList<String> tmp = new ArrayList<>();
         for (Server s : this.servers) {
             tmp.add(s.getStringData());
@@ -111,7 +111,7 @@ public class ServerList {
         return tmp;
     }
 
-    ArrayList<String> getStoredServersString() {
+    public ArrayList<String> getStoredServersString() {
         ArrayList<String> tmp = new ArrayList<>();
         for (Server s : this.storedServers) {
             tmp.add(s.getStoredStringData());
@@ -119,11 +119,11 @@ public class ServerList {
         return tmp;
     }
 
-    ArrayList<Server> getCustomServers() {
+    public ArrayList<Server> getCustomServers() {
         return this.storedServers;
     }
 
-    Server getActiveServer() {
+    public Server getActiveServer() {
         for (Server s : this.servers) {
             if (s.getActive()) return s;
         }
@@ -133,12 +133,12 @@ public class ServerList {
         return null;
     }
 
-    void deleteAllData() {
+    public void deleteAllData() {
         storedServers = null;
         servers = null;
     }
 
-    void deleteAllUserData() {
+    public void deleteAllUserData() {
         for (Server s : this.storedServers) {
             s.setUserName(null);
             s.setUserPassword(null);
@@ -149,7 +149,7 @@ public class ServerList {
         }
     }
 
-    Server getServer(String itemValue) {
+    public Server getServer(String itemValue) {
         for (Server s : this.storedServers) {
             if (s.name.equals(itemValue)) return s;
         }
@@ -159,12 +159,12 @@ public class ServerList {
         return null;
     }
 
-    void removeServer(int position) {
+    public void removeServer(int position) {
         if (position <= storedServers.size())
             this.storedServers.remove(position);
     }
 
-    String getServerStoreString() {
+    public String getServerStoreString() {
         String serverStoreString = "";
         for (Server s : this.storedServers) {
             serverStoreString = serverStoreString + "--" + s.getStringData();
@@ -172,7 +172,7 @@ public class ServerList {
         return serverStoreString;
     }
 
-    void setActive(Server server) {
+    public void setActive(Server server) {
         for (Server s : this.servers) {
             if ((s.getActive())) {
                 if (!s.equals(server)) {
@@ -189,7 +189,7 @@ public class ServerList {
         }
     }
 
-    void deactivateServer() {
+    public void deactivateServer() {
         for (Server s : this.servers) {
             if ((s.getActive())) {
                 s.setActive(false);
@@ -202,7 +202,7 @@ public class ServerList {
         }
     }
 
-    void clearLocalServers() {
+    public void clearLocalServers() {
         this.servers = new ArrayList<>();
     }
 

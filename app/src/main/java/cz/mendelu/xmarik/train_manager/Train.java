@@ -218,7 +218,7 @@ public class Train {
         return userLokoName;
     }
 
-    String getDisplayLokoName() {
+    public String getDisplayLokoName() {
         return this.userLokoName + " : " + this.mark;
     }
 

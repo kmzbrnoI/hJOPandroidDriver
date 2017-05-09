@@ -1,4 +1,4 @@
-package cz.mendelu.xmarik.train_manager;
+package cz.mendelu.xmarik.train_manager.activities;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -35,6 +35,11 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.util.ArrayList;
 
+import cz.mendelu.xmarik.train_manager.HelpServices;
+import cz.mendelu.xmarik.train_manager.R;
+import cz.mendelu.xmarik.train_manager.Server;
+import cz.mendelu.xmarik.train_manager.ServerList;
+import cz.mendelu.xmarik.train_manager.UdpDiscover;
 import cz.mendelu.xmarik.train_manager.events.CriticalErrorEvent;
 import cz.mendelu.xmarik.train_manager.events.ReloadEvent;
 

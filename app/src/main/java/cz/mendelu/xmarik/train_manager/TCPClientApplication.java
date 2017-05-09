@@ -27,7 +27,7 @@ public class TCPClientApplication extends Application {
     static TCPClientApplication instance;
     public boolean auth = false;
     TCPClient mTcpClient;
-    Server server;
+    public Server server;
     private String tCPAnswer;
     private ArrayList<TCPAnswer> serverResponses;
     private ConnectTask connectTask;
