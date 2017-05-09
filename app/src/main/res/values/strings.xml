@@ -53,6 +53,13 @@
     <string name="login_password">Heslo</string>
     <string name="login_save">Uložit login</string>
 
+    <string name="mm_connect">Připojit</string>
+    <string name="mm_change_login">Změnit přihlašovací údaje</string>
+    <string name="mm_change_settings">Upravit</string>
+    <string name="mm_info">Informace</string>
+    <string name="mm_delete">Smazat</string>
+    <string name="mm_delete_all">Smazat všechny servery</string>
+
     <string name="save">Uložit</string>
     <string name="cancel">Zrušit</string>
 </resources>

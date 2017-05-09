@@ -189,7 +189,16 @@ public class ServerSelect extends AppCompatActivity
         if (v.getId() == R.id.farServers) {
             AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
             menu.setHeaderTitle(array1.get(info.position));
-            String[] menuItems = {"Připojit", "Přihlašovací údaje", "Změnit", "Info", "Smazat", "Smazat vše"};
+
+            String[] menuItems = {
+                    getString(R.string.mm_connect),
+                    getString(R.string.mm_change_login),
+                    getString(R.string.mm_change_settings),
+                    getString(R.string.mm_info),
+                    getString(R.string.mm_delete),
+                    getString(R.string.mm_delete_all)
+            };
+
             for (int i = 0; i < menuItems.length; i++) {
                 menu.add(Menu.NONE, i, i, menuItems[i]);
             }
