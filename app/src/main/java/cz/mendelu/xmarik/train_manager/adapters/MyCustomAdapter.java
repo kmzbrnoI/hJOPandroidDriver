@@ -1,4 +1,4 @@
-package cz.mendelu.xmarik.train_manager;
+package cz.mendelu.xmarik.train_manager.adapters;
 
 /**
  * Created by ja on 25. 5. 2016.
@@ -12,6 +12,8 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+
+import cz.mendelu.xmarik.train_manager.R;
 
 public class MyCustomAdapter extends BaseAdapter {
     private ArrayList<String> mListItems;

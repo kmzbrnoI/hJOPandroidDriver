@@ -22,7 +22,7 @@ import java.util.ArrayList;
 
 import cz.mendelu.xmarik.train_manager.ControlArea;
 import cz.mendelu.xmarik.train_manager.HelpServices;
-import cz.mendelu.xmarik.train_manager.MyCustomAdapter;
+import cz.mendelu.xmarik.train_manager.adapters.MyCustomAdapter;
 import cz.mendelu.xmarik.train_manager.R;
 import cz.mendelu.xmarik.train_manager.Server;
 import cz.mendelu.xmarik.train_manager.ServerList;
