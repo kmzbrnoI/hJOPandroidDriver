@@ -12,7 +12,7 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="uložit"
+        android:text="@string/ns_save"
         android:id="@+id/saveButton"
         android:layout_gravity="right|bottom"
         android:onClick="save" />
@@ -20,7 +20,7 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="zpět"
+        android:text="@string/ns_cancel"
         android:id="@+id/backButton"
         android:layout_gravity="left|bottom"
         android:onClick="back" />
@@ -35,7 +35,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="Název serveru"
+            android:text="@string/ns_server_name"
             android:id="@+id/textView4"
             android:layout_gravity="center_horizontal" />
 
@@ -49,7 +49,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="IP/DNS serveru  "
+            android:text="@string/ns_server_ip_dns"
             android:id="@+id/textView5"
             android:layout_gravity="center_horizontal" />
 
@@ -63,7 +63,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="Port "
+            android:text="@string/ns_server_port"
             android:id="@+id/textView6"
             android:layout_gravity="center_horizontal" />
 
@@ -79,7 +79,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="Popis"
+            android:text="@string/ns_server_type"
             android:id="@+id/textView7"
             android:layout_gravity="center_horizontal" />
 
