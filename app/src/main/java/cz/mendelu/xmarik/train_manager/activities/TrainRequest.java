@@ -158,7 +158,7 @@ public class TrainRequest extends AppCompatActivity
         reloadEventHelper();
         if (this.sendButton.getText().equals("zrusit")) this.sendButton.setText(R.string.tr_send_request);
         Toast.makeText(getApplicationContext(),
-                R.string.novaLoko, Toast.LENGTH_LONG)
+                R.string.gl_new_loko, Toast.LENGTH_LONG)
                 .show();
         //TODO podminka s automatickym prechodem
         EventBus.getDefault().unregister(this);

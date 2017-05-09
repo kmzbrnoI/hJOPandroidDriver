@@ -83,7 +83,7 @@ public class ServerSelect extends AppCompatActivity
             udp.execute();
             this.lButton.setClickable(false);
         } else Toast.makeText(getApplicationContext(),
-                R.string.nedostupnaWifi, Toast.LENGTH_LONG)
+                R.string.conn_wifi_unavailable, Toast.LENGTH_LONG)
                 .show();
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -134,7 +134,7 @@ public class ServerSelect extends AppCompatActivity
                             float deg = lButton.getRotation() + 720F;
                             lButton.animate().rotation(deg).setInterpolator(new AccelerateDecelerateInterpolator());
                         } else Toast.makeText(getApplicationContext(),
-                                R.string.nedostupnaWifi, Toast.LENGTH_LONG)
+                                R.string.conn_wifi_unavailable, Toast.LENGTH_LONG)
                                 .show();
                         float deg = lButton.getRotation() + 360F;
                         lButton.animate().rotation(deg).setInterpolator(new AccelerateDecelerateInterpolator());
@@ -292,11 +292,11 @@ public class ServerSelect extends AppCompatActivity
         } else if (requestCode == 2) {
             if (resultCode == RESULT_OK) {
                 Toast.makeText(getApplicationContext(),
-                        R.string.autorizaceOk, Toast.LENGTH_LONG)
+                        R.string.conn_connected, Toast.LENGTH_LONG)
                         .show();
             } else {
                 Toast.makeText(getApplicationContext(),
-                        R.string.autorizaceErr, Toast.LENGTH_LONG)
+                        R.string.conn_no_server_authorized, Toast.LENGTH_LONG)
                         .show();
             }
         }
@@ -342,7 +342,7 @@ public class ServerSelect extends AppCompatActivity
         } else if (id == R.id.nav_train_manage) {
             if(ServerList.getInstance().getActiveServer() == null) {
                 Toast.makeText(getApplicationContext(),
-                        R.string.neniServer,
+                        R.string.conn_no_server_authorized,
                         Toast.LENGTH_LONG).show();
             } else {
                 Intent intent = new Intent(this, TrainHandler.class);
@@ -351,7 +351,7 @@ public class ServerSelect extends AppCompatActivity
         } else if (id == R.id.nav_trains) {
             if(ServerList.getInstance().getActiveServer() == null) {
                 Toast.makeText(getApplicationContext(),
-                        R.string.neniServer,
+                        R.string.conn_no_server_authorized,
                         Toast.LENGTH_LONG).show();
             } else {
                 Intent intent = new Intent(this, TrainRequest.class);
@@ -458,7 +458,7 @@ public class ServerSelect extends AppCompatActivity
         editor.remove("StoredServers");
         editor.commit();
         Toast.makeText(getApplicationContext(),
-                R.string.smazanoServer,
+                R.string.gl_all_deleted,
                 Toast.LENGTH_LONG).show();
     }
 

@@ -144,16 +144,16 @@ public class TrainRelease extends AppCompatActivity
                 });
         AlertDialog alert = builder.create();
         alert.show();
-        this.sendButton.setText(R.string.uvolnit);
+        this.sendButton.setText(R.string.trl_release);
     }
 
     @Subscribe
     public void onEvent(FreeEvent event) {
         Toast.makeText(getApplicationContext(),
-                R.string.lokoUvolneno, Toast.LENGTH_LONG)
+                R.string.trl_loko_released, Toast.LENGTH_LONG)
                 .show();
         reloadEventHelper();
-        this.sendButton.setText(R.string.uvolnit);
+        this.sendButton.setText(R.string.trl_release);
     }
 
     public void release(View v) {

@@ -194,7 +194,7 @@ public class TrainHandler extends AppCompatActivity
                     if (!update) {
                         if (direction1.isChecked()) {
                             direction1.setText(R.string.ta_direction_forward);
-                        } else direction1.setText(R.string.dirBac);
+                        } else direction1.setText(R.string.ta_direction_backwards);
                         if (managed.contains(train1)) {
                             for (Train s : managed) {
                                 String text = s.changeDirection();
@@ -216,7 +216,7 @@ public class TrainHandler extends AppCompatActivity
                     if (!update) {
                         if (direction1.isChecked()) {
                             direction1.setText(R.string.ta_direction_forward);
-                        } else direction1.setText(R.string.dirBac);
+                        } else direction1.setText(R.string.ta_direction_backwards);
                         if (managed.contains(train1)) {
                             for (Train s : managed) {
                                 String text = s.changeDirection();
@@ -256,7 +256,7 @@ public class TrainHandler extends AppCompatActivity
                             direction1.setChecked(train1.isDirection());
                             if (direction1.isChecked()) {
                                 direction1.setText(R.string.ta_direction_forward);
-                            } else direction1.setText(R.string.dirBac);
+                            } else direction1.setText(R.string.ta_direction_backwards);
                             group1.setChecked(train1.isControled());
                             kmhSpeed1.setText(String.format("%s km/h", Integer.toString(train1.getKmhSpeed())));
                             totalManaged.setChecked(train1.getTotalManaged());
@@ -473,11 +473,11 @@ public class TrainHandler extends AppCompatActivity
             if (direction == 1) {
                 if (direction1.isChecked()) {
                     direction1.setText(R.string.ta_direction_forward);
-                } else direction1.setText(R.string.dirBac);
+                } else direction1.setText(R.string.ta_direction_backwards);
             } else {
                 if (direction2.isChecked()) {
-                    direction2.setText(R.string.ta_direction_backwards);
-                } else direction2.setText(R.string.dirBac);
+                    direction2.setText(R.string.ta_direction_forward);
+                } else direction2.setText(R.string.ta_direction_backwards);
             }
     }
 

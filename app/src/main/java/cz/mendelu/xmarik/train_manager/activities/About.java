@@ -75,7 +75,7 @@ public class About extends AppCompatActivity
         } else if (id == R.id.nav_train_manage) {
             if(ServerList.getInstance().getActiveServer() == null) {
                 Toast.makeText(getApplicationContext(),
-                        R.string.neniServer,
+                        R.string.conn_no_server_authorized,
                         Toast.LENGTH_LONG).show();
             } else {
                 Intent intent = new Intent(this, TrainHandler.class);
@@ -84,7 +84,7 @@ public class About extends AppCompatActivity
         } else if (id == R.id.nav_trains) {
             if(ServerList.getInstance().getActiveServer() == null) {
                 Toast.makeText(getApplicationContext(),
-                        R.string.neniServer,
+                        R.string.conn_no_server_authorized,
                         Toast.LENGTH_LONG).show();
             } else {
                 Intent intent = new Intent(this, TrainRequest.class);

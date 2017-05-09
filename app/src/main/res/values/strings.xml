@@ -17,6 +17,7 @@
     <string name="hamburger_train_release_title">Uvolnění vlaku</string>
     <string name="hamburger_about_title">O aplikaci</string>
 
+    <string name="ta_new_loko">Přijata nová lokomotiva.</string>
     <string name="ta_multitraction">Multitrakce</string>
     <string name="ta_total">Ruční ř.</string>
     <string name="ta_direction_forward">vpřed</string>
@@ -29,14 +30,16 @@
     <string name="tr_info_request_sent">Žádost odeslána, čekám na server.</string>
     <string name="tr_info_request_requesting">"Probíhá žádost do stanice "</string>
 
-    <string name="nedostupnaWifi">Wifi připojení není dostupné.</string>
-    <string name="autorizaceOk">Připojeno a autorizováno.</string>
-    <string name="autorizaceErr">Připojení k serveru se nezdařilo.</string>
-    <string name="neniServer">Nebyl autorizován žádný server.</string>
-    <string name="smazanoServer">Všechny servery byly smazány.</string>
-    <string name="novaLoko">Přijata nová lokomotiva.</string>
-    <string name="lokoUvolneno">Lokomotiva uvolněna.</string>
-    <string name="dirBac">vzad</string>
-    <string name="opakovat">opakovat</string>
-    <string name="uvolnit">Uvolnit</string>
+    <string name="trl_release">Uvolnit</string>
+    <string name="trl_loko_released">Lokomotiva uvolněna.</string>
+
+    <string name="conn_wifi_unavailable">Wifi připojení není dostupné.</string>
+    <string name="conn_connected">Připojeno a autorizováno.</string>
+    <string name="conn_connection_error">Připojení k serveru se nezdařilo.</string>
+    <string name="conn_no_server_authorized">Nebyl autorizován žádný server.</string>
+
+    <string name="gl_new_loko">Nová lokomotiva</string>
+    <string name="gl_all_deleted">Všechny servery byly smazány.</string>
+    <string name="gl_repeat">opakovat</string>
+
 </resources>

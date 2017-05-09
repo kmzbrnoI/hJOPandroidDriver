@@ -199,7 +199,7 @@ public class ServerConnector extends Activity {
         TCPClientApplication.getInstance().auth = false;
         if (ok) {
             Toast.makeText(getApplicationContext(),
-                    R.string.autorizaceOk, Toast.LENGTH_LONG)
+                    R.string.conn_connected, Toast.LENGTH_LONG)
                     .show();
             progressBar.setVisibility(View.GONE);
             Intent intent = new Intent(this, TrainRequest.class);
@@ -265,7 +265,7 @@ public class ServerConnector extends Activity {
             public void run() {
                 i = 0;
                 send.setClickable(true);
-                send.setText(R.string.opakovat);
+                send.setText(R.string.gl_repeat);
                 arrayList.add(error);
                 mAdapter.notifyDataSetChanged();
                 progressBar.setVisibility(View.GONE);
