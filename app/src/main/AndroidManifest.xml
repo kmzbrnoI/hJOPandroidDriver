@@ -49,9 +49,7 @@
             android:theme="@style/AppTheme.NoActionBar" />
 
         <activity android:name=".activities.NewServer"
-            />
-
-        <activity android:name=".activities.RemoveServer"
+            android:theme="@style/AppTheme.NoActionBar"
             />
 
         <activity android:name=".activities.About"
