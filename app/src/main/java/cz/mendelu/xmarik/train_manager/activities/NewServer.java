@@ -47,16 +47,16 @@ public class NewServer extends AppCompatActivity {
         about = aboutText.getText().toString();
         if (name.equals("") || port.equals("") || ipAdr.equals("")) {
             Toast.makeText(getApplicationContext(),
-                    "Název, adresa serveru a port serveru jsou povinná pole", Toast.LENGTH_LONG)
+                    R.string.ns_warning_compulsory, Toast.LENGTH_LONG)
                     .show();
         } else if (ip(ipAdr) || domainName(ipAdr)) {
             if (ServerList.getInstance().getStoredServersString().contains(name)) {
                 Toast.makeText(getApplicationContext(),
-                        "Server s tímto názvem již přidán :", Toast.LENGTH_LONG)
+                        R.string.ns_warning_server_exists, Toast.LENGTH_LONG)
                         .show();
             } else if (name.contains("--")) {
                 Toast.makeText(getApplicationContext(),
-                        "Název nesmí obsahovat sekvenci \"--\"", Toast.LENGTH_LONG)
+                        R.string.ns_warning_invalid_characters, Toast.LENGTH_LONG)
                         .show();
             } else {
                 if (server == null) {
@@ -79,7 +79,7 @@ public class NewServer extends AppCompatActivity {
                 finish();
             }
         } else Toast.makeText(getApplicationContext(),
-                "adresa není v platném ipV4 formátu a ani se nejedná o doménové jméno", Toast.LENGTH_LONG)
+                R.string.ns_warning_invalid_address, Toast.LENGTH_LONG)
                 .show();
     }
 

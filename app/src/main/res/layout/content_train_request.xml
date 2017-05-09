@@ -48,7 +48,7 @@
             android:layout_height="wrap_content">
 
             <TextView
-                android:text="Volitelná zpráva pro dispečera:"
+                android:text="@string/tr_disp_message"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/textView11"
@@ -68,7 +68,7 @@
                 android:editable="true" />
 
             <Button
-                android:text="Odeslat žádost"
+                android:text="@string/tr_send_request"
                 android:layout_width="match_parent"
                 android:layout_height="68dp"
                 android:id="@+id/trainBoxButton"

@@ -25,9 +25,11 @@
     <string name="ta_idle">Idle</string>
     <string name="ta_emergency_stop">Nouzové STOP</string>
 
+    <string name="tr_disp_message">Volitelná zpráva pro dispečera:</string>
     <string name="tr_send_request">Odeslat žádost</string>
     <string name="tr_request">Žádost</string>
-    <string name="tr_info_request_sent">Žádost odeslána, čekám na server.</string>
+    <string name="tr_info_request_sent">Žádost odeslána, čekám na odpověď serveru.</string>
+    <string name="tr_info_waiting_disp">Žádost odeslána, čekám na dispečera.</string>
     <string name="tr_info_request_requesting">"Probíhá žádost do stanice "</string>
 
     <string name="trl_release">Uvolnit</string>
@@ -39,6 +41,8 @@
     <string name="conn_connected">Připojeno a autorizováno.</string>
     <string name="conn_connection_error">Připojení k serveru se nezdařilo.</string>
     <string name="conn_no_server_authorized">Nebyl autorizován žádný server.</string>
+    <string name="conn_search_finished">Vyhledávání serverů dokončeno.</string>
+    <string name="conn_server_offline">Server je offline.</string>
 
     <string name="gl_new_loko">Nová lokomotiva</string>
     <string name="gl_all_deleted">Všechny servery byly smazány.</string>
@@ -48,6 +52,10 @@
     <string name="ns_server_ip_dns">IP/DNS serveru</string>
     <string name="ns_server_port">Port</string>
     <string name="ns_server_type">Typ serveru</string>
+    <string name="ns_warning_compulsory">Název, adresa serveru a port serveru jsou povinná pole.</string>
+    <string name="ns_warning_server_exists">Server s tímto názvem již přidán :</string>
+    <string name="ns_warning_invalid_characters">Název nesmí obsahovat sekvenci "--"</string>
+    <string name="ns_warning_invalid_address">Adresa není v platném ipV4 formátu a ani se nejedná o doménové jméno.</string>
 
     <string name="login_username">Uživatelské jméno</string>
     <string name="login_password">Heslo</string>

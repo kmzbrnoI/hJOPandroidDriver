@@ -464,7 +464,7 @@ public class TrainHandler extends AppCompatActivity
                 });
             }
         } else Toast.makeText(getApplicationContext(),
-                "Žádný server není authorizován", Toast.LENGTH_LONG)
+                R.string.conn_no_server_authorized, Toast.LENGTH_LONG)
                 .show();
     }
 
@@ -734,7 +734,6 @@ public class TrainHandler extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         // Handle navigation view item clicks here.

@@ -156,7 +156,7 @@ public class TrainRequest extends AppCompatActivity
     public void onEvent(TrainReloadEvent event) {
         // your implementation
         reloadEventHelper();
-        if (this.sendButton.getText().equals("zrusit")) this.sendButton.setText(R.string.tr_send_request);
+        if (this.sendButton.getText().equals(R.string.cancel)) this.sendButton.setText(R.string.tr_send_request);
         Toast.makeText(getApplicationContext(),
                 R.string.gl_new_loko, Toast.LENGTH_LONG)
                 .show();
@@ -196,7 +196,7 @@ public class TrainRequest extends AppCompatActivity
 
     @Subscribe
     public void onEvent(ServerOkEvent event) {
-        dialogMessage.setText("Žádost odeslána, čekám na dispečera.");
+        dialogMessage.setText(R.string.tr_info_waiting_disp);
     }
 
 

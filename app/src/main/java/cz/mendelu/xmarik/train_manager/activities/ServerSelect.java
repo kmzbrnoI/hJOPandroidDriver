@@ -179,7 +179,7 @@ public class ServerSelect extends AppCompatActivity
         lAdapter.notifyDataSetChanged();
         Log.e("reload", "S: reoad done size '" + array.size() + "'");
         Toast.makeText(getApplicationContext(),
-                "Vyhledávání serverů dokončeno.", Toast.LENGTH_LONG)
+                getString(R.string.conn_search_finished), Toast.LENGTH_LONG)
                 .show();
     }
 
@@ -224,7 +224,7 @@ public class ServerSelect extends AppCompatActivity
                 if (tmpServer.status) {
                     AuthorizeServer(tmp[0]);
                 } else Toast.makeText(getApplicationContext(),
-                        "server je offline", Toast.LENGTH_LONG)
+                        R.string.conn_server_offline, Toast.LENGTH_LONG)
                         .show();
                 break;
             case 1:
@@ -251,12 +251,6 @@ public class ServerSelect extends AppCompatActivity
                 break;
         }
         return true;
-    }
-
-    public void discoverServer(View view) {
-        Toast.makeText(getApplicationContext(),
-                "discover clicked", Toast.LENGTH_LONG)
-                .show();
     }
 
     public void addServer(View view) {
@@ -337,7 +331,6 @@ public class ServerSelect extends AppCompatActivity
      * @param item
      * @return
      */
-    @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         // Handle navigation view item clicks here.
@@ -369,7 +362,7 @@ public class ServerSelect extends AppCompatActivity
         }else if (id == R.id.nav_ack_trains) {
             if(ServerList.getInstance().getActiveServer() == null) {
                 Toast.makeText(getApplicationContext(),
-                        "Nebyl autorizován žádný server",
+                        R.string.conn_no_server_authorized,
                         Toast.LENGTH_LONG).show();
             } else {
                 Intent intent = new Intent(this, TrainRelease.class);
