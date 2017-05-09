@@ -1,73 +1,74 @@
 <resources>
     <string name="app_name">hJOP Driver</string>
+    <string name="app_hint">Enjoy your ride.</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
-    <string name="activity_server_select_title">Vyberte server</string>
-    <string name="activity_train_handler_title">Řízení vlaku</string>
-    <string name="activity_train_release_title">Autorizované soupravy</string>
-    <string name="activity_train_request_title">Vyberte cílovou oblast řízení</string>
-    <string name="activity_about_title">O aplikaci</string>
-    <string name="activity_new_server_title">Nový server</string>
+    <string name="activity_server_select_title">Select a server</string>
+    <string name="activity_train_handler_title">Train control</string>
+    <string name="activity_train_release_title">Authorized trains</string>
+    <string name="activity_train_request_title">Select a station</string>
+    <string name="activity_about_title">About</string>
+    <string name="activity_new_server_title">New server</string>
 
-    <string name="hamburger_server_select_title">Výběr serveru</string>
-    <string name="hamburger_train_handler">Řízení vlaku</string>
-    <string name="hamburger_train_request_title">Žádost o vlak</string>
-    <string name="hamburger_train_release_title">Uvolnění vlaku</string>
-    <string name="hamburger_about_title">O aplikaci</string>
+    <string name="hamburger_server_select_title">Server select</string>
+    <string name="hamburger_train_handler">Train control</string>
+    <string name="hamburger_train_request_title">Train request</string>
+    <string name="hamburger_train_release_title">Train release</string>
+    <string name="hamburger_about_title">About</string>
 
-    <string name="ta_new_loko">Přijata nová lokomotiva.</string>
-    <string name="ta_multitraction">Multitrakce</string>
-    <string name="ta_total">Ruční ř.</string>
-    <string name="ta_direction_forward">vpřed</string>
-    <string name="ta_direction_backwards">vzad</string>
+    <string name="ta_new_loko">New locomotive received.</string>
+    <string name="ta_multitraction">Multitraction</string>
+    <string name="ta_total">Total c.</string>
+    <string name="ta_direction_forward">forward</string>
+    <string name="ta_direction_backwards">backward</string>
     <string name="ta_idle">Idle</string>
-    <string name="ta_emergency_stop">Nouzové STOP</string>
+    <string name="ta_emergency_stop">Emergency STOP</string>
 
-    <string name="tr_disp_message">Volitelná zpráva pro dispečera:</string>
-    <string name="tr_send_request">Odeslat žádost</string>
-    <string name="tr_request">Žádost</string>
-    <string name="tr_info_request_sent">Žádost odeslána, čekám na odpověď serveru.</string>
-    <string name="tr_info_waiting_disp">Žádost odeslána, čekám na dispečera.</string>
-    <string name="tr_info_request_requesting">"Probíhá žádost do stanice "</string>
+    <string name="tr_disp_message">Optional message for the dispatcher:</string>
+    <string name="tr_send_request">Send request</string>
+    <string name="tr_request">Request</string>
+    <string name="tr_info_request_sent">Request sent, waiting for server response.</string>
+    <string name="tr_info_waiting_disp">Request sent, waiting for dispatcher response.</string>
+    <string name="tr_info_request_requesting">"Request in progress "</string>
 
-    <string name="trl_release">Uvolnit</string>
-    <string name="trl_loko_released">Lokomotiva uvolněna.</string>
+    <string name="trl_release">Release</string>
+    <string name="trl_loko_released">Train released.</string>
 
-    <string name="conn_servers_discovered">Nalezené servery</string>
-    <string name="conn_servers_saved">Uložené servery</string>
-    <string name="conn_wifi_unavailable">Wifi připojení není dostupné.</string>
-    <string name="conn_connected">Připojeno a autorizováno.</string>
-    <string name="conn_connection_error">Připojení k serveru se nezdařilo.</string>
-    <string name="conn_no_server_authorized">Nebyl autorizován žádný server.</string>
-    <string name="conn_search_finished">Vyhledávání serverů dokončeno.</string>
-    <string name="conn_server_offline">Server je offline.</string>
+    <string name="conn_servers_discovered">Discovered servers</string>
+    <string name="conn_servers_saved">Saved servers</string>
+    <string name="conn_wifi_unavailable">WiFi connection is not available.</string>
+    <string name="conn_connected">Connected and authorized.</string>
+    <string name="conn_connection_error">Failed to connect to the server.</string>
+    <string name="conn_no_server_authorized">No server authorized.</string>
+    <string name="conn_search_finished">Server discovery finished.</string>
+    <string name="conn_server_offline">Server is offline.</string>
 
-    <string name="gl_new_loko">Nová lokomotiva</string>
-    <string name="gl_all_deleted">Všechny servery byly smazány.</string>
-    <string name="gl_repeat">Opakovat</string>
+    <string name="gl_new_loko">New train</string>
+    <string name="gl_all_deleted">All servers deleted.</string>
+    <string name="gl_repeat">Repeat</string>
 
-    <string name="ns_server_name">Název serveru</string>
-    <string name="ns_server_ip_dns">IP/DNS serveru</string>
+    <string name="ns_server_name">Server name</string>
+    <string name="ns_server_ip_dns">Server IP/DNS</string>
     <string name="ns_server_port">Port</string>
-    <string name="ns_server_type">Typ serveru</string>
-    <string name="ns_warning_compulsory">Název, adresa serveru a port serveru jsou povinná pole.</string>
-    <string name="ns_warning_server_exists">Server s tímto názvem již přidán :</string>
-    <string name="ns_warning_invalid_characters">Název nesmí obsahovat sekvenci "--"</string>
-    <string name="ns_warning_invalid_address">Adresa není v platném ipV4 formátu a ani se nejedná o doménové jméno.</string>
+    <string name="ns_server_type">Server type</string>
+    <string name="ns_warning_compulsory">Name, address and port are compulsory fields.</string>
+    <string name="ns_warning_server_exists">This server already exists :</string>
+    <string name="ns_warning_invalid_characters">Name cannot contain sequence "--"</string>
+    <string name="ns_warning_invalid_address">Address is not a valid ipv4 address nor domain name.</string>
 
-    <string name="login_username">Uživatelské jméno</string>
-    <string name="login_password">Heslo</string>
-    <string name="login_save">Uložit login</string>
+    <string name="login_username">Username</string>
+    <string name="login_password">Password</string>
+    <string name="login_save">Save login</string>
 
-    <string name="mm_connect">Připojit</string>
-    <string name="mm_change_login">Změnit přihlašovací údaje</string>
-    <string name="mm_change_settings">Upravit</string>
-    <string name="mm_info">Informace</string>
-    <string name="mm_delete">Smazat</string>
-    <string name="mm_delete_all">Smazat všechny servery</string>
+    <string name="mm_connect">Connect</string>
+    <string name="mm_change_login">Change login</string>
+    <string name="mm_change_settings">Edit</string>
+    <string name="mm_info">Info</string>
+    <string name="mm_delete">Delete</string>
+    <string name="mm_delete_all">Delete all servers</string>
 
-    <string name="save">Uložit</string>
-    <string name="cancel">Zrušit</string>
+    <string name="save">Save</string>
+    <string name="cancel">Cancel</string>
 </resources>

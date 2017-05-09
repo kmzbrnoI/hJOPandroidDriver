@@ -31,6 +31,6 @@
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Užijte si jízdu." />
+        android:text="@string/app_hint" />
 
 </LinearLayout>
