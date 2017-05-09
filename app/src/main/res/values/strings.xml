@@ -8,6 +8,7 @@
     <string name="activity_train_handler_title">Řízení vlaku</string>
     <string name="activity_ack_trains_title">Autorizované soupravy</string>
     <string name="activity_train_request_title">Vyberte cílovou oblast řízení</string>
+    <string name="activity_about_title">O aplikaci</string>
 
 
     <string name="multitrakce">Multitrakce</string>
