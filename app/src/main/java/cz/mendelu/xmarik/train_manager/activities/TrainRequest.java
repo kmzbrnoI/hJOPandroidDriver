@@ -313,7 +313,7 @@ public class TrainRequest extends AppCompatActivity
             startActivity(intent);
 
         } else if (id == R.id.nav_ack_trains) {
-            Intent intent = new Intent(this, AckTrains.class);
+            Intent intent = new Intent(this, TrainRelease.class);
             startActivity(intent);
 
         }

@@ -14,7 +14,6 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
@@ -761,7 +760,7 @@ public class TrainHandler extends AppCompatActivity
             startActivity(intent);
 
         } else if (id == R.id.nav_ack_trains) {
-            Intent intent = new Intent(this, AckTrains.class);
+            Intent intent = new Intent(this, TrainRelease.class);
             startActivity(intent);
 
         }

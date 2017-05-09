@@ -363,7 +363,7 @@ public class ServerSelect extends AppCompatActivity
                         "Nebyl autorizován žádný server",
                         Toast.LENGTH_LONG).show();
             } else {
-                Intent intent = new Intent(this, AckTrains.class);
+                Intent intent = new Intent(this, TrainRelease.class);
                 startActivity(intent);
             }
         }

@@ -37,7 +37,7 @@ import cz.mendelu.xmarik.train_manager.events.FreeEvent;
 import cz.mendelu.xmarik.train_manager.events.RefuseEvent;
 import cz.mendelu.xmarik.train_manager.events.TrainReloadEvent;
 
-public class AckTrains extends AppCompatActivity
+public class TrainRelease extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     Server active;
@@ -58,7 +58,7 @@ public class AckTrains extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_ack_trains);
+        setContentView(R.layout.activity_train_release);
 
         connectionDialog = new AlertDialog.Builder(this);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);

@@ -1,37 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <group>
+    <group android:id="@+id/group_server">
+        <item
+            android:id="@+id/nav_server"
+            android:icon="@drawable/ic_menu_slideshow"
+            android:title="@string/hamburger_server_select_title" />
+    </group>
+
+    <group android:id="@+id/group_train">
         <item
             android:id="@+id/nav_train_manage"
             android:icon="@drawable/ic_menu_send"
-            android:title="Řízení vlaku" />
+            android:title="@string/hamburger_train_handler" />
         <item
             android:id="@+id/nav_trains"
             android:icon="@drawable/ic_menu_gallery"
-            android:title="Žádost o vlak" />
+            android:title="@string/hamburger_train_request_title" />
         <item
             android:id="@+id/nav_ack_trains"
             android:icon="@drawable/ic_train_black"
-            android:title="Uvolnění vlaku" />
-
-        <item android:title="Správa serverů">
-            <menu>
-                <item
-                    android:id="@+id/nav_server"
-                    android:icon="@drawable/ic_menu_slideshow"
-                    android:title="Výběr serveru" />
-            </menu>
-        </item>
+            android:title="@string/hamburger_train_release_title" />
     </group>
-    <item android:title="O aplikaci">
-        <menu>
-            <item
-                android:id="@+id/nav_about"
-                android:icon="@drawable/ic_menu_share"
-                android:title="O aplikaci" />
 
-        </menu>
-    </item>
+    <group android:id="@+id/group_about">
+         <item
+            android:id="@+id/nav_about"
+            android:icon="@drawable/ic_menu_share"
+            android:title="@string/hamburger_about_title" />
+    </group>
 
 </menu>

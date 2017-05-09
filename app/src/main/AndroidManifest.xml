@@ -31,9 +31,9 @@
             android:theme="@style/AppTheme.NoActionBar" />
 
         <activity
-            android:name=".activities.AckTrains"
+            android:name=".activities.TrainRelease"
             android:launchMode="singleInstance"
-            android:label="@string/activity_ack_trains_title"
+            android:label="@string/activity_train_release_title"
             android:screenOrientation="locked"
             android:theme="@style/AppTheme.NoActionBar" />
 
