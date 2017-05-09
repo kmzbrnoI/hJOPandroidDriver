@@ -1,13 +1,13 @@
 <resources>
-    <string name="app_name">Regulátor</string>
+    <string name="app_name">hJOP Driver</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
-    <string name="action_settings">Nastavení</string>
     <string name="title_activity_train_handler">Řízení vlaku</string>
-    <string name="title_activity_settings">Nastavení</string>
+<!--    <string name="title_activity_settings">Nastavení</string> -->
     <string name="title_activity_ack_trains">Autorizované soupravy</string>
+
     <string name="controlArea">Vyberte cílovou oblast řízení</string>
     <string name="multitrakce">Multitrakce</string>
     <string name="total">Ruční ř.</string>

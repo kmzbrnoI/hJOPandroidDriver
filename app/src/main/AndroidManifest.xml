@@ -33,11 +33,6 @@
             android:label="@string/title_activity_ack_trains"
             android:screenOrientation="locked"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".Settings"
-            android:launchMode="singleInstance"
-            android:label="@string/title_activity_settings"
-            android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".Servers"
             android:launchMode="singleInstance"
             android:label="@string/app_name"

@@ -25,8 +25,6 @@ public class CheckBoxAdapter extends ArrayAdapter<TrainFunction> {
         this.trainList = new ArrayList<>();
         this.trainList.addAll(trainList);
         vi = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        //TODO nacis data z pameti
-        names = Settings.buttons;
     }
 
     @NonNull
