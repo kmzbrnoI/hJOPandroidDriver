@@ -124,7 +124,7 @@ public class MainActivity extends AppCompatActivity
                         ConnectivityManager connManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
                         NetworkInfo mWifi = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
                         if (mWifi.isConnected()) {
-                            new UdpDiscover(context, port, (MainActivity) obj).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, null);
+                            new UdpDiscover(context, port, (MainActivity) obj).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                             System.out.print("button activated");
                             float deg = lButton.getRotation() + 720F;
                             lButton.animate().rotation(deg).setInterpolator(new AccelerateDecelerateInterpolator());
@@ -444,7 +444,6 @@ public class MainActivity extends AppCompatActivity
 
     public void get() {
         sharedpreferences = getDefaultSharedPreferences(getApplicationContext());//getSharedPreferences(myServerPreferences, Context.MODE_PRIVATE);
-        Settings.loadData(sharedpreferences);
         if (sharedpreferences.contains("StoredServers")) {
             ServerList.getInstance().loadServers(sharedpreferences.getString("StoredServers", ""));
         }
