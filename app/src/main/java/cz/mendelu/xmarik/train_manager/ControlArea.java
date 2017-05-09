@@ -3,6 +3,8 @@ package cz.mendelu.xmarik.train_manager;
 import java.util.ArrayList;
 import java.util.List;
 
+import cz.mendelu.xmarik.train_manager.models.Train;
+
 /**
  * Created by ja on 17. 6. 2016.
  */

@@ -1,6 +1,9 @@
-package cz.mendelu.xmarik.train_manager;
+package cz.mendelu.xmarik.train_manager.models;
 
 import java.util.ArrayList;
+
+import cz.mendelu.xmarik.train_manager.ServerList;
+import cz.mendelu.xmarik.train_manager.TrainFunction;
 
 /**
  * Created by ja on 29. 5. 2016.
@@ -210,11 +213,11 @@ public class Train {
         return kmhSpeed;
     }
 
-    void setKmhSpeed(int kmhSpeed) {
+    public void setKmhSpeed(int kmhSpeed) {
         this.kmhSpeed = kmhSpeed;
     }
 
-    String getUserLokoName() {
+    public String getUserLokoName() {
         return userLokoName;
     }
 

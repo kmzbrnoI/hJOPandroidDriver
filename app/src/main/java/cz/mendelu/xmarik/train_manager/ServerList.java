@@ -5,6 +5,8 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
+import cz.mendelu.xmarik.train_manager.models.Server;
+
 /**
  * Created by ja on 15. 6. 2016.
  * Class for in memmory store servers, during run
@@ -209,7 +211,7 @@ public class ServerList {
     /**
      * enum type for loko engine
      */
-    enum TRAINTYPE {
+    public enum TRAINTYPE {
         parní, dieslová, motorová, elektrická
     }
 

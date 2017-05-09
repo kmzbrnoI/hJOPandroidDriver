@@ -11,7 +11,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import cz.mendelu.xmarik.train_manager.R;
-import cz.mendelu.xmarik.train_manager.Server;
+import cz.mendelu.xmarik.train_manager.models.Server;
 import cz.mendelu.xmarik.train_manager.ServerList;
 
 public class NewServer extends AppCompatActivity {

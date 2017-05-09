@@ -37,7 +37,7 @@ import java.util.ArrayList;
 
 import cz.mendelu.xmarik.train_manager.HelpServices;
 import cz.mendelu.xmarik.train_manager.R;
-import cz.mendelu.xmarik.train_manager.Server;
+import cz.mendelu.xmarik.train_manager.models.Server;
 import cz.mendelu.xmarik.train_manager.ServerList;
 import cz.mendelu.xmarik.train_manager.UdpDiscover;
 import cz.mendelu.xmarik.train_manager.events.CriticalErrorEvent;

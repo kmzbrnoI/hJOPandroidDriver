@@ -21,6 +21,7 @@ import java.util.List;
 
 import cz.mendelu.xmarik.train_manager.activities.ServerSelect;
 import cz.mendelu.xmarik.train_manager.events.ReloadEvent;
+import cz.mendelu.xmarik.train_manager.models.Server;
 
 
 /**

@@ -6,7 +6,7 @@ package cz.mendelu.xmarik.train_manager;
 public class TrainFunction {
     String code;
     String name;
-    boolean checked;
+    public boolean checked;
 
     /**
      * @param code

@@ -24,7 +24,7 @@ import cz.mendelu.xmarik.train_manager.ControlArea;
 import cz.mendelu.xmarik.train_manager.HelpServices;
 import cz.mendelu.xmarik.train_manager.adapters.MyCustomAdapter;
 import cz.mendelu.xmarik.train_manager.R;
-import cz.mendelu.xmarik.train_manager.Server;
+import cz.mendelu.xmarik.train_manager.models.Server;
 import cz.mendelu.xmarik.train_manager.ServerList;
 import cz.mendelu.xmarik.train_manager.TCPClientApplication;
 import cz.mendelu.xmarik.train_manager.events.AreasEvent;

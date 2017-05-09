@@ -2,6 +2,8 @@ package cz.mendelu.xmarik.train_manager;
 
 import java.util.Comparator;
 
+import cz.mendelu.xmarik.train_manager.models.Server;
+
 /**
  * Created by ja on 12. 10. 2016.
  */

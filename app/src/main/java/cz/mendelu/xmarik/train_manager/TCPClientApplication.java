@@ -17,6 +17,8 @@ import cz.mendelu.xmarik.train_manager.events.RefuseEvent;
 import cz.mendelu.xmarik.train_manager.events.ReloadEvent;
 import cz.mendelu.xmarik.train_manager.events.ServerOkEvent;
 import cz.mendelu.xmarik.train_manager.events.TrainReloadEvent;
+import cz.mendelu.xmarik.train_manager.models.Server;
+import cz.mendelu.xmarik.train_manager.models.Train;
 
 /**
  * Created by ja on 9. 10. 2016.

@@ -1,4 +1,4 @@
-package cz.mendelu.xmarik.train_manager;
+package cz.mendelu.xmarik.train_manager.models;
 
 import android.util.Log;
 
@@ -6,6 +6,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
+
+import cz.mendelu.xmarik.train_manager.ControlArea;
+import cz.mendelu.xmarik.train_manager.TCPClient;
 
 /**
  * Created by ja on 15. 6. 2016.
