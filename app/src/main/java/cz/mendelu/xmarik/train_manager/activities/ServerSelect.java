@@ -386,7 +386,7 @@ public class ServerSelect extends AppCompatActivity
 
     public void showDialog(final String serverName) {
         final Dialog dialog = new Dialog(this);
-        dialog.setContentView(R.layout.user_dialog);
+        dialog.setContentView(R.layout.dialog_user);
         dialog.setTitle("Set user data");
         final Server server = ServerList.getInstance().getServer(serverName);
         //set dialog component

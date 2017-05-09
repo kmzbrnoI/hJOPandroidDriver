@@ -42,12 +42,17 @@
 
     <string name="gl_new_loko">Nová lokomotiva</string>
     <string name="gl_all_deleted">Všechny servery byly smazány.</string>
-    <string name="gl_repeat">opakovat</string>
+    <string name="gl_repeat">Opakovat</string>
 
     <string name="ns_server_name">Název serveru</string>
     <string name="ns_server_ip_dns">IP/DNS serveru</string>
     <string name="ns_server_port">Port</string>
     <string name="ns_server_type">Typ serveru</string>
-    <string name="ns_save">Uložit</string>
-    <string name="ns_cancel">Zrušit</string>
+
+    <string name="login_username">Uživatelské jméno</string>
+    <string name="login_password">Heslo</string>
+    <string name="login_save">Uložit login</string>
+
+    <string name="save">Uložit</string>
+    <string name="cancel">Zrušit</string>
 </resources>

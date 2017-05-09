@@ -140,7 +140,7 @@ public class ServerConnector extends Activity {
 
     public void changeUserData(View view) {
         final Dialog dialog = new Dialog(this);
-        dialog.setContentView(R.layout.user_dialog);
+        dialog.setContentView(R.layout.dialog_user);
         dialog.setTitle("Zadejte příhlašovací údaje");
         //set dialog component
         final EditText mName = (EditText) dialog.findViewById(R.id.dialogName);
@@ -329,7 +329,7 @@ public class ServerConnector extends Activity {
         if (chyba != null && chyba.startsWith(";"))
             chyba = chyba.substring(1);
         final Dialog dialog = new Dialog(this);
-        dialog.setContentView(R.layout.user_dialog);
+        dialog.setContentView(R.layout.dialog_user);
         dialog.setTitle(title);
         //set dialog component
         final EditText mName = (EditText) dialog.findViewById(R.id.dialogName);

@@ -68,7 +68,7 @@ public class TrainRequest extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_train_request);
         dialog = new Dialog(this);
-        dialog.setContentView(R.layout.train_request_dialog);
+        dialog.setContentView(R.layout.dialog_train_request);
         dialog.setTitle(R.string.tr_request);
         dialogMessage = (TextView) dialog.findViewById(R.id.dialogMessage);
         dialogButton = (Button) dialog.findViewById(R.id.cancelButton);
