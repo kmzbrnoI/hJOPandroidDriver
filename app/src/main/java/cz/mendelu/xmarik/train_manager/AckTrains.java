@@ -13,8 +13,6 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.ContextMenu;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -223,7 +221,7 @@ public class AckTrains extends AppCompatActivity
             startActivity(intent);
 
         } else if (id == R.id.nav_trains) {
-            Intent intent = new Intent(this, Trains_box.class);
+            Intent intent = new Intent(this, TrainRequest.class);
             startActivity(intent);
 
         }

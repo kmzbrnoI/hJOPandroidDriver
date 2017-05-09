@@ -4,10 +4,11 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
-    <string name="activity_train_handler_title">Řízení vlaku</string>
-    <string name="activity_ack_trains_title">Autorizované soupravy</string>
-    <string name="activity_train_request_title">Vyberte cílovou oblast řízení</string>
-
+    <!-- <string name="action_settings">Nastavení</string> -->
+    <!-- <string name="title_activity_train_handler">Řízení vlaku</string>
+    <string name="title_activity_settings">Nastavení</string>
+    <string name="title_activity_ack_trains">Autorizované soupravy</string>
+    <string name="controlArea">Vyberte cílovou oblast řízení</string>
     <string name="multitrakce">Multitrakce</string>
     <string name="total">Ruční ř.</string>
     <string name="DirFor">vpřed</string>
@@ -27,5 +28,5 @@
     <string name="lokoUvolneno">Lokomotiva uvolněna.</string>
     <string name="dirBac">vzad</string>
     <string name="opakovat">opakovat</string>
-    <string name="uvolnit">Uvolnit</string>
+    <string name="uvolnit">Uvolnit</string> -->
 </resources>

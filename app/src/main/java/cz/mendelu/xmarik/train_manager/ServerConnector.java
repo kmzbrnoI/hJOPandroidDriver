@@ -5,8 +5,6 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -197,7 +195,7 @@ public class ServerConnector extends Activity {
                     R.string.autorizaceOk, Toast.LENGTH_LONG)
                     .show();
             progressBar.setVisibility(View.GONE);
-            Intent intent = new Intent(this, Trains_box.class);
+            Intent intent = new Intent(this, TrainRequest.class);
             startActivity(intent);
         } else {
             returnIntent.putExtra("result", "authorization failed");

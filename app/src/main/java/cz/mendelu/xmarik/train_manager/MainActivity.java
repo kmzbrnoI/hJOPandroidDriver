@@ -349,7 +349,7 @@ public class MainActivity extends AppCompatActivity
                         R.string.neniServer,
                         Toast.LENGTH_LONG).show();
             } else {
-                Intent intent = new Intent(this, Trains_box.class);
+                Intent intent = new Intent(this, TrainRequest.class);
                 startActivity(intent);
             }
         } else if (id == R.id.nav_view) {

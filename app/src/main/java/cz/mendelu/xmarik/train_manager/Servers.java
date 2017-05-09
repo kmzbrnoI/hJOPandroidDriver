@@ -276,7 +276,7 @@ public class Servers extends AppCompatActivity
             startActivity(intent);
 
         } else if (id == R.id.nav_trains) {
-            Intent intent = new Intent(this, Trains_box.class);
+            Intent intent = new Intent(this, TrainRequest.class);
             startActivity(intent);
 
         } else if (id == R.id.nav_view) {

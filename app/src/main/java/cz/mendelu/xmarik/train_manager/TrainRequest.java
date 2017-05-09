@@ -38,7 +38,7 @@ import cz.mendelu.xmarik.train_manager.events.RefuseEvent;
 import cz.mendelu.xmarik.train_manager.events.ServerOkEvent;
 import cz.mendelu.xmarik.train_manager.events.TrainReloadEvent;
 
-public class Trains_box extends AppCompatActivity
+public class TrainRequest extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     Server active;
