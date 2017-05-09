@@ -50,6 +50,7 @@
 
         <activity android:name=".activities.NewServer"
             android:theme="@style/AppTheme.NoActionBar"
+            android:label="@string/activity_new_server_title"
             />
 
         <activity android:name=".activities.About"
