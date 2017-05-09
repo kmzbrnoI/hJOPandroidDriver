@@ -13,7 +13,7 @@ railroad dispatchers.
 Application was developed as [master thesis](http://is.mendelu.cz/lide/clovek.pl?id=43049;zalozka=7;studium=77602;zp=54008)
 at Mendel University in Brno by [Miroslav Marik](http://is.mendelu.cz/lide/clovek.pl?id=43049),
 however the current maintainer is [Jan Horacek](http://apophis.cz/)
-((jan.horacek@kmz-brno.cz)[mailto:jan.horacek@kmz-brno.cz]).
+([jan.horacek@kmz-brno.cz](mailto:jan.horacek@kmz-brno.cz)).
 
 ## Licence
 
