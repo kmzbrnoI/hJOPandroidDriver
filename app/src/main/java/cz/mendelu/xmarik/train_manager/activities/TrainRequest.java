@@ -69,7 +69,7 @@ public class TrainRequest extends AppCompatActivity
         setContentView(R.layout.activity_trains_box);
         dialog = new Dialog(this);
         dialog.setContentView(R.layout.train_request_dialog);
-        dialog.setTitle(R.string.žádost);
+        dialog.setTitle(R.string.tr_request);
         dialogMessage = (TextView) dialog.findViewById(R.id.dialogMessage);
         dialogButton = (Button) dialog.findViewById(R.id.cancelButton);
         dialogButton.setOnClickListener(new View.OnClickListener() {
@@ -156,7 +156,7 @@ public class TrainRequest extends AppCompatActivity
     public void onEvent(TrainReloadEvent event) {
         // your implementation
         reloadEventHelper();
-        if (this.sendButton.getText().equals("zrusit")) this.sendButton.setText(R.string.poslatZ);
+        if (this.sendButton.getText().equals("zrusit")) this.sendButton.setText(R.string.tr_send_request);
         Toast.makeText(getApplicationContext(),
                 R.string.novaLoko, Toast.LENGTH_LONG)
                 .show();
@@ -182,7 +182,7 @@ public class TrainRequest extends AppCompatActivity
         alert.show();
 
         mProgressBar.setVisibility(View.GONE);
-        this.sendButton.setText(R.string.poslatZ);
+        this.sendButton.setText(R.string.tr_send_request);
     }
 
    /* @Subscribe
@@ -225,13 +225,13 @@ public class TrainRequest extends AppCompatActivity
             String msg = messageForServer.getText().toString();
             Log.e("tcp", "zadáno:" + msg + " \n");
             serverMessage = serverMessage + "{" + msg + "}";
-            dialog.setTitle(getString(R.string.dialogAreaTitle) + msg);
+            dialog.setTitle(getString(R.string.tr_info_request_requesting) + msg);
             sendNext(serverMessage);
             lAdapter.notifyDataSetChanged();
             mProgressBar.setVisibility(View.VISIBLE);
             this.trains.setClickable(false);
 
-            dialogMessage.setText(R.string.zadostOdeslana);
+            dialogMessage.setText(R.string.tr_info_request_sent);
             dialog.show();
         }
     }
@@ -239,7 +239,7 @@ public class TrainRequest extends AppCompatActivity
     private void cancelMessage() {
         sendNext("-;LOK;G;CANCEL");
         mProgressBar.setVisibility(View.GONE);
-        this.sendButton.setText(R.string.poslatZ);
+        this.sendButton.setText(R.string.tr_send_request);
         this.trains.setClickable(true);
     }
 

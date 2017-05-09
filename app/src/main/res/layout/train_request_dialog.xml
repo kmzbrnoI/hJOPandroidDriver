@@ -22,7 +22,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/dialogMessage"
         android:layout_alignParentEnd="true"
-        android:textAlignment="center"
+        android:gravity="center"
         android:textSize="50dp" />
 
     <ProgressBar

@@ -4,29 +4,31 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
+    <string name="activity_server_select_title">Vyberte server</string>
     <string name="activity_train_handler_title">Řízení vlaku</string>
     <string name="activity_train_release_title">Autorizované soupravy</string>
     <string name="activity_train_request_title">Vyberte cílovou oblast řízení</string>
-    <string name="activity_server_select_title">Vyberte server</string>
     <string name="activity_about_title">O aplikaci</string>
     <string name="activity_new_server_title">Nový server</string>
 
+    <string name="hamburger_server_select_title">Výběr serveru</string>
     <string name="hamburger_train_handler">Řízení vlaku</string>
     <string name="hamburger_train_request_title">Žádost o vlak</string>
     <string name="hamburger_train_release_title">Uvolnění vlaku</string>
-    <string name="hamburger_server_select_title">Výběr serveru</string>
     <string name="hamburger_about_title">O aplikaci</string>
 
+    <string name="ta_multitraction">Multitrakce</string>
+    <string name="ta_total">Ruční ř.</string>
+    <string name="ta_direction_forward">vpřed</string>
+    <string name="ta_direction_backwards">vzad</string>
+    <string name="ta_idle">Idle</string>
+    <string name="ta_emergency_stop">Nouzové STOP</string>
 
-    <string name="multitrakce">Multitrakce</string>
-    <string name="total">Ruční ř.</string>
-    <string name="DirFor">vpřed</string>
-    <string name="DirBack">vzad</string>
-    <string name="zastav">Idle</string>
-    <string name="poslatZ">Odeslat žádost</string>
-    <string name="žádost">Žádost</string>
-    <string name="zadostOdeslana">Žádost odeslána, čekám na server.</string>
-    <string name="dialogAreaTitle">"Probíhá žádost do stanice "</string>
+    <string name="tr_send_request">Odeslat žádost</string>
+    <string name="tr_request">Žádost</string>
+    <string name="tr_info_request_sent">Žádost odeslána, čekám na server.</string>
+    <string name="tr_info_request_requesting">"Probíhá žádost do stanice "</string>
+
     <string name="nedostupnaWifi">Wifi připojení není dostupné.</string>
     <string name="autorizaceOk">Připojeno a autorizováno.</string>
     <string name="autorizaceErr">Připojení k serveru se nezdařilo.</string>

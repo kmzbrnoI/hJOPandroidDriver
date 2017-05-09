@@ -193,7 +193,7 @@ public class TrainHandler extends AppCompatActivity
                 public void onClick(View view) {
                     if (!update) {
                         if (direction1.isChecked()) {
-                            direction1.setText(R.string.DirFor);
+                            direction1.setText(R.string.ta_direction_forward);
                         } else direction1.setText(R.string.dirBac);
                         if (managed.contains(train1)) {
                             for (Train s : managed) {
@@ -215,7 +215,7 @@ public class TrainHandler extends AppCompatActivity
                 public boolean onGenericMotion(View view, MotionEvent motionEvent) {
                     if (!update) {
                         if (direction1.isChecked()) {
-                            direction1.setText(R.string.DirFor);
+                            direction1.setText(R.string.ta_direction_forward);
                         } else direction1.setText(R.string.dirBac);
                         if (managed.contains(train1)) {
                             for (Train s : managed) {
@@ -255,7 +255,7 @@ public class TrainHandler extends AppCompatActivity
                             speed1.setProgress(train1.getSpeed());
                             direction1.setChecked(train1.isDirection());
                             if (direction1.isChecked()) {
-                                direction1.setText(R.string.DirFor);
+                                direction1.setText(R.string.ta_direction_forward);
                             } else direction1.setText(R.string.dirBac);
                             group1.setChecked(train1.isControled());
                             kmhSpeed1.setText(String.format("%s km/h", Integer.toString(train1.getKmhSpeed())));
@@ -423,8 +423,8 @@ public class TrainHandler extends AppCompatActivity
                             direction2.setChecked(train2.isDirection());
 
                             if (direction2.isChecked()) {
-                                direction2.setText(R.string.DirFor);
-                            } else direction2.setText(R.string.DirBack);
+                                direction2.setText(R.string.ta_direction_forward);
+                            } else direction2.setText(R.string.ta_direction_backwards);
 
                             group2.setChecked(train2.isControled());
                             kmhSpeed2.setText(String.format("%s km/h", Integer.toString(train2.getKmhSpeed())));
@@ -472,11 +472,11 @@ public class TrainHandler extends AppCompatActivity
         if (!update)
             if (direction == 1) {
                 if (direction1.isChecked()) {
-                    direction1.setText(R.string.DirFor);
+                    direction1.setText(R.string.ta_direction_forward);
                 } else direction1.setText(R.string.dirBac);
             } else {
                 if (direction2.isChecked()) {
-                    direction2.setText(R.string.DirFor);
+                    direction2.setText(R.string.ta_direction_backwards);
                 } else direction2.setText(R.string.dirBac);
             }
     }
