@@ -58,6 +58,7 @@
     <string name="ns_warning_invalid_characters">Název nesmí obsahovat sekvenci "--"</string>
     <string name="ns_warning_invalid_address">Adresa není v platném ipV4 formátu a ani se nejedná o doménové jméno.</string>
 
+    <string name="login_enter">Zadejte přihlašovací údaje</string>
     <string name="login_username">Uživatelské jméno</string>
     <string name="login_password">Heslo</string>
     <string name="login_save">Uložit login</string>
@@ -68,6 +69,15 @@
     <string name="mm_info">Informace</string>
     <string name="mm_delete">Smazat</string>
     <string name="mm_delete_all">Smazat všechny servery</string>
+
+    <string name="sc_connecting">Navazuji komunikaci...</string>
+    <string name="sc_authorizing">Autorizuji...</string>
+    <string name="sc_getting_ors">Získávám oblasti řízení...</string>
+    <string name="sc_done">Připojování úspěšně dokončeno</string>
+    <string name="sc_connection_ok">Komunikace navázána</string>
+    <string name="sc_auth_ok">Úspěšně autorizováno</string>
+    <string name="sc_auth_err">Autorizace se nezdařila!</string>
+    <string name="sc_version_warning">Server využívá jiný komunikační protokol než 1.0, v komunikaci může docházet k chybám!</string>
 
     <string name="save">Uložit</string>
     <string name="cancel">Zrušit</string>

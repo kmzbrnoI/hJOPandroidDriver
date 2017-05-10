@@ -58,6 +58,7 @@
     <string name="ns_warning_invalid_characters">Name cannot contain sequence "--"</string>
     <string name="ns_warning_invalid_address">Address is not a valid ipv4 address nor domain name.</string>
 
+    <string name="login_enter">Enter a login</string>
     <string name="login_username">Username</string>
     <string name="login_password">Password</string>
     <string name="login_save">Save login</string>
@@ -71,6 +72,15 @@
 
     <string name="save">Save</string>
     <string name="cancel">Cancel</string>
+
+    <string name="sc_connecting">Connecting...</string>
+    <string name="sc_authorizing">Authorizing...</string>
+    <string name="sc_getting_ors">Gettting stations...</string>
+    <string name="sc_done">Successfully connected</string>
+    <string name="sc_connection_ok">Communication establushed</string>
+    <string name="sc_auth_ok">Sucessfully authorized</string>
+    <string name="sc_auth_err">Authorization problem!</string>
+    <string name="sc_version_warning">Server uses other protocol version, application may misbehave!</string>
 
     <string name="about">hJOP Driver allows you to become an engine driver and control one or more
         engines on the model railroad. It fully cooperates with hJOP.\nhttp://hjop.kmz-brno.cz/"</string>

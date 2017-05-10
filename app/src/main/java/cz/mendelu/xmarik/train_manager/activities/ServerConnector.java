@@ -89,10 +89,10 @@ public class ServerConnector extends Activity {
         if (messges.length > i) {
             String tmp = messges[i];
             if (i == 0) {
-                arrayList.add("Navazuji komunikaci");
+                arrayList.add(getString(R.string.sc_connecting));
             } else if (i == 1) {
-                arrayList.add("Autorizuji");
-            } else arrayList.add("Získávám oblasti řízení");
+                arrayList.add(getString(R.string.sc_authorizing));
+            } else arrayList.add(getString(R.string.sc_getting_ors));
             i++;
             return tmp;
         }
@@ -119,8 +119,6 @@ public class ServerConnector extends Activity {
     private void sendNext() {
         String message = getMessage();
         //sends the message to the server
-        Log.e("", "Send pokus odeslat:" + message);
-
         if (TCPClientApplication.getInstance().getClient() != null && message != null) {
             TCPClientApplication.getInstance().getClient().sendMessage(message);
             Log.v("TCP", "Send odeslano:" + message);
@@ -131,7 +129,7 @@ public class ServerConnector extends Activity {
 
     @Subscribe
     public void onEvent(ReloadEvent event) {
-        Log.e("", "TCP navázáno a plikace to ví");
+        Log.v("", "TCP navázáno a aplikace to ví");
         sendNext();
         synchronized(monitor){
             monitor.notify();
@@ -141,7 +139,7 @@ public class ServerConnector extends Activity {
     public void changeUserData(View view) {
         final Dialog dialog = new Dialog(this);
         dialog.setContentView(R.layout.dialog_user);
-        dialog.setTitle("Zadejte příhlašovací údaje");
+        dialog.setTitle(getString(R.string.login_enter));
         //set dialog component
         final EditText mName = (EditText) dialog.findViewById(R.id.dialogName);
         final EditText mPasswd = (EditText) dialog.findViewById(R.id.dialogPasswd);
@@ -178,9 +176,9 @@ public class ServerConnector extends Activity {
 
     private void initialize() {
         send.setClickable(false);
-        send.setText("autorizuji");
+        send.setText(getString(R.string.sc_authorizing));
         arrayList.clear();
-        arrayList.add("připojuji k serveru");
+        arrayList.add(getString(R.string.sc_connecting));
         mAdapter.notifyDataSetChanged();
         //sendNext();
     }
@@ -190,7 +188,7 @@ public class ServerConnector extends Activity {
         // your implementation
         Log.e("", "Area event : " + event.getMessage());
         addControlAreas(event.getMessage().substring("-;OR-LIST;".length()));
-        arrayList.add("Data načtena, aktivace serveru dokončena");
+        arrayList.add(getString(R.string.sc_done));
         Intent returnIntent = new Intent();
         //TODO dodelat nejakou chybu
         server.setTcpClient(TCPClientApplication.getInstance().getClient());
@@ -217,19 +215,19 @@ public class ServerConnector extends Activity {
         // your implementation
         Log.e("", "Hand shake : " + event.getMessage());
         if (event.getMessage().startsWith("-;HELLO;")) {
-            arrayList.add("komunikace navázána");
+            arrayList.add(getString(R.string.sc_connection_ok));
             sendNext();
             if (!event.getMessage().substring("-;HELLO;".length()).equals("1.0")) {
-                arrayList.add("Server využívá jiný komunikační protokol než 1.0, v komunikaci může docházet k chybám");
+                arrayList.add(getString(R.string.sc_version_warning));
             }
         } else if (event.getMessage().startsWith("-;LOK;G;AUTH;ok;")) {
             ok = true;
-            arrayList.add("Strojvůdce autorizován");
+            arrayList.add(getString(R.string.sc_auth_ok));
             sendNext();
         } else if (event.getMessage().startsWith("-;LOK;G;AUTH;")) {
             ok = false;
-            raiseErrorState("autorizace se nezdarila");
-        } else raiseErrorState("handshake selhal");
+            raiseErrorState(getString(R.string.sc_auth_err));
+        } else raiseErrorState("handshake failed");
     }
 
     private void addControlAreas(String data) {
@@ -267,7 +265,7 @@ public class ServerConnector extends Activity {
                 arrayList.add(error);
                 mAdapter.notifyDataSetChanged();
                 progressBar.setVisibility(View.GONE);
-                showDialog("Nastala chyba", error);
+                showDialog("Error", error);
             }
         });
     }
@@ -286,7 +284,7 @@ public class ServerConnector extends Activity {
             tcp.auth = true;
             tcp.start();
         } else if (this.server != null) {
-            Log.e("connector", "server nebyl null a ma udaje:: " + server.getUserName() + "  " + server.getUserPassword());
+            Log.v("connector", "server nebyl null a ma udaje:: " + server.getUserName() + "  " + server.getUserPassword());
             tcp.server = server;
             tcp.auth = true;
             tcp.start();
@@ -297,7 +295,7 @@ public class ServerConnector extends Activity {
             passwd = server.getUserPassword();
             messges[1] = "-;LOK;G;AUTH;{" + user + "};" + passwd;
         } else {
-            showDialog("Zadejte přihlašovací údaje", null);
+            showDialog(getString(R.string.login_enter), null);
         }
         messges[2] = "-;OR-LIST;";
         arrayList = new ArrayList<>();
