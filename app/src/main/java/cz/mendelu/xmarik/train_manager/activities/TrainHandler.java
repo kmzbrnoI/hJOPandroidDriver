@@ -562,13 +562,13 @@ public class TrainHandler extends AppCompatActivity
 
         if (!active1.equals("") && active1.equals(trainAdr))
             if (status) {
-                status1.setImageResource(R.mipmap.ic_green);
-            } else status1.setImageResource(R.mipmap.ic_red);
+                status1.setImageResource(R.drawable.ic_circle_green);
+            } else status1.setImageResource(R.drawable.ic_circle_red);
 
         if (!active2.equals("") && active2.equals(trainAdr))
             if (status) {
-                status2.setImageResource(R.mipmap.ic_green);
-            } else status2.setImageResource(R.mipmap.ic_red);
+                status2.setImageResource(R.drawable.ic_circle_green);
+            } else status2.setImageResource(R.drawable.ic_circle_red);
     }
 
     public void dataChangeNotify() {
@@ -607,9 +607,9 @@ public class TrainHandler extends AppCompatActivity
     private void syncStatus(Train t, ImageButton s) {
         if (t.getErr() != null) {
             if (t.getErr().equals("stolen")) {
-                s.setImageResource(R.mipmap.ic_yellow);
-            } else s.setImageResource(R.mipmap.ic_red);
-        } else s.setImageResource(R.mipmap.ic_green);
+                s.setImageResource(R.drawable.ic_circle_yellow);
+            } else s.setImageResource(R.drawable.ic_circle_red);
+        } else s.setImageResource(R.drawable.ic_circle_green);
     }
 
 

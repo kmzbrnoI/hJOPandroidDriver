@@ -76,8 +76,8 @@
                         android:layout_height="53dp"
                         android:id="@+id/imageButton1"
                         android:layout_gravity="right"
-                        android:background="@drawable/roundcorner"
-                        android:src="@mipmap/ic_green_light"
+                        android:background="@null"
+                        android:src="@drawable/ic_circle_green"
                         android:layout_weight="1.25"
                         android:onClick="showStats1" />
 
@@ -138,6 +138,14 @@
                     android:layout_gravity="center"
                     android:textAlignment="center" />
 
+                <ListView
+                    android:id="@+id/checkBoxView1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="1850dp"
+                    android:choiceMode="multipleChoice"
+                    android:elevation="13dp"
+                    android:numColumns="4" />
+
                 <LinearLayout
                     android:orientation="horizontal"
                     android:layout_width="match_parent"
@@ -155,13 +163,6 @@
                         android:layout_gravity="center_vertical" />
                 </LinearLayout>
 
-                <ListView
-                    android:layout_width="wrap_content"
-                    android:layout_height="1850dp"
-                    android:id="@+id/checkBoxView1"
-                    android:numColumns="4"
-                    android:choiceMode="multipleChoice"
-                    android:elevation="13dp" />
             </LinearLayout>
         </ScrollView>
 
@@ -225,8 +226,8 @@
                         android:layout_height="53dp"
                         android:id="@+id/imageButton2"
                         android:layout_gravity="right"
-                        android:background="@drawable/roundcorner"
-                        android:src="@drawable/ic_red_light"
+                        android:src="@drawable/ic_circle_green"
+                        android:background="@null"
                         android:layout_weight="1.25"
                         android:onClick="showStats2" />
 

@@ -65,18 +65,18 @@
 
             <ImageButton
                 android:layout_width="104dp"
-                android:layout_height="wrap_content"
+                android:layout_height="10dp"
                 android:id="@+id/imageButton1"
-                android:background="@drawable/roundcorner"
+                android:background="@null"
                 android:layout_gravity="right"
                 android:layout_weight="0.57"
-                android:src="@mipmap/ic_green"
+                android:src="@drawable/ic_circle_green"
                 android:onClick="showStats1"
-                tools:src="@mipmap/ic_green" />
+                android:scaleType="fitCenter" />
 
             <TextView
-                android:layout_width="184dp"
-                android:layout_height="68dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:id="@+id/handlerName1" />
 
