@@ -16,8 +16,8 @@ import java.net.Socket;
 import java.net.SocketException;
 
 import cz.mendelu.xmarik.train_manager.events.CriticalErrorEvent;
-import cz.mendelu.xmarik.train_manager.events.ErrorEvent;
-import cz.mendelu.xmarik.train_manager.events.ReloadEvent;
+import cz.mendelu.xmarik.train_manager.events.TCPErrorEvent;
+import cz.mendelu.xmarik.train_manager.events.ServerReloadEvent;
 
 /**
  * TCPClient is a basic TCP client that connects to the server and synchronously waits for
@@ -70,7 +70,7 @@ public class TCPClient {
             InetAddress serverAddr = InetAddress.getByName(serverIp);
             socket = new Socket(serverAddr, serverPort);
         } catch (Exception e) {
-            EventBus.getDefault().post(new ErrorEvent("Cannot connect to socket"));
+            EventBus.getDefault().post(new TCPErrorEvent("Cannot connect to socket"));
         }
 
         if (socket == null) return;
@@ -79,9 +79,6 @@ public class TCPClient {
             //send the message to the server
             out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(socket.getOutputStream())), true);
             in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-
-            //in this while the client listens for the messages sent by the server
-            EventBus.getDefault().post(new ReloadEvent("")); // TODO: why is this piece of code here?
 
             while (mRun) {
                 try {
@@ -97,7 +94,7 @@ public class TCPClient {
 
         } catch (Exception e) {
             Log.e("TCP", "Socket general error", e);
-            EventBus.getDefault().post(new ErrorEvent("Socket general error"));
+            EventBus.getDefault().post(new TCPErrorEvent("Socket general error"));
 
         } finally {
             //the socket must be closed. It is not possible to reconnect to this socket
@@ -111,8 +108,6 @@ public class TCPClient {
             }
         }
     }
-
-    // TODO: is this necessarry?
 
     //Declare the interface. The method messageReceived(String message) will must be implemented in the MyActivity
     //class at on asynckTask doInBackground
