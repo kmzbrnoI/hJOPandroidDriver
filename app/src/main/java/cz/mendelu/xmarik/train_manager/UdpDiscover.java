@@ -20,14 +20,14 @@ import java.util.Collections;
 import java.util.List;
 
 import cz.mendelu.xmarik.train_manager.activities.ServerSelect;
-import cz.mendelu.xmarik.train_manager.events.ReloadEvent;
+import cz.mendelu.xmarik.train_manager.events.ServerReloadEvent;
+import cz.mendelu.xmarik.train_manager.helpers.ParseHelper;
 import cz.mendelu.xmarik.train_manager.models.Server;
 
 
 /**
- * Created by ja on 15. 3. 2016.
+ * UdpDiscover discovers hJOPservers in local network.
  */
-//URL, Integer, Long
 public class UdpDiscover extends AsyncTask<String, Void, String> {
     private static final int TIMEOUT_MS = 500;
     InetAddress nov = null;
@@ -127,16 +127,16 @@ public class UdpDiscover extends AsyncTask<String, Void, String> {
     private Server parseServerMessage(String message) {
         //"hJOP";verze_protokolu;typ_zarizeni;server_nazev;server_ip;server_port;
         //server_status;server_popis
-        String[] tmp = HelpServices.parseHelper(message);
+        ArrayList<String> parsed = ParseHelper.parse(message, Collections.singletonList(";"), Collections.<String>emptyList());
         Server server = null;
 
-        if ((tmp.length > 0) && (tmp[0].equals("hJOP"))) {
-            if (tmp[2].equals("server")) {
-                server = new Server(tmp.length > 4 ? tmp[7] : "",
-                        tmp.length > 5 ? tmp[4] : "",
-                        tmp.length > 6 ? Integer.parseInt(tmp[5]) : 0,
-                        tmp.length > 7 ? tmp[6].equals("on") : null,
-                        tmp.length >= 8 ? tmp[3] : "", "", "");
+        if ((parsed.size() > 0) && (parsed.get(0).equals("hJOP"))) {
+            if (parsed.get(2).equals("server")) {
+                server = new Server(parsed.size() > 4 ? parsed.get(7) : "",
+                        parsed.size() > 5 ? parsed.get(4) : "",
+                        parsed.size() > 6 ? Integer.parseInt(parsed.get(5)) : 0,
+                        parsed.size() > 7 ? parsed.get(6).equals("on") : null,
+                        parsed.size() >= 8 ? parsed.get(3) : "", "", "");
             }
         }
         return server;
@@ -202,7 +202,7 @@ public class UdpDiscover extends AsyncTask<String, Void, String> {
     @Override
     protected void onPostExecute(String result) {
         super.onPostExecute(result);
-        EventBus.getDefault().post(new ReloadEvent(""));
+        EventBus.getDefault().post(new ServerReloadEvent());
     }
 
 
