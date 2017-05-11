@@ -136,7 +136,7 @@ public class UdpDiscover extends AsyncTask<String, Void, String> {
                         tmp.length > 5 ? tmp[4] : "",
                         tmp.length > 6 ? Integer.parseInt(tmp[5]) : 0,
                         tmp.length > 7 ? tmp[6].equals("on") : null,
-                        tmp.length >= 8 ? tmp[3] : "");
+                        tmp.length >= 8 ? tmp[3] : "", "", "");
             }
         }
         return server;

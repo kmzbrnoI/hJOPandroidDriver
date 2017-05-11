@@ -647,8 +647,8 @@ public class TrainHandler extends NavigationBase {
     private void sendNext(String message) {
 
         if (!update) {
-            if (TCPClientApplication.getInstance().getClient() != null) {
-                TCPClientApplication.getInstance().getClient().sendMessage(message);
+            if (TCPClientApplication.getInstance() != null) {
+                TCPClientApplication.getInstance().send(message);
                 Log.v("data", "C: Odeslana zpráva: " + message + "");
             } else {
                 Log.v("data", "C: Neodeslána zpráva: " + message + " Tcp není navázáno");

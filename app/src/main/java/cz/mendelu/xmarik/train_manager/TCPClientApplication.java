@@ -6,6 +6,7 @@ import android.util.Log;
 
 import org.greenrobot.eventbus.EventBus;
 
+import java.net.ConnectException;
 import java.util.ArrayList;
 
 import cz.mendelu.xmarik.train_manager.events.AreasEvent;
@@ -21,90 +22,72 @@ import cz.mendelu.xmarik.train_manager.models.Server;
 import cz.mendelu.xmarik.train_manager.models.Train;
 
 /**
- * Created by ja on 9. 10. 2016.
+ * TCPClientApplication is a singleton, whicch handles connection with the server. It encapsules
+ * TCPClient.
  */
 
 public class TCPClientApplication extends Application {
-
     static TCPClientApplication instance;
+
+    public Server server = null; // TODO should be private and with getter
+
     public boolean auth = false;
     TCPClient mTcpClient;
-    public Server server;
     private String tCPAnswer;
     private ArrayList<TCPAnswer> serverResponses;
-    private ConnectTask connectTask;
+    private ListenTask listenTask;
 
     TCPClientApplication() {
         serverResponses = new ArrayList<>();
     }
 
     public static TCPClientApplication getInstance() {
-        if (instance == null) {
-            instance = new TCPClientApplication();
-        }
-
+        if (instance == null) instance = new TCPClientApplication();
         return instance;
-    }
-
-    public static TCPClientApplication startNewServer() {
-
-        instance = new TCPClientApplication();
-        return instance;
-    }
-
-    public TCPClient getClient() {
-        return this.mTcpClient;
-    }
-
-    public void setClient(TCPClient client) {
-        this.mTcpClient = client;
     }
 
     public void connect(Server server) {
-        this.server = server;
+        server = server;
+        mTcpClient = new TCPClient(server.host, server.port);
+        listenTask = new ListenTask();
+        listenTask.execute();
     }
 
-    public void start() {
-        connectTask = new ConnectTask();
-        connectTask.execute();
+    public void disconnect() {
+        if (mTcpClient != null)
+            this.mTcpClient.disconnect();
+        if (listenTask != null)
+            listenTask.cancel(true);
+
+        this.server = null;
+        ServerList.getInstance().deactivateServer();
+
+        // TODO: notify everyone else
     }
 
-    public void sendToServer(String message) {
-        Log.v("TCP", "odeslano:" + message);
-        //sends the message to the server
-        if (mTcpClient != null) {
-            mTcpClient.sendMessage(message);
+    public void send(String message) {
+        if (mTcpClient == null) return;
+
+        try {
+            mTcpClient.send(message);
+        } catch (ConnectException e) {
+            Log.e("TCP", "Cannot send data, disconnecting", e);
+            this.disconnect();
         }
     }
 
-    public void stop() {
-        if (mTcpClient != null)
-            mTcpClient.stopClient();
-        if (connectTask != null)
-            connectTask.cancel(true);
-        instance = null;
-        ServerList.getInstance().deactivateServer();
-    }
+    public boolean connected() { return (mTcpClient != null && mTcpClient.connected()); }
 
-    public class ConnectTask extends AsyncTask<String, String, TCPClient> {
-
+    public class ListenTask extends AsyncTask<String, String, TCPClient> {
         @Override
         protected TCPClient doInBackground(String... message) {
 
-            //we create a TCPClient object and
-            mTcpClient = new TCPClient(new TCPClient.OnMessageReceived() {
+            mTcpClient.listen(new TCPClient.OnMessageReceived()  {
                 @Override
-                //here the messageReceived method is implemented
                 public void messageReceived(String message) {
-                    //this method calls the onProgressUpdate
                     publishProgress(message);
                 }
-            }, server.ipAdr, server.port);
-            String answer = mTcpClient.run();
-
-            if (answer != null && answer.equals("server is unreachable")) {
-                tCPAnswer = "client error, please check your connection";
-            }
+            });
 
             return null;
         }
@@ -112,6 +95,7 @@ public class TCPClientApplication extends Application {
         @Override
         protected void onProgressUpdate(String... values) {
             super.onProgressUpdate(values);
+
             String serverMessage = values[0];
             //parsovat odpoved od serveru je ve values 0
             Log.v("TCP", "zprava :" + serverMessage);

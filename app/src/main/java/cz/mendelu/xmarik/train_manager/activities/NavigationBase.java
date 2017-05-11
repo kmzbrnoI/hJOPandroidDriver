@@ -68,40 +68,40 @@ public class NavigationBase extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_server) {
-            Intent intent = new Intent(this, ServerSelect.class);
-            startActivity(intent);
+            startActivity(new Intent(this, ServerSelect.class));
+
         } else if (id == R.id.nav_about) {
-            Intent intent = new Intent(this, About.class);
-            startActivity(intent);
-        } else if (id == R.id.nav_train_manage) {
+            startActivity(new Intent(this, About.class));
+
+        } else if (id == R.id.nav_train_control) {
             if(ServerList.getInstance().getActiveServer() == null) {
                 Toast.makeText(getApplicationContext(),
                         R.string.conn_no_server_authorized,
                         Toast.LENGTH_LONG).show();
             } else {
-                Intent intent = new Intent(this, TrainHandler.class);
-                startActivity(intent);
+                startActivity(new Intent(this, TrainHandler.class));
             }
-        } else if (id == R.id.nav_trains) {
+
+        } else if (id == R.id.nav_train_request) {
             if(ServerList.getInstance().getActiveServer() == null) {
                 Toast.makeText(getApplicationContext(),
                         R.string.conn_no_server_authorized,
                         Toast.LENGTH_LONG).show();
             } else {
-                Intent intent = new Intent(this, TrainRequest.class);
-                startActivity(intent);
+                startActivity(new Intent(this, TrainRequest.class));
             }
-        }else if (id == R.id.nav_ack_trains) {
+
+        } else if (id == R.id.nav_train_release) {
             if(ServerList.getInstance().getActiveServer() == null) {
                 Toast.makeText(getApplicationContext(),
                         R.string.conn_no_server_authorized,
                         Toast.LENGTH_LONG).show();
             } else {
-                Intent intent = new Intent(this, TrainRelease.class);
-                startActivity(intent);
+                startActivity(new Intent(this, TrainRelease.class));
             }
         }
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+
+        DrawerLayout drawer = (DrawerLayout)findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }

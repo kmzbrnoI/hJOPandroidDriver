@@ -69,7 +69,7 @@ public class TrainRelease extends NavigationBase {
         EventBus.getDefault().register(this);
         if (active != null) {
             port = active.port;
-            ipAdr = active.ipAdr;
+            ipAdr = active.host;
             array = active.getAuthorizedTrainsString();
         } else {
             array = new ArrayList<>();
@@ -102,9 +102,8 @@ public class TrainRelease extends NavigationBase {
 
     private void sendNext(String message) {
         //sends the message to the server
-        if (TCPClientApplication.getInstance().getClient() != null) {
-            TCPClientApplication.getInstance().getClient().sendMessage(message);
-            Log.v("TCP", "odeslano:" + message + " \n");
+        if (TCPClientApplication.getInstance() != null) {
+            TCPClientApplication.getInstance().send(message);
         }
     }
 

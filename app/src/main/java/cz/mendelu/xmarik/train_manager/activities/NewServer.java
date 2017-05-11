@@ -33,9 +33,9 @@ public class NewServer extends AppCompatActivity {
             String[] tmp = value.split("\t");
             server = ServerList.getInstance().getServer(tmp[0]);
             nameText.setText(server.name);
-            ipAdrText.setText(server.ipAdr);
+            ipAdrText.setText(server.host);
             portText.setText(String.valueOf(server.port));
-            aboutText.setText(server.about);
+            aboutText.setText(server.type);
         }
     }
 
@@ -45,58 +45,45 @@ public class NewServer extends AppCompatActivity {
         port = portText.getText().toString();
         ipAdr = ipAdrText.getText().toString();
         about = aboutText.getText().toString();
+
         if (name.equals("") || port.equals("") || ipAdr.equals("")) {
             Toast.makeText(getApplicationContext(),
                     R.string.ns_warning_compulsory, Toast.LENGTH_LONG)
                     .show();
-        } else if (ip(ipAdr) || domainName(ipAdr)) {
-            if (ServerList.getInstance().getStoredServersString().contains(name)) {
-                Toast.makeText(getApplicationContext(),
-                        R.string.ns_warning_server_exists, Toast.LENGTH_LONG)
-                        .show();
-            } else if (name.contains("--")) {
-                Toast.makeText(getApplicationContext(),
-                        R.string.ns_warning_invalid_characters, Toast.LENGTH_LONG)
-                        .show();
-            } else {
-                if (server == null) {
-                    server = new Server(name, Integer.parseInt(port), false, about);
-                } else {
-                    server.name = name;
-                    server.port = Integer.parseInt(port);
-                    server.about = about;
-                    server.setActive(false);
-                }
-                if (ip(ipAdr)) {
-                    server.ipAdr = ipAdr;
-                } else {
-                    server.setDnsName(ipAdr);
-                }
-                ServerList.getInstance().addCustomServer(server);
-                Intent returnIntent = new Intent();
-                returnIntent.putExtra("result", name);
-                setResult(RESULT_OK, returnIntent);
-                finish();
-            }
-        } else Toast.makeText(getApplicationContext(),
-                R.string.ns_warning_invalid_address, Toast.LENGTH_LONG)
-                .show();
+            return;
+        }
+
+        if (ServerList.getInstance().getStoredServersString().contains(name)) {
+            Toast.makeText(getApplicationContext(),
+                    R.string.ns_warning_server_exists, Toast.LENGTH_LONG)
+                    .show();
+            return;
+        }
+
+        if (name.contains("--")) {
+            Toast.makeText(getApplicationContext(),
+                    R.string.ns_warning_invalid_characters, Toast.LENGTH_LONG)
+                    .show();
+            return;
+        }
+
+        if (server == null) {
+            server = new Server(name, ipAdr, Integer.parseInt(port), false, about, "", "");
+        } else {
+            server.name = name;
+            server.port = Integer.parseInt(port);
+            server.type = about;
+            server.active = false;
+        }
+
+        ServerList.getInstance().addCustomServer(server);
+        Intent returnIntent = new Intent();
+        returnIntent.putExtra("result", name);
+        setResult(RESULT_OK, returnIntent);
+        finish();
     }
 
     public void back(View view) {
         onBackPressed();
     }
-
-    public boolean ip(String text) {
-        Pattern p = Pattern.compile("^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$");
-        Matcher m = p.matcher(text);
-        return m.find();
-    }
-
-    public boolean domainName(String text) {
-        Pattern p = Pattern.compile("^((?!-)[A-Za-z0-9-]{1,63}(?<!-)\\\\.)+[A-Za-z]{2,6}$");
-        Matcher m = p.matcher(text);
-        return m.find();
-    }
-
 }

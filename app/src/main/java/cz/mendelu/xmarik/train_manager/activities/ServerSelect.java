@@ -8,14 +8,9 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -162,8 +157,8 @@ public class ServerSelect extends NavigationBase {
         for (Server s : serverList.getServers()) {
             for (Server c : serverList.getCustomServers())
                 if (c.equals(s)) {
-                    s.setUserName(c.getUserName());
-                    s.setUserPassword(c.getUserPassword());
+                    s.username = c.username;
+                    s.password = c.password;
                 }
         }
 
@@ -214,7 +209,7 @@ public class ServerSelect extends NavigationBase {
         switch (menuItemIndex) {
             case 0:
                 Server tmpServer = ServerList.getInstance().getServer(tmp[0]);
-                if (tmpServer.status) {
+                if (tmpServer.active) {
                     AuthorizeServer(tmp[0]);
                 } else Toast.makeText(getApplicationContext(),
                         R.string.conn_server_offline, Toast.LENGTH_LONG)
@@ -229,9 +224,7 @@ public class ServerSelect extends NavigationBase {
                 startActivityForResult(intent, 2);
                 break;
             case 3:
-                Toast.makeText(getApplicationContext(),
-                        ServerList.getInstance().getServer(tmp[0]).getInfo(), Toast.LENGTH_LONG)
-                        .show();
+                // TODO: remove item from menu
                 break;
             case 4:
                 array1.remove(info.position);
@@ -330,14 +323,14 @@ public class ServerSelect extends NavigationBase {
         final EditText mPasswd = (EditText) dialog.findViewById(R.id.dialogPasswd);
         Button dialogButton = (Button) dialog.findViewById(R.id.dialogButtonOK);
         // if button is clicked, close the custom dialog
-        if (server.getUserPassword() != null) mPasswd.setText(server.getUserPassword());
-        if (server.getUserName() != null) mName.setText(server.getUserName());
+        if (server.password != null) mPasswd.setText(server.password);
+        if (server.username != null) mName.setText(server.username);
 
         dialogButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                server.setUserPassword(HelpServices.hashPasswd(mPasswd.getText().toString()));
-                server.setUserName(mName.getText().toString());
+                server.password = HelpServices.hashPasswd(mPasswd.getText().toString());
+                server.username = mName.getText().toString();
                 dialog.dismiss();
             }
         });

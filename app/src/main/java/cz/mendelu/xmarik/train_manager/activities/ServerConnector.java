@@ -58,7 +58,7 @@ public class ServerConnector extends Activity {
     @Override
     public void onBackPressed() {
         if(EventBus.getDefault().isRegistered(this))EventBus.getDefault().unregister(this);
-        TCPClientApplication.getInstance().stop();
+        TCPClientApplication.getInstance().disconnect();
         super.onBackPressed();
     }
 
@@ -72,8 +72,8 @@ public class ServerConnector extends Activity {
         this.user = name;
         this.passwd = tmpPass;
         if (save) {
-            this.server.setUserName(name);
-            this.server.setUserPassword(tmpPass);
+            this.server.username = name;
+            this.server.password = tmpPass;
             ServerList.getInstance().setPassword(server);
         }
         Log.e("", "user a heslo:" + name + " \n" + tmpPass);
@@ -110,7 +110,7 @@ public class ServerConnector extends Activity {
         i = 0;
         tcpOK = false;
         if (TCPClientApplication.getInstance() != null)
-            TCPClientApplication.getInstance().stop();
+            TCPClientApplication.getInstance().disconnect();
         super.onResume();
         if (!EventBus.getDefault().isRegistered(this)) EventBus.getDefault().register(this);
         startMethod();
@@ -119,9 +119,8 @@ public class ServerConnector extends Activity {
     private void sendNext() {
         String message = getMessage();
         //sends the message to the server
-        if (TCPClientApplication.getInstance().getClient() != null && message != null) {
-            TCPClientApplication.getInstance().getClient().sendMessage(message);
-            Log.v("TCP", "Send odeslano:" + message);
+        if (TCPClientApplication.getInstance() != null && message != null) {
+            TCPClientApplication.getInstance().send(message);
         }
         //refresh the list
         mAdapter.notifyDataSetChanged();
@@ -191,8 +190,8 @@ public class ServerConnector extends Activity {
         arrayList.add(getString(R.string.sc_done));
         Intent returnIntent = new Intent();
         //TODO dodelat nejakou chybu
-        server.setTcpClient(TCPClientApplication.getInstance().getClient());
-        server.setActive(true);
+        //server.setTcpClient(TCPClientApplication.getInstance().getClient());
+        server.active = true;
         ServerList.getInstance().setActive(server);
         TCPClientApplication.getInstance().auth = false;
         if (ok) {
@@ -274,25 +273,39 @@ public class ServerConnector extends Activity {
         classObject = this;
         if(!EventBus.getDefault().isRegistered(this))EventBus.getDefault().register(this);
         Bundle extras = getIntent().getExtras();
-        TCPClientApplication tcp = TCPClientApplication.startNewServer();
+        TCPClientApplication tcp = TCPClientApplication.getInstance();
+
+        if (tcp.connected())
+            tcp.disconnect();
+
         messges = new String[3];
         if ( extras != null ) {
             String value = extras.getString("server");
             String[] tmp = value.split("\t");
             server = ServerList.getInstance().getServer(tmp[0]);
-            tcp.server = server;
             tcp.auth = true;
-            tcp.start();
+
+            try {
+                tcp.connect(server);
+            } catch (Exception e) {
+                // TODO
+                Log.e("TCP", "Connecting", e);
+            }
+
         } else if (this.server != null) {
-            Log.v("connector", "server nebyl null a ma udaje:: " + server.getUserName() + "  " + server.getUserPassword());
-            tcp.server = server;
             tcp.auth = true;
-            tcp.start();
+            try {
+                tcp.connect(server);
+            } catch (Exception e) {
+                // TODO
+                Log.e("TCP", "Connecting", e);
+            }
         } else finish();
+
         messges[0] = "-;HELLO;1.0";
-        if (server.getUserName() != null && server.getUserPassword() != null) {
-            user = server.getUserName();
-            passwd = server.getUserPassword();
+        if (server.username != null && server.password != null) {
+            user = server.username;
+            passwd = server.password;
             messges[1] = "-;LOK;G;AUTH;{" + user + "};" + passwd;
         } else {
             showDialog(getString(R.string.login_enter), null);

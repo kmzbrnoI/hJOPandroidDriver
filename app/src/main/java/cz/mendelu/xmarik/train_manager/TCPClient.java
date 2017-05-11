@@ -20,122 +20,99 @@ import cz.mendelu.xmarik.train_manager.events.ErrorEvent;
 import cz.mendelu.xmarik.train_manager.events.ReloadEvent;
 
 /**
- * Created by ja on 24. 6. 2016.
+ * TCPClient is a basic TCP client that connects to the server and synchronously waits for
+ * incoming data. It is intended to be in separate thread.
  */
 public class TCPClient {
-    public String SERVERIP = "10.2.0.174"; //your computer IP address
-    public int SERVERPORT = 4444;
-    Socket socket;
-    PrintWriter out;
-    BufferedReader in;
-    private String serverMessage;
-    private OnMessageReceived mMessageListener = null;
+    public String serverIp;
+    public int serverPort;
+
+    private Socket socket = null;
+    private PrintWriter out;
+    private BufferedReader in;
     private boolean mRun = false;
 
-    /**
-     * Constructor of the class. OnMessagedReceived listens for the messages received from server
-     */
-    public TCPClient(OnMessageReceived listener, String ip, int port) {
-        this.SERVERIP = ip;
-        this.SERVERPORT = port;
-        mMessageListener = listener;
-        Log.i("TCP Client", "port: " + port);
-        Log.i("TCP Client", "ip: " + ip);
+    public TCPClient(String ip, int port) {
+        this.serverIp = ip;
+        this.serverPort = port;
     }
 
-    /**
-     * Sends the message entered by client to the server
-     *
-     * @param message text entered by client
-     */
-    public void sendMessage(String message) {
-        Log.v("TCP", "odeslano:" + message);
-        if (out != null && !out.checkError()) {
-            out.println(message);
-            out.flush();
-        }
+    public void send(String message) throws ConnectException {
+        if (out == null)
+            throw new ConnectException("Not connected!");
+
+        out.println(message);
+        out.flush();
     }
 
-    /**
-     * close tcp klient
-     */
-    public void stopClient() {
+    public void disconnect() {
         mRun = false;
-        if (socket != null) try {
-            socket.close();
-        } catch (IOException e) {
-            e.printStackTrace();
+        if (socket != null) {
+            try {
+                socket.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                socket = null;
+            }
         }
     }
 
-    public String run() {
+    public boolean connected() { return socket != null; }
 
+    public void listen(OnMessageReceived listener) {
+        String serverMessage = null;
         mRun = true;
 
+        if (socket != null) return;
+
         try {
-            InetAddress serverAddr = InetAddress.getByName(SERVERIP);
-            Log.d("TCP Client", "C: Connecting...");
-            //create a socket to make the connection with the server
-
-            try {
-                if (socket == null) socket = new Socket(serverAddr, SERVERPORT);
-            } catch (ConnectException e) {
-                Log.e("TCP Client", "C: error connection refused");
-                EventBus.getDefault().post(new ErrorEvent("error - connection refused"));
-                return  "error - connection refused";
-            }
-            try {
-                //send the message to the server
-                if (socket != null) {
-                    out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(socket.getOutputStream())), true);
-                    Log.d("TCP Client", "C: Sent.");
-                    //receive the message which the server sends back
-                    in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-                    //in this while the client listens for the messages sent by the server
-                    EventBus.getDefault().post(new ReloadEvent(""));
-                    while (mRun) {
-                        try {
-                            serverMessage = in.readLine();
-                        } catch (SocketException e) {
-                            EventBus.getDefault().post(new CriticalErrorEvent("Spojení ukončeno"));
-                        }
-                        if (serverMessage != null && mMessageListener != null) {
-                            //call the method messageReceived from MyActivity class
-                            Log.d("TCP Client", "C: message received: " + serverMessage);
-                            mMessageListener.messageReceived(serverMessage);
-                        }
-                        serverMessage = null;
-                    }
-                    Log.d("RESPONSE FROM SERVER", "S: Received Message: '" + serverMessage + "'");
-                } else {
-                    Log.e("TCP", "S: Error - server is unreachable");
-                    serverMessage = "error - server is unreachable";
-                    mMessageListener.messageReceived(serverMessage);
-                }
-                //return serverMessage;
-            } catch (Exception e) {
-                Log.e("TCP", "S: Error", e);
-                EventBus.getDefault().post(new ErrorEvent("error - server"));
-                serverMessage = "error - server";
-            } finally {
-                //the socket must be closed. It is not possible to reconnect to this socket
-                // after it is closed, which means a new socket instance has to be created.
-                if (socket != null) socket.close();
-            }
+            InetAddress serverAddr = InetAddress.getByName(serverIp);
+            socket = new Socket(serverAddr, serverPort);
         } catch (Exception e) {
-            Log.e("TCP", "C: Error", e);
-            serverMessage = "error client";
+            EventBus.getDefault().post(new ErrorEvent("Cannot connect to socket"));
         }
-        return serverMessage;
+
+        if (socket == null) return;
+
+        try {
+            //send the message to the server
+            out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(socket.getOutputStream())), true);
+            in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+
+            //in this while the client listens for the messages sent by the server
+            EventBus.getDefault().post(new ReloadEvent("")); // TODO: why is this piece of code here?
+
+            while (mRun) {
+                try {
+                    serverMessage = in.readLine();
+                } catch (SocketException e) {
+                    EventBus.getDefault().post(new CriticalErrorEvent("Socket exception!"));
+                }
+
+                if (serverMessage != null && listener != null) {
+                    listener.messageReceived(serverMessage);
+                }
+            }
+
+        } catch (Exception e) {
+            Log.e("TCP", "Socket general error", e);
+            EventBus.getDefault().post(new ErrorEvent("Socket general error"));
+
+        } finally {
+            //the socket must be closed. It is not possible to reconnect to this socket
+            // after it is closed, which means a new socket instance has to be created.
+            if (socket != null) {
+                try {
+                    socket.close();
+                } catch (IOException e) {
+                    Log.e("TCP", "Socket close exception", e);
+                }
+            }
+        }
     }
 
-    public OnMessageReceived getmMessageListener() {
-        return mMessageListener;
-    }
-
-    public void setmMessageListener(OnMessageReceived mMessageListener) {
-        this.mMessageListener = mMessageListener;
-    }
+    // TODO: is this necessarry?
 
     //Declare the interface. The method messageReceived(String message) will must be implemented in the MyActivity
     //class at on asynckTask doInBackground

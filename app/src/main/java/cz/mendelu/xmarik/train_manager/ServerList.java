@@ -46,8 +46,8 @@ public class ServerList {
         if (storedServers.contains(server)) {
             for (Server s : storedServers) {
                 if (s.equals(server)) {
-                    s.setUserPassword(server.getUserPassword());
-                    s.setUserName(server.getUserName());
+                    s.password = server.password;
+                    s.username = server.username;
                 }
             }
         } else storedServers.add(server);
@@ -66,8 +66,8 @@ public class ServerList {
         for (String tmpS : serverString) {
             String[] attributes = tmpS.split(";");
             if (tmpS.length() > 5) {
-                Server tmpServer = new Server(attributes[0], attributes[1], attributes[2], attributes[3],
-                        attributes[4], attributes[5]);
+                Server tmpServer = new Server(attributes[0], attributes[1], Integer.parseInt(attributes[2]), false,
+                        attributes[3], attributes[4], attributes[5]);
                 if (!storedServers.contains(tmpServer)) storedServers.add(tmpServer);
             }
         }
@@ -127,10 +127,10 @@ public class ServerList {
 
     public Server getActiveServer() {
         for (Server s : this.servers) {
-            if (s.getActive()) return s;
+            if (s.active) return s;
         }
         for (Server s : this.storedServers) {
-            if (s.getActive()) return s;
+            if (s.active) return s;
         }
         return null;
     }
@@ -142,12 +142,12 @@ public class ServerList {
 
     public void deleteAllUserData() {
         for (Server s : this.storedServers) {
-            s.setUserName(null);
-            s.setUserPassword(null);
+            s.username = "";
+            s.password = "";
         }
         for (Server s : this.servers) {
-            s.setUserName(null);
-            s.setUserPassword(null);
+            s.username = "";
+            s.password = "";
         }
     }
 
@@ -176,16 +176,16 @@ public class ServerList {
 
     public void setActive(Server server) {
         for (Server s : this.servers) {
-            if ((s.getActive())) {
+            if (s.active) {
                 if (!s.equals(server)) {
-                    s.setActive(false);
+                    s.active = false;
                 }
             }
         }
         for (Server s : this.storedServers) {
-            if ((s.getActive())) {
+            if (s.active) {
                 if (!s.equals(server)) {
-                    s.setActive(false);
+                    s.active = false;
                 }
             }
         }
@@ -193,13 +193,13 @@ public class ServerList {
 
     public void deactivateServer() {
         for (Server s : this.servers) {
-            if ((s.getActive())) {
-                s.setActive(false);
+            if (s.active) {
+                s.active = false;
             }
         }
         for (Server s : this.storedServers) {
-            if ((s.getActive())) {
-                s.setActive(false);
+            if (s.active) {
+                s.active = false;
             }
         }
     }

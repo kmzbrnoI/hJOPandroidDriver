@@ -9,61 +9,52 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import cz.mendelu.xmarik.train_manager.ControlArea;
 import cz.mendelu.xmarik.train_manager.TCPClient;
+import cz.mendelu.xmarik.train_manager.TCPClientApplication;
 
 /**
- * Created by ja on 15. 6. 2016.
+ * Class Server represents a single server. Server contains database of all trains.
  */
-@SuppressWarnings("ALL")
 public class Server {
-    public static AtomicInteger id = new AtomicInteger(0);
-    public int serverId;
+    public static AtomicInteger globalId = new AtomicInteger(0);
+
+    public int id;
     public String name;
-    public String ipAdr;
+    public String host;
     public int port;
-    public String about;
-    public boolean status;
-    public List<ControlArea> areas;
-    private String base = "-;LOK;G;";
-    private boolean active;
-    private String dnsName;
-    private String userName;
-    private String userPassword;
-    private TCPClient tcpClient;
+    public String type;
+    public boolean active;
 
-//verze_protokolu;typ_zarizeni;server_nazev;server_ip;server_port;
-    public Server(String name, String ipAdr, int port, boolean status, String about) {
-        this.ipAdr = ipAdr;
+    public String username;
+    public String password;
+
+    public List<ControlArea> areas; // TODO: remove this
+
+    public Server(String name, String host, int port, boolean active, String type, String username, String password) {
+        this.id = globalId.incrementAndGet();
         this.name = name;
+        this.host = host;
         this.port = port;
-        this.about = about;
-        fixAbout();
-        this.areas = new ArrayList<>();
-        this.status = status;
-        this.active = false;
-        this.serverId = id.incrementAndGet();
+        this.type = type;
+        this.active = active;
+        this.username = username;
+        this.password = password;
+
         List<Train> trains = new ArrayList<>();
-        trains.add(new Train("bnn21f86", false, new boolean[16], 16, true, "loko1", 10));
-        trains.add(new Train("aaaa", true, new boolean[16], 16, false, "loko2", 15));
-        trains.add(new Train("nov", true, new boolean[16], 16, true, "loko3", 100));
-        trains.get(0).setAuthorized(true);
-        trains.get(2).setAuthorized(true);
-        areas.add(new ControlArea("1", "full", trains));
-        areas.add(new ControlArea("1", "empty", new ArrayList<Train>()));
+        areas = new ArrayList<>();
     }
 
-    public Server(String name, int port, boolean status, String about) {
+/*    public Server(String name, int port, boolean status, String about) {
         this.name = name;
         this.port = port;
         this.about = about;
-        fixAbout();
         this.areas = new ArrayList<>();
         this.status = status;
         this.active = false;
 
         this.serverId = id.incrementAndGet();
-    }
+    } */
 
-    public Server(String attribute, String attribute1, String attribute2, String attribute3,
+    /*public Server(String attribute, String attribute1, String attribute2, String attribute3,
                   String attribute4, String attribute5) {
         this.name = attribute;
         this.ipAdr = attribute1;
@@ -72,16 +63,7 @@ public class Server {
         fixAbout();
         this.userName = attribute4;
         this.userPassword = attribute5;
-    }
-
-    private void fixAbout() {
-        if (this.about.startsWith("{")) {
-            this.about = this.about.substring(1);
-        }
-        if (this.about.endsWith("}")) {
-            this.about = this.about.substring(0, this.about.length()-1);
-        }
-    }
+    }*/
 
     public String GetLoko(String token, String adr) {
         String text = null;
@@ -108,53 +90,12 @@ public class Server {
     }
 
     public String getLongInfo() {
-        return "Server :" + about + "\n" +
-                "ip = " + ipAdr + "\n" +
-                "port = " + port + "\n" +
-                "typ = " + name + "\n" +
-                "aktivní = " + (active ? "ano" : "ne");
-    }
-
-    public String getBase() {
-        return base;
-    }
-
-    public boolean isActive() {
-        return active;
-    }
-
-    public String getDnsName() {
-        return dnsName;
-    }
-
-    public void setDnsName(String dnsName) {
-        this.dnsName = dnsName;
-    }
-
-    public String getUserName() {
-        return userName;
-    }
-
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
-
-    public String getUserPassword() {
-        return userPassword;
-    }
-
-    public void setUserPassword(String userPassword) {
-        this.userPassword = userPassword;
-    }
-
-    public boolean getActive() {
-        return active;
-    }
-
-    public void setActive(boolean ac) {
-
-        this.active = ac;
-
+        return "Server :" + name + "\n" +
+                "Ip: " + host + "\n" +
+                "Port: " + port + "\n" +
+                "Type: " + type + "\n" +
+                "Active: " + ((TCPClientApplication.getInstance().server == this &&
+                               TCPClientApplication.getInstance().connected()) ? "yes" : "no");
     }
 
     public Train getTrain(String adr) {
@@ -171,7 +112,7 @@ public class Server {
     @Override
     public String toString() {
         return "Server --" + name + "--" +
-                "| ip=" + ipAdr +
+                "| ip=" + host +
                 "| port=" + port + ' ';
     }
 
@@ -272,14 +213,19 @@ public class Server {
 
 
     public String getStringData() {
-        String statusText = this.status ? "online" : "offline";
-        String stringData = this.name + "\t" + this.ipAdr + "\n" + this.about + " \t" + statusText;
+        String statusText = this.active ? "online" : "offline";
+        String stringData = this.name + "\t" + this.host + "\n" + this.type + " \t" + statusText;
+        return stringData;
+    }
+
+    public String getStoredStringData() {
+        String stringData = this.name + "\t" + this.host + "\n" + this.type;
         return stringData;
     }
 
     public String getSaveDataString() {
-        return this.name + ";" + this.ipAdr + ";" + this.port + ";"
-                + this.about + ";" + this.userName + ";" + this.userPassword;
+        return this.name + ";" + this.host + ";" + this.port + ";"
+                + this.type + ";" + this.username + ";" + this.password;
     }
 
     @Override
@@ -291,23 +237,15 @@ public class Server {
 
         if (port != server.port) return false;
         if (!name.equals(server.name)) return false;
-        return ipAdr != null ? ipAdr.equals(server.ipAdr) : server.ipAdr == null;
+        return host != null ? host.equals(server.host) : server.host == null;
     }
 
     @Override
     public int hashCode() {
         int result = name.hashCode();
-        result = 31 * result + (ipAdr != null ? ipAdr.hashCode() : 0);
+        result = 31 * result + (host != null ? host.hashCode() : 0);
         result = 31 * result + port;
         return result;
-    }
-
-    public void setTcpClient(TCPClient tcpClient) {
-        this.tcpClient = tcpClient;
-    }
-
-    public String getInfo() {
-        return this.about +" uživatel:"+ this.userName;
     }
 
     public void addTrain(Train newTrain) {
@@ -327,11 +265,6 @@ public class Server {
         trains.get(2).setAuthorized(true);
         return trains;
     }*/
-
-    public String getStoredStringData() {
-        String stringData = this.name + "\t " + this.ipAdr+ " " + this.about;
-        return stringData;
-    }
 
     public void removeTrain(Train train) {
         List<Train> trains;
