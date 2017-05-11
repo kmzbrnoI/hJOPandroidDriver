@@ -8,7 +8,7 @@ import java.util.List;
  * Parse Helper allowes parsing data from hJOPserver in format of semicolon-separated-values.
  */
 public class ParseHelper {
-    public static ArrayList<String> parse(String text, List<String> separators, List<String> ignore) {
+    public static ArrayList<String> parse(String text, List<Character> separators, List<Character> ignore) {
         ArrayList<String> result = new ArrayList<>();
         String s = "";
         int plain_cnt = 0;

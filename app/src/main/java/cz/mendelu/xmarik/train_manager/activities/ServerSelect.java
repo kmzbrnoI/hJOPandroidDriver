@@ -32,6 +32,7 @@ import java.util.ArrayList;
 
 import cz.mendelu.xmarik.train_manager.HelpServices;
 import cz.mendelu.xmarik.train_manager.R;
+import cz.mendelu.xmarik.train_manager.events.ServerReloadEvent;
 import cz.mendelu.xmarik.train_manager.events.TCPErrorEvent;
 import cz.mendelu.xmarik.train_manager.models.Server;
 import cz.mendelu.xmarik.train_manager.ServerList;
@@ -337,10 +338,10 @@ public class ServerSelect extends NavigationBase {
         dialog.show();
     }
 
-    /*@Subscribe
+    @Subscribe
     public void onEvent(ServerReloadEvent event) {
         dataReload();
-    }*/
+    }
 
     @Override
     public void onPause() {

@@ -127,7 +127,7 @@ public class UdpDiscover extends AsyncTask<String, Void, String> {
     private Server parseServerMessage(String message) {
         //"hJOP";verze_protokolu;typ_zarizeni;server_nazev;server_ip;server_port;
         //server_status;server_popis
-        ArrayList<String> parsed = ParseHelper.parse(message, Collections.singletonList(";"), Collections.<String>emptyList());
+        ArrayList<String> parsed = ParseHelper.parse(message, Collections.singletonList(';'), Collections.<Character>emptyList());
         Server server = null;
 
         if ((parsed.size() > 0) && (parsed.get(0).equals("hJOP"))) {
