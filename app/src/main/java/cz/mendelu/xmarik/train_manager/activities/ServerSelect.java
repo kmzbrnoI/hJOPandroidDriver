@@ -45,8 +45,7 @@ import cz.mendelu.xmarik.train_manager.events.ReloadEvent;
 
 import static android.preference.PreferenceManager.getDefaultSharedPreferences;
 
-public class ServerSelect extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+public class ServerSelect extends NavigationBase {
 
     private final int port = 5880;
     ServerSocket serverSocket;
@@ -64,8 +63,9 @@ public class ServerSelect extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         //tady nacist ulozeny data
-        super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_server_select);
+        super.onCreate(savedInstanceState);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         get();
@@ -85,13 +85,7 @@ public class ServerSelect extends AppCompatActivity
         } else Toast.makeText(getApplicationContext(),
                 R.string.conn_wifi_unavailable, Toast.LENGTH_LONG)
                 .show();
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
-        toggle.syncState();
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
+
         array = ServerList.getInstance().getServersString();
         lAdapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_list_item_1, android.R.id.text1, array);
@@ -312,65 +306,6 @@ public class ServerSelect extends AppCompatActivity
         } else {
             super.onBackPressed();
         }
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-        //noinspection SimplifiableIfStatement
-
-        return super.onOptionsItemSelected(item);
-    }
-
-    /**
-     * Metoda sloužící k obsluze hambuger menu
-     * @param item
-     * @return
-     */
-    @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        // Handle navigation view item clicks here.
-        int id = item.getItemId();
-        if (id == R.id.nav_server) {
-            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-            drawer.closeDrawer(GravityCompat.START);
-        } else if (id == R.id.nav_about) {
-            Intent intent = new Intent(this, About.class);
-            startActivity(intent);
-        } else if (id == R.id.nav_train_manage) {
-            if(ServerList.getInstance().getActiveServer() == null) {
-                Toast.makeText(getApplicationContext(),
-                        R.string.conn_no_server_authorized,
-                        Toast.LENGTH_LONG).show();
-            } else {
-                Intent intent = new Intent(this, TrainHandler.class);
-                startActivity(intent);
-            }
-        } else if (id == R.id.nav_trains) {
-            if(ServerList.getInstance().getActiveServer() == null) {
-                Toast.makeText(getApplicationContext(),
-                        R.string.conn_no_server_authorized,
-                        Toast.LENGTH_LONG).show();
-            } else {
-                Intent intent = new Intent(this, TrainRequest.class);
-                startActivity(intent);
-            }
-        }else if (id == R.id.nav_ack_trains) {
-            if(ServerList.getInstance().getActiveServer() == null) {
-                Toast.makeText(getApplicationContext(),
-                        R.string.conn_no_server_authorized,
-                        Toast.LENGTH_LONG).show();
-            } else {
-                Intent intent = new Intent(this, TrainRelease.class);
-                startActivity(intent);
-            }
-        }
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
     }
 
     @Override
