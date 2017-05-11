@@ -29,6 +29,8 @@ public class About extends NavigationBase {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        // TODO: this could be removed, or couldnt be?
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -51,22 +53,6 @@ public class About extends NavigationBase {
     @Override
     public void onResume() {
         super.onResume();
-    }
-
-    @Subscribe
-    public void criticalError(CriticalErrorEvent event) {
-        ServerList.getInstance().deactivateServer();
-        if (event.getMessage().startsWith("connection")) {
-            Intent intent = new Intent(this, ServerSelect.class);
-            startActivity(intent);
-        }else {
-            Toast.makeText(getApplicationContext(),
-                    event.getMessage(),
-                    Toast.LENGTH_LONG).show();
-            //possibility of another activity, but need additional analyze
-            Intent intent = new Intent(this, ServerSelect.class);
-            startActivity(intent);
-        }
     }
 
     public void linkhJOP(View v) {
