@@ -32,11 +32,11 @@ import java.util.ArrayList;
 
 import cz.mendelu.xmarik.train_manager.HelpServices;
 import cz.mendelu.xmarik.train_manager.R;
+import cz.mendelu.xmarik.train_manager.events.TCPErrorEvent;
 import cz.mendelu.xmarik.train_manager.models.Server;
 import cz.mendelu.xmarik.train_manager.ServerList;
 import cz.mendelu.xmarik.train_manager.UdpDiscover;
 import cz.mendelu.xmarik.train_manager.events.CriticalErrorEvent;
-import cz.mendelu.xmarik.train_manager.events.ReloadEvent;
 
 import static android.preference.PreferenceManager.getDefaultSharedPreferences;
 
@@ -337,10 +337,10 @@ public class ServerSelect extends NavigationBase {
         dialog.show();
     }
 
-    @Subscribe
-    public void onEvent(ReloadEvent event) {
+    /*@Subscribe
+    public void onEvent(ServerReloadEvent event) {
         dataReload();
-    }
+    }*/
 
     @Override
     public void onPause() {
@@ -392,19 +392,14 @@ public class ServerSelect extends NavigationBase {
     }
 
     @Subscribe
-    public void criticalError(CriticalErrorEvent event) {
+    public void tcpErrorEvent(TCPErrorEvent event) {
         ServerList.getInstance().deactivateServer();
-        if (event.getMessage().startsWith("connection")) {
-            Intent intent = new Intent(this, ServerSelect.class);
-            startActivity(intent);
-        }else {
-            Toast.makeText(getApplicationContext(),
-                    event.getMessage(),
-                    Toast.LENGTH_LONG).show();
+        Toast.makeText(getApplicationContext(),
+                event.getError(),
+                Toast.LENGTH_LONG).show();
 
-            Intent intent = new Intent(this, ServerSelect.class);
-            startActivity(intent);
-        }
+        Intent intent = new Intent(this, ServerSelect.class);
+        startActivity(intent);
     }
 
 }

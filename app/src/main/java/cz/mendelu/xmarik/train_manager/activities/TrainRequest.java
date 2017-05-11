@@ -3,7 +3,6 @@ package cz.mendelu.xmarik.train_manager.activities;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.view.GravityCompat;
@@ -30,10 +29,7 @@ import cz.mendelu.xmarik.train_manager.R;
 import cz.mendelu.xmarik.train_manager.models.Server;
 import cz.mendelu.xmarik.train_manager.ServerList;
 import cz.mendelu.xmarik.train_manager.TCPClientApplication;
-import cz.mendelu.xmarik.train_manager.events.CriticalErrorEvent;
-import cz.mendelu.xmarik.train_manager.events.RefuseEvent;
-import cz.mendelu.xmarik.train_manager.events.ServerOkEvent;
-import cz.mendelu.xmarik.train_manager.events.TrainReloadEvent;
+import cz.mendelu.xmarik.train_manager.events.RequestEvent;
 
 public class TrainRequest extends NavigationBase {
 
@@ -138,7 +134,7 @@ public class TrainRequest extends NavigationBase {
         }
     }
 
-    @Subscribe
+    /*@Subscribe
     public void onEvent(TrainReloadEvent event) {
         // your implementation
         reloadEventHelper();
@@ -151,13 +147,14 @@ public class TrainRequest extends NavigationBase {
         dialog.dismiss();
         Intent intent = new Intent(this, TrainHandler.class);
         startActivity(intent);
-    }
+    }*/
 
     @Subscribe
-    public void onEvent(RefuseEvent event) {
-        dialog.dismiss();
+    public void onEvent(RequestEvent event) {
+        // TODO
+        /*dialog.dismiss();
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage(event.getMessage())
+        builder.setMessage(event.getParsed())
                 .setCancelable(false)
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
@@ -168,7 +165,7 @@ public class TrainRequest extends NavigationBase {
         alert.show();
 
         mProgressBar.setVisibility(View.GONE);
-        this.sendButton.setText(R.string.tr_send_request);
+        this.sendButton.setText(R.string.tr_send_request);*/
     }
 
    /* @Subscribe
@@ -180,10 +177,10 @@ public class TrainRequest extends NavigationBase {
         this.sendButton.setText(R.string.poslatZ);
     }*/
 
-    @Subscribe
+    /*@Subscribe
     public void onEvent(ServerOkEvent event) {
         dialogMessage.setText(R.string.tr_info_waiting_disp);
-    }
+    }*/
 
     /**
      * method for handl send button event pressed
@@ -266,22 +263,6 @@ public class TrainRequest extends NavigationBase {
     public void onDestroy() {
         super.onDestroy();
         if (EventBus.getDefault().isRegistered(this)) EventBus.getDefault().unregister(this);
-    }
-
-    @Subscribe
-    public void criticalError(CriticalErrorEvent event) {
-        ServerList.getInstance().deactivateServer();
-        if (event.getMessage().startsWith("connection")) {
-            Intent intent = new Intent(this, ServerSelect.class);
-            startActivity(intent);
-        } else {
-            Toast.makeText(getApplicationContext(),
-                    event.getMessage(),
-                    Toast.LENGTH_LONG).show();
-            //possibility of another activity, but need additional analyze
-            Intent intent = new Intent(this, ServerSelect.class);
-            startActivity(intent);
-        }
     }
 
 }

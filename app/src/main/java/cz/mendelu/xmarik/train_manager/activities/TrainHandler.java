@@ -34,12 +34,12 @@ import java.util.List;
 
 import cz.mendelu.xmarik.train_manager.adapters.CheckBoxAdapter;
 import cz.mendelu.xmarik.train_manager.R;
+import cz.mendelu.xmarik.train_manager.events.ServerReloadEvent;
 import cz.mendelu.xmarik.train_manager.models.Server;
 import cz.mendelu.xmarik.train_manager.ServerList;
 import cz.mendelu.xmarik.train_manager.TCPClientApplication;
 import cz.mendelu.xmarik.train_manager.models.Train;
 import cz.mendelu.xmarik.train_manager.events.CriticalErrorEvent;
-import cz.mendelu.xmarik.train_manager.events.ReloadEvent;
 
 public class TrainHandler extends NavigationBase {
     String err;
@@ -658,7 +658,7 @@ public class TrainHandler extends NavigationBase {
     }
 
     @Subscribe
-    public void onEvent(ReloadEvent event) {
+    public void onEvent(ServerReloadEvent event) {
         Log.e("", "handler reload");
         dataChangeNotify();
     }
@@ -768,22 +768,5 @@ public class TrainHandler extends NavigationBase {
         stopTrains();
         super.onDestroy();
     }
-
-    @Subscribe
-    public void criticalError(CriticalErrorEvent event) {
-        ServerList.getInstance().deactivateServer();
-        if (event.getMessage().startsWith("connection")) {
-            Intent intent = new Intent(this, ServerSelect.class);
-            startActivity(intent);
-        } else {
-            Toast.makeText(getApplicationContext(),
-                    event.getMessage(),
-                    Toast.LENGTH_LONG).show();
-            //possibility of another activity, but need additional analyze
-            Intent intent = new Intent(this, ServerSelect.class);
-            startActivity(intent);
-        }
-    }
-
 
 }

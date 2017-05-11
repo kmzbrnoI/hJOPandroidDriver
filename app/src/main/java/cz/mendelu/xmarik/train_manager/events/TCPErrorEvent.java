@@ -9,5 +9,5 @@ public class TCPErrorEvent {
     public TCPErrorEvent(String error) {
         this.error = error;
     }
-    public String getData() { return error; }
+    public String getError() { return error; }
 }

@@ -9,7 +9,6 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -29,9 +28,7 @@ import cz.mendelu.xmarik.train_manager.models.Server;
 import cz.mendelu.xmarik.train_manager.ServerList;
 import cz.mendelu.xmarik.train_manager.TCPClientApplication;
 import cz.mendelu.xmarik.train_manager.models.Train;
-import cz.mendelu.xmarik.train_manager.events.FreeEvent;
-import cz.mendelu.xmarik.train_manager.events.RefuseEvent;
-import cz.mendelu.xmarik.train_manager.events.TrainReloadEvent;
+import cz.mendelu.xmarik.train_manager.events.RequestEvent;
 
 public class TrainRelease extends NavigationBase {
 
@@ -107,7 +104,7 @@ public class TrainRelease extends NavigationBase {
         }
     }
 
-    @Subscribe
+    /*@Subscribe
     public void onEvent(TrainReloadEvent event) {
         // your implementation
         reloadEventHelper();
@@ -119,10 +116,10 @@ public class TrainRelease extends NavigationBase {
         EventBus.getDefault().unregister(this);
         Intent intent = new Intent(this, TrainHandler.class);
         startActivity(intent);
-    }
+    }*/
 
-    @Subscribe
-    public void onEvent(RefuseEvent event) {
+    /*@Subscribe
+    public void onEvent(RequestEvent event) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage(event.getMessage())
                 .setCancelable(false)
@@ -134,16 +131,16 @@ public class TrainRelease extends NavigationBase {
         AlertDialog alert = builder.create();
         alert.show();
         this.sendButton.setText(R.string.trl_release);
-    }
+    }*/
 
-    @Subscribe
+    /*@Subscribe
     public void onEvent(FreeEvent event) {
         Toast.makeText(getApplicationContext(),
                 R.string.trl_loko_released, Toast.LENGTH_LONG)
                 .show();
         reloadEventHelper();
         this.sendButton.setText(R.string.trl_release);
-    }
+    }*/
 
     public void release(View v) {
         if ( focused != null && trains.getItemAtPosition(focused) != null ) {

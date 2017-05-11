@@ -3,7 +3,6 @@ package cz.mendelu.xmarik.train_manager.activities;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -13,7 +12,6 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -24,13 +22,13 @@ import cz.mendelu.xmarik.train_manager.ControlArea;
 import cz.mendelu.xmarik.train_manager.HelpServices;
 import cz.mendelu.xmarik.train_manager.adapters.MyCustomAdapter;
 import cz.mendelu.xmarik.train_manager.R;
+import cz.mendelu.xmarik.train_manager.events.GlobalAuthEvent;
 import cz.mendelu.xmarik.train_manager.models.Server;
 import cz.mendelu.xmarik.train_manager.ServerList;
 import cz.mendelu.xmarik.train_manager.TCPClientApplication;
 import cz.mendelu.xmarik.train_manager.events.AreasEvent;
-import cz.mendelu.xmarik.train_manager.events.ErrorEvent;
+import cz.mendelu.xmarik.train_manager.events.TCPErrorEvent;
 import cz.mendelu.xmarik.train_manager.events.HandShakeEvent;
-import cz.mendelu.xmarik.train_manager.events.ReloadEvent;
 
 public class ServerConnector extends Activity {
     private static String[] messges = {};//dodelat vsechno retezce co budou treba
@@ -126,14 +124,22 @@ public class ServerConnector extends Activity {
         mAdapter.notifyDataSetChanged();
     }
 
-    @Subscribe
-    public void onEvent(ReloadEvent event) {
+    private void send(String text) {
+        if (TCPClientApplication.getInstance() != null) {
+            TCPClientApplication.getInstance().send(text);
+        }
+        //refresh the list
+        mAdapter.notifyDataSetChanged(); // needed ?
+    }
+
+    /*@Subscribe
+    public void onEvent(ServerReloadEvent event) {
         Log.v("", "TCP navázáno a aplikace to ví");
         sendNext();
         synchronized(monitor){
             monitor.notify();
         }
-    }
+    }*/
 
     public void changeUserData(View view) {
         final Dialog dialog = new Dialog(this);
@@ -185,7 +191,8 @@ public class ServerConnector extends Activity {
     @Subscribe
     public void onEvent(AreasEvent event) {
         // your implementation
-        Log.e("", "Area event : " + event.getMessage());
+        // TODO
+        /*Log.e("", "Area event : " + event.getMessage());
         addControlAreas(event.getMessage().substring("-;OR-LIST;".length()));
         arrayList.add(getString(R.string.sc_done));
         Intent returnIntent = new Intent();
@@ -206,14 +213,19 @@ public class ServerConnector extends Activity {
             progressBar.setVisibility(View.GONE);
             setResult(RESULT_CANCELED, returnIntent);
             finish();
-        }
+        }*/
     }
 
     @Subscribe
     public void onEvent(HandShakeEvent event) {
-        // your implementation
-        Log.e("", "Hand shake : " + event.getMessage());
-        if (event.getMessage().startsWith("-;HELLO;")) {
+        if ((event.getParsed().size() < 3) || (event.getParsed().get(2) != "1.0"))
+            arrayList.add(getString(R.string.sc_version_warning));
+
+        send("-;LOK;G;AUTH;{" + TCPClientApplication.getInstance().server.username + "};" +
+            TCPClientApplication.getInstance().server.password);
+
+
+/*        if (event.getMessage().startsWith("-;HELLO;")) {
             arrayList.add(getString(R.string.sc_connection_ok));
             sendNext();
             if (!event.getMessage().substring("-;HELLO;".length()).equals("1.0")) {
@@ -226,7 +238,12 @@ public class ServerConnector extends Activity {
         } else if (event.getMessage().startsWith("-;LOK;G;AUTH;")) {
             ok = false;
             raiseErrorState(getString(R.string.sc_auth_err));
-        } else raiseErrorState("handshake failed");
+        } else raiseErrorState("handshake failed"); */
+    }
+
+    @Subscribe
+    public void onEvent(GlobalAuthEvent event) {
+        // TODO
     }
 
     private void addControlAreas(String data) {
@@ -242,15 +259,16 @@ public class ServerConnector extends Activity {
     }
 
     @Subscribe
-    public void onEvent(ErrorEvent event) {
-        if (event.getMessage().equals("error - connection refused")) {
+    public void onEvent(TCPErrorEvent event) {
+        // TODO
+        /*if (event.getMessage().equals("error - connection refused")) {
             raiseErrorState(event.getMessage());
         } else {
             Log.e("connector", "error nastal " + event.toString());
             String message = event.getMessage()
                 .substring(event.getMessage().lastIndexOf(";"));
         raiseErrorState(message);
-        }
+        }*/
     }
 
 

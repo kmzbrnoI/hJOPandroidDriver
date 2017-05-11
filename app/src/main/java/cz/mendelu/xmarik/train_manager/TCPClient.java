@@ -84,7 +84,7 @@ public class TCPClient {
                 try {
                     serverMessage = in.readLine();
                 } catch (SocketException e) {
-                    EventBus.getDefault().post(new CriticalErrorEvent("Socket exception!"));
+                    EventBus.getDefault().post(new TCPErrorEvent("Socket exception!"));
                 }
 
                 if (serverMessage != null && listener != null) {

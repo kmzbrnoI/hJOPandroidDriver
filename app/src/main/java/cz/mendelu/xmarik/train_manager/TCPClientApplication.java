@@ -8,18 +8,14 @@ import org.greenrobot.eventbus.EventBus;
 
 import java.net.ConnectException;
 import java.util.ArrayList;
+import java.util.Collections;
 
 import cz.mendelu.xmarik.train_manager.events.AreasEvent;
-import cz.mendelu.xmarik.train_manager.events.CriticalErrorEvent;
-import cz.mendelu.xmarik.train_manager.events.ErrorEvent;
-import cz.mendelu.xmarik.train_manager.events.FreeEvent;
+import cz.mendelu.xmarik.train_manager.events.GlobalAuthEvent;
 import cz.mendelu.xmarik.train_manager.events.HandShakeEvent;
-import cz.mendelu.xmarik.train_manager.events.RefuseEvent;
-import cz.mendelu.xmarik.train_manager.events.ReloadEvent;
-import cz.mendelu.xmarik.train_manager.events.ServerOkEvent;
-import cz.mendelu.xmarik.train_manager.events.TrainReloadEvent;
+import cz.mendelu.xmarik.train_manager.events.LokEvent;
+import cz.mendelu.xmarik.train_manager.helpers.ParseHelper;
 import cz.mendelu.xmarik.train_manager.models.Server;
-import cz.mendelu.xmarik.train_manager.models.Train;
 
 /**
  * TCPClientApplication is a singleton, whicch handles connection with the server. It encapsules
@@ -96,23 +92,26 @@ public class TCPClientApplication extends Application {
         protected void onProgressUpdate(String... values) {
             super.onProgressUpdate(values);
 
-            String serverMessage = values[0];
-            //parsovat odpoved od serveru je ve values 0
-            Log.v("TCP", "zprava :" + serverMessage);
-            if (serverMessage.startsWith("-;MOD-CAS") || serverMessage.startsWith("-;DCC")) {
+            ArrayList<String> parsed = ParseHelper.parse(values[0], Collections.singletonList(";"), Collections.<String>emptyList());
 
-            } else if (serverMessage.startsWith("-;HELLO;")) {
-                EventBus.getDefault().post(new HandShakeEvent(serverMessage));
-            } else if (serverMessage.startsWith("-;LOK;G;AUTH;ok;")) {
-                EventBus.getDefault().post(new HandShakeEvent(serverMessage));
-            } else if (serverMessage.startsWith("-;LOK;G;AUTH;not")) {
-                EventBus.getDefault().post(new CriticalErrorEvent(
-                        serverMessage.substring("-;LOK;G;AUTH;not".length())));
-                //todo consumery kdyz bude na jine nez prihlasovaci obrazovce
-                EventBus.getDefault().post(new ErrorEvent(serverMessage));
-            } else if (serverMessage.startsWith("-;OR-LIST;")) {
-                EventBus.getDefault().post(new AreasEvent(serverMessage));
-            } else if (serverMessage.startsWith("-;LOK;") && !auth) {
+            if (parsed.size() < 2 || parsed.get(0) != "-") return;
+            parsed.set(1, parsed.get(1).toUpperCase());
+
+            if (parsed.get(1) == "HELLO") {
+                EventBus.getDefault().post(new HandShakeEvent(parsed));
+
+            } else if (parsed.get(1) == "OR-LIST") {
+                EventBus.getDefault().post(new AreasEvent(parsed));
+
+            } else if (parsed.get(1) == "LOK") {
+                if (parsed.size() < 3) return;
+                if (parsed.get(2) == "G")
+                    EventBus.getDefault().post(new GlobalAuthEvent(parsed));
+                else
+                    EventBus.getDefault().post(new LokEvent(parsed));
+            }
+
+            /*} else if (serverMessage.startsWith("-;LOK;") && !auth) {
                 serverMessage = serverMessage.substring("-;LOK;".length());
                 String[] tmp = HelpServices.parseHelper(serverMessage);
                 if (tmp.length > 2) {
@@ -155,12 +154,12 @@ public class TCPClientApplication extends Application {
                                     if (lokoData.length > 14)
                                         newTrain.setFunctionNames(lokoData[15]);
                                     ServerList.getInstance().getActiveServer().addTrain(newTrain);
-                                    EventBus.getDefault().post(new ReloadEvent(serverMessage));
+                                    EventBus.getDefault().post(new ServerReloadEvent(serverMessage));
                                 }
                                 break;
                             case "not":
                                 t.setAuthorized(false);
-                                EventBus.getDefault().post(new ReloadEvent(serverMessage));
+                                EventBus.getDefault().post(new ServerReloadEvent(serverMessage));
                                 break;
                             case "release":
                                 //t.setAuthorized(false);
@@ -169,7 +168,7 @@ public class TCPClientApplication extends Application {
                             case "stolen":
                                 t.setAuthorized(false);
                                 t.setErr("stolen");
-                                EventBus.getDefault().post(new ReloadEvent(serverMessage));
+                                EventBus.getDefault().post(new ServerReloadEvent(serverMessage));
                                 break;
                             default:
                                 break;
@@ -177,7 +176,7 @@ public class TCPClientApplication extends Application {
                     } else if (tmp[1].equals("TOTAL")) {
                         Train train = ServerList.getInstance().getActiveServer().getTrain(tmp[0]);
                         train.setTotalManaged(tmp[2].equals("1"));
-                        EventBus.getDefault().post(new ReloadEvent(serverMessage));
+                        EventBus.getDefault().post(new ServerReloadEvent(serverMessage));
                     } else if (tmp[1].equals("RESP")) {
                         Train train = ServerList.getInstance().getActiveServer().getTrain(tmp[0]);
                         if (tmp[2].equals("ok")) {
@@ -186,17 +185,17 @@ public class TCPClientApplication extends Application {
                         } else {
                             train.setErr(tmp[3]);
                         }
-                        EventBus.getDefault().post(new ReloadEvent(serverMessage));
+                        EventBus.getDefault().post(new ServerReloadEvent(serverMessage));
                     } else if (tmp[1].equals("SPD")) {
                         Train train = ServerList.getInstance().getActiveServer().getTrain(tmp[0]);
                         train.setKmhSpeed(Integer.parseInt(tmp[2]));
                         train.setSpeed(Integer.parseInt(tmp[3]));
                         train.setDirection(tmp[4].equals("1"));
                         train.setErr(null);
-                        EventBus.getDefault().post(new ReloadEvent(serverMessage));
+                        EventBus.getDefault().post(new ServerReloadEvent(serverMessage));
                     } else if (tmp[1].equals("PLEASE-RESP")) {
                         if (tmp[2].equals("ERR")||tmp[2].equals("err")) {
-                            EventBus.getDefault().post(new RefuseEvent(tmp[3]));
+                            EventBus.getDefault().post(new RequestEvent(tmp[3]));
                         } else EventBus.getDefault().post(new ServerOkEvent("ok"));
                     } else if (tmp[1].equals("F")) {
                         boolean[] func = new boolean[tmp[3].length()];
@@ -206,14 +205,16 @@ public class TCPClientApplication extends Application {
                         }
                         t.setFunction(func);
                         t.setErr(null);
-                        EventBus.getDefault().post(new ReloadEvent(serverMessage));
+                        EventBus.getDefault().post(new ServerReloadEvent(serverMessage));
                     } else if (tmp[1].equals("TOTAL")) {
                         t.setTotalManged(tmp[2].equals("1"));
-                        EventBus.getDefault().post(new ReloadEvent(serverMessage));
+                        EventBus.getDefault().post(new ServerReloadEvent(serverMessage));
                     }
                 }
-            }
+            }*/
         }
     }
+
+    // TODO: subscribe criticcal errors from thread
 
 }
