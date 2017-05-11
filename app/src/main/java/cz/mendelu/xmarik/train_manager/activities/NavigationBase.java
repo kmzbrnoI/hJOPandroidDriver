@@ -67,14 +67,9 @@ public class NavigationBase extends AppCompatActivity
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
 
-
         if (id == R.id.nav_server) {
-            //if (this.findViewById(android.R.id.content) != this.findViewById(R.layout.activity_server_select)) {
-                Intent intent = new Intent(this, ServerSelect.class);
-                startActivity(intent);
-            //} else {
-            //    drawer.closeDrawer(GravityCompat.START);
-            //}
+            Intent intent = new Intent(this, ServerSelect.class);
+            startActivity(intent);
         } else if (id == R.id.nav_about) {
             Intent intent = new Intent(this, About.class);
             startActivity(intent);
