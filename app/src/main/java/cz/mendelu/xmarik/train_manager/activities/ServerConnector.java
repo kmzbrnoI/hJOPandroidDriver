@@ -3,6 +3,7 @@ package cz.mendelu.xmarik.train_manager.activities;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -12,6 +13,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -182,25 +184,18 @@ public class ServerConnector extends Activity {
 
     @Subscribe
     public void onEvent(AreasEvent event) {
-        // your implementation
-        // TODO
-        /*Log.e("", "Area event : " + event.getMessage());
-        addControlAreas(event.getMessage().substring("-;OR-LIST;".length()));
+        // TODO: add real control areas to database
+        //addControlAreas(event.getMessage().substring("-;OR-LIST;".length()));
         arrayList.add(getString(R.string.sc_done));
-        Intent returnIntent = new Intent();
-        //TODO dodelat nejakou chybu
-        //server.setTcpClient(TCPClientApplication.getInstance().getClient());
-        server.active = true;
-        ServerList.getInstance().setActive(server);
-        TCPClientApplication.getInstance().auth = false;
-        if (ok) {
-            Toast.makeText(getApplicationContext(),
-                    R.string.conn_connected, Toast.LENGTH_LONG)
-                    .show();
-            progressBar.setVisibility(View.GONE);
-            Intent intent = new Intent(this, TrainRequest.class);
-            startActivity(intent);
-        } else {
+        //Intent returnIntent = new Intent();
+
+        Toast.makeText(getApplicationContext(),
+                R.string.conn_connected, Toast.LENGTH_LONG)
+                .show();
+        progressBar.setVisibility(View.GONE);
+        Intent intent = new Intent(this, TrainRequest.class);
+        startActivity(intent);
+        /*} else {
             returnIntent.putExtra("result", "authorization failed");
             progressBar.setVisibility(View.GONE);
             setResult(RESULT_CANCELED, returnIntent);
@@ -233,7 +228,15 @@ public class ServerConnector extends Activity {
 
     @Subscribe
     public void onEvent(GlobalAuthEvent event) {
-        // TODO
+        if (event.getParsed().get(4).toUpperCase().equals("OK")) {
+            arrayList.add(getString(R.string.sc_auth_ok));
+            arrayList.add(getString(R.string.sc_getting_ors));
+            send("-;OR-LIST");
+        } else {
+            arrayList.add(getString(R.string.sc_auth_err));
+
+            // TODO: handle general disconnect
+        }
     }
 
     private void addControlAreas(String data) {
