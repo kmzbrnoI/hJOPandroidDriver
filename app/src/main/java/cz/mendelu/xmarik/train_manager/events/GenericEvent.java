@@ -1,17 +1,11 @@
 package cz.mendelu.xmarik.train_manager.events;
 
-/**
- * Created by ja on 26. 11. 2016.
- */
+import java.util.ArrayList;
 
 public class GenericEvent {
-    private final String message;
-
-    public GenericEvent(String message) {
-        this.message = message;
+    private final ArrayList<String> parsed;
+    public GenericEvent(ArrayList<String> parsed) {
+        this.parsed = parsed;
     }
-
-    public String getMessage() {
-        return message;
-    }
+    public ArrayList<String> getParsed() { return parsed; }
 }
