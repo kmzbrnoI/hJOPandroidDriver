@@ -20,13 +20,13 @@ import cz.mendelu.xmarik.train_manager.R;
 import cz.mendelu.xmarik.train_manager.ServerList;
 import cz.mendelu.xmarik.train_manager.events.CriticalErrorEvent;
 
-public class About extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+public class About extends NavigationBase {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_about);
+        super.onCreate(savedInstanceState);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -51,53 +51,6 @@ public class About extends AppCompatActivity
     @Override
     public void onResume() {
         super.onResume();
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        //noinspection SimplifiableIfStatement
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        // Handle navigation view item clicks here.
-        int id = item.getItemId();
-
-        if (id == R.id.nav_server) {
-            Intent intent = new Intent(this, ServerSelect.class);
-            startActivity(intent);
-        } else if (id == R.id.nav_about) {
-            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-            drawer.closeDrawer(GravityCompat.START);
-        } else if (id == R.id.nav_train_manage) {
-            if(ServerList.getInstance().getActiveServer() == null) {
-                Toast.makeText(getApplicationContext(),
-                        R.string.conn_no_server_authorized,
-                        Toast.LENGTH_LONG).show();
-            } else {
-                Intent intent = new Intent(this, TrainHandler.class);
-                startActivity(intent);
-            }
-        } else if (id == R.id.nav_trains) {
-            if(ServerList.getInstance().getActiveServer() == null) {
-                Toast.makeText(getApplicationContext(),
-                        R.string.conn_no_server_authorized,
-                        Toast.LENGTH_LONG).show();
-            } else {
-                Intent intent = new Intent(this, TrainRequest.class);
-                startActivity(intent);
-            }
-        } else if (id == R.id.nav_view) {
-            Intent intent = new Intent(this, ServerSelect.class);
-            startActivity(intent);
-        }
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
     }
 
     @Subscribe

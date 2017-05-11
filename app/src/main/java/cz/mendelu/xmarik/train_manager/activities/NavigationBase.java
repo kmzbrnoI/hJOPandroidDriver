@@ -22,11 +22,15 @@ import cz.mendelu.xmarik.train_manager.ServerList;
 /**
  * Class NavigationBase implements base class for all activities, which want to have navigation
  * toolbar.
+ * Every activity inheriting from NavigationBase must call setContentView before .super in
+ * constructor.
  * Created by Jan Horacek
  */
 
 public class NavigationBase extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    DrawerLayout drawer;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,7 +39,7 @@ public class NavigationBase extends AppCompatActivity
         Context context = this.getApplicationContext();
 
         // Navigation Drawer open / close event
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
@@ -63,9 +67,14 @@ public class NavigationBase extends AppCompatActivity
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
 
+
         if (id == R.id.nav_server) {
-            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-            drawer.closeDrawer(GravityCompat.START);
+            //if (this.findViewById(android.R.id.content) != this.findViewById(R.layout.activity_server_select)) {
+                Intent intent = new Intent(this, ServerSelect.class);
+                startActivity(intent);
+            //} else {
+            //    drawer.closeDrawer(GravityCompat.START);
+            //}
         } else if (id == R.id.nav_about) {
             Intent intent = new Intent(this, About.class);
             startActivity(intent);
@@ -108,8 +117,6 @@ public class NavigationBase extends AppCompatActivity
      */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        DrawerLayout drawer = (DrawerLayout)findViewById(R.id.drawer_layout);
-
         switch (item.getItemId()) {
             case android.R.id.home:
                 if(drawer.isDrawerOpen(GravityCompat.START)) {

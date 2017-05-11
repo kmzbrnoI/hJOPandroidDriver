@@ -15,6 +15,7 @@
 
         <activity
             android:name=".activities.ServerSelect"
+            android:launchMode="singleInstance"
             android:label="@string/activity_server_select_title"
             android:screenOrientation="locked"
             android:theme="@style/AppTheme.NoActionBar">
@@ -49,6 +50,7 @@
             android:theme="@style/AppTheme.NoActionBar" />
 
         <activity android:name=".activities.NewServer"
+            android:launchMode="singleInstance"
             android:theme="@style/AppTheme.NoActionBar"
             android:label="@string/activity_new_server_title"
             />
