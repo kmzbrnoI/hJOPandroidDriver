@@ -14,17 +14,6 @@ import java.util.Collections;
  */
 public class HelpServices {
 
-    public static String[] parseHelper(String s) {
-        Log.v("Parse", s);
-        String splitByBrecket[] = s.split("\\{.*\\}");
-        ArrayList<String> response = new ArrayList<>();
-        for (String tmp : splitByBrecket) {
-            Collections.addAll(response, tmp.split(";"));
-        }
-
-        return response.toArray(new String[0]);
-    }
-
     public static String[] trainParseHelper(String s) {
         int count = 0;
         int start = 0;
