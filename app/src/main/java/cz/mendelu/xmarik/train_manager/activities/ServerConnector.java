@@ -22,6 +22,7 @@ import cz.mendelu.xmarik.train_manager.ControlArea;
 import cz.mendelu.xmarik.train_manager.HelpServices;
 import cz.mendelu.xmarik.train_manager.adapters.MyCustomAdapter;
 import cz.mendelu.xmarik.train_manager.R;
+import cz.mendelu.xmarik.train_manager.events.ConnectionEstablishedEvent;
 import cz.mendelu.xmarik.train_manager.events.GlobalAuthEvent;
 import cz.mendelu.xmarik.train_manager.models.Server;
 import cz.mendelu.xmarik.train_manager.ServerList;
@@ -172,20 +173,11 @@ public class ServerConnector extends Activity {
                 passwd = HelpServices.hashPasswd(mPasswd.getText().toString());
                 setData(user, passwd, savebox.isChecked());
                 messges[1] = "-;LOK;G;AUTH;{" + user + "};" + passwd;
-                initialize();
+                //initialize();
                 dialog.dismiss();
             }
         });
         dialog.show();
-    }
-
-    private void initialize() {
-        send.setClickable(false);
-        send.setText(getString(R.string.sc_authorizing));
-        arrayList.clear();
-        arrayList.add(getString(R.string.sc_connecting));
-        mAdapter.notifyDataSetChanged();
-        //sendNext();
     }
 
     @Subscribe
@@ -218,20 +210,18 @@ public class ServerConnector extends Activity {
 
     @Subscribe
     public void onEvent(HandShakeEvent event) {
-        if ((event.getParsed().size() < 3) || (event.getParsed().get(2) != "1.0"))
+        if ((event.getParsed().size() < 3) || (!event.getParsed().get(2).equals("1.0")))
             arrayList.add(getString(R.string.sc_version_warning));
+        else
+            arrayList.add(getString(R.string.sc_connection_ok));
 
+        // TODO: check username and password non-existence
+
+        arrayList.add(getString(R.string.sc_authorizing));
         send("-;LOK;G;AUTH;{" + TCPClientApplication.getInstance().server.username + "};" +
             TCPClientApplication.getInstance().server.password);
 
-
-/*        if (event.getMessage().startsWith("-;HELLO;")) {
-            arrayList.add(getString(R.string.sc_connection_ok));
-            sendNext();
-            if (!event.getMessage().substring("-;HELLO;".length()).equals("1.0")) {
-                arrayList.add(getString(R.string.sc_version_warning));
-            }
-        } else if (event.getMessage().startsWith("-;LOK;G;AUTH;ok;")) {
+/*       if (event.getMessage().startsWith("-;LOK;G;AUTH;ok;")) {
             ok = true;
             arrayList.add(getString(R.string.sc_auth_ok));
             sendNext();
@@ -288,7 +278,6 @@ public class ServerConnector extends Activity {
     }
 
     private void startMethod() {
-        classObject = this;
         if(!EventBus.getDefault().isRegistered(this))EventBus.getDefault().register(this);
         Bundle extras = getIntent().getExtras();
         TCPClientApplication tcp = TCPClientApplication.getInstance();
@@ -296,7 +285,6 @@ public class ServerConnector extends Activity {
         if (tcp.connected())
             tcp.disconnect();
 
-        messges = new String[3];
         if ( extras != null ) {
             String value = extras.getString("server");
             String[] tmp = value.split("\t");
@@ -320,33 +308,36 @@ public class ServerConnector extends Activity {
             }
         } else finish();
 
-        messges[0] = "-;HELLO;1.0";
-        if (server.username != null && server.password != null) {
-            user = server.username;
-            passwd = server.password;
-            messges[1] = "-;LOK;G;AUTH;{" + user + "};" + passwd;
-        } else {
-            showDialog(getString(R.string.login_enter), null);
-        }
-        messges[2] = "-;OR-LIST;";
         arrayList = new ArrayList<>();
+
         send = (Button) findViewById(R.id.send_button);
         progressBar = (ProgressBar) findViewById(R.id.serverLoadBar);
-        progressBar.setVisibility(View.VISIBLE);
-                //relate the listView from java to the one created in xml
+        progressBar.setVisibility(View.VISIBLE); //relate the listView from java to the one created in xml
         mList = (ListView) findViewById(R.id.list);
         mAdapter = new MyCustomAdapter(this, arrayList);
         mList.setAdapter(mAdapter);
-        //new connectTask().execute("");
+
+
         send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                initialize();
+                //initialize();
             }
 
         });
-        //TODO podminka ze settings
-        initialize();
+
+        send.setClickable(false);
+        send.setText(getString(R.string.sc_authorizing));
+        arrayList.clear();
+        arrayList.add(getString(R.string.sc_connecting));
+        mAdapter.notifyDataSetChanged();
+
+    }
+
+    @Subscribe
+    public void onEvent(ConnectionEstablishedEvent event) {
+        // connection established -> begin handshake
+        send("-;HELLO;1.0");
     }
 
     public static class MonitorObject{

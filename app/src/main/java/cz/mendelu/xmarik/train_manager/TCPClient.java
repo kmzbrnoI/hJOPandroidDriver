@@ -15,6 +15,7 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.net.SocketException;
 
+import cz.mendelu.xmarik.train_manager.events.ConnectionEstablishedEvent;
 import cz.mendelu.xmarik.train_manager.events.CriticalErrorEvent;
 import cz.mendelu.xmarik.train_manager.events.TCPErrorEvent;
 import cz.mendelu.xmarik.train_manager.events.ServerReloadEvent;
@@ -73,12 +74,17 @@ public class TCPClient {
             EventBus.getDefault().post(new TCPErrorEvent("Cannot connect to socket"));
         }
 
-        if (socket == null) return;
+        if (socket == null) {
+            EventBus.getDefault().post(new TCPErrorEvent("Socket not initialized!"));
+            return;
+        }
 
         try {
             //send the message to the server
             out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(socket.getOutputStream())), true);
             in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+
+            EventBus.getDefault().post(new ConnectionEstablishedEvent());
 
             while (mRun) {
                 try {
