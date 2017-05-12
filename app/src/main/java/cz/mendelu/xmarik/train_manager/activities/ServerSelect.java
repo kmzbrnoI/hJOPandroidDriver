@@ -30,6 +30,7 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.util.ArrayList;
 
+import cz.mendelu.xmarik.train_manager.ControlAreaDb;
 import cz.mendelu.xmarik.train_manager.HelpServices;
 import cz.mendelu.xmarik.train_manager.R;
 import cz.mendelu.xmarik.train_manager.events.ServerReloadEvent;
@@ -61,6 +62,9 @@ public class ServerSelect extends NavigationBase {
         //tady nacist ulozeny data
         setContentView(R.layout.activity_server_select);
         super.onCreate(savedInstanceState);
+
+        // create database of control areas
+        ControlAreaDb.instance = new ControlAreaDb();
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);

@@ -7,8 +7,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import cz.mendelu.xmarik.train_manager.ControlArea;
-import cz.mendelu.xmarik.train_manager.TCPClient;
 import cz.mendelu.xmarik.train_manager.TCPClientApplication;
 
 /**
@@ -66,7 +64,7 @@ public class Server {
     }*/
 
     public String GetLoko(String token, String adr) {
-        String text = null;
+        /*String text = null;
         //-:LOK;G;PLEASE;id_stanice;{poznámka}                 - zadost o rizeni konkretni lokomotivy; token neni potreba pripojovat v pripade, kdy loko uz mame autorizovane a bylo nam ukradeno napriklad mysi
         List<Train> trains;
         for (ControlArea a : areas) {
@@ -80,7 +78,8 @@ public class Server {
             }
         }
         text = token != null ? "-:LOK;" + adr + ";PLEASE;" + token : "-:LOK;" + adr + ";PLEASE";
-        return text;
+        return text;*/
+        return "";
     }
 
     public String Release(String adr) {
@@ -99,13 +98,13 @@ public class Server {
     }
 
     public Train getTrain(String adr) {
-        List<Train> trains;
+        /*List<Train> trains;
         for (ControlArea a : areas) {
             trains = a.getTrains();
             for (Train t : trains) {
                 if (t.getUserLokoName().equals(adr) || t.getName().equals(adr)) return t;
             }
-        }
+        }*/
         return null;
     }
 
@@ -117,7 +116,7 @@ public class Server {
     }
 
     public ArrayList<String> getAuthorizedTrainsString() {
-        ArrayList<String> temp = new ArrayList<>();
+        /*ArrayList<String> temp = new ArrayList<>();
         List<Train> trains;
         if (areas.size() > 0) {
             for (ControlArea a : areas) {
@@ -132,11 +131,12 @@ public class Server {
             }
             if (!temp.isEmpty()) return temp;
         }
-        return temp;
+        return temp;*/
+        return new ArrayList<>();
     }
 
     public ArrayList<String> getTrainString() {
-        ArrayList<String> temp = new ArrayList<>();
+        /*ArrayList<String> temp = new ArrayList<>();
         List<Train> trains;
         if (areas.size() > 0) {
             for (ControlArea a : areas) {
@@ -153,8 +153,9 @@ public class Server {
             }
             if (!temp.isEmpty()) return temp;
         }
-        temp.add("no trains loaded");
-        return temp;
+        temp.add("no trains loaded");*/
+        //return temp;
+        return new ArrayList<>();
     }
 
     public void addArea(ControlArea area) {
@@ -162,16 +163,17 @@ public class Server {
     }
 
     public ArrayList<String> getAreasId() {
-        ArrayList<String> id = new ArrayList<>();
+        /*ArrayList<String> id = new ArrayList<>();
         for (ControlArea a : areas) {
             id.add(a.getId());
         }
-        return id;
+        return id;*/
+        return new ArrayList<>();
     }
 
 
     public ArrayList<String> getUnAuthorizedAreas() {
-        ArrayList<String> temp = new ArrayList<>();
+        /*ArrayList<String> temp = new ArrayList<>();
         if ((areas.size() > 0)) {
             for (ControlArea s : areas) {
                 temp.add(s.getName());
@@ -179,11 +181,12 @@ public class Server {
             if (!temp.isEmpty()) return temp;
         }
         temp.add("no areas loaded");
-        return temp;
+        return temp;*/
+        return new ArrayList<>();
     }
 
     public Collection<? extends String> getAuthorizedAreas() {
-        ArrayList<String> temp = new ArrayList<>();
+        /*ArrayList<String> temp = new ArrayList<>();
         if ((areas.size() > 0)) {
             for (ControlArea s : areas) {
                 temp.add("area:" + s.getName());
@@ -191,24 +194,26 @@ public class Server {
             if (!temp.isEmpty()) return temp;
         }
         temp.add("no areas loaded");
-        return temp;
+        return temp;*/
+        return new ArrayList<>();
     }
 
     public ControlArea getArea(String itemValue) {
-        for (ControlArea c : areas) {
+        /*for (ControlArea c : areas) {
             if (c.getName().equals(itemValue)) return c;
-        }
+        }*/
         return null;
     }
 
     public String getAreaServerString(String itemValue) {
-        String tmp[] = itemValue.split(" ", 2);
+        /*String tmp[] = itemValue.split(" ", 2);
         //Log.e("", "prvni: " + tmp[0] + " druha: " + tmp[1]);
         //ControlArea c = this.getArea(tmp[1]);
         ControlArea c = this.getArea(itemValue);
         Log.e("", "id: " + c.getId());
         String text = "-;LOK;G;PLEASE;" + c.getId() + ";";
-        return text;
+        return text;*/
+        return "";
     }
 
 
@@ -250,9 +255,9 @@ public class Server {
 
     public void addTrain(Train newTrain) {
         //TODO dodelat
-        ControlArea tmp = this.areas.get(areas.size() - 1);
+        /*ControlArea tmp = this.areas.get(areas.size() - 1);
         if (tmp.getTrains().contains(newTrain)) tmp.getTrains().remove(newTrain);
-        tmp.addTrain(newTrain);
+        tmp.addTrain(newTrain);*/
     }
 
    /* public ArrayList<Train> getTrains() {
@@ -267,11 +272,11 @@ public class Server {
     }*/
 
     public void removeTrain(Train train) {
-        List<Train> trains;
+        /*List<Train> trains;
         for (ControlArea a : areas) {
             trains = a.getTrains();
             if (trains.contains(train))
                 trains.remove(train);
-        }
+        }*/
     }
 }

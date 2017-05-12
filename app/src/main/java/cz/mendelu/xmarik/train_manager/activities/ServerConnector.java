@@ -20,7 +20,8 @@ import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 
-import cz.mendelu.xmarik.train_manager.ControlArea;
+import cz.mendelu.xmarik.train_manager.events.AreasParsedEvent;
+import cz.mendelu.xmarik.train_manager.models.ControlArea;
 import cz.mendelu.xmarik.train_manager.HelpServices;
 import cz.mendelu.xmarik.train_manager.adapters.MyCustomAdapter;
 import cz.mendelu.xmarik.train_manager.R;
@@ -183,24 +184,17 @@ public class ServerConnector extends Activity {
     }
 
     @Subscribe
-    public void onEvent(AreasEvent event) {
-        // TODO: add real control areas to database
-        //addControlAreas(event.getMessage().substring("-;OR-LIST;".length()));
+    public void onEvent(AreasParsedEvent event) {
         arrayList.add(getString(R.string.sc_done));
-        //Intent returnIntent = new Intent();
 
         Toast.makeText(getApplicationContext(),
                 R.string.conn_connected, Toast.LENGTH_LONG)
                 .show();
+
         progressBar.setVisibility(View.GONE);
+
         Intent intent = new Intent(this, TrainRequest.class);
         startActivity(intent);
-        /*} else {
-            returnIntent.putExtra("result", "authorization failed");
-            progressBar.setVisibility(View.GONE);
-            setResult(RESULT_CANCELED, returnIntent);
-            finish();
-        }*/
     }
 
     @Subscribe
