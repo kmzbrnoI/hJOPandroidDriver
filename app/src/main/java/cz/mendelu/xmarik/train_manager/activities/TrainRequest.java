@@ -25,21 +25,16 @@ import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 
+import cz.mendelu.xmarik.train_manager.ControlAreaDb;
 import cz.mendelu.xmarik.train_manager.R;
-import cz.mendelu.xmarik.train_manager.models.Server;
-import cz.mendelu.xmarik.train_manager.ServerList;
 import cz.mendelu.xmarik.train_manager.TCPClientApplication;
+import cz.mendelu.xmarik.train_manager.models.ControlArea;
 import cz.mendelu.xmarik.train_manager.events.RequestEvent;
 
 public class TrainRequest extends NavigationBase {
 
-    Server active;
-    int port;
-    String ipAdr;
-    String serverResponse = "-;LOK;G:PLEASE-RESP;";
     Context context;
     ProgressBar mProgressBar;
-    ArrayList<String> array;
     ArrayAdapter<String> lAdapter;
     Button sendButton;
     EditText messageForServer;
@@ -49,12 +44,18 @@ public class TrainRequest extends NavigationBase {
     TextView dialogMessage;
     Button dialogButton;
     View lastSelected;
-    private ListView trains;
+
+    ListView areas_lv;
+    ArrayList<String> areas_data;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setContentView(R.layout.activity_train_request);
         super.onCreate(savedInstanceState);
+
+        EventBus.getDefault().register(this);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
         dialog = new Dialog(this);
         dialog.setContentView(R.layout.dialog_train_request);
@@ -75,33 +76,19 @@ public class TrainRequest extends NavigationBase {
         });
 
         connectionDialog = new AlertDialog.Builder(this);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
 
-        context = this;
         mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
-        trains = (ListView) findViewById(R.id.nav_trains);
-        sendButton = (Button) findViewById(R.id.trainBoxButton);
+        areas_lv = (ListView) findViewById(R.id.nav_areas);
+        sendButton = (Button) findViewById(R.id.b_request);
         messageForServer = (EditText) findViewById(R.id.authMessage);
         focused = -1;
-        active = ServerList.getInstance().getActiveServer();
-        EventBus.getDefault().register(this);
         mProgressBar.setVisibility(View.GONE);
-        if (active != null) {
-            port = active.port;
-            ipAdr = active.host;
-            array = active.getUnAuthorizedAreas();
-        } else {
-            array = new ArrayList<>();
-            Toast.makeText(getApplicationContext(),
-                    "nebyl vybrán server", Toast.LENGTH_LONG)
-                    .show();
-            sendButton.setEnabled(false);
-            trains.setEnabled(false);
-        }
+
+        areas_data = new ArrayList<String>();
         lAdapter = new ArrayAdapter<>(this,
-                android.R.layout.simple_list_item_1, android.R.id.text1, array);
-        trains.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                android.R.layout.simple_list_item_1, android.R.id.text1, areas_data);
+
+        areas_lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override
             public void onItemClick(AdapterView<?> parent, View view,
@@ -123,16 +110,29 @@ public class TrainRequest extends NavigationBase {
             }
         });
 
-        trains.setAdapter(lAdapter);
+        areas_lv.setAdapter(lAdapter);
+
+        FillAreas();
     }
 
-    private void sendNext(String message) {
+    void FillAreas() {
+        areas_data.clear();
+
+        areas_lv.setEnabled(ControlAreaDb.instance.areas.size() > 0);
+        if (ControlAreaDb.instance.areas.size() == 0)
+            areas_data.add("No areas!"); // TODO: string here
+
+        for(ControlArea c : ControlAreaDb.instance.areas)
+            areas_data.add(c.name);
+    }
+
+    /*private void sendNext(String message) {
         //sends the message to the server
         if (TCPClientApplication.getInstance() != null) {
             TCPClientApplication.getInstance().send(message);
             mProgressBar.setVisibility(View.VISIBLE);
         }
-    }
+    }*/
 
     /*@Subscribe
     public void onEvent(TrainReloadEvent event) {
@@ -187,30 +187,32 @@ public class TrainRequest extends NavigationBase {
      *
      * @param v
      */
-    public void messagePressed(View v) {
-        if (trains.getItemAtPosition(focused) != null) {
-            final String itemValue = (String) trains.getItemAtPosition(focused);
-            final Server s = ServerList.getInstance().getActiveServer();
-            String serverMessage = s.getAreaServerString(itemValue);
-            String msg = messageForServer.getText().toString();
-            Log.v("tcp", "zadáno:" + msg + " \n");
-            serverMessage = serverMessage + "{" + msg + "}";
-            dialog.setTitle(getString(R.string.tr_info_request_requesting) + msg);
-            sendNext(serverMessage);
-            lAdapter.notifyDataSetChanged();
-            mProgressBar.setVisibility(View.VISIBLE);
-            this.trains.setClickable(false);
-
-            dialogMessage.setText(R.string.tr_info_request_sent);
-            dialog.show();
+    public void b_requestClick(View v) {
+        if (areas_lv.getItemAtPosition(focused) == null) {
+            new AlertDialog.Builder(this)
+                    .setMessage("You must select area!") // TODO: strings
+                    .setCancelable(false)
+                    .setPositiveButton("ok", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {}
+                    }).show();
+            return;
         }
+
+        TCPClientApplication.getInstance().send("-;LOK;G;PLEASE;" +
+                ControlAreaDb.instance.areas.get(focused).id + ";" + messageForServer.getText().toString());
+
+        dialog.setTitle(getString(R.string.tr_info_request_requesting));
+        mProgressBar.setVisibility(View.VISIBLE);
+        dialogMessage.setText(R.string.tr_info_request_sent);
+        dialog.show();
     }
 
     private void cancelMessage() {
-        sendNext("-;LOK;G;CANCEL");
+        /*sendNext("-;LOK;G;CANCEL");
         mProgressBar.setVisibility(View.GONE);
         this.sendButton.setText(R.string.tr_send_request);
-        this.trains.setClickable(true);
+        this.trains.setClickable(true);*/
     }
 
 
@@ -219,7 +221,7 @@ public class TrainRequest extends NavigationBase {
      * purpose is reload all list adapter and make progress bar invisible
      */
     private void reloadEventHelper() {
-        mProgressBar.setVisibility(View.GONE);
+        /*mProgressBar.setVisibility(View.GONE);
         final ArrayList<String> array;
         final ArrayList<String> acquired;
         array = active.getUnAuthorizedAreas();
@@ -230,7 +232,7 @@ public class TrainRequest extends NavigationBase {
         final ArrayAdapter<String> ackAdapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_list_item_1, android.R.id.text1, acquired);
 
-        trains.setAdapter(lAdapter);
+        trains.setAdapter(lAdapter);*/
     }
 
     @Override

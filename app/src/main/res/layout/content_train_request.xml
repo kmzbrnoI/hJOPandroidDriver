@@ -13,7 +13,6 @@
     tools:showIn="@layout/app_bar_train_request">
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-
         xmlns:tools="http://schemas.android.com/tools"
         android:orientation="vertical" android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -22,7 +21,7 @@
         <ListView
             android:layout_width="match_parent"
             android:layout_height="243dp"
-            android:id="@+id/nav_trains"
+            android:id="@+id/nav_areas"
             android:scrollbars="horizontal|vertical" />
 
         <ProgressBar
@@ -71,8 +70,8 @@
                 android:text="@string/tr_send_request"
                 android:layout_width="match_parent"
                 android:layout_height="68dp"
-                android:id="@+id/trainBoxButton"
-                android:onClick="messagePressed" />
+                android:id="@+id/b_request"
+                android:onClick="b_requestClick" />
         </LinearLayout>
 
     </LinearLayout>
