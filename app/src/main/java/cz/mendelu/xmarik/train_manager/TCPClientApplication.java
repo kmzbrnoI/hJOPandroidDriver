@@ -92,7 +92,7 @@ public class TCPClientApplication extends Application {
         protected void onProgressUpdate(String... values) {
             super.onProgressUpdate(values);
 
-            ArrayList<String> parsed = ParseHelper.parse(values[0], Collections.singletonList(';'), Collections.<Character>emptyList());
+            ArrayList<String> parsed = ParseHelper.parse(values[0], ";", "");
 
             if (parsed.size() < 2 || !parsed.get(0).equals("-")) return;
             parsed.set(1, parsed.get(1).toUpperCase());
