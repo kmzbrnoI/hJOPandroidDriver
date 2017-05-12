@@ -71,7 +71,7 @@ public class TrainRequest extends NavigationBase {
         dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
             @Override
             public void onDismiss(DialogInterface dialogInterface) {
-                cancelMessage();
+                cancelRequest();
             }
         });
 
@@ -126,14 +126,6 @@ public class TrainRequest extends NavigationBase {
             areas_data.add(c.name);
     }
 
-    /*private void sendNext(String message) {
-        //sends the message to the server
-        if (TCPClientApplication.getInstance() != null) {
-            TCPClientApplication.getInstance().send(message);
-            mProgressBar.setVisibility(View.VISIBLE);
-        }
-    }*/
-
     /*@Subscribe
     public void onEvent(TrainReloadEvent event) {
         // your implementation
@@ -151,21 +143,19 @@ public class TrainRequest extends NavigationBase {
 
     @Subscribe
     public void onEvent(RequestEvent event) {
-        // TODO
-        /*dialog.dismiss();
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage(event.getParsed())
-                .setCancelable(false)
-                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        dialog.dismiss();
-                    }
-                });
-        AlertDialog alert = builder.create();
-        alert.show();
-
-        mProgressBar.setVisibility(View.GONE);
-        this.sendButton.setText(R.string.tr_send_request);*/
+        if (event.getParsed().get(4).toUpperCase().equals("OK")) {
+            dialogMessage.setText(R.string.tr_info_waiting_disp);
+        } else if (event.getParsed().get(4).toUpperCase().equals("ERR")) {
+            new AlertDialog.Builder(this)
+                    .setMessage(event.getParsed().size() >= 6 ? event.getParsed().get(5) : "General error!") // TODO: strings
+                    .setCancelable(false)
+                    .setPositiveButton("ok", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {}
+                    }).show();
+            dialog.dismiss();
+            mProgressBar.setVisibility(View.GONE);
+        }
     }
 
    /* @Subscribe
@@ -177,16 +167,6 @@ public class TrainRequest extends NavigationBase {
         this.sendButton.setText(R.string.poslatZ);
     }*/
 
-    /*@Subscribe
-    public void onEvent(ServerOkEvent event) {
-        dialogMessage.setText(R.string.tr_info_waiting_disp);
-    }*/
-
-    /**
-     * method for handl send button event pressed
-     *
-     * @param v
-     */
     public void b_requestClick(View v) {
         if (areas_lv.getItemAtPosition(focused) == null) {
             new AlertDialog.Builder(this)
@@ -208,11 +188,9 @@ public class TrainRequest extends NavigationBase {
         dialog.show();
     }
 
-    private void cancelMessage() {
-        /*sendNext("-;LOK;G;CANCEL");
+    private void cancelRequest() {
+        TCPClientApplication.getInstance().send("-;LOK;G;CANCEL");
         mProgressBar.setVisibility(View.GONE);
-        this.sendButton.setText(R.string.tr_send_request);
-        this.trains.setClickable(true);*/
     }
 
 

@@ -14,6 +14,7 @@ import cz.mendelu.xmarik.train_manager.events.AreasEvent;
 import cz.mendelu.xmarik.train_manager.events.GlobalAuthEvent;
 import cz.mendelu.xmarik.train_manager.events.HandShakeEvent;
 import cz.mendelu.xmarik.train_manager.events.LokEvent;
+import cz.mendelu.xmarik.train_manager.events.RequestEvent;
 import cz.mendelu.xmarik.train_manager.helpers.ParseHelper;
 import cz.mendelu.xmarik.train_manager.models.Server;
 
@@ -108,6 +109,8 @@ public class TCPClientApplication extends Application {
                 if (parsed.get(2).equals("G"))
                     if (parsed.get(3).toUpperCase().equals("AUTH"))
                         EventBus.getDefault().post(new GlobalAuthEvent(parsed));
+                    else if (parsed.get(3).toUpperCase().equals("PLEASE-RESP"))
+                        EventBus.getDefault().post(new RequestEvent(parsed));
                 else
                     EventBus.getDefault().post(new LokEvent(parsed));
             }
