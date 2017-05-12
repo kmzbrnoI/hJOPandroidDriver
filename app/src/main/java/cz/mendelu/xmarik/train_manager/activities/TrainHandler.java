@@ -107,12 +107,6 @@ public class TrainHandler extends NavigationBase {
         s_spinner.setAdapter(managed_adapter);
         this.fillHVs();
 
-        // set current train
-        if (TrainDb.instance.trains.size() > 0)
-            train = managed.get(0);
-        else
-            train = null;
-
         // fill functions TODO?
         final ArrayAdapter<String> funcAdapter1 = new ArrayAdapter<>(this,
                 android.R.layout.simple_list_item_1, ServerList.FUNCTION);
@@ -166,7 +160,7 @@ public class TrainHandler extends NavigationBase {
 
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
-                // ListView Clicked item value
+                if (position >= managed.size()) return;
                 train = managed.get(position);
                 updateGUTtoHV();
             }
@@ -244,6 +238,11 @@ public class TrainHandler extends NavigationBase {
         if (managed.size() < 2) chb_group.setChecked(false);
 
         s_spinner.setSelection(index);
+        if (TrainDb.instance.trains.size() > 0)
+            train = managed.get(0);
+        else
+            train = null;
+
         managed_adapter.notifyDataSetChanged();
         this.updateGUTtoHV();
     }
@@ -587,7 +586,6 @@ public class TrainHandler extends NavigationBase {
     public void onResume() {
         super.onResume();
         this.fillHVs();
-        this.updateGUTtoHV();
     }
 
     @Override
