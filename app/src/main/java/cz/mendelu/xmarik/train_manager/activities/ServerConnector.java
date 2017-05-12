@@ -30,8 +30,7 @@ import cz.mendelu.xmarik.train_manager.events.GlobalAuthEvent;
 import cz.mendelu.xmarik.train_manager.models.Server;
 import cz.mendelu.xmarik.train_manager.ServerList;
 import cz.mendelu.xmarik.train_manager.TCPClientApplication;
-import cz.mendelu.xmarik.train_manager.events.AreasEvent;
-import cz.mendelu.xmarik.train_manager.events.TCPErrorEvent;
+import cz.mendelu.xmarik.train_manager.events.TCPDisconnectEvent;
 import cz.mendelu.xmarik.train_manager.events.HandShakeEvent;
 
 public class ServerConnector extends Activity {
@@ -246,7 +245,7 @@ public class ServerConnector extends Activity {
     }
 
     @Subscribe
-    public void onEvent(TCPErrorEvent event) {
+    public void onEvent(TCPDisconnectEvent event) {
         // TODO
         /*if (event.getMessage().equals("error - connection refused")) {
             raiseErrorState(event.getMessage());

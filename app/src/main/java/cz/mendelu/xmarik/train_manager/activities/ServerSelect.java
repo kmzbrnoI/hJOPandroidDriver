@@ -34,11 +34,10 @@ import cz.mendelu.xmarik.train_manager.ControlAreaDb;
 import cz.mendelu.xmarik.train_manager.HelpServices;
 import cz.mendelu.xmarik.train_manager.R;
 import cz.mendelu.xmarik.train_manager.events.ServerReloadEvent;
-import cz.mendelu.xmarik.train_manager.events.TCPErrorEvent;
+import cz.mendelu.xmarik.train_manager.events.TCPDisconnectEvent;
 import cz.mendelu.xmarik.train_manager.models.Server;
 import cz.mendelu.xmarik.train_manager.ServerList;
 import cz.mendelu.xmarik.train_manager.UdpDiscover;
-import cz.mendelu.xmarik.train_manager.events.CriticalErrorEvent;
 
 import static android.preference.PreferenceManager.getDefaultSharedPreferences;
 
@@ -397,7 +396,7 @@ public class ServerSelect extends NavigationBase {
     }
 
     @Subscribe
-    public void tcpErrorEvent(TCPErrorEvent event) {
+    public void tcpErrorEvent(TCPDisconnectEvent event) {
         ServerList.getInstance().deactivateServer();
         Toast.makeText(getApplicationContext(),
                 event.getError(),

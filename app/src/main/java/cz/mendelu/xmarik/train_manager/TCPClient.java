@@ -13,12 +13,9 @@ import java.io.PrintWriter;
 import java.net.ConnectException;
 import java.net.InetAddress;
 import java.net.Socket;
-import java.net.SocketException;
 
 import cz.mendelu.xmarik.train_manager.events.ConnectionEstablishedEvent;
-import cz.mendelu.xmarik.train_manager.events.CriticalErrorEvent;
-import cz.mendelu.xmarik.train_manager.events.TCPErrorEvent;
-import cz.mendelu.xmarik.train_manager.events.ServerReloadEvent;
+import cz.mendelu.xmarik.train_manager.events.TCPDisconnectEvent;
 
 /**
  * TCPClient is a basic TCP client that connects to the server and synchronously waits for
@@ -44,6 +41,11 @@ public class TCPClient {
 
         out.println(message);
         out.flush();
+
+        if (out.checkError()) {
+            Log.e("TCP", "Socket send error, closing");
+            disconnect();
+        }
     }
 
     public void disconnect() {
@@ -55,8 +57,11 @@ public class TCPClient {
                 e.printStackTrace();
             } finally {
                 socket = null;
+                in = null;
+                out = null;
             }
         }
+        EventBus.getDefault().post(new TCPDisconnectEvent("Disconnect"));
     }
 
     public boolean connected() { return socket != null; }
@@ -71,11 +76,11 @@ public class TCPClient {
             InetAddress serverAddr = InetAddress.getByName(serverIp);
             socket = new Socket(serverAddr, serverPort);
         } catch (Exception e) {
-            EventBus.getDefault().post(new TCPErrorEvent("Cannot connect to socket"));
+            EventBus.getDefault().post(new TCPDisconnectEvent("Cannot connect to socket"));
         }
 
         if (socket == null) {
-            EventBus.getDefault().post(new TCPErrorEvent("Socket not initialized!"));
+            EventBus.getDefault().post(new TCPDisconnectEvent("Socket not initialized!"));
             return;
         }
 
@@ -87,31 +92,25 @@ public class TCPClient {
             EventBus.getDefault().post(new ConnectionEstablishedEvent());
 
             while (mRun) {
+                serverMessage = in.readLine();
+
                 try {
-                    serverMessage = in.readLine();
-                } catch (SocketException e) {
-                    EventBus.getDefault().post(new TCPErrorEvent("Socket exception!"));
+                    if (serverMessage != null && listener != null)
+                        listener.messageReceived(serverMessage);
+                } catch (Exception e) {
+                    Log.e("TCP", "Socket message error", e);
                 }
 
-                if (serverMessage != null && listener != null) {
-                    listener.messageReceived(serverMessage);
-                }
             }
 
         } catch (Exception e) {
             Log.e("TCP", "Socket general error", e);
-            EventBus.getDefault().post(new TCPErrorEvent("Socket general error"));
+            EventBus.getDefault().post(new TCPDisconnectEvent("Socket general error"));
 
         } finally {
             //the socket must be closed. It is not possible to reconnect to this socket
             // after it is closed, which means a new socket instance has to be created.
-            if (socket != null) {
-                try {
-                    socket.close();
-                } catch (IOException e) {
-                    Log.e("TCP", "Socket close exception", e);
-                }
-            }
+            disconnect();
         }
     }
 

@@ -3,13 +3,13 @@ package cz.mendelu.xmarik.train_manager.activities;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -18,7 +18,6 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -28,6 +27,8 @@ import java.util.ArrayList;
 import cz.mendelu.xmarik.train_manager.ControlAreaDb;
 import cz.mendelu.xmarik.train_manager.R;
 import cz.mendelu.xmarik.train_manager.TCPClientApplication;
+import cz.mendelu.xmarik.train_manager.events.AreasParsedEvent;
+import cz.mendelu.xmarik.train_manager.events.TCPDisconnectEvent;
 import cz.mendelu.xmarik.train_manager.models.ControlArea;
 import cz.mendelu.xmarik.train_manager.events.RequestEvent;
 
@@ -53,7 +54,6 @@ public class TrainRequest extends NavigationBase {
         setContentView(R.layout.activity_train_request);
         super.onCreate(savedInstanceState);
 
-        EventBus.getDefault().register(this);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -98,7 +98,6 @@ public class TrainRequest extends NavigationBase {
                     lastSelected.setBackgroundColor(Color.rgb(238, 238, 238));
                 }
                 lastSelected = view;
-
                 focused = position;
             }
         });
@@ -111,11 +110,15 @@ public class TrainRequest extends NavigationBase {
         });
 
         areas_lv.setAdapter(lAdapter);
-
-        FillAreas();
     }
 
     void FillAreas() {
+        focused = -1;
+        if (lastSelected != null) {
+            lastSelected.setBackgroundColor(Color.rgb(238, 238, 238));
+            lastSelected = null;
+        }
+
         areas_data.clear();
 
         areas_lv.setEnabled(ControlAreaDb.instance.areas.size() > 0);
@@ -124,6 +127,8 @@ public class TrainRequest extends NavigationBase {
 
         for(ControlArea c : ControlAreaDb.instance.areas)
             areas_data.add(c.name);
+
+        lAdapter.notifyDataSetChanged();
     }
 
     /*@Subscribe
@@ -156,6 +161,28 @@ public class TrainRequest extends NavigationBase {
             dialog.dismiss();
             mProgressBar.setVisibility(View.GONE);
         }
+    }
+
+    @Subscribe
+    public void onEvent(AreasParsedEvent event) {
+        this.FillAreas();
+    }
+
+    @Subscribe
+    public void onEvent(TCPDisconnectEvent event) {
+        mProgressBar.setVisibility(View.GONE);
+        dialog.dismiss();
+
+        // TODO:  move this to parent object?
+        new AlertDialog.Builder(this)
+                .setMessage("Disconnected from server!") // TODO: strings
+                .setCancelable(false)
+                .setPositiveButton("ok", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        startActivity(new Intent(getBaseContext(), ServerSelect.class));
+                    }
+                }).show();
     }
 
    /* @Subscribe
@@ -235,8 +262,8 @@ public class TrainRequest extends NavigationBase {
     @Override
     public void onResume() {
         super.onResume();
-        //connectionDialog.dismiss();
         if (!EventBus.getDefault().isRegistered(this)) EventBus.getDefault().register(this);
+        FillAreas();
     }
 
     @Override

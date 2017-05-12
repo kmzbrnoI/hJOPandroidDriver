@@ -83,13 +83,7 @@ public class NavigationBase extends AppCompatActivity
             }
 
         } else if (id == R.id.nav_train_request) {
-            if(ServerList.getInstance().getActiveServer() == null) {
-                Toast.makeText(getApplicationContext(),
-                        R.string.conn_no_server_authorized,
-                        Toast.LENGTH_LONG).show();
-            } else {
-                startActivity(new Intent(this, TrainRequest.class));
-            }
+            startActivity(new Intent(this, TrainRequest.class));
 
         } else if (id == R.id.nav_train_release) {
             if(ServerList.getInstance().getActiveServer() == null) {
