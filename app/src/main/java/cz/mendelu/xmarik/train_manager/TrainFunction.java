@@ -1,45 +1,16 @@
 package cz.mendelu.xmarik.train_manager;
 
 /**
- * Created by ja on 5. 7. 2016.
+ * Decoder function, e. g. F0-F28.
  */
 public class TrainFunction {
-    String code;
-    String name;
+    public int num;
+    public String name;
     public boolean checked;
 
-    /**
-     * @param code
-     * @param name
-     * @param checked
-     */
-    public TrainFunction(String code, String name, boolean checked) {
-        this.code = code;
+    public TrainFunction(int num, String name, boolean checked) {
+        this.num = num;
         this.name = name;
         this.checked = checked;
-    }
-
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public boolean isSelected() {
-        return checked;
-    }
-
-    public void setSelected(boolean selected) {
-        this.checked = selected;
     }
 }

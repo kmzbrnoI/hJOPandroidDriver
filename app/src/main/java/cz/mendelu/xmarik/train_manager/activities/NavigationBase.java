@@ -74,25 +74,13 @@ public class NavigationBase extends AppCompatActivity
             startActivity(new Intent(this, About.class));
 
         } else if (id == R.id.nav_train_control) {
-            if(ServerList.getInstance().getActiveServer() == null) {
-                Toast.makeText(getApplicationContext(),
-                        R.string.conn_no_server_authorized,
-                        Toast.LENGTH_LONG).show();
-            } else {
-                startActivity(new Intent(this, TrainHandler.class));
-            }
+            startActivity(new Intent(this, TrainHandler.class));
 
         } else if (id == R.id.nav_train_request) {
             startActivity(new Intent(this, TrainRequest.class));
 
         } else if (id == R.id.nav_train_release) {
-            if(ServerList.getInstance().getActiveServer() == null) {
-                Toast.makeText(getApplicationContext(),
-                        R.string.conn_no_server_authorized,
-                        Toast.LENGTH_LONG).show();
-            } else {
-                startActivity(new Intent(this, TrainRelease.class));
-            }
+            startActivity(new Intent(this, TrainRelease.class));
         }
 
         DrawerLayout drawer = (DrawerLayout)findViewById(R.id.drawer_layout);

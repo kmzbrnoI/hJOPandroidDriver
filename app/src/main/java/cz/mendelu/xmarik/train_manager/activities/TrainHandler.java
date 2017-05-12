@@ -30,10 +30,17 @@ import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.function.Function;
 
+import cz.mendelu.xmarik.train_manager.TrainDb;
+import cz.mendelu.xmarik.train_manager.TrainFunction;
 import cz.mendelu.xmarik.train_manager.adapters.CheckBoxAdapter;
 import cz.mendelu.xmarik.train_manager.R;
+import cz.mendelu.xmarik.train_manager.events.LokAddEvent;
+import cz.mendelu.xmarik.train_manager.events.LokChangeEvent;
+import cz.mendelu.xmarik.train_manager.events.LokRemoveEvent;
 import cz.mendelu.xmarik.train_manager.events.ServerReloadEvent;
 import cz.mendelu.xmarik.train_manager.models.Server;
 import cz.mendelu.xmarik.train_manager.ServerList;
@@ -42,41 +49,26 @@ import cz.mendelu.xmarik.train_manager.models.Train;
 import cz.mendelu.xmarik.train_manager.events.CriticalErrorEvent;
 
 public class TrainHandler extends NavigationBase {
-    String err;
-    //private ArrayList<String> activeTrains;
-    private Server activeServer;
-    private List<String> array;
     private List<Train> managed;
-    private TextView name1;
-    private SeekBar speed1;
-    private Switch direction1;
-    private CheckBox totalManaged;
-    private Spinner spinner1;
-    private Button stopButton1;
-    private CheckBox group1;
-    private boolean landscape = false;
-    private ImageButton status1;
-    private Train train1;
-    private ListView checkBoxView1;
-    private TextView kmhSpeed1;
-    private Button idleButton1;
-    private String message;
-    private Train train2;
-    private TextView name2;
-    private SeekBar speed2;
-    private Switch direction2;
-    private CheckBox group2;
-    private ImageButton status2;
-    private String active1, active2;
-    private TextView kmhSpeed2;
-    private Button idleButton2;
-    private Button stopButton2;
-    private CheckBox totalManaged2;
-    private ListView checkBoxView2;
-    private Spinner spinner2;
-    private Context context;
-    private boolean update;
+    private List<Train> multitrack;
+    private List<String> managed_str;
+    private ArrayAdapter<String> managed_adapter;
+    private Train train;
+    private boolean updating;
     private Long timer;
+    private Context context;
+
+    private TextView tv_name;
+    private SeekBar sb_speed;
+    private Switch s_direction;
+    private CheckBox chb_total;
+    private Spinner s_spinner;
+    private Button b_stop;
+    private Button b_idle;
+    private CheckBox chb_group;
+    private ImageButton ib_status;
+    private ListView chb_functions;
+    private TextView tv_kmhSpeed;
 
     @SuppressWarnings("deprecation")
     @Override
@@ -86,375 +78,241 @@ public class TrainHandler extends NavigationBase {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        update = false;
 
-        //activeTrains = new ArrayList<>();
-        managed = new ArrayList<>();
+        updating = false;
         context = this;
-        err = null;
+
+        managed = new ArrayList<>();
+        multitrack = new ArrayList<>();
         timer = System.currentTimeMillis();
 
-        name1 = (TextView) findViewById(R.id.handlerName1);
-        speed1 = (SeekBar) findViewById(R.id.speedkBar1);
-        direction1 = (Switch) findViewById(R.id.handlerDirection1);
-        idleButton1 = (Button) findViewById(R.id.startButton1);
-        stopButton1 = (Button) findViewById(R.id.stopButton1);
-        group1 = (CheckBox) findViewById(R.id.goupManaged1);
-        status1 = (ImageButton) findViewById(R.id.imageButton1);
-        checkBoxView1 = (ListView) findViewById(R.id.checkBoxView1);
-        kmhSpeed1 = (TextView) findViewById(R.id.kmh1);
-        totalManaged = (CheckBox) findViewById(R.id.totalManaged);
+        tv_name = (TextView) findViewById(R.id.handlerName1);
+        sb_speed = (SeekBar) findViewById(R.id.speedkBar1);
+        s_direction = (Switch) findViewById(R.id.handlerDirection1);
+        b_idle = (Button) findViewById(R.id.startButton1);
+        b_stop = (Button) findViewById(R.id.stopButton1);
+        chb_group = (CheckBox) findViewById(R.id.goupManaged1);
+        ib_status = (ImageButton) findViewById(R.id.imageButton1);
+        chb_functions = (ListView) findViewById(R.id.checkBoxView1);
+        tv_kmhSpeed = (TextView) findViewById(R.id.kmh1);
+        chb_total = (CheckBox) findViewById(R.id.totalManaged);
+
         EventBus.getDefault().register(this);
-        active1 = "";
-        active2 = "";
 
-        //makes all controls inactive before train is chosen
-        this.clickableManager(true, false);
+        // fill spinner
+        s_spinner = (Spinner)findViewById(R.id.spinner1);
+        managed_str = new ArrayList<String>();
+        managed_adapter = new ArrayAdapter<>(this,
+                android.R.layout.simple_list_item_1, android.R.id.text1, managed_str);
+        s_spinner.setAdapter(managed_adapter);
+        this.fillHVs();
 
+        // set current train
+        if (TrainDb.instance.trains.size() > 0)
+            train = managed.get(0);
+        else
+            train = null;
+
+        // fill functions TODO?
         final ArrayAdapter<String> funcAdapter1 = new ArrayAdapter<>(this,
                 android.R.layout.simple_list_item_1, ServerList.FUNCTION);
 
-        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            landscape = true;
+        // TODO: one of these:
 
-            name2 = (TextView) findViewById(R.id.handlerName2);
-            speed2 = (SeekBar) findViewById(R.id.speedkBar2);
-            direction2 = (Switch) findViewById(R.id.handlerDirection2);
-            group2 = (CheckBox) findViewById(R.id.goupManaged2);
-            status2 = (ImageButton) findViewById(R.id.imageButton2);
-            kmhSpeed2 = (TextView) findViewById(R.id.kmh2);
-            idleButton2 = (Button) findViewById(R.id.startButton2);
-            stopButton2 = (Button) findViewById(R.id.stopButton2);
-            totalManaged2 = (CheckBox) findViewById(R.id.totalManaged2);
-            checkBoxView2 = (ListView) findViewById(R.id.checkBoxView2);
-            spinner2 = (Spinner) findViewById(R.id.spinner2);
-
-        }
-
-        activeServer = ServerList.getInstance().getActiveServer();
-
-        if (activeServer != null) {
-            spinner1 = (Spinner) findViewById(R.id.spinner1);
-            array = activeServer.getTrainString();
-
-            ArrayAdapter<String> lAdapter = new ArrayAdapter<>(this,
-                    android.R.layout.simple_list_item_1, android.R.id.text1, array);
-
-            spinner1.setAdapter(lAdapter);
-
-            checkBoxView1.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                public void onItemClick(AdapterView<?> parent, View view,
-                                        int position, long id) {
-                    // When clicked, show a toast with the TextView text
-
-                    train1.chageFunc(position);
-                    String message = train1.getFunctionStr(0, train1.getFunction().length - 1);
-                    //zmena zaskrknutí i pri kliknuti mimo checkbox
-                    checkBoxView1.setItemChecked(position, !checkBoxView1.isItemChecked(position));
-
-                    sendNext(message);
-
-                }
-            });
-
-            checkBoxView1.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-
-                @Override
-                public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-
-                    train1.chageFunc(i);
-                    String message = train1.getFunctionStr(0, train1.getFunction().length - 1);
-
-                    sendNext(message);
-                }
-
-                @Override
-                public void onNothingSelected(AdapterView<?> adapterView) {
-
-                }
-            });
-
-            direction1.setOnClickListener(new CompoundButton.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (!update) {
-                        if (direction1.isChecked()) {
-                            direction1.setText(R.string.ta_direction_forward);
-                        } else direction1.setText(R.string.ta_direction_backwards);
-                        if (managed.contains(train1)) {
-                            for (Train s : managed) {
-                                String text = s.changeDirection();
-                                sendNext(text);
-                            }
-                        } else {
-                            if (train1 != null) {
-                                String text = train1.changeDirection();
-                                sendNext(text);
-                            }
-                        }
-                    }
-                }
-            });
-
-            direction1.setOnGenericMotionListener(new CompoundButton.OnGenericMotionListener() {
-                @Override
-                public boolean onGenericMotion(View view, MotionEvent motionEvent) {
-                    if (!update) {
-                        if (direction1.isChecked()) {
-                            direction1.setText(R.string.ta_direction_forward);
-                        } else direction1.setText(R.string.ta_direction_backwards);
-                        if (managed.contains(train1)) {
-                            for (Train s : managed) {
-                                String text = s.changeDirection();
-                                sendNext(text);
-                            }
-                        } else {
-                            if (train1 != null) {
-                                String text = train1.changeDirection();
-                                sendNext(text);
-                            }
-                        }
-                    }
-                    return false;
-                }
-
-            });
-
-            spinner1.setOnItemSelectedListener(new Spinner.OnItemSelectedListener() {
-                @Override
-                public void onNothingSelected(AdapterView<?> adapterView) {
-
-                }
-
-                @Override
-                public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
-                    // ListView Clicked item value
-                    String value = spinner1.getItemAtPosition(position).toString();
-                    if (spinner1.getCount() > 0 && value.contains(":")) {
-                        String lokoName = value.substring(0, value.indexOf(":"));
-                        Train t = activeServer.getTrain(lokoName);
-                        String itemValue = t != null ? t.getName() : null;
-                        if (itemValue != null) {
-                            train1 = activeServer.getTrain(itemValue);
-                            active1 = itemValue;
-                            name1.setText(train1.getDisplayLokoName());
-                            speed1.setProgress(train1.getSpeed());
-                            direction1.setChecked(train1.isDirection());
-                            if (direction1.isChecked()) {
-                                direction1.setText(R.string.ta_direction_forward);
-                            } else direction1.setText(R.string.ta_direction_backwards);
-                            group1.setChecked(train1.isControled());
-                            kmhSpeed1.setText(String.format("%s km/h", Integer.toString(train1.getKmhSpeed())));
-                            totalManaged.setChecked(train1.getTotalManaged());
-                            syncStatus(train1, status1);
-
-                            if (train1.getTotalManaged()) {
-                                clickableManager(true, true);
-                            } else {
-                                clickableManager(true, false);
-                            }
-                            //set custom adapter with check boxes to list view
-                            CheckBoxAdapter dataAdapter = new CheckBoxAdapter(context,
-                                    R.layout.trainfunctioninfo, new ArrayList<>(Arrays.asList(train1.getFunction())));
-                            checkBoxView1.setAdapter(dataAdapter);
-
-                        }
-                    }
-                }
-
-            });
-
-            if (array.size() <= 1) {
-                group1.setEnabled(false);
-            } else group1.setEnabled(true);
-
-            group1.setOnCheckedChangeListener(new CheckBox.OnCheckedChangeListener() {
-
-                @Override
-                public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                    if (train1 != null)
-                        if (b) {
-                            if (!managed.contains(train1)) {
-                                managed.add(train1);
-                                train1.setControled(true);
-                            }
-                        } else {
-                            train1.setControled(false);
-                            group1.setChecked(false);
-                            managed.remove(train1);
-                        }
-                }
-            });
-
-            totalManaged.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                    if (train1 != null) {
-                        String msg = train1.setTotalManged(b);
-                        if (!b) {
-                            group1.setChecked(false);
-                        }
-                        sendNext(msg);
-                    }
-                }
-            });
-
-            speed1.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-
-                @Override
-                public void onProgressChanged(SeekBar seekBar, int progress,
-                                              boolean fromUser) {
-                    if (timer < System.currentTimeMillis())
-                        if (train1 != null) {
-                            //because server cant handle as mutch packet as client possible could send
-                            timer = System.currentTimeMillis() + 200;
-                            train1.setSpeed(progress);
-                            setSpeed(progress, train1);
-                        }
-                }
-
-                @Override
-                public void onStartTrackingTouch(SeekBar seekBar) {
-
-                }
-
-                @Override
-                public void onStopTrackingTouch(SeekBar seekBar) {
-
-                }
-            });
-
-            if (landscape) {
-                spinner2.setAdapter(lAdapter);
-                speed2.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-
-                    @Override
-                    public void onProgressChanged(SeekBar seekBar, int progress,
-                                                  boolean fromUser) {
-                        if (timer < System.currentTimeMillis())
-                            if (train2 != null) {
-                                //because server cant handle as mutch packet as client possible could send
-                                timer = System.currentTimeMillis() + 200;
-                                train2.setSpeed(progress);
-                                setSpeed(progress, train2);
-                            }
-                    }
-
-                    @Override
-                    public void onStartTrackingTouch(SeekBar seekBar) {
-
-                    }
-
-                    @Override
-                    public void onStopTrackingTouch(SeekBar seekBar) {
-
-                    }
-                });
-
-                if (array.size() <= 1) {
-                    group2.setEnabled(false);
-                } else group2.setEnabled(true);
-
-                direction2.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                        setDirectionText(2);
-                        if (!update) {
-                            if (managed.contains(train2)) {
-                                for (Train s : managed) {
-                                    String text = s.changeDirection();
-                                    sendNext(text);
-                                }
-                            } else {
-                                if (train2 != null) {
-                                    String text = train2.changeDirection();
-                                    sendNext(text);
-                                }
-                            }
-                        }
-                    }
-                });
-
-                totalManaged2.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                    @Override
-                    public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                        if (train1 != null) {
-                            String msg = train1.setTotalManged(b);
-                            if (!b) {
-                                group2.setChecked(false);
-                            }
-                            sendNext(msg);
-                        }
-                    }
-                });
-
-                spinner2.setOnItemSelectedListener(new Spinner.OnItemSelectedListener() {
-
-                    @Override
-                    public void onNothingSelected(AdapterView<?> adapterView) {
-
-                    }
-
-                    @Override
-                    public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
-                        // ListView Clicked item index
-                        String value = spinner2.getItemAtPosition(position).toString();
-                        String lokoName = value.substring(0, value.indexOf(":"));
-                        Train t = activeServer.getTrain(lokoName);
-                        String itemValue = t != null ? t.getName() : null;
-                        if (itemValue != null) {
-                            train2 = activeServer.getTrain(itemValue);
-                            active2 = itemValue;
-                            name2.setText(train2.getDisplayLokoName());
-                            speed2.setProgress(train2.getSpeed());
-                            direction2.setChecked(train2.isDirection());
-
-                            if (direction2.isChecked()) {
-                                direction2.setText(R.string.ta_direction_forward);
-                            } else direction2.setText(R.string.ta_direction_backwards);
-
-                            group2.setChecked(train2.isControled());
-                            kmhSpeed2.setText(String.format("%s km/h", Integer.toString(train2.getKmhSpeed())));
-                            totalManaged.setChecked(train2.getTotalManaged());
-
-                            if (train2.getTotalManaged()) {
-                                clickableManager(false, true);
-                            } else {
-                                clickableManager(false, false);
-                            }
-
-                            syncStatus(train2, status2);
-
-                            //set custom adapter with check boxes to list view
-                            CheckBoxAdapter dataAdapter = new CheckBoxAdapter(context,
-                                    R.layout.trainfunctioninfo, new ArrayList<>(Arrays.asList(train2.getFunction())));
-                            checkBoxView2.setAdapter(dataAdapter);
-                        }
-                    }
-                });
-
-                group2.setOnCheckedChangeListener(new CheckBox.OnCheckedChangeListener() {
-
-                    @Override
-                    public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                        if (train2 != null)
-                            if (b) {
-                                if (!managed.contains(train2)) {
-                                    managed.add(train2);
-                                    train2.setControled(true);
-                                }
-                            } else {
-                                train2.setControled(false);
-                                managed.remove(train2);
-                            }
-                    }
-                });
+        chb_functions.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View view,
+                                    int position, long id) {
+                if (updating) return;
+                chb_functions.setItemChecked(position, !chb_functions.isItemChecked(position));
+                train.setFunc(position, chb_functions.isItemChecked(position));
             }
-        } else Toast.makeText(getApplicationContext(),
-                R.string.conn_no_server_authorized, Toast.LENGTH_LONG)
-                .show();
+        });
+
+        chb_functions.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                if (updating) return;
+                train.setFunc(i, chb_functions.isItemChecked(i));
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
+        s_direction.setOnClickListener(new CompoundButton.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onDirectionChange(s_direction.isChecked());
+            }
+        });
+
+        s_direction.setOnGenericMotionListener(new CompoundButton.OnGenericMotionListener() {
+            @Override
+            public boolean onGenericMotion(View view, MotionEvent motionEvent) {
+                onDirectionChange(s_direction.isChecked());
+                return false;
+            }
+
+        });
+
+        s_spinner.setOnItemSelectedListener(new Spinner.OnItemSelectedListener() {
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
+                // ListView Clicked item value
+                train = managed.get(position);
+                updateGUTtoHV();
+            }
+
+        });
+
+        chb_group.setOnCheckedChangeListener(new CheckBox.OnCheckedChangeListener() {
+
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if (b) {
+                    if (!multitrack.contains(train))
+                        multitrack.add(train);
+                } else {
+                    if (multitrack.contains(train))
+                        multitrack.remove(train);
+                }
+            }
+        });
+
+        chb_total.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                train.setTotal(b);
+            }
+        });
+
+        sb_speed.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress,
+                                          boolean fromUser) {
+                // TODO: this is really bad solution, it puts the first speed, not the last!
+                if (timer < System.currentTimeMillis())
+                    timer = System.currentTimeMillis() + 200;
+                    train.setSpeedSteps(progress);
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+
     }
 
-    private void setDirectionText(int direction) {
+    private void fillHVs() {
+        managed_str.clear();
+        managed.clear();
+        int index = 0;
+
+        s_spinner.setEnabled(TrainDb.instance.trains.size() > 0);
+        if (TrainDb.instance.trains.size() == 0)
+            managed_str.add("No trains!"); // TODO: string here
+
+        int i = 0;
+        for(Train t : TrainDb.instance.trains.values()) {
+            managed.add(t);
+            managed_str.add(String.valueOf(t.addr));
+            if (t == train) index = i;
+            i++;
+        }
+
+        // update multitraction
+        for (i = multitrack.size()-1; i >= 0; i--)
+            if (!managed.contains(multitrack.get(i)))
+                multitrack.remove(i);
+
+        chb_group.setEnabled(managed.size() >= 2);
+        if (managed.size() < 2) chb_group.setChecked(false);
+
+        s_spinner.setSelection(index);
+        managed_adapter.notifyDataSetChanged();
+        this.updateGUTtoHV();
+    }
+
+    private void onDirectionChange(boolean newDir) {
+        if (updating) return;
+
+        if (newDir)
+            s_direction.setText(R.string.ta_direction_forward);
+        else
+            s_direction.setText(R.string.ta_direction_backwards);
+
+        train.setDirection(s_direction.isChecked());
+
+        if (managed.contains(train)) {
+            for (Train s : managed)
+                s.setDirection(newDir);
+        } else {
+            train.setDirection(newDir);
+        }
+    }
+
+    private void updateGUTtoHV() {
+        chb_group.setEnabled(train != null);
+        chb_total.setEnabled(train != null);
+
+        if (train == null) {
+            tv_name.setText("");
+            sb_speed.setProgress(0);
+            s_direction.setChecked(false);
+            s_direction.setText("-");
+
+            chb_group.setChecked(false);
+            tv_kmhSpeed.setText("- km/h");
+            chb_total.setChecked(false);
+            //syncStatus(train, status); ????? TODO
+
+            this.setEnabled(false);
+
+            //set custom adapter with check boxes to list view
+            CheckBoxAdapter dataAdapter = new CheckBoxAdapter(context,
+                    R.layout.trainfunctioninfo, new ArrayList<TrainFunction>());
+            chb_functions.setAdapter(dataAdapter);
+
+        } else {
+            tv_name.setText(String.valueOf(train.addr) + " : " + train.name);
+            sb_speed.setProgress(train.stepsSpeed);
+            s_direction.setChecked(train.direction);
+            if (s_direction.isChecked())
+                s_direction.setText(R.string.ta_direction_forward);
+            else
+                s_direction.setText(R.string.ta_direction_backwards);
+
+            chb_group.setChecked(multitrack.contains(train));
+            tv_kmhSpeed.setText(String.format("%s km/h", Integer.toString(train.kmphSpeed)));
+            chb_total.setChecked(train.total);
+
+            //syncStatus(train, status); ????? TODO
+
+            this.setEnabled(train.total);
+
+            //set custom adapter with check boxes to list view
+            CheckBoxAdapter dataAdapter = new CheckBoxAdapter(context,
+                    R.layout.trainfunctioninfo, new ArrayList<>(Arrays.asList(train.function)));
+            chb_functions.setAdapter(dataAdapter);
+        }
+    }
+
+    /*private void setDirectionText(int direction) {
         if (!update)
             if (direction == 1) {
                 if (direction1.isChecked()) {
@@ -483,23 +341,19 @@ public class TrainHandler extends NavigationBase {
                 }
             }
         }
+    }*/
+
+    public void b_stopClick(View view) {
+        sb_speed.setProgress(0);
+        if (multitrack.contains(train)) {
+            for (Train t : multitrack)
+                t.emergencyStop();
+        } else {
+            train.emergencyStop();
+        }
     }
 
-    public void stop1(View view) {
-        speed1.setProgress(0);
-        if (train1 != null)
-            if (managed.contains(train1)) {
-                for (Train s : managed) {
-                    String text = s.emergencyStop();
-                    sendNext(text);
-                }
-            } else {
-                String text = train1.emergencyStop();
-                sendNext(text);
-            }
-    }
-
-    public void stop2(View view) {
+    /*public void stop2(View view) {
         speed2.setProgress(0);
         if (train2 != null)
             if (managed.contains(train2)) {
@@ -511,14 +365,19 @@ public class TrainHandler extends NavigationBase {
                 String text = train2.emergencyStop();
                 sendNext(text);
             }
+    }*/
+
+    public void b_idleClick(View view) {
+        sb_speed.setProgress(0);
+        if (multitrack.contains(train)) {
+            for (Train t : multitrack)
+                t.setSpeedSteps(0);
+        } else {
+            train.setSpeedSteps(0);
+        }
     }
 
-    public void idle1(View view) {
-        speed1.setProgress(0);
-        setSpeed(0, train1);
-    }
-
-    public void idle2(View view) {
+    /*public void idle2(View view) {
         speed2.setProgress(0);
         setSpeed(0, train2);
     }
@@ -596,12 +455,12 @@ public class TrainHandler extends NavigationBase {
                 s.setImageResource(R.drawable.ic_circle_yellow);
             } else s.setImageResource(R.drawable.ic_circle_red);
         } else s.setImageResource(R.drawable.ic_circle_green);
-    }
+    }*/
 
 
-    public void showStats1(View view) {
+    public void ib_showStatsClick(View view) {
 
-        if (train1.getErr() != null) {
+        /*if (train1.getErr() != null) {
             if (train1.getErr().equals("stolen")) {
                 sendNext(train1.getBase() + ";PLEASE");
             } else {
@@ -622,10 +481,10 @@ public class TrainHandler extends NavigationBase {
                     });
             AlertDialog alert = builder.create();
             alert.show();
-        }
+        }*/
     }
 
-    public void showStats2(View view) {
+    /*public void showStats2(View view) {
 
         if (train2.getErr() != null) {
             if (train2.getErr().equals("stolen")) {
@@ -655,51 +514,34 @@ public class TrainHandler extends NavigationBase {
                 //TODO error
             }
         }
+    }*/
+
+    @Subscribe
+    public void onEvent(LokChangeEvent event) {
+        if (train != null && event.getAddr() == train.addr)
+            this.updateGUTtoHV();
     }
 
     @Subscribe
-    public void onEvent(ServerReloadEvent event) {
-        Log.e("", "handler reload");
-        dataChangeNotify();
+    public void onEvent(LokAddEvent event) {
+        this.fillHVs();
     }
 
-    private void clickableManager(boolean firstTrain, boolean state) {
-        if (firstTrain) {
-            direction1.setEnabled(state);
-            speed1.setEnabled(state);
-            stopButton1.setEnabled(state);
-            idleButton1.setEnabled(state);
-            if (array != null && array.size() <= 1) {
-                group1.setEnabled(state);
-            } else group1.setEnabled(false);
-            speed1.setEnabled(state);
-
-            if (!state) {
-                if (group1.isChecked()) {
-                    group1.setChecked(false);
-                    managed.remove(train1);
-                }
-            }
-        } else {
-            direction2.setClickable(state);
-            speed2.setClickable(state);
-            stopButton2.setClickable(state);
-            idleButton2.setClickable(state);
-            speed2.setEnabled(state);
-            if (array.size() <= 1) {
-                group2.setEnabled(state);
-            } else group2.setEnabled(false);
-
-            if (!state) {
-                if (group2.isChecked()) {
-                    group2.setChecked(false);
-                    managed.remove(train2);
-                }
-            }
-        }
+    @Subscribe
+    public void onEvent(LokRemoveEvent event) {
+        this.fillHVs();
     }
 
-    public void stopTrains() {
+    private void setEnabled(boolean enabled) {
+        s_direction.setEnabled(enabled);
+        sb_speed.setEnabled(enabled);
+        b_stop.setEnabled(enabled);
+        b_idle.setEnabled(enabled);
+        chb_group.setEnabled(enabled);
+        chb_functions.setEnabled(enabled);
+    }
+
+    /*public void stopTrains() {
 
         if (train1 != null) {
             setSpeed(0, train1);
@@ -708,7 +550,7 @@ public class TrainHandler extends NavigationBase {
             setSpeed(0, train2);
         }
 
-    }
+    }*/
 
     @Override
     protected void onStart() {
@@ -718,14 +560,14 @@ public class TrainHandler extends NavigationBase {
     @Override
     protected void onStop() {
         // set trains speed to 0
-        stopTrains();
+        //stopTrains();
         super.onStop();
     }
 
     @Override
     protected void onPause() {
         // set trains speed to 0
-        stopTrains();
+        //stopTrains();
         super.onPause();
     }
 
@@ -736,7 +578,7 @@ public class TrainHandler extends NavigationBase {
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            stopTrains();
+            //stopTrains();
             super.onBackPressed();
         }
     }
@@ -744,28 +586,14 @@ public class TrainHandler extends NavigationBase {
     @Override
     public void onResume() {
         super.onResume();
-        if (spinner1 != null) {
-            array = activeServer.getTrainString();
-
-            ArrayAdapter<String> lAdapter = new ArrayAdapter<>(this,
-                    android.R.layout.simple_list_item_1, android.R.id.text1, array);
-
-            spinner1.setAdapter(lAdapter);
-        }
-        if (spinner2 != null) {
-            array = activeServer.getTrainString();
-
-            ArrayAdapter<String> lAdapter = new ArrayAdapter<>(this,
-                    android.R.layout.simple_list_item_1, android.R.id.text1, array);
-
-            spinner2.setAdapter(lAdapter);
-        }
+        this.fillHVs();
+        this.updateGUTtoHV();
     }
 
     @Override
     public void onDestroy() {
         // set trains speed to 0
-        stopTrains();
+        //stopTrains();
         super.onDestroy();
     }
 

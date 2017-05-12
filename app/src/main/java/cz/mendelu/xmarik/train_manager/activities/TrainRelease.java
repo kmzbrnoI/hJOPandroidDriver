@@ -147,7 +147,7 @@ public class TrainRelease extends NavigationBase {
             final String itemValue = (String) trains.getItemAtPosition(focused);
             final Server s = ServerList.getInstance().getActiveServer();
             Train train = s.getTrain(itemValue.substring(0,itemValue.indexOf("\n")));
-            String message = "-;LOK;"+train.getName()+";RELEASE";
+            String message = "-;LOK;"+train.name+";RELEASE";
             sendNext(message);
             ServerList.getInstance()
                     .getActiveServer().removeTrain(train);

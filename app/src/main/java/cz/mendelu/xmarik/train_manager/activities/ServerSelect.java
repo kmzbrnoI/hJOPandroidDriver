@@ -33,6 +33,7 @@ import java.util.ArrayList;
 import cz.mendelu.xmarik.train_manager.ControlAreaDb;
 import cz.mendelu.xmarik.train_manager.HelpServices;
 import cz.mendelu.xmarik.train_manager.R;
+import cz.mendelu.xmarik.train_manager.TrainDb;
 import cz.mendelu.xmarik.train_manager.events.ServerReloadEvent;
 import cz.mendelu.xmarik.train_manager.events.TCPDisconnectEvent;
 import cz.mendelu.xmarik.train_manager.models.Server;
@@ -64,6 +65,9 @@ public class ServerSelect extends NavigationBase {
 
         // create database of control areas
         ControlAreaDb.instance = new ControlAreaDb();
+
+        // create database of trains
+        TrainDb.instance = new TrainDb();
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);

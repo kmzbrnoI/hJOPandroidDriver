@@ -106,12 +106,12 @@ public class TCPClientApplication extends Application {
 
             } else if (parsed.get(1).equals("LOK")) {
                 if (parsed.size() < 3) return;
-                if (parsed.get(2).equals("G"))
+                if (parsed.get(2).equals("G")) {
                     if (parsed.get(3).toUpperCase().equals("AUTH"))
                         EventBus.getDefault().post(new GlobalAuthEvent(parsed));
                     else if (parsed.get(3).toUpperCase().equals("PLEASE-RESP"))
                         EventBus.getDefault().post(new RequestEvent(parsed));
-                else
+                } else
                     EventBus.getDefault().post(new LokEvent(parsed));
             }
 
