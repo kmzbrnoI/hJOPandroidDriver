@@ -314,7 +314,7 @@ public class TrainHandler extends NavigationBase {
         }
     }
 
-    public void ib_StatusClick() {
+    public void ib_StatusClick(View v) {
         // TODO?
     }
 

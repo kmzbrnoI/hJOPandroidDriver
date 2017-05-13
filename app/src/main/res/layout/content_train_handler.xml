@@ -101,7 +101,7 @@
                     <Switch
                         android:layout_width="136dp"
                         android:layout_height="46dp"
-                        android:text="vpřed"
+                        android:text="forward"
                         android:id="@+id/handlerDirection1"
                         android:layout_gravity="top|center_horizontal"
                         android:checked="false"
@@ -167,7 +167,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/checkBoxView1"
-
             android:choiceMode="multipleChoice" />
 
     </LinearLayout>
