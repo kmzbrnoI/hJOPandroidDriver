@@ -37,7 +37,6 @@
             android:theme="@style/AppTheme.NoActionBar" />
 
         <activity android:name=".activities.TrainRequest"
-            android:screenOrientation="portrait"
             android:launchMode="singleInstance"
             android:label="@string/activity_train_request_title"
             android:theme="@style/AppTheme.NoActionBar" />
