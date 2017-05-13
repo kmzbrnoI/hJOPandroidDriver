@@ -76,27 +76,13 @@ public class ServerConnector extends Activity {
             this.server.password = tmpPass;
             ServerDb.getInstance().setPassword(server);
         }
-        Log.e("", "user a heslo:" + name + " \n" + tmpPass);
+        Log.v("", "user a heslo:" + name + " \n" + tmpPass);
     }
 
     @Override
     protected void onStop() {
         super.onStop();
         EventBus.getDefault().unregister(this);
-    }
-
-    public String getMessage() {
-        if (messges.length > i) {
-            String tmp = messges[i];
-            if (i == 0) {
-                arrayList.add(getString(R.string.sc_connecting));
-            } else if (i == 1) {
-                arrayList.add(getString(R.string.sc_authorizing));
-            } else arrayList.add(getString(R.string.sc_getting_ors));
-            i++;
-            return tmp;
-        }
-        return null;
     }
 
     @Override
@@ -116,22 +102,10 @@ public class ServerConnector extends Activity {
         startMethod();
     }
 
-    private void sendNext() {
-        String message = getMessage();
-        //sends the message to the server
-        if (TCPClientApplication.getInstance() != null && message != null) {
-            TCPClientApplication.getInstance().send(message);
-        }
-        //refresh the list
-        mAdapter.notifyDataSetChanged();
-    }
-
-    private void send(String text) {
-        if (TCPClientApplication.getInstance() != null) {
-            TCPClientApplication.getInstance().send(text);
-        }
-        //refresh the list
-        mAdapter.notifyDataSetChanged(); // needed ?
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if(EventBus.getDefault().isRegistered(this))EventBus.getDefault().unregister(this);
     }
 
     public void changeUserData(View view) {
@@ -175,6 +149,7 @@ public class ServerConnector extends Activity {
     @Subscribe
     public void onEvent(AreasParsedEvent event) {
         arrayList.add(getString(R.string.sc_done));
+        mAdapter.notifyDataSetChanged();
 
         Toast.makeText(getApplicationContext(),
                 R.string.conn_connected, Toast.LENGTH_LONG)
@@ -196,9 +171,10 @@ public class ServerConnector extends Activity {
         // TODO: check username and password non-existence
 
         arrayList.add(getString(R.string.sc_authorizing));
-        send("-;LOK;G;AUTH;{" + TCPClientApplication.getInstance().server.username + "};" +
-            TCPClientApplication.getInstance().server.password);
+        mAdapter.notifyDataSetChanged();
 
+        TCPClientApplication.getInstance().send("-;LOK;G;AUTH;{" + TCPClientApplication.getInstance().server.username + "};" +
+            TCPClientApplication.getInstance().server.password);
     }
 
     @Subscribe
@@ -206,12 +182,13 @@ public class ServerConnector extends Activity {
         if (event.getParsed().get(4).toUpperCase().equals("OK")) {
             arrayList.add(getString(R.string.sc_auth_ok));
             arrayList.add(getString(R.string.sc_getting_ors));
-            send("-;OR-LIST");
+            TCPClientApplication.getInstance().send("-;OR-LIST");
         } else {
             arrayList.add(getString(R.string.sc_auth_err));
 
             // TODO: handle general disconnect
         }
+        mAdapter.notifyDataSetChanged();
     }
 
     @Subscribe
@@ -294,7 +271,7 @@ public class ServerConnector extends Activity {
     @Subscribe
     public void onEvent(ConnectionEstablishedEvent event) {
         // connection established -> begin handshake
-        send("-;HELLO;1.0");
+        TCPClientApplication.getInstance().send("-;HELLO;1.0");
     }
 
     public static class MonitorObject{
