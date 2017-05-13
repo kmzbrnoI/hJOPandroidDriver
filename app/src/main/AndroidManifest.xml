@@ -17,7 +17,7 @@
             android:name=".activities.ServerSelect"
             android:launchMode="singleInstance"
             android:label="@string/activity_server_select_title"
-            android:screenOrientation="locked"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter android:label="@string/app_name">
                 <action android:name="android.intent.action.MAIN" />
@@ -35,11 +35,10 @@
             android:name=".activities.TrainRelease"
             android:launchMode="singleInstance"
             android:label="@string/activity_train_release_title"
-            android:screenOrientation="locked"
             android:theme="@style/AppTheme.NoActionBar" />
 
         <activity android:name=".activities.TrainRequest"
-            android:screenOrientation="locked"
+            android:screenOrientation="portrait"
             android:launchMode="singleInstance"
             android:label="@string/activity_train_request_title"
             android:theme="@style/AppTheme.NoActionBar" />
