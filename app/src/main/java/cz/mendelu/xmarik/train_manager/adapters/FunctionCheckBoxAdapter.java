@@ -13,7 +13,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import cz.mendelu.xmarik.train_manager.R;
-import cz.mendelu.xmarik.train_manager.TrainFunction;
+import cz.mendelu.xmarik.train_manager.models.TrainFunction;
 import cz.mendelu.xmarik.train_manager.activities.TrainHandler;
 
 /**

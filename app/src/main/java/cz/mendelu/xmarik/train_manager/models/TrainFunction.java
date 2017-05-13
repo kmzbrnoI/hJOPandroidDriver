@@ -1,4 +1,4 @@
-package cz.mendelu.xmarik.train_manager;
+package cz.mendelu.xmarik.train_manager.models;
 
 /**
  * Decoder function, e. g. F0-F28.

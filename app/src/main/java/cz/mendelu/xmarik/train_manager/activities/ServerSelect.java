@@ -31,7 +31,7 @@ import java.net.ServerSocket;
 import java.util.ArrayList;
 
 import cz.mendelu.xmarik.train_manager.storage.ControlAreaDb;
-import cz.mendelu.xmarik.train_manager.HelpServices;
+import cz.mendelu.xmarik.train_manager.helpers.HashHelper;
 import cz.mendelu.xmarik.train_manager.R;
 import cz.mendelu.xmarik.train_manager.storage.ServerDb;
 import cz.mendelu.xmarik.train_manager.storage.TrainDb;
@@ -337,7 +337,7 @@ public class ServerSelect extends NavigationBase {
         dialogButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                server.password = HelpServices.hashPasswd(mPasswd.getText().toString());
+                server.password = HashHelper.hashPasswd(mPasswd.getText().toString());
                 server.username = mName.getText().toString();
                 dialog.dismiss();
             }

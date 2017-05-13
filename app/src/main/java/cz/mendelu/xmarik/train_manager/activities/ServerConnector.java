@@ -21,7 +21,7 @@ import org.greenrobot.eventbus.Subscribe;
 import java.util.ArrayList;
 
 import cz.mendelu.xmarik.train_manager.events.AreasParsedEvent;
-import cz.mendelu.xmarik.train_manager.HelpServices;
+import cz.mendelu.xmarik.train_manager.helpers.HashHelper;
 import cz.mendelu.xmarik.train_manager.adapters.MyCustomAdapter;
 import cz.mendelu.xmarik.train_manager.R;
 import cz.mendelu.xmarik.train_manager.events.ConnectionEstablishedEvent;
@@ -162,7 +162,7 @@ public class ServerConnector extends Activity {
             public void onClick(View v) {
 
                 user = mName.getText().toString();
-                passwd = HelpServices.hashPasswd(mPasswd.getText().toString());
+                passwd = HashHelper.hashPasswd(mPasswd.getText().toString());
                 setData(user, passwd, savebox.isChecked());
                 messges[1] = "-;LOK;G;AUTH;{" + user + "};" + passwd;
                 //initialize();
@@ -340,7 +340,7 @@ public class ServerConnector extends Activity {
             @Override
             public void onDismiss(DialogInterface dialogInterface) {
                 user = mName.getText().toString();
-                passwd = HelpServices.hashPasswd(mPasswd.getText().toString());
+                passwd = HashHelper.hashPasswd(mPasswd.getText().toString());
                 if (save.isChecked()) {
                     setData(user, passwd, true);
                 } else setData(user, passwd, false);

@@ -117,14 +117,14 @@ public class TCPClientApplication extends Application {
 
             /*} else if (serverMessage.startsWith("-;LOK;") && !auth) {
                 serverMessage = serverMessage.substring("-;LOK;".length());
-                String[] tmp = HelpServices.parseHelper(serverMessage);
+                String[] tmp = HashHelper.parseHelper(serverMessage);
                 if (tmp.length > 2) {
                     String[] lokoData;
                     Train t = ServerDb.getInstance().getActiveServer().getTrain(tmp[0]);
                     if (tmp[1].equals("AUTH")) {
                         switch (tmp[2]) {
                             case "ok":
-                                tmp = HelpServices.trainParseHelper(serverMessage);
+                                tmp = HashHelper.trainParseHelper(serverMessage);
                                 if (tmp.length > 3) {
                                     lokoData = tmp[3].split("\\|");
                                     Train newTrain = new Train(lokoData[0], lokoData[1], lokoData[2], lokoData[3], lokoData[4], lokoData[5], lokoData[6], lokoData[7], lokoData[8]);
@@ -143,7 +143,7 @@ public class TCPClientApplication extends Application {
                                 }
                                 break;
                             case "total":
-                                tmp = HelpServices.trainParseHelper(serverMessage);
+                                tmp = HashHelper.trainParseHelper(serverMessage);
                                 if (tmp.length > 3) {
                                     lokoData = tmp[3].split("\\|");
                                     Train newTrain = new Train(lokoData[0], lokoData[1], lokoData[2], lokoData[3], lokoData[4], lokoData[5], lokoData[6], lokoData[7], lokoData[8]);

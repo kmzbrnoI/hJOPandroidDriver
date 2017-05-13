@@ -27,7 +27,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import cz.mendelu.xmarik.train_manager.storage.TrainDb;
-import cz.mendelu.xmarik.train_manager.TrainFunction;
+import cz.mendelu.xmarik.train_manager.models.TrainFunction;
 import cz.mendelu.xmarik.train_manager.adapters.FunctionCheckBoxAdapter;
 import cz.mendelu.xmarik.train_manager.R;
 import cz.mendelu.xmarik.train_manager.events.LokAddEvent;
