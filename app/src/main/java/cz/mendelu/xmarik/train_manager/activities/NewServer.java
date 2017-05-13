@@ -7,12 +7,9 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import cz.mendelu.xmarik.train_manager.R;
 import cz.mendelu.xmarik.train_manager.models.Server;
-import cz.mendelu.xmarik.train_manager.ServerList;
+import cz.mendelu.xmarik.train_manager.storage.ServerDb;
 
 public class NewServer extends AppCompatActivity {
 
@@ -31,7 +28,7 @@ public class NewServer extends AppCompatActivity {
         if (extras != null) {
             String value = extras.getString("server");
             String[] tmp = value.split("\t");
-            server = ServerList.getInstance().getServer(tmp[0]);
+            server = ServerDb.getInstance().getServer(tmp[0]);
             nameText.setText(server.name);
             ipAdrText.setText(server.host);
             portText.setText(String.valueOf(server.port));
@@ -53,7 +50,7 @@ public class NewServer extends AppCompatActivity {
             return;
         }
 
-        if (ServerList.getInstance().getStoredServersString().contains(name)) {
+        if (ServerDb.getInstance().getStoredServersString().contains(name)) {
             Toast.makeText(getApplicationContext(),
                     R.string.ns_warning_server_exists, Toast.LENGTH_LONG)
                     .show();
@@ -76,7 +73,7 @@ public class NewServer extends AppCompatActivity {
             server.active = false;
         }
 
-        ServerList.getInstance().addCustomServer(server);
+        ServerDb.getInstance().addCustomServer(server);
         Intent returnIntent = new Intent();
         returnIntent.putExtra("result", name);
         setResult(RESULT_OK, returnIntent);

@@ -24,7 +24,7 @@ import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 
-import cz.mendelu.xmarik.train_manager.ControlAreaDb;
+import cz.mendelu.xmarik.train_manager.storage.ControlAreaDb;
 import cz.mendelu.xmarik.train_manager.R;
 import cz.mendelu.xmarik.train_manager.TCPClientApplication;
 import cz.mendelu.xmarik.train_manager.events.AreasParsedEvent;

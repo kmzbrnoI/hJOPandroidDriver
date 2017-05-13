@@ -23,6 +23,7 @@ import cz.mendelu.xmarik.train_manager.activities.ServerSelect;
 import cz.mendelu.xmarik.train_manager.events.ServerReloadEvent;
 import cz.mendelu.xmarik.train_manager.helpers.ParseHelper;
 import cz.mendelu.xmarik.train_manager.models.Server;
+import cz.mendelu.xmarik.train_manager.storage.ServerDb;
 
 
 /**
@@ -33,7 +34,7 @@ public class UdpDiscover extends AsyncTask<String, Void, String> {
     InetAddress nov = null;
     String message;
     int DISCOVERY_PORT;
-    ServerList reciver;
+    ServerDb reciver;
     ServerSelect main;
     private WifiManager mWifi;
 
@@ -43,7 +44,7 @@ public class UdpDiscover extends AsyncTask<String, Void, String> {
         String zprava = "hJOP;1.0;regulator;mobileManager;";
         message = zprava + this.getIPAddress(true) + ";" + "\n";
         DISCOVERY_PORT = port;
-        reciver = ServerList.getInstance();
+        reciver = ServerDb.getInstance();
         main = mainActivity;
     }
 

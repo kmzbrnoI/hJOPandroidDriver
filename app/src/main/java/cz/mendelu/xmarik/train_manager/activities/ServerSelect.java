@@ -30,14 +30,14 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.util.ArrayList;
 
-import cz.mendelu.xmarik.train_manager.ControlAreaDb;
+import cz.mendelu.xmarik.train_manager.storage.ControlAreaDb;
 import cz.mendelu.xmarik.train_manager.HelpServices;
 import cz.mendelu.xmarik.train_manager.R;
-import cz.mendelu.xmarik.train_manager.TrainDb;
+import cz.mendelu.xmarik.train_manager.storage.ServerDb;
+import cz.mendelu.xmarik.train_manager.storage.TrainDb;
 import cz.mendelu.xmarik.train_manager.events.ServerReloadEvent;
 import cz.mendelu.xmarik.train_manager.events.TCPDisconnectEvent;
 import cz.mendelu.xmarik.train_manager.models.Server;
-import cz.mendelu.xmarik.train_manager.ServerList;
 import cz.mendelu.xmarik.train_manager.UdpDiscover;
 
 import static android.preference.PreferenceManager.getDefaultSharedPreferences;
@@ -89,10 +89,10 @@ public class ServerSelect extends NavigationBase {
                 R.string.conn_wifi_unavailable, Toast.LENGTH_LONG)
                 .show();
 
-        array = ServerList.getInstance().getServersString();
+        array = ServerDb.getInstance().getServersString();
         lAdapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_list_item_1, android.R.id.text1, array);
-        array1 = ServerList.getInstance().getStoredServersString();
+        array1 = ServerDb.getInstance().getStoredServersString();
         fAdapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_list_item_1, android.R.id.text1, array1);
         lServers.setAdapter(lAdapter);
@@ -115,8 +115,8 @@ public class ServerSelect extends NavigationBase {
                 new View.OnClickListener() {
 
                     public void onClick(View view) {
-                        ServerList.getInstance().clearLocalServers();
-                        array = ServerList.getInstance().getServersString();
+                        ServerDb.getInstance().clearLocalServers();
+                        array = ServerDb.getInstance().getServersString();
 
                         lAdapter = new ArrayAdapter<>(context,
                                 android.R.layout.simple_list_item_1, android.R.id.text1, array);
@@ -159,7 +159,7 @@ public class ServerSelect extends NavigationBase {
      */
     public void dataReload() {
         lButton.setClickable(true);
-        ServerList serverList = ServerList.getInstance();
+        ServerDb serverList = ServerDb.getInstance();
         serverList.clear();
         array = serverList.getServersString();
         for (Server s : serverList.getServers()) {
@@ -216,7 +216,7 @@ public class ServerSelect extends NavigationBase {
         //TODO dialogy k mazani
         switch (menuItemIndex) {
             case 0:
-                Server tmpServer = ServerList.getInstance().getServer(tmp[0]);
+                Server tmpServer = ServerDb.getInstance().getServer(tmp[0]);
                 if (tmpServer.active) {
                     AuthorizeServer(tmp[0]);
                 } else Toast.makeText(getApplicationContext(),
@@ -236,11 +236,11 @@ public class ServerSelect extends NavigationBase {
                 break;
             case 4:
                 array1.remove(info.position);
-                ServerList.getInstance().removeServer(info.position);
+                ServerDb.getInstance().removeServer(info.position);
                 fAdapter.notifyDataSetChanged();
                 break;
             case 5:
-                ServerList.getInstance().clearCustomServer();
+                ServerDb.getInstance().clearCustomServer();
                 deleteAllServers();
                 break;
         }
@@ -267,7 +267,7 @@ public class ServerSelect extends NavigationBase {
      */
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == 1) {
-            array1 = ServerList.getInstance().getStoredServersString();
+            array1 = ServerDb.getInstance().getStoredServersString();
             fAdapter.notifyDataSetChanged();
             //asi predelat s tim novym adapterem do ifu, pak to vali
             fAdapter = new ArrayAdapter<>(this,
@@ -275,13 +275,13 @@ public class ServerSelect extends NavigationBase {
             fAdapter.notifyDataSetChanged();
             fServers.setAdapter(fAdapter);
             fAdapter.notifyDataSetChanged();
-            String txt = ServerList.getInstance().getServerStoreString();
+            String txt = ServerDb.getInstance().getServerStoreString();
             SharedPreferences.Editor editor = sharedpreferences.edit();
             editor.putString("storedServers", txt);
             //editor.commit();
             editor.apply();
             if (resultCode == RESULT_OK) {
-                array1 = ServerList.getInstance().getStoredServersString();
+                array1 = ServerDb.getInstance().getStoredServersString();
                 fAdapter.notifyDataSetChanged();
             }else if (resultCode == RESULT_CANCELED) {
                 //Do nothing?
@@ -325,7 +325,7 @@ public class ServerSelect extends NavigationBase {
         final Dialog dialog = new Dialog(this);
         dialog.setContentView(R.layout.dialog_user);
         dialog.setTitle("Set user data");
-        final Server server = ServerList.getInstance().getServer(serverName);
+        final Server server = ServerDb.getInstance().getServer(serverName);
         //set dialog component
         final EditText mName = (EditText) dialog.findViewById(R.id.dialogName);
         final EditText mPasswd = (EditText) dialog.findViewById(R.id.dialogPasswd);
@@ -372,7 +372,7 @@ public class ServerSelect extends NavigationBase {
     }
 
     public void Save() {
-        String n = ServerList.getInstance().getSaveString();
+        String n = ServerDb.getInstance().getSaveString();
 
         SharedPreferences.Editor editor = sharedpreferences.edit();
         editor.remove("StoredServers");
@@ -384,7 +384,7 @@ public class ServerSelect extends NavigationBase {
     public void get() {
         sharedpreferences = getDefaultSharedPreferences(getApplicationContext());//getSharedPreferences(myServerPreferences, Context.MODE_PRIVATE);
         if (sharedpreferences.contains("StoredServers")) {
-            ServerList.getInstance().loadServers(sharedpreferences.getString("StoredServers", ""));
+            ServerDb.getInstance().loadServers(sharedpreferences.getString("StoredServers", ""));
         }
     }
 
@@ -401,7 +401,7 @@ public class ServerSelect extends NavigationBase {
 
     @Subscribe
     public void tcpErrorEvent(TCPDisconnectEvent event) {
-        ServerList.getInstance().deactivateServer();
+        ServerDb.getInstance().deactivateServer();
         Toast.makeText(getApplicationContext(),
                 event.getError(),
                 Toast.LENGTH_LONG).show();

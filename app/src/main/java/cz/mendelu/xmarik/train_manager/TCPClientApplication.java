@@ -8,7 +8,6 @@ import org.greenrobot.eventbus.EventBus;
 
 import java.net.ConnectException;
 import java.util.ArrayList;
-import java.util.Collections;
 
 import cz.mendelu.xmarik.train_manager.events.AreasEvent;
 import cz.mendelu.xmarik.train_manager.events.GlobalAuthEvent;
@@ -17,6 +16,7 @@ import cz.mendelu.xmarik.train_manager.events.LokEvent;
 import cz.mendelu.xmarik.train_manager.events.RequestEvent;
 import cz.mendelu.xmarik.train_manager.helpers.ParseHelper;
 import cz.mendelu.xmarik.train_manager.models.Server;
+import cz.mendelu.xmarik.train_manager.storage.ServerDb;
 
 /**
  * TCPClientApplication is a singleton, whicch handles connection with the server. It encapsules
@@ -57,7 +57,7 @@ public class TCPClientApplication extends Application {
             listenTask.cancel(true);
 
         this.server = null;
-        ServerList.getInstance().deactivateServer();
+        ServerDb.getInstance().deactivateServer();
 
         // TODO: notify everyone else
     }
@@ -120,7 +120,7 @@ public class TCPClientApplication extends Application {
                 String[] tmp = HelpServices.parseHelper(serverMessage);
                 if (tmp.length > 2) {
                     String[] lokoData;
-                    Train t = ServerList.getInstance().getActiveServer().getTrain(tmp[0]);
+                    Train t = ServerDb.getInstance().getActiveServer().getTrain(tmp[0]);
                     if (tmp[1].equals("AUTH")) {
                         switch (tmp[2]) {
                             case "ok":
@@ -138,7 +138,7 @@ public class TCPClientApplication extends Application {
                                         newTrain.setDirection(lokoData[11].equals("0"));
                                     if (lokoData.length > 14)
                                         newTrain.setFunctionNames(lokoData[15]);
-                                    ServerList.getInstance().getActiveServer().addTrain(newTrain);
+                                    ServerDb.getInstance().getActiveServer().addTrain(newTrain);
                                     EventBus.getDefault().post(new TrainReloadEvent(serverMessage));
                                 }
                                 break;
@@ -157,7 +157,7 @@ public class TCPClientApplication extends Application {
                                         newTrain.setDirection(lokoData[11].equals("0"));
                                     if (lokoData.length > 14)
                                         newTrain.setFunctionNames(lokoData[15]);
-                                    ServerList.getInstance().getActiveServer().addTrain(newTrain);
+                                    ServerDb.getInstance().getActiveServer().addTrain(newTrain);
                                     EventBus.getDefault().post(new ServerReloadEvent(serverMessage));
                                 }
                                 break;
@@ -178,11 +178,11 @@ public class TCPClientApplication extends Application {
                                 break;
                         }
                     } else if (tmp[1].equals("TOTAL")) {
-                        Train train = ServerList.getInstance().getActiveServer().getTrain(tmp[0]);
+                        Train train = ServerDb.getInstance().getActiveServer().getTrain(tmp[0]);
                         train.setTotalManaged(tmp[2].equals("1"));
                         EventBus.getDefault().post(new ServerReloadEvent(serverMessage));
                     } else if (tmp[1].equals("RESP")) {
-                        Train train = ServerList.getInstance().getActiveServer().getTrain(tmp[0]);
+                        Train train = ServerDb.getInstance().getActiveServer().getTrain(tmp[0]);
                         if (tmp[2].equals("ok")) {
                             train.setKmhSpeed(Integer.parseInt(tmp[3]));
                             train.setErr(null);
@@ -191,7 +191,7 @@ public class TCPClientApplication extends Application {
                         }
                         EventBus.getDefault().post(new ServerReloadEvent(serverMessage));
                     } else if (tmp[1].equals("SPD")) {
-                        Train train = ServerList.getInstance().getActiveServer().getTrain(tmp[0]);
+                        Train train = ServerDb.getInstance().getActiveServer().getTrain(tmp[0]);
                         train.setKmhSpeed(Integer.parseInt(tmp[2]));
                         train.setSpeed(Integer.parseInt(tmp[3]));
                         train.setDirection(tmp[4].equals("1"));

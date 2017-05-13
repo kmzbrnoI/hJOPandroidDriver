@@ -21,14 +21,13 @@ import org.greenrobot.eventbus.Subscribe;
 import java.util.ArrayList;
 
 import cz.mendelu.xmarik.train_manager.events.AreasParsedEvent;
-import cz.mendelu.xmarik.train_manager.models.ControlArea;
 import cz.mendelu.xmarik.train_manager.HelpServices;
 import cz.mendelu.xmarik.train_manager.adapters.MyCustomAdapter;
 import cz.mendelu.xmarik.train_manager.R;
 import cz.mendelu.xmarik.train_manager.events.ConnectionEstablishedEvent;
 import cz.mendelu.xmarik.train_manager.events.GlobalAuthEvent;
 import cz.mendelu.xmarik.train_manager.models.Server;
-import cz.mendelu.xmarik.train_manager.ServerList;
+import cz.mendelu.xmarik.train_manager.storage.ServerDb;
 import cz.mendelu.xmarik.train_manager.TCPClientApplication;
 import cz.mendelu.xmarik.train_manager.events.TCPDisconnectEvent;
 import cz.mendelu.xmarik.train_manager.events.HandShakeEvent;
@@ -75,7 +74,7 @@ public class ServerConnector extends Activity {
         if (save) {
             this.server.username = name;
             this.server.password = tmpPass;
-            ServerList.getInstance().setPassword(server);
+            ServerDb.getInstance().setPassword(server);
         }
         Log.e("", "user a heslo:" + name + " \n" + tmpPass);
     }
@@ -246,7 +245,7 @@ public class ServerConnector extends Activity {
         if ( extras != null ) {
             String value = extras.getString("server");
             String[] tmp = value.split("\t");
-            server = ServerList.getInstance().getServer(tmp[0]);
+            server = ServerDb.getInstance().getServer(tmp[0]);
             tcp.auth = true;
 
             try {
