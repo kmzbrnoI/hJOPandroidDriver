@@ -1,4 +1,4 @@
-package cz.mendelu.xmarik.train_manager;
+package cz.mendelu.xmarik.train_manager.network;
 
 import android.content.Context;
 import android.net.DhcpInfo;
@@ -27,9 +27,9 @@ import cz.mendelu.xmarik.train_manager.storage.ServerDb;
 
 
 /**
- * UdpDiscover discovers hJOPservers in local network.
+ * UDPDiscover discovers hJOPservers in local network.
  */
-public class UdpDiscover extends AsyncTask<String, Void, String> {
+public class UDPDiscover extends AsyncTask<String, Void, String> {
     private static final int TIMEOUT_MS = 500;
     InetAddress nov = null;
     String message;
@@ -39,7 +39,7 @@ public class UdpDiscover extends AsyncTask<String, Void, String> {
     private WifiManager mWifi;
 
 
-    public UdpDiscover(Context context, int port, ServerSelect mainActivity) {
+    public UDPDiscover(Context context, int port, ServerSelect mainActivity) {
         mWifi = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
         String zprava = "hJOP;1.0;regulator;mobileManager;";
         message = zprava + this.getIPAddress(true) + ";" + "\n";

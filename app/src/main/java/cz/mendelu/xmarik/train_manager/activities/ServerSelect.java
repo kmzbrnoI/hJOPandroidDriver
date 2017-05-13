@@ -30,6 +30,7 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.util.ArrayList;
 
+import cz.mendelu.xmarik.train_manager.network.UDPDiscover;
 import cz.mendelu.xmarik.train_manager.storage.ControlAreaDb;
 import cz.mendelu.xmarik.train_manager.helpers.HashHelper;
 import cz.mendelu.xmarik.train_manager.R;
@@ -38,7 +39,6 @@ import cz.mendelu.xmarik.train_manager.storage.TrainDb;
 import cz.mendelu.xmarik.train_manager.events.ServerReloadEvent;
 import cz.mendelu.xmarik.train_manager.events.TCPDisconnectEvent;
 import cz.mendelu.xmarik.train_manager.models.Server;
-import cz.mendelu.xmarik.train_manager.UdpDiscover;
 
 import static android.preference.PreferenceManager.getDefaultSharedPreferences;
 
@@ -82,7 +82,7 @@ public class ServerSelect extends NavigationBase {
         ConnectivityManager connManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo mWifi = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
         if (mWifi.isConnected()) {
-            UdpDiscover udp = new UdpDiscover(context, port, this);
+            UDPDiscover udp = new UDPDiscover(context, port, this);
             udp.execute();
             this.lButton.setClickable(false);
         } else Toast.makeText(getApplicationContext(),
@@ -126,7 +126,7 @@ public class ServerSelect extends NavigationBase {
                         ConnectivityManager connManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
                         NetworkInfo mWifi = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
                         if (mWifi.isConnected()) {
-                            new UdpDiscover(context, port, (ServerSelect) obj).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                            new UDPDiscover(context, port, (ServerSelect) obj).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                             System.out.print("button activated");
                             float deg = lButton.getRotation() + 720F;
                             lButton.animate().rotation(deg).setInterpolator(new AccelerateDecelerateInterpolator());

@@ -1,4 +1,4 @@
-package cz.mendelu.xmarik.train_manager;
+package cz.mendelu.xmarik.train_manager.network;
 
 import android.util.Log;
 

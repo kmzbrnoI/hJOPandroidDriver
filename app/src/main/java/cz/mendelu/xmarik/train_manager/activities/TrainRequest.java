@@ -26,7 +26,7 @@ import java.util.ArrayList;
 
 import cz.mendelu.xmarik.train_manager.storage.ControlAreaDb;
 import cz.mendelu.xmarik.train_manager.R;
-import cz.mendelu.xmarik.train_manager.TCPClientApplication;
+import cz.mendelu.xmarik.train_manager.network.TCPClientApplication;
 import cz.mendelu.xmarik.train_manager.events.AreasParsedEvent;
 import cz.mendelu.xmarik.train_manager.events.LokAddEvent;
 import cz.mendelu.xmarik.train_manager.events.TCPDisconnectEvent;

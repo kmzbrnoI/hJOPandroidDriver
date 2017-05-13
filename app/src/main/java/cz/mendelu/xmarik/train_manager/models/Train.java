@@ -2,7 +2,7 @@ package cz.mendelu.xmarik.train_manager.models;
 
 import java.util.ArrayList;
 
-import cz.mendelu.xmarik.train_manager.TCPClientApplication;
+import cz.mendelu.xmarik.train_manager.network.TCPClientApplication;
 import cz.mendelu.xmarik.train_manager.helpers.ParseHelper;
 
 /**

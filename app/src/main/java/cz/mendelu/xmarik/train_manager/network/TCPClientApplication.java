@@ -1,4 +1,4 @@
-package cz.mendelu.xmarik.train_manager;
+package cz.mendelu.xmarik.train_manager.network;
 
 import android.app.Application;
 import android.os.AsyncTask;
@@ -30,13 +30,7 @@ public class TCPClientApplication extends Application {
 
     public boolean auth = false;
     TCPClient mTcpClient;
-    private String tCPAnswer;
-    private ArrayList<TCPAnswer> serverResponses;
     private ListenTask listenTask;
-
-    TCPClientApplication() {
-        serverResponses = new ArrayList<>();
-    }
 
     public static TCPClientApplication getInstance() {
         if (instance == null) instance = new TCPClientApplication();

@@ -28,7 +28,7 @@ import cz.mendelu.xmarik.train_manager.events.ConnectionEstablishedEvent;
 import cz.mendelu.xmarik.train_manager.events.GlobalAuthEvent;
 import cz.mendelu.xmarik.train_manager.models.Server;
 import cz.mendelu.xmarik.train_manager.storage.ServerDb;
-import cz.mendelu.xmarik.train_manager.TCPClientApplication;
+import cz.mendelu.xmarik.train_manager.network.TCPClientApplication;
 import cz.mendelu.xmarik.train_manager.events.TCPDisconnectEvent;
 import cz.mendelu.xmarik.train_manager.events.HandShakeEvent;
 

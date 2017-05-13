@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import cz.mendelu.xmarik.train_manager.TCPClientApplication;
+import cz.mendelu.xmarik.train_manager.network.TCPClientApplication;
 
 /**
  * Class Server represents a single server. Server contains database of all trains.
