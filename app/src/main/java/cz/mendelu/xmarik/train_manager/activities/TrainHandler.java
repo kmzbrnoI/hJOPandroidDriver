@@ -48,7 +48,6 @@ public class TrainHandler extends NavigationBase {
     private Long timer;
     private Context context;
 
-    private TextView tv_name;
     private SeekBar sb_speed;
     private Switch s_direction;
     private CheckBox chb_total;
@@ -76,7 +75,6 @@ public class TrainHandler extends NavigationBase {
         multitrack = new ArrayList<>();
         timer = System.currentTimeMillis();
 
-        tv_name = (TextView) findViewById(R.id.handlerName1);
         sb_speed = (SeekBar) findViewById(R.id.speedkBar1);
         s_direction = (Switch) findViewById(R.id.handlerDirection1);
         b_idle = (Button) findViewById(R.id.startButton1);
@@ -195,7 +193,7 @@ public class TrainHandler extends NavigationBase {
         int i = 0;
         for(Train t : TrainDb.instance.trains.values()) {
             managed.add(t);
-            managed_str.add(String.valueOf(t.addr));
+            managed_str.add(t.name + " (" + t.label + ") : " + String.valueOf(t.addr));
             if (t == train) index = i;
             i++;
         }
@@ -244,7 +242,6 @@ public class TrainHandler extends NavigationBase {
             lv_functions.setEnabled(train != null);
 
             if (train == null) {
-                tv_name.setText("");
                 sb_speed.setProgress(0);
                 s_direction.setChecked(false);
                 s_direction.setText("-");
@@ -263,7 +260,6 @@ public class TrainHandler extends NavigationBase {
                 ib_status.setImageResource(R.drawable.ic_circle_gray);
 
             } else {
-                tv_name.setText(String.valueOf(train.addr) + " : " + train.name);
                 sb_speed.setProgress(train.stepsSpeed);
                 s_direction.setChecked(!train.direction);
                 if (!train.direction)
@@ -306,6 +302,8 @@ public class TrainHandler extends NavigationBase {
 
     public void b_idleClick(View view) {
         sb_speed.setProgress(0);
+
+        if (train == null) return;
         if (multitrack.contains(train)) {
             for (Train t : multitrack)
                 t.setSpeedSteps(0);

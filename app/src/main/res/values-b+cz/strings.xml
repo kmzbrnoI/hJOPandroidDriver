@@ -19,7 +19,7 @@
 
     <string name="ta_new_loko">Přijata nová lokomotiva.</string>
     <string name="ta_multitraction">Multitrakce</string>
-    <string name="ta_total">Ruční ř.</string>
+    <string name="ta_total">Ruční řízení</string>
     <string name="ta_direction_forward">vpřed</string>
     <string name="ta_direction_backwards">vzad</string>
     <string name="ta_idle">Idle</string>

@@ -19,7 +19,7 @@
 
     <string name="ta_new_loko">New locomotive received.</string>
     <string name="ta_multitraction">Multitraction</string>
-    <string name="ta_total">Total c.</string>
+    <string name="ta_total">Total control</string>
     <string name="ta_direction_forward">forward</string>
     <string name="ta_direction_backwards">backward</string>
     <string name="ta_idle">Idle</string>

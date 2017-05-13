@@ -21,64 +21,42 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentStart="true">
 
+        <Spinner
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:id="@+id/spinner1" />
+
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="60dp"
+            android:layout_height="wrap_content"
             android:weightSum="1">
 
-            <Spinner
+            <CheckBox
+                android:text="@string/ta_total"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/spinner1"
-                android:layout_weight="0.82" />
+                android:id="@+id/totalManaged" />
 
-            <LinearLayout
-                android:orientation="vertical"
+            <Space
+                android:layout_width="20dp"
+                android:layout_height="match_parent" />
+
+            <CheckBox
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent">
-
-                <CheckBox
-                    android:layout_width="match_parent"
-                    android:layout_height="38dp"
-                    android:text="@string/ta_multitraction"
-                    android:id="@+id/goupManaged1"
-                    android:layout_weight="0.08"
-                    android:checked="false"
-                    />
-
-                <CheckBox
-                    android:text="@string/ta_total"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/totalManaged"
-                    android:layout_weight="0.08" />
-            </LinearLayout>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="81dp"
-            android:weightSum="1">
+                android:layout_height="wrap_content"
+                android:text="@string/ta_multitraction"
+                android:id="@+id/goupManaged1"
+                android:checked="false" />
 
             <ImageButton
-                android:layout_width="104dp"
-                android:layout_height="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:id="@+id/ib_status"
                 android:background="@null"
-                android:layout_gravity="right"
-                android:layout_weight="0.57"
                 android:src="@drawable/ic_circle_green"
                 android:onClick="ib_StatusClick"
                 android:scaleType="fitCenter" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:id="@+id/handlerName1" />
 
         </LinearLayout>
 
@@ -140,12 +118,13 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/kmh1"
-                    android:gravity="center" />
+                    android:gravity="center"
+                    android:layout_marginTop="5dp" />
 
                 <LinearLayout
                     android:orientation="horizontal"
                     android:layout_width="match_parent"
-                    android:layout_height="72dp"
+                    android:layout_height="62dp"
                     android:layout_weight="0.57"
                     android:layout_gravity="center_vertical"
                     android:id="@+id/handlerSpeed1">

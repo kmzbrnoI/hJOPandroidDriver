@@ -15,7 +15,7 @@
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:orientation="horizontal" android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent">
 
         <ScrollView
             android:layout_width="0dp"
@@ -29,67 +29,43 @@
                 android:layout_height="wrap_content"
                 android:weightSum="1" >
 
+                <Spinner
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:id="@+id/spinner1" />
+
                 <LinearLayout
                     android:orientation="horizontal"
                     android:layout_width="match_parent"
-                    android:layout_height="60dp"
-                    android:weightSum="1" >
+                    android:layout_height="wrap_content"
+                    android:weightSum="1">
 
-                    <Spinner
+                    <CheckBox
+                        android:text="@string/ta_total"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:id="@+id/spinner1"
-                        android:layout_weight="0.82" />
+                        android:id="@+id/totalManaged" />
 
-                    <LinearLayout
-                        android:orientation="vertical"
+                    <Space
+                        android:layout_width="10dp"
+                        android:layout_height="match_parent" />
+
+                    <CheckBox
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="0.82">
-
-                        <CheckBox
-                            android:layout_width="match_parent"
-                            android:layout_height="38dp"
-                            android:text="@string/ta_multitraction"
-                            android:id="@+id/goupManaged1"
-                            android:layout_weight="0.82"
-                            android:checked="false" />
-
-                        <CheckBox
-                            android:text="@string/ta_total"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:id="@+id/totalManaged"
-                            android:layout_weight="0.82" />
-
-                    </LinearLayout>
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:orientation="vertical"
-                    android:layout_width="match_parent"
-                    android:layout_height="81dp"
-                    android:layout_weight="0.12"
-                    android:weightSum="1" >
+                        android:text="@string/ta_multitraction"
+                        android:id="@+id/goupManaged1"
+                        android:checked="false" />
 
                     <ImageButton
-                        android:layout_width="94dp"
-                        android:layout_height="53dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
                         android:id="@+id/ib_status"
-                        android:layout_gravity="right"
                         android:background="@null"
                         android:src="@drawable/ic_circle_green"
-                        android:layout_weight="1.25"
-                        android:onClick="ib_StatusClick" />
+                        android:onClick="ib_StatusClick"
+                        android:scaleType="fitCenter" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textAppearance="?android:attr/textAppearanceLarge"
-                        android:text="-----------"
-                        android:id="@+id/handlerName1"
-                        android:layout_weight="0.30" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -138,8 +114,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/kmh1"
-                    android:layout_gravity="center"
-                    android:textAlignment="center" />
+                    android:gravity="center"
+                    android:layout_marginTop="5dp"/>
 
                 <LinearLayout
                     android:orientation="horizontal"
