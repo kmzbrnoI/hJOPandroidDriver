@@ -232,18 +232,6 @@ public class ServerConnector extends Activity {
         }
     }
 
-    private void addControlAreas(String data) {
-        String[] tmp = data.split("\\[*\\]");
-        server.areas = new ArrayList<ControlArea>();
-        for (String s : tmp) {
-            s = s.replace("[", "");
-            s = s.replace("]", "");
-            s = s.replace("];", "");
-            String[] area = s.split(",");
-            server.addArea(new ControlArea(area[0], area[1]));
-        }
-    }
-
     @Subscribe
     public void onEvent(TCPDisconnectEvent event) {
         // TODO
