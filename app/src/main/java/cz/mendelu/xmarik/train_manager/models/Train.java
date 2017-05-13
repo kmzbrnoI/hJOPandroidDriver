@@ -363,7 +363,7 @@ public class Train {
         if (function[id].checked == state) return;
         function[id].checked = state;
         String strState = state ? "1" : "0";
-        TCPClientApplication.getInstance().send("-;LOK;" + String.valueOf(this.addr) + ";F" +
+        TCPClientApplication.getInstance().send("-;LOK;" + String.valueOf(this.addr) + ";F;" +
             String.valueOf(id) + ";" + strState);
     }
 

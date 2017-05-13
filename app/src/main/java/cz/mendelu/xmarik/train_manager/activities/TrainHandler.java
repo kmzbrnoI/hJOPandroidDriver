@@ -1,15 +1,10 @@
 package cz.mendelu.xmarik.train_manager.activities;
 
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
@@ -23,31 +18,23 @@ import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
-import java.util.function.Function;
 
 import cz.mendelu.xmarik.train_manager.TrainDb;
 import cz.mendelu.xmarik.train_manager.TrainFunction;
-import cz.mendelu.xmarik.train_manager.adapters.CheckBoxAdapter;
+import cz.mendelu.xmarik.train_manager.adapters.FunctionCheckBoxAdapter;
 import cz.mendelu.xmarik.train_manager.R;
 import cz.mendelu.xmarik.train_manager.events.LokAddEvent;
 import cz.mendelu.xmarik.train_manager.events.LokChangeEvent;
 import cz.mendelu.xmarik.train_manager.events.LokRemoveEvent;
 import cz.mendelu.xmarik.train_manager.events.LokRespEvent;
-import cz.mendelu.xmarik.train_manager.events.ServerReloadEvent;
-import cz.mendelu.xmarik.train_manager.models.Server;
-import cz.mendelu.xmarik.train_manager.ServerList;
-import cz.mendelu.xmarik.train_manager.TCPClientApplication;
 import cz.mendelu.xmarik.train_manager.models.Train;
-import cz.mendelu.xmarik.train_manager.events.CriticalErrorEvent;
 
 // TODO: timer on speed change
 
@@ -70,7 +57,7 @@ public class TrainHandler extends NavigationBase {
     private Button b_idle;
     private CheckBox chb_group;
     private ImageButton ib_status;
-    private ListView chb_functions;
+    private ListView lv_functions;
     private TextView tv_kmhSpeed;
 
     @SuppressWarnings("deprecation")
@@ -96,7 +83,7 @@ public class TrainHandler extends NavigationBase {
         b_stop = (Button) findViewById(R.id.stopButton1);
         chb_group = (CheckBox) findViewById(R.id.goupManaged1);
         ib_status = (ImageButton) findViewById(R.id.ib_status);
-        chb_functions = (ListView) findViewById(R.id.checkBoxView1);
+        lv_functions = (ListView) findViewById(R.id.checkBoxView1);
         tv_kmhSpeed = (TextView) findViewById(R.id.kmh1);
         chb_total = (CheckBox) findViewById(R.id.totalManaged);
 
@@ -110,32 +97,15 @@ public class TrainHandler extends NavigationBase {
         s_spinner.setAdapter(managed_adapter);
         this.fillHVs();
 
-        // fill functions TODO?
-        final ArrayAdapter<String> funcAdapter1 = new ArrayAdapter<>(this,
-                android.R.layout.simple_list_item_1, ServerList.FUNCTION);
+        // GUI events:
 
-        // TODO: one of these:
-
-        chb_functions.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        lv_functions.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
                 if (updating) return;
-                chb_functions.setItemChecked(position, !chb_functions.isItemChecked(position));
-                train.setFunc(position, chb_functions.isItemChecked(position));
-            }
-        });
-
-        chb_functions.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                if (updating) return;
-                train.setFunc(i, chb_functions.isItemChecked(i));
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
+                CheckBox chb = (CheckBox)view.findViewById(R.id.checkBox1);
+                chb.toggle();
+                train.setFunc(position, chb.isChecked());
             }
         });
 
@@ -273,6 +243,7 @@ public class TrainHandler extends NavigationBase {
         try {
             chb_group.setEnabled(train != null);
             chb_total.setEnabled(train != null);
+            lv_functions.setEnabled(train != null);
 
             if (train == null) {
                 tv_name.setText("");
@@ -287,9 +258,9 @@ public class TrainHandler extends NavigationBase {
                 this.setEnabled(false);
 
                 //set custom adapter with check boxes to list view
-                CheckBoxAdapter dataAdapter = new CheckBoxAdapter(context,
-                        R.layout.trainfunctioninfo, new ArrayList<TrainFunction>());
-                chb_functions.setAdapter(dataAdapter);
+                FunctionCheckBoxAdapter dataAdapter = new FunctionCheckBoxAdapter(context,
+                        R.layout.lok_function, new ArrayList<>(Arrays.asList(TrainFunction.DEF_FUNCTION)));
+                lv_functions.setAdapter(dataAdapter);
 
                 ib_status.setImageResource(R.drawable.ic_circle_gray);
 
@@ -309,9 +280,18 @@ public class TrainHandler extends NavigationBase {
                 this.setEnabled(train.total);
 
                 //set custom adapter with check boxes to list view
-                CheckBoxAdapter dataAdapter = new CheckBoxAdapter(context,
-                        R.layout.trainfunctioninfo, new ArrayList<>(Arrays.asList(train.function)));
-                chb_functions.setAdapter(dataAdapter);
+                FunctionCheckBoxAdapter dataAdapter = new FunctionCheckBoxAdapter(context,
+                        R.layout.lok_function, new ArrayList<>(Arrays.asList(train.function)));
+                lv_functions.setAdapter(dataAdapter);
+
+
+                /*String[] foody = {"pizza", "burger", "chocolate", "ice-cream", "banana", "apple"};
+                ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this,
+                        R.layout.lok_function, foody);
+                lv_functions.setAdapter(dataAdapter);
+                lv_functions.setItemsCanFocus(false);
+                lv_functions.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);*/
+
 
                 ib_status.setImageResource(R.drawable.ic_circle_green);
             }
@@ -319,6 +299,10 @@ public class TrainHandler extends NavigationBase {
         finally {
             this.updating = false;
         }
+    }
+
+    public void onFuncChanged(int index, Boolean newState) {
+        train.setFunc(index, newState);
     }
 
     /*private void setDirectionText(int direction) {
@@ -559,7 +543,6 @@ public class TrainHandler extends NavigationBase {
         b_stop.setEnabled(enabled);
         b_idle.setEnabled(enabled);
         chb_group.setEnabled(enabled);
-        chb_functions.setEnabled(enabled);
     }
 
 

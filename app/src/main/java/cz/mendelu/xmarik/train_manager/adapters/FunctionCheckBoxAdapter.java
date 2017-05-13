@@ -1,8 +1,8 @@
 package cz.mendelu.xmarik.train_manager.adapters;
 
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.support.annotation.NonNull;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,16 +14,18 @@ import java.util.ArrayList;
 
 import cz.mendelu.xmarik.train_manager.R;
 import cz.mendelu.xmarik.train_manager.TrainFunction;
+import cz.mendelu.xmarik.train_manager.activities.TrainHandler;
 
 /**
- * Created by ja on 5. 9. 2016.
+ * FunctionCheckBoxAdapter is a ListView` checkbox itesm with behavior connected to function
+ * setting.
  */
-public class CheckBoxAdapter extends ArrayAdapter<TrainFunction> {
+public class FunctionCheckBoxAdapter extends ArrayAdapter<TrainFunction> {
     private LayoutInflater vi;
     private ArrayList<TrainFunction> trainList;
 
-    public CheckBoxAdapter(Context context, int textViewResourceId,
-                           ArrayList<TrainFunction> trainList) {
+    public FunctionCheckBoxAdapter(Context context, int textViewResourceId,
+                                   ArrayList<TrainFunction> trainList) {
         super(context, textViewResourceId, trainList);
         this.trainList = new ArrayList<>();
         this.trainList.addAll(trainList);
@@ -33,21 +35,20 @@ public class CheckBoxAdapter extends ArrayAdapter<TrainFunction> {
     @NonNull
     @Override
     public View getView(int position, View convertView, @NonNull ViewGroup parent) {
-
         ViewHolder holder;
         if (convertView == null) {
-            convertView = vi.inflate(R.layout.trainfunctioninfo, null);
+            convertView = vi.inflate(R.layout.lok_function, null);
             holder = new ViewHolder();
             holder.code = (TextView) convertView.findViewById(R.id.code);
             holder.name = (CheckBox) convertView.findViewById(R.id.checkBox1);
             convertView.setTag(holder);
-            /*holder.name.setOnClickListener(new View.OnClickListener() {
+
+            holder.name.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
-                    CheckBox cb = (CheckBox) v;
-                    TrainFunction trainFunc = (TrainFunction) cb.getTag();
-                    trainFunc.setSelected(cb.isChecked());
-                } TODO
-            });*/
+                    TrainFunction trainFunc = (TrainFunction)((CheckBox)v).getTag();
+                    ((TrainHandler)(((ContextWrapper)v.getContext()).getBaseContext())).onFuncChanged(trainFunc.num, ((CheckBox)v).isChecked());
+                }
+            });
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
