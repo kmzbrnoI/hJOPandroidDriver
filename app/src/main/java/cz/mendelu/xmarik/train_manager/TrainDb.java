@@ -12,6 +12,7 @@ import cz.mendelu.xmarik.train_manager.events.LokAddEvent;
 import cz.mendelu.xmarik.train_manager.events.LokChangeEvent;
 import cz.mendelu.xmarik.train_manager.events.LokEvent;
 import cz.mendelu.xmarik.train_manager.events.LokRemoveEvent;
+import cz.mendelu.xmarik.train_manager.events.LokRespEvent;
 import cz.mendelu.xmarik.train_manager.events.TCPDisconnectEvent;
 import cz.mendelu.xmarik.train_manager.models.Train;
 
@@ -77,14 +78,36 @@ public class TrainDb {
     }
 
     public void fEvent(LokEvent event) {
+        Train t = trains.get(Integer.valueOf(event.getParsed().get(2)));
+        String[] f = event.getParsed().get(4).split("-");
+        if (f.length == 1) {
+            t.function[Integer.valueOf(f[0])].checked = (event.getParsed().get(5) == "1");
+        } else if (f.length == 2) {
+            int from = Integer.valueOf(f[0]);
+            int to = Integer.valueOf(f[1]);
 
+            for (int i = from; i <= to; i++)
+                t.function[i].checked = (event.getParsed().get(5).charAt(i-from) == '1');
+        }
+
+        EventBus.getDefault().post(new LokChangeEvent(t.addr));
     }
 
     public void spdEvent(LokEvent event) {
+        Train t = trains.get(Integer.valueOf(event.getParsed().get(2)));
+        t.kmphSpeed = Integer.valueOf(event.getParsed().get(4));
+        t.stepsSpeed = Integer.valueOf(event.getParsed().get(5));
+        t.direction = Boolean.valueOf(event.getParsed().get(6));
 
+        EventBus.getDefault().post(new LokChangeEvent(t.addr));
     }
-    public void respEvent(LokEvent event) {
 
+    public void respEvent(LokEvent event) {
+        Train t = trains.get(Integer.valueOf(event.getParsed().get(2)));
+        if (event.getParsed().get(4).toUpperCase().equals("OK"))
+            t.kmphSpeed = Integer.valueOf(event.getParsed().get(5));
+
+        EventBus.getDefault().post(new LokRespEvent(event.getParsed()));
     }
 
     public void totalEvent(LokEvent event) {

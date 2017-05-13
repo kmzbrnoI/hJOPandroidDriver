@@ -41,6 +41,7 @@ import cz.mendelu.xmarik.train_manager.R;
 import cz.mendelu.xmarik.train_manager.events.LokAddEvent;
 import cz.mendelu.xmarik.train_manager.events.LokChangeEvent;
 import cz.mendelu.xmarik.train_manager.events.LokRemoveEvent;
+import cz.mendelu.xmarik.train_manager.events.LokRespEvent;
 import cz.mendelu.xmarik.train_manager.events.ServerReloadEvent;
 import cz.mendelu.xmarik.train_manager.models.Server;
 import cz.mendelu.xmarik.train_manager.ServerList;
@@ -92,7 +93,7 @@ public class TrainHandler extends NavigationBase {
         b_idle = (Button) findViewById(R.id.startButton1);
         b_stop = (Button) findViewById(R.id.stopButton1);
         chb_group = (CheckBox) findViewById(R.id.goupManaged1);
-        ib_status = (ImageButton) findViewById(R.id.imageButton1);
+        ib_status = (ImageButton) findViewById(R.id.ib_status);
         chb_functions = (ListView) findViewById(R.id.checkBoxView1);
         tv_kmhSpeed = (TextView) findViewById(R.id.kmh1);
         chb_total = (CheckBox) findViewById(R.id.totalManaged);
@@ -287,6 +288,8 @@ public class TrainHandler extends NavigationBase {
                     R.layout.trainfunctioninfo, new ArrayList<TrainFunction>());
             chb_functions.setAdapter(dataAdapter);
 
+            ib_status.setImageResource(R.drawable.ic_circle_gray);
+
         } else {
             tv_name.setText(String.valueOf(train.addr) + " : " + train.name);
             sb_speed.setProgress(train.stepsSpeed);
@@ -308,6 +311,8 @@ public class TrainHandler extends NavigationBase {
             CheckBoxAdapter dataAdapter = new CheckBoxAdapter(context,
                     R.layout.trainfunctioninfo, new ArrayList<>(Arrays.asList(train.function)));
             chb_functions.setAdapter(dataAdapter);
+
+            ib_status.setImageResource(R.drawable.ic_circle_green);
         }
     }
 
@@ -531,6 +536,18 @@ public class TrainHandler extends NavigationBase {
         this.fillHVs();
     }
 
+    @Subscribe
+    public void onEvent(LokRespEvent event) {
+        if (train == null) return;
+
+        tv_kmhSpeed.setText(String.format("%s km/h", Integer.toString(train.kmphSpeed)));
+
+        if (event.getParsed().get(4).toUpperCase().equals("OK"))
+            ib_status.setImageResource(R.drawable.ic_circle_green);
+        else
+            ib_status.setImageResource(R.drawable.ic_circle_red);
+    }
+
     private void setEnabled(boolean enabled) {
         s_direction.setEnabled(enabled);
         sb_speed.setEnabled(enabled);
@@ -539,6 +556,8 @@ public class TrainHandler extends NavigationBase {
         chb_group.setEnabled(enabled);
         chb_functions.setEnabled(enabled);
     }
+
+
 
     /*public void stopTrains() {
 
