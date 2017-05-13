@@ -54,7 +54,9 @@ public class Train {
     }*/
 
     /** Constructs train from server string.
-     * @param data in format: nazev|majitel|oznaceni|poznamka|adresa|trida|souprava|stanovisteA|funkce
+     * @param data in format: název|majitel|označení|poznámka|DCC adresa|třída|číslo soupravy|
+            orientace stanovište A|funkce|rychlost ve stupních|rychlost km/h|směr|
+            id oblasti řízení|cv_take|cv_release|func_vyznamy
      */
     public Train(String data) {
         updateFromServerString(data);
@@ -62,6 +64,7 @@ public class Train {
 
     public void updateFromServerString(String data) {
         ArrayList<String> parsed = ParseHelper.parse(data, "|", "");
+        ArrayList<String> functionStrs = ParseHelper.parse(parsed.get(15), ";", "");
 
         name = parsed.get(0);
         owner = parsed.get(1);
@@ -70,9 +73,16 @@ public class Train {
         addr = Integer.parseInt(parsed.get(4));
         kind = parsed.get(5);
 
+        stepsSpeed = Integer.parseInt(parsed.get(9));
+        kmphSpeed = Integer.parseInt(parsed.get(10));
+        direction = parsed.get(11).equals("1");
+
         function = new TrainFunction[parsed.get(8).length()];
-        for (int i = 0; i < function.length; i++)
-            this.function[i] = new TrainFunction(i, "F" + String.valueOf(i), parsed.get(8).charAt(i) == '1');
+        for (int i = 0; i < function.length; i++) {
+            String desc = "";
+            if (i < functionStrs.size()) desc = functionStrs.get(i);
+            this.function[i] = new TrainFunction(i, desc, parsed.get(8).charAt(i) == '1');
+        }
     }
 
     /**

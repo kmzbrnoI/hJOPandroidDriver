@@ -19,7 +19,7 @@ public class ServerList {
             "F12", "F13", "F14", "F15",
             "F16", "F17", "F18", "F19",
             "F20", "F21", "F22", "F23",
-            "F24", "F25", "F26", "F27",};
+            "F24", "F25", "F26", "F27", "F28"};
     private static ServerList instance;
     private ArrayList<Server> servers;
     private ArrayList<Server> storedServers;
