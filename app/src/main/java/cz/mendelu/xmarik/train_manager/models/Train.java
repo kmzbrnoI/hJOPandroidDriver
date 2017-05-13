@@ -237,13 +237,11 @@ public class Train {
         this.direction = !this.direction;
         String tmp = direction ? "0" : "1";
         return base + ";D;" + tmp;
-    }
-
-    public String Release() {
-        String text = null;
-        text = base + "RELEASE";
-        return text;
     }*/
+
+    public void release() {
+        TCPClientApplication.getInstance().send("-;LOK;" + String.valueOf(this.addr) + ";RELEASE");
+    }
 
     /**
      * - nastaveni rychlosti lokomotivy

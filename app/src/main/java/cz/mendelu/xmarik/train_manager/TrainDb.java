@@ -66,12 +66,12 @@ public class TrainDb {
             }
 
         } else if (event.getParsed().get(4).toUpperCase().equals("RELEASE")) {
-            if (!trains.containsValue(addr)) return;
+            if (!trains.containsKey(addr)) return;
             trains.remove(addr);
             EventBus.getDefault().post(new LokRemoveEvent(addr));
 
         } else if (event.getParsed().get(4).toUpperCase().equals("STOLEN")) {
-            if (!trains.containsValue(addr)) return;
+            if (!trains.containsKey(addr)) return;
             trains.get(addr).stolen = true;
             EventBus.getDefault().post(new LokChangeEvent(addr));
         }

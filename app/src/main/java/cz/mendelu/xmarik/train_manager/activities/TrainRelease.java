@@ -2,7 +2,6 @@ package cz.mendelu.xmarik.train_manager.activities;
 
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.view.GravityCompat;
@@ -20,30 +19,23 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
 
 import cz.mendelu.xmarik.train_manager.R;
-import cz.mendelu.xmarik.train_manager.models.Server;
-import cz.mendelu.xmarik.train_manager.ServerList;
-import cz.mendelu.xmarik.train_manager.TCPClientApplication;
+import cz.mendelu.xmarik.train_manager.TrainDb;
+import cz.mendelu.xmarik.train_manager.events.LokAddEvent;
+import cz.mendelu.xmarik.train_manager.events.LokChangeEvent;
+import cz.mendelu.xmarik.train_manager.events.LokRemoveEvent;
 import cz.mendelu.xmarik.train_manager.models.Train;
-import cz.mendelu.xmarik.train_manager.events.RequestEvent;
 
 public class TrainRelease extends NavigationBase {
-
-    Server active;
-    int port;
-    String ipAdr;
-    String serverResponse = "-;LOK;G:PLEASE-RESP;";
     Context context;
-    ArrayList<String> array;
-    ArrayAdapter<String> lAdapter;
-    Button sendButton;
+    ArrayList<String> train_strings;
+    ArrayList<Train> trains;
+    ArrayAdapter<String> hvs_adapter;
     Integer focused;
-    private ListView trains;
-    private ListView ackTrains;
-    private List<String> lokos;
+
+    Button b_send;
+    ListView lv_trains;
     AlertDialog.Builder connectionDialog;
     View lastSelected;
 
@@ -57,30 +49,20 @@ public class TrainRelease extends NavigationBase {
 
         connectionDialog = new AlertDialog.Builder(this);
 
-        lokos = new LinkedList<>();
         context = this;
-        trains = (ListView) findViewById(R.id.acquiredTrains);
-        sendButton = (Button) findViewById(R.id.trainBoxButton);
+        lv_trains = (ListView) findViewById(R.id.acquiredTrains);
+        b_send = (Button) findViewById(R.id.trainBoxButton);
         focused = -1;
-        active = ServerList.getInstance().getActiveServer();
-        EventBus.getDefault().register(this);
-        if (active != null) {
-            port = active.port;
-            ipAdr = active.host;
-            array = active.getAuthorizedTrainsString();
-        } else {
-            array = new ArrayList<>();
-            Toast.makeText(getApplicationContext(),
-                    "nebyl vybrán server", Toast.LENGTH_LONG)
-                    .show();
-            sendButton.setEnabled(false);
-            trains.setEnabled(false);
-            ackTrains.setEnabled(false);
-        }
-        lAdapter = new ArrayAdapter<>(this,
-                android.R.layout.simple_list_item_1, android.R.id.text1, array);
-        trains.setAdapter(lAdapter);
-        trains.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+        trains = new ArrayList<Train>();
+        train_strings = new ArrayList<String>();
+        hvs_adapter = new ArrayAdapter<>(this,
+                android.R.layout.simple_list_item_1, android.R.id.text1, train_strings);
+        lv_trains.setAdapter(hvs_adapter);
+
+        updateHVList();
+
+        lv_trains.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override
             public void onItemClick(AdapterView<?> parent, View view,
@@ -95,75 +77,63 @@ public class TrainRelease extends NavigationBase {
             }
 
         });
+
+        EventBus.getDefault().register(this);
     }
 
-    private void sendNext(String message) {
-        //sends the message to the server
-        if (TCPClientApplication.getInstance() != null) {
-            TCPClientApplication.getInstance().send(message);
-        }
-    }
-
-    /*@Subscribe
-    public void onEvent(TrainReloadEvent event) {
-        // your implementation
-        reloadEventHelper();
-        if (this.sendButton.getText().equals("zrusit")) this.sendButton.setText("@string/uvolnit");
-        Toast.makeText(getApplicationContext(),
-                "Zářízení autorizováno", Toast.LENGTH_LONG)
-                .show();
-        //TODO podminka s automatickym prechodem
-        EventBus.getDefault().unregister(this);
-        Intent intent = new Intent(this, TrainHandler.class);
-        startActivity(intent);
-    }*/
-
-    /*@Subscribe
-    public void onEvent(RequestEvent event) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage(event.getMessage())
-                .setCancelable(false)
-                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        dialog.dismiss();
-                    }
-                });
-        AlertDialog alert = builder.create();
-        alert.show();
-        this.sendButton.setText(R.string.trl_release);
-    }*/
-
-    /*@Subscribe
-    public void onEvent(FreeEvent event) {
+    @Subscribe
+    public void onEvent(LokRemoveEvent event) {
         Toast.makeText(getApplicationContext(),
                 R.string.trl_loko_released, Toast.LENGTH_LONG)
                 .show();
-        reloadEventHelper();
-        this.sendButton.setText(R.string.trl_release);
-    }*/
-
-    public void release(View v) {
-        if ( focused != null && trains.getItemAtPosition(focused) != null ) {
-            final String itemValue = (String) trains.getItemAtPosition(focused);
-            final Server s = ServerList.getInstance().getActiveServer();
-            Train train = s.getTrain(itemValue.substring(0,itemValue.indexOf("\n")));
-            String message = "-;LOK;"+train.name+";RELEASE";
-            sendNext(message);
-            ServerList.getInstance()
-                    .getActiveServer().removeTrain(train);
-
-            reloadEventHelper();
-        }
+        updateHVList();
     }
 
-    private void reloadEventHelper() {
-        final ArrayList<String> acquired;
-        this.focused = null;
-        acquired = active.getAuthorizedTrainsString();
+    @Subscribe
+    public void onEvent(LokChangeEvent event) {
+        updateHVList();
+    }
 
-        lAdapter = new ArrayAdapter<>(this,
-                android.R.layout.simple_list_item_1, android.R.id.text1, acquired);
-        trains.setAdapter(lAdapter);
+    @Subscribe
+    public void onEvent(LokAddEvent event) {
+        updateHVList();
+    }
+
+    public void b_releaseClick(View v) {
+        if (focused == -1) {
+            new AlertDialog.Builder(this)
+                    .setMessage("You must select a train!") // TODO: strings
+                    .setCancelable(false)
+                    .setPositiveButton("ok", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {}
+                    }).show();
+            return;
+        }
+
+        trains.get(focused).release();
+    }
+
+    private void updateHVList() {
+        focused = -1;
+        if (lastSelected != null) {
+            lastSelected.setBackgroundColor(Color.rgb(238, 238, 238));
+            lastSelected = null;
+        }
+
+        trains.clear();
+        train_strings.clear();
+
+        lv_trains.setEnabled(TrainDb.instance.trains.size() > 0);
+        if (TrainDb.instance.trains.size() == 0)
+            train_strings.add("No trains!"); // TODO: string here
+
+        for(Train t : TrainDb.instance.trains.values()) {
+            train_strings.add(t.name + " (" + t.label + ") : " + String.valueOf(t.addr));
+            trains.add(t);
+        }
+
+        hvs_adapter.notifyDataSetChanged();
     }
 
     @Override
@@ -187,12 +157,7 @@ public class TrainRelease extends NavigationBase {
     public void onResume() {
         super.onResume();
         if(!EventBus.getDefault().isRegistered(this))EventBus.getDefault().register(this);
-        if(lAdapter != null) {
-            array = active.getAuthorizedTrainsString();
-            lAdapter = new ArrayAdapter<>(this,
-                    android.R.layout.simple_list_item_1, android.R.id.text1, array);
-            trains.setAdapter(lAdapter);
-        }
+        updateHVList();
     }
 
     @Override

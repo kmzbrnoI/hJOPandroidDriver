@@ -49,6 +49,8 @@ import cz.mendelu.xmarik.train_manager.TCPClientApplication;
 import cz.mendelu.xmarik.train_manager.models.Train;
 import cz.mendelu.xmarik.train_manager.events.CriticalErrorEvent;
 
+// TODO: timer on speed change
+
 public class TrainHandler extends NavigationBase {
     private List<Train> managed;
     private List<Train> multitrack;
@@ -267,52 +269,55 @@ public class TrainHandler extends NavigationBase {
     }
 
     private void updateGUTtoHV() {
-        chb_group.setEnabled(train != null);
-        chb_total.setEnabled(train != null);
+        this.updating = true;
+        try {
+            chb_group.setEnabled(train != null);
+            chb_total.setEnabled(train != null);
 
-        if (train == null) {
-            tv_name.setText("");
-            sb_speed.setProgress(0);
-            s_direction.setChecked(false);
-            s_direction.setText("-");
+            if (train == null) {
+                tv_name.setText("");
+                sb_speed.setProgress(0);
+                s_direction.setChecked(false);
+                s_direction.setText("-");
 
-            chb_group.setChecked(false);
-            tv_kmhSpeed.setText("- km/h");
-            chb_total.setChecked(false);
-            //syncStatus(train, status); ????? TODO
+                chb_group.setChecked(false);
+                tv_kmhSpeed.setText("- km/h");
+                chb_total.setChecked(false);
 
-            this.setEnabled(false);
+                this.setEnabled(false);
 
-            //set custom adapter with check boxes to list view
-            CheckBoxAdapter dataAdapter = new CheckBoxAdapter(context,
-                    R.layout.trainfunctioninfo, new ArrayList<TrainFunction>());
-            chb_functions.setAdapter(dataAdapter);
+                //set custom adapter with check boxes to list view
+                CheckBoxAdapter dataAdapter = new CheckBoxAdapter(context,
+                        R.layout.trainfunctioninfo, new ArrayList<TrainFunction>());
+                chb_functions.setAdapter(dataAdapter);
 
-            ib_status.setImageResource(R.drawable.ic_circle_gray);
+                ib_status.setImageResource(R.drawable.ic_circle_gray);
 
-        } else {
-            tv_name.setText(String.valueOf(train.addr) + " : " + train.name);
-            sb_speed.setProgress(train.stepsSpeed);
-            s_direction.setChecked(!train.direction);
-            if (!train.direction)
-                s_direction.setText(R.string.ta_direction_forward);
-            else
-                s_direction.setText(R.string.ta_direction_backwards);
+            } else {
+                tv_name.setText(String.valueOf(train.addr) + " : " + train.name);
+                sb_speed.setProgress(train.stepsSpeed);
+                s_direction.setChecked(!train.direction);
+                if (!train.direction)
+                    s_direction.setText(R.string.ta_direction_forward);
+                else
+                    s_direction.setText(R.string.ta_direction_backwards);
 
-            chb_group.setChecked(multitrack.contains(train));
-            tv_kmhSpeed.setText(String.format("%s km/h", Integer.toString(train.kmphSpeed)));
-            chb_total.setChecked(train.total);
+                chb_group.setChecked(multitrack.contains(train));
+                tv_kmhSpeed.setText(String.format("%s km/h", Integer.toString(train.kmphSpeed)));
+                chb_total.setChecked(train.total);
 
-            //syncStatus(train, status); ????? TODO
+                this.setEnabled(train.total);
 
-            this.setEnabled(train.total);
+                //set custom adapter with check boxes to list view
+                CheckBoxAdapter dataAdapter = new CheckBoxAdapter(context,
+                        R.layout.trainfunctioninfo, new ArrayList<>(Arrays.asList(train.function)));
+                chb_functions.setAdapter(dataAdapter);
 
-            //set custom adapter with check boxes to list view
-            CheckBoxAdapter dataAdapter = new CheckBoxAdapter(context,
-                    R.layout.trainfunctioninfo, new ArrayList<>(Arrays.asList(train.function)));
-            chb_functions.setAdapter(dataAdapter);
-
-            ib_status.setImageResource(R.drawable.ic_circle_green);
+                ib_status.setImageResource(R.drawable.ic_circle_green);
+            }
+        }
+        finally {
+            this.updating = false;
         }
     }
 
