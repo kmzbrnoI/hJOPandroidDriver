@@ -140,14 +140,14 @@ public class TrainHandler extends NavigationBase {
         s_direction.setOnClickListener(new CompoundButton.OnClickListener() {
             @Override
             public void onClick(View view) {
-                onDirectionChange(s_direction.isChecked());
+                onDirectionChange(!s_direction.isChecked());
             }
         });
 
         s_direction.setOnGenericMotionListener(new CompoundButton.OnGenericMotionListener() {
             @Override
             public boolean onGenericMotion(View view, MotionEvent motionEvent) {
-                onDirectionChange(s_direction.isChecked());
+                onDirectionChange(!s_direction.isChecked());
                 return false;
             }
 
@@ -251,12 +251,12 @@ public class TrainHandler extends NavigationBase {
     private void onDirectionChange(boolean newDir) {
         if (updating) return;
 
-        if (newDir)
+        if (!newDir)
             s_direction.setText(R.string.ta_direction_forward);
         else
             s_direction.setText(R.string.ta_direction_backwards);
 
-        train.setDirection(s_direction.isChecked());
+        train.setDirection(newDir);
 
         if (managed.contains(train)) {
             for (Train s : managed)
@@ -293,8 +293,8 @@ public class TrainHandler extends NavigationBase {
         } else {
             tv_name.setText(String.valueOf(train.addr) + " : " + train.name);
             sb_speed.setProgress(train.stepsSpeed);
-            s_direction.setChecked(train.direction);
-            if (s_direction.isChecked())
+            s_direction.setChecked(!train.direction);
+            if (!train.direction)
                 s_direction.setText(R.string.ta_direction_forward);
             else
                 s_direction.setText(R.string.ta_direction_backwards);

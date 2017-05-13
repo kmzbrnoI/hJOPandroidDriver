@@ -81,7 +81,7 @@ public class TrainDb {
         Train t = trains.get(Integer.valueOf(event.getParsed().get(2)));
         String[] f = event.getParsed().get(4).split("-");
         if (f.length == 1) {
-            t.function[Integer.valueOf(f[0])].checked = (event.getParsed().get(5) == "1");
+            t.function[Integer.valueOf(f[0])].checked = (event.getParsed().get(5).equals("1"));
         } else if (f.length == 2) {
             int from = Integer.valueOf(f[0]);
             int to = Integer.valueOf(f[1]);
@@ -97,7 +97,7 @@ public class TrainDb {
         Train t = trains.get(Integer.valueOf(event.getParsed().get(2)));
         t.kmphSpeed = Integer.valueOf(event.getParsed().get(4));
         t.stepsSpeed = Integer.valueOf(event.getParsed().get(5));
-        t.direction = Boolean.valueOf(event.getParsed().get(6));
+        t.direction = (event.getParsed().get(6).equals("1"));
 
         EventBus.getDefault().post(new LokChangeEvent(t.addr));
     }
