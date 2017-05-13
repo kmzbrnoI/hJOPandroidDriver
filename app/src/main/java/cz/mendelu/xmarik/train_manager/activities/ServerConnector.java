@@ -135,15 +135,6 @@ public class ServerConnector extends Activity {
         mAdapter.notifyDataSetChanged(); // needed ?
     }
 
-    /*@Subscribe
-    public void onEvent(ServerReloadEvent event) {
-        Log.v("", "TCP navázáno a aplikace to ví");
-        sendNext();
-        synchronized(monitor){
-            monitor.notify();
-        }
-    }*/
-
     public void changeUserData(View view) {
         final Dialog dialog = new Dialog(this);
         dialog.setContentView(R.layout.dialog_user);
@@ -209,14 +200,6 @@ public class ServerConnector extends Activity {
         send("-;LOK;G;AUTH;{" + TCPClientApplication.getInstance().server.username + "};" +
             TCPClientApplication.getInstance().server.password);
 
-/*       if (event.getMessage().startsWith("-;LOK;G;AUTH;ok;")) {
-            ok = true;
-            arrayList.add(getString(R.string.sc_auth_ok));
-            sendNext();
-        } else if (event.getMessage().startsWith("-;LOK;G;AUTH;")) {
-            ok = false;
-            raiseErrorState(getString(R.string.sc_auth_err));
-        } else raiseErrorState("handshake failed"); */
     }
 
     @Subscribe
@@ -235,16 +218,7 @@ public class ServerConnector extends Activity {
     @Subscribe
     public void onEvent(TCPDisconnectEvent event) {
         // TODO
-        /*if (event.getMessage().equals("error - connection refused")) {
-            raiseErrorState(event.getMessage());
-        } else {
-            Log.e("connector", "error nastal " + event.toString());
-            String message = event.getMessage()
-                .substring(event.getMessage().lastIndexOf(";"));
-        raiseErrorState(message);
-        }*/
     }
-
 
     private void raiseErrorState(final String error) {
         runOnUiThread(new Runnable() {

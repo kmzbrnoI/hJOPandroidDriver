@@ -137,21 +137,6 @@ public class TrainRequest extends NavigationBase {
         startActivity(new Intent(this, TrainHandler.class));
     }
 
-    /*@Subscribe
-    public void onEvent(TrainReloadEvent event) {
-        // your implementation
-        reloadEventHelper();
-        if (this.sendButton.getText().equals(R.string.cancel)) this.sendButton.setText(R.string.tr_send_request);
-        Toast.makeText(getApplicationContext(),
-                R.string.gl_new_loko, Toast.LENGTH_LONG)
-                .show();
-        //TODO podminka s automatickym prechodem
-        EventBus.getDefault().unregister(this);
-        dialog.dismiss();
-        Intent intent = new Intent(this, TrainHandler.class);
-        startActivity(intent);
-    }*/
-
     @Subscribe
     public void onEvent(RequestEvent event) {
         if (event.getParsed().get(4).toUpperCase().equals("OK")) {
@@ -191,15 +176,6 @@ public class TrainRequest extends NavigationBase {
                 }).show();
     }
 
-   /* @Subscribe
-    public void onEvent(FreeEvent event) {
-        Toast.makeText(getApplicationContext(),
-                "loko uvolneno", Toast.LENGTH_LONG)
-                .show();
-        reloadEventHelper();
-        this.sendButton.setText(R.string.poslatZ);
-    }*/
-
     public void b_requestClick(View v) {
         if (areas_lv.getItemAtPosition(focused) == null) {
             new AlertDialog.Builder(this)
@@ -224,26 +200,6 @@ public class TrainRequest extends NavigationBase {
     private void cancelRequest() {
         TCPClientApplication.getInstance().send("-;LOK;G;CANCEL");
         mProgressBar.setVisibility(View.GONE);
-    }
-
-
-    /**
-     * when there is new loko in server answer, this method will be called
-     * purpose is reload all list adapter and make progress bar invisible
-     */
-    private void reloadEventHelper() {
-        /*mProgressBar.setVisibility(View.GONE);
-        final ArrayList<String> array;
-        final ArrayList<String> acquired;
-        array = active.getUnAuthorizedAreas();
-        acquired = active.getAuthorizedTrainsString();
-        final ArrayAdapter<String> lAdapter = new ArrayAdapter<>(this,
-                android.R.layout.simple_list_item_1, android.R.id.text1, array);
-
-        final ArrayAdapter<String> ackAdapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_list_item_1, android.R.id.text1, acquired);
-
-        trains.setAdapter(lAdapter);*/
     }
 
     @Override

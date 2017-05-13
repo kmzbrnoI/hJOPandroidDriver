@@ -87,8 +87,6 @@ public class TrainHandler extends NavigationBase {
         tv_kmhSpeed = (TextView) findViewById(R.id.kmh1);
         chb_total = (CheckBox) findViewById(R.id.totalManaged);
 
-        EventBus.getDefault().register(this);
-
         // fill spinner
         s_spinner = (Spinner)findViewById(R.id.spinner1);
         managed_str = new ArrayList<String>();
@@ -284,15 +282,6 @@ public class TrainHandler extends NavigationBase {
                         R.layout.lok_function, new ArrayList<>(Arrays.asList(train.function)));
                 lv_functions.setAdapter(dataAdapter);
 
-
-                /*String[] foody = {"pizza", "burger", "chocolate", "ice-cream", "banana", "apple"};
-                ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this,
-                        R.layout.lok_function, foody);
-                lv_functions.setAdapter(dataAdapter);
-                lv_functions.setItemsCanFocus(false);
-                lv_functions.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);*/
-
-
                 ib_status.setImageResource(R.drawable.ic_circle_green);
             }
         }
@@ -305,37 +294,6 @@ public class TrainHandler extends NavigationBase {
         train.setFunc(index, newState);
     }
 
-    /*private void setDirectionText(int direction) {
-        if (!update)
-            if (direction == 1) {
-                if (direction1.isChecked()) {
-                    direction1.setText(R.string.ta_direction_forward);
-                } else direction1.setText(R.string.ta_direction_backwards);
-            } else {
-                if (direction2.isChecked()) {
-                    direction2.setText(R.string.ta_direction_forward);
-                } else direction2.setText(R.string.ta_direction_backwards);
-            }
-    }
-
-    public void setSpeed(int spd, Train train) {
-
-        if (train != null && !update) {
-            if (managed.contains(train)) {
-                for (Train s : managed) {
-                    s.setSpeed(spd);
-                    String text = s.GetSpeedSTxt();
-                    sendNext(text);
-                }
-            } else {
-                if (train.GetSpeedSTxt() != null) {
-                    String text = train.GetSpeedSTxt();
-                    sendNext(text);
-                }
-            }
-        }
-    }*/
-
     public void b_stopClick(View view) {
         sb_speed.setProgress(0);
         if (multitrack.contains(train)) {
@@ -345,20 +303,6 @@ public class TrainHandler extends NavigationBase {
             train.emergencyStop();
         }
     }
-
-    /*public void stop2(View view) {
-        speed2.setProgress(0);
-        if (train2 != null)
-            if (managed.contains(train2)) {
-                for (Train s : managed) {
-                    String text = s.emergencyStop();
-                    sendNext(text);
-                }
-            } else {
-                String text = train2.emergencyStop();
-                sendNext(text);
-            }
-    }*/
 
     public void b_idleClick(View view) {
         sb_speed.setProgress(0);
@@ -370,144 +314,9 @@ public class TrainHandler extends NavigationBase {
         }
     }
 
-    /*public void idle2(View view) {
-        speed2.setProgress(0);
-        setSpeed(0, train2);
+    public void ib_StatusClick() {
+        // TODO?
     }
-
-    public void changeManaged(String s) {
-        Server tmp = ServerList.getInstance().getActiveServer();
-        Train t = tmp.getTrain(s);
-        String text = null;
-
-        if (managed.contains(t)) {
-            this.managed.remove(t);
-        } else this.managed.add(t);
-
-        if (t.isControled()) {
-            text = t.setTotalManged(false);
-        } else {
-            text = t.setTotalManged(true);
-        }
-        sendNext(text);
-    }
-
-    public void setStatus(String trainAdr, boolean status, String err) {
-        Server tmp = ServerList.getInstance().getActiveServer();
-        Train t = tmp.getTrain(trainAdr);
-        t.setErr(err);
-        t.statusOk = status;
-
-        if (!active1.equals("") && active1.equals(trainAdr))
-            if (status) {
-                status1.setImageResource(R.drawable.ic_circle_green);
-            } else status1.setImageResource(R.drawable.ic_circle_red);
-
-        if (!active2.equals("") && active2.equals(trainAdr))
-            if (status) {
-                status2.setImageResource(R.drawable.ic_circle_green);
-            } else status2.setImageResource(R.drawable.ic_circle_red);
-    }
-
-    public void dataChangeNotify() {
-        update = true;
-        if (train1 != null) {
-            train1 = activeServer.getTrain(train1.getName());
-            name1.setText(train1.getDisplayLokoName());
-            if (train1.getSpeed() != speed1.getProgress()) speed1.setProgress(train1.getSpeed());
-            direction1.setChecked(train1.isDirection());
-            group1.setChecked(managed.contains(train1));
-            kmhSpeed1.setText(String.format("%s km/h", Integer.toString(train1.getKmhSpeed())));
-            totalManaged.setChecked(train1.getTotalManaged());
-
-            setDirectionText(1);
-            syncStatus(train1, status1);
-            clickableManager(true, train1.getTotalManaged());
-        }
-
-        if (landscape) {
-            if (train2 != null) {
-                train2 = activeServer.getTrain(train2.getName());
-                name2.setText(train2.getDisplayLokoName());
-                speed2.setProgress(train2.getSpeed());
-                direction2.setChecked(train2.isDirection());
-                group2.setChecked(managed.contains(train2));
-                kmhSpeed2.setText(String.format("%s km/h", Integer.toString(train2.getKmhSpeed())));
-                totalManaged2.setChecked(train2.getTotalManaged());
-
-                setDirectionText(2);
-                syncStatus(train2, status2);
-            }
-        }
-        update = false;
-    }
-
-    private void syncStatus(Train t, ImageButton s) {
-        if (t.getErr() != null) {
-            if (t.getErr().equals("stolen")) {
-                s.setImageResource(R.drawable.ic_circle_yellow);
-            } else s.setImageResource(R.drawable.ic_circle_red);
-        } else s.setImageResource(R.drawable.ic_circle_green);
-    }*/
-
-
-    public void ib_showStatsClick(View view) {
-
-        /*if (train1.getErr() != null) {
-            if (train1.getErr().equals("stolen")) {
-                sendNext(train1.getBase() + ";PLEASE");
-            } else {
-                Toast.makeText(getApplicationContext(),
-                        train1.getErr(),
-                        Toast.LENGTH_LONG).show();
-            }
-        } else {
-            message = train1.getUserTrainInfo();
-
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setMessage(message)
-                    .setCancelable(false)
-                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            dialog.dismiss();
-                        }
-                    });
-            AlertDialog alert = builder.create();
-            alert.show();
-        }*/
-    }
-
-    /*public void showStats2(View view) {
-
-        if (train2.getErr() != null) {
-            if (train2.getErr().equals("stolen")) {
-                sendNext(train2.getBase() + ";PLEASE");
-            } else {
-                Toast.makeText(getApplicationContext(),
-                        train1.getErr(),
-                        Toast.LENGTH_LONG).show();
-            }
-        } else {
-            message = train2.getUserTrainInfo();
-
-            Toast.makeText(getApplicationContext(),
-                    message,
-                    Toast.LENGTH_LONG).show();
-        }
-    }
-
-    private void sendNext(String message) {
-
-        if (!update) {
-            if (TCPClientApplication.getInstance() != null) {
-                TCPClientApplication.getInstance().send(message);
-                Log.v("data", "C: Odeslana zpráva: " + message + "");
-            } else {
-                Log.v("data", "C: Neodeslána zpráva: " + message + " Tcp není navázáno");
-                //TODO error
-            }
-        }
-    }*/
 
     @Subscribe
     public void onEvent(LokChangeEvent event) {
@@ -545,46 +354,19 @@ public class TrainHandler extends NavigationBase {
         chb_group.setEnabled(enabled);
     }
 
-
-
-    /*public void stopTrains() {
-
-        if (train1 != null) {
-            setSpeed(0, train1);
-        }
-        if (train2 != null) {
-            setSpeed(0, train2);
-        }
-
-    }*/
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-    }
-
-    @Override
-    protected void onStop() {
-        // set trains speed to 0
-        //stopTrains();
-        super.onStop();
-    }
-
     @Override
     protected void onPause() {
-        // set trains speed to 0
-        //stopTrains();
+        b_idleClick((Button)findViewById(R.id.startButton1));
         super.onPause();
     }
 
     @Override
     public void onBackPressed() {
-        // set trains speed to 0
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            //stopTrains();
+            b_idleClick((Button)findViewById(R.id.startButton1));
             super.onBackPressed();
         }
     }
@@ -593,12 +375,12 @@ public class TrainHandler extends NavigationBase {
     public void onResume() {
         super.onResume();
         this.fillHVs();
+        if(!EventBus.getDefault().isRegistered(this)) EventBus.getDefault().register(this);
     }
 
     @Override
     public void onDestroy() {
-        // set trains speed to 0
-        //stopTrains();
+        if(EventBus.getDefault().isRegistered(this)) EventBus.getDefault().unregister(this);
         super.onDestroy();
     }
 

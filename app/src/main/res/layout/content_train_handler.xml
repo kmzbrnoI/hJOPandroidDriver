@@ -71,7 +71,7 @@
                 android:layout_gravity="right"
                 android:layout_weight="0.57"
                 android:src="@drawable/ic_circle_green"
-                android:onClick="ib_showStatsClick"
+                android:onClick="ib_StatusClick"
                 android:scaleType="fitCenter" />
 
             <TextView
