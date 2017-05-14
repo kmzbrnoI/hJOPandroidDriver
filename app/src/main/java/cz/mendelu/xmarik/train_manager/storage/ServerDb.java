@@ -59,6 +59,17 @@ public class ServerDb {
     public void addFoundServer(Server server) {
         this.found.add(server);
         EventBus.getDefault().post(new FoundServersReloadEvent());
+
+        // transfer password from stored servers
+        if (server.username.isEmpty() && server.password.isEmpty()) {
+            for (Server s : stored) {
+                if (server.host.equals(s.host) && server.port == s.port) {
+                    server.username = s.username;
+                    server.password = s.password;
+                    break;
+                }
+            }
+        }
     }
 
     public void removeStoredServer(int position) {
