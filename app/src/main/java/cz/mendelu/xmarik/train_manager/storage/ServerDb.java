@@ -3,13 +3,9 @@ package cz.mendelu.xmarik.train_manager.storage;
 import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
 
 import cz.mendelu.xmarik.train_manager.events.FoundServersReloadEvent;
 import cz.mendelu.xmarik.train_manager.events.StoredServersReloadEvent;
-import cz.mendelu.xmarik.train_manager.models.CustomServerComparator;
 import cz.mendelu.xmarik.train_manager.models.Server;
 
 /**
@@ -77,6 +73,15 @@ public class ServerDb {
             if (s.host.equals(host) && s.port == port)
                 return true;
         return false;
+    }
+
+    public void transferLoginToSaved(Server found) {
+        for(Server s : stored) {
+            if (s != found && s.host.equals(found.host) && s.port == found.port) {
+                s.username = found.username;
+                s.password = found.password;
+            }
+        }
     }
 
 }

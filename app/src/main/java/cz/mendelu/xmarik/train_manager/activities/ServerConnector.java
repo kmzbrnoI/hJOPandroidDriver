@@ -113,8 +113,8 @@ public class ServerConnector extends Activity {
                 TCPClientApplication.getInstance().server.username = mName.getText().toString();
                 TCPClientApplication.getInstance().server.password = HashHelper.hashPasswd(mPasswd.getText().toString());
 
-                // TODO: when transfer found server to stored server?
-                // TODO: save login to persistent servers
+                if (savebox.isChecked())
+                    ServerDb.instance.transferLoginToSaved(TCPClientApplication.getInstance().server);
 
                 TCPClientApplication.getInstance().send("-;LOK;G;AUTH;{" +
                         TCPClientApplication.getInstance().server.username + "};" +
