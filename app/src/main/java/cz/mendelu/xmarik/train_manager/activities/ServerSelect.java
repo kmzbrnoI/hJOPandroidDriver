@@ -329,7 +329,7 @@ public class ServerSelect extends NavigationBase {
     }
 
     @Subscribe
-    public void tcpErrorEvent(TCPDisconnectEvent event) {
+    public void onEvent(TCPDisconnectEvent event) {
 
     }
 
