@@ -127,9 +127,9 @@ public class NavigationBase extends AppCompatActivity
     }
 
     @Override
-    public void onDestroy() {
+    public void onStop() {
         if (EventBus.getDefault().isRegistered(this)) EventBus.getDefault().unregister(this);
-        super.onDestroy();
+        super.onStop();
     }
 
 }
