@@ -44,14 +44,14 @@
                     android:layout_height="55dp"
                     android:id="@+id/serverButton"
                     android:layout_gravity="center_horizontal"
-                    android:onClick="discoverServer (MainActivity)"
+                    android:onClick="discoverServerClick"
                     android:background="@drawable/ic_refresh_new" />
             </LinearLayout>
 
             <ListView
                 android:layout_width="match_parent"
                 android:layout_height="187dp"
-                android:id="@+id/localServers" />
+                android:id="@+id/foundServers" />
 
         </LinearLayout>
 
@@ -85,7 +85,7 @@
                 <Button
                     android:layout_height="55dp"
                     android:id="@+id/add"
-                    android:onClick="addServer"
+                    android:onClick="addServerClick"
                     android:layout_gravity="center_horizontal"
                     style="@style/Widget.AppCompat.Button.Borderless"
                     android:background="@drawable/ic_add_black_24dp"
@@ -96,7 +96,7 @@
             <ListView
                 android:layout_width="match_parent"
                 android:layout_height="185dp"
-                android:id="@+id/farServers" />
+                android:id="@+id/storedServers" />
 
         </LinearLayout>
     </LinearLayout>

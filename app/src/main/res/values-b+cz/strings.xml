@@ -42,7 +42,7 @@
     <string name="conn_connection_error">Připojení k serveru se nezdařilo.</string>
     <string name="conn_no_server_authorized">Nebyl autorizován žádný server.</string>
     <string name="conn_search_finished">Vyhledávání serverů dokončeno.</string>
-    <string name="conn_server_offline">Server je offline.</string>
+    <string name="conn_server_offline">Server je offline, skutečně se připojit?</string>
 
     <string name="gl_new_loko">Nová lokomotiva</string>
     <string name="gl_all_deleted">Všechny servery byly smazány.</string>

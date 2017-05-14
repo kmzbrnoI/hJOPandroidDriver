@@ -6,13 +6,28 @@
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_gravity="center">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="note here"
+            android:layout_marginBottom="2pt"
+            android:layout_gravity="center_horizontal"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:id="@+id/tv_note" />
+
+        <ImageButton
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/imageButton3" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:text="@string/login_username"
+            android:layout_marginTop="2pt"
             android:layout_gravity="center_horizontal"
             android:textAppearance="?android:attr/textAppearanceLarge" />
 
@@ -41,34 +56,24 @@
             android:layout_gravity="center_horizontal"
             android:textAppearance="?android:attr/textAppearanceLarge" />
 
+        <CheckBox
+            android:text="@string/login_save"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/dialogButtonOK"
+            android:layout_marginStart="11dp"
+            android:layout_marginBottom="11dp"
+            android:id="@+id/dialogSaveData"
+            android:checked="true" />
+
+        <Button
+            android:id="@+id/dialogButtonOK"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text=" Ok "
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true" />
+
     </LinearLayout>
-
-    <Button
-        android:id="@+id/dialogButtonOK"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:text=" Ok "
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true" />
-
-    <CheckBox
-        android:text="@string/login_save"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/dialogButtonOK"
-        android:layout_alignStart="@+id/dialogPasswd"
-        android:layout_marginStart="11dp"
-        android:layout_marginBottom="67dp"
-        android:id="@+id/dialogSaveData"
-        android:checked="true" />
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/errorMessage"
-        android:textSize="30sp"
-        android:layout_marginTop="30dp"
-        android:layout_below="@+id/dialogPasswd"
-        android:layout_alignParentStart="true" />
 
 </RelativeLayout>

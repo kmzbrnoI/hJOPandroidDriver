@@ -20,7 +20,8 @@ import java.util.Collections;
 import java.util.List;
 
 import cz.mendelu.xmarik.train_manager.activities.ServerSelect;
-import cz.mendelu.xmarik.train_manager.events.ServerReloadEvent;
+import cz.mendelu.xmarik.train_manager.events.LokChangeEvent;
+import cz.mendelu.xmarik.train_manager.events.StoredServersReloadEvent;
 import cz.mendelu.xmarik.train_manager.helpers.ParseHelper;
 import cz.mendelu.xmarik.train_manager.models.Server;
 import cz.mendelu.xmarik.train_manager.storage.ServerDb;
@@ -30,38 +31,14 @@ import cz.mendelu.xmarik.train_manager.storage.ServerDb;
  * UDPDiscover discovers hJOPservers in local network.
  */
 public class UDPDiscover extends AsyncTask<String, Void, String> {
+    public static final int DEFAULT_PORT = 5880;
     private static final int TIMEOUT_MS = 500;
-    InetAddress nov = null;
-    String message;
-    int DISCOVERY_PORT;
-    ServerDb reciver;
-    ServerSelect main;
-    private WifiManager mWifi;
 
+    WifiManager mWifi;
+    Server toAdd = null;
 
-    public UDPDiscover(Context context, int port, ServerSelect mainActivity) {
-        mWifi = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
-        String zprava = "hJOP;1.0;regulator;mobileManager;";
-        message = zprava + this.getIPAddress(true) + ";" + "\n";
-        DISCOVERY_PORT = port;
-        reciver = ServerDb.getInstance();
-        main = mainActivity;
-    }
-
-    public void run() {
-
-    }
-
-    /**
-     * Send a broadcast UDP packet containing a request for train server services to
-     * announce themselves.
-     *
-     * @throws IOException
-     */
-    private void sendDiscoveryRequest(DatagramSocket socket) throws IOException {
-        DatagramPacket packet = new DatagramPacket(message.getBytes(), message
-                .length(), getBroadcastAddress(), DISCOVERY_PORT);
-        socket.send(packet);
+    public UDPDiscover(WifiManager mWifi) {
+        this.mWifi = mWifi;
     }
 
     /**
@@ -69,7 +46,7 @@ public class UDPDiscover extends AsyncTask<String, Void, String> {
      * it to 255.255.255.255, it never gets sent. I guess this has something to
      * do with the mobile network not wanting to do broadcast.
      */
-    public InetAddress getBroadcastAddress() throws IOException {
+    InetAddress getBroadcastAddress() throws IOException {
         DhcpInfo dhcp = mWifi.getDhcpInfo();
         if (dhcp == null) {
             //"Could not get dhcp info"
@@ -91,11 +68,10 @@ public class UDPDiscover extends AsyncTask<String, Void, String> {
      * @return list of discovered servers, never null
      * @throws IOException
      */
-    private ArrayList<Server> listenForResponses(DatagramSocket socket)
+    private void listenForResponses(DatagramSocket socket)
             throws IOException {
         long start = System.currentTimeMillis();
         byte[] buf = new byte[1024];
-        ArrayList<Server> servers = new ArrayList<>();
 
         // Loop and try to receive responses until the timeout elapses. We'll
         // get
@@ -109,38 +85,25 @@ public class UDPDiscover extends AsyncTask<String, Void, String> {
                 String s = new String(packet.getData(), 0, packet.getLength());
 
                 Server server = parseServerMessage(s);
-                if (server != null)
-                    servers.add(server);
+                if (server != null && !ServerDb.instance.isFoundServer(server.host, server.port)) {
+                    toAdd = server;
+                    this.publishProgress();
+                }
             }
         } catch (SocketTimeoutException e) {
             Log.e("listening exception", "S: time out '" + e + "'");
         }
-        return servers;
-    }
-
-    public InetAddress zjisti(int port) {
-        String zprava = "hJOP;1.0;panel;;";
-        zprava = zprava + this.getIPAddress(true) + ";";
-
-        return nov;
     }
 
     private Server parseServerMessage(String message) {
         //"hJOP";verze_protokolu;typ_zarizeni;server_nazev;server_ip;server_port;
         //server_status;server_popis
         ArrayList<String> parsed = ParseHelper.parse(message, ";", "");
-        Server server = null;
 
-        if ((parsed.size() > 0) && (parsed.get(0).equals("hJOP"))) {
-            if (parsed.get(2).equals("server")) {
-                server = new Server(parsed.size() > 4 ? parsed.get(7) : "",
-                        parsed.size() > 5 ? parsed.get(4) : "",
-                        parsed.size() > 6 ? Integer.parseInt(parsed.get(5)) : 0,
-                        parsed.size() > 7 ? parsed.get(6).equals("on") : null,
-                        parsed.size() >= 8 ? parsed.get(3) : "", "", "");
-            }
-        }
-        return server;
+        if (parsed.size() >= 8 && parsed.get(0).equals("hJOP") && parsed.get(2).equals("server"))
+            return new Server(message);
+        else
+            return null;
     }
 
     /**
@@ -183,28 +146,32 @@ public class UDPDiscover extends AsyncTask<String, Void, String> {
         try {
             DatagramSocket sock = new DatagramSocket(null);
             sock.setReuseAddress(true);
-            sock.bind(new InetSocketAddress(DISCOVERY_PORT));
+            sock.bind(new InetSocketAddress(DEFAULT_PORT));
+
             DatagramSocket socket = sock;
             socket.setBroadcast(true);
             socket.setSoTimeout(TIMEOUT_MS);
-            sendDiscoveryRequest(socket);
-            servers = listenForResponses(socket);
+
+            String message = "hJOP;1.0;regulator;mobileManager;" + this.getIPAddress(true) + ";\n";
+            DatagramPacket packet = new DatagramPacket(message.getBytes(), message.length(),
+                    getBroadcastAddress(), DEFAULT_PORT);
+            socket.send(packet);
+
+            listenForResponses(socket);
             socket.close();
         } catch (Exception e) {
-            servers = new ArrayList<Server>(); // use an empty one
             Log.e("exception", "S: Received Message: '" + e + "'");
-            //"Could not send discovery request", e);
         }
-        reciver.addServer(servers);
 
         return null;
     }
 
     @Override
-    protected void onPostExecute(String result) {
-        super.onPostExecute(result);
-        EventBus.getDefault().post(new ServerReloadEvent());
+    protected void onProgressUpdate(Void... progress) {
+        if (toAdd != null) {
+            ServerDb.instance.addFoundServer(toAdd);
+            toAdd = null;
+        }
     }
-
 
 }

@@ -33,36 +33,28 @@ import cz.mendelu.xmarik.train_manager.events.TCPDisconnectEvent;
 import cz.mendelu.xmarik.train_manager.events.HandShakeEvent;
 
 public class ServerConnector extends Activity {
-    private static String[] messges = {};//dodelat vsechno retezce co budou treba
-    private static int i = 0;
-    String user = null;
-    String passwd = null;
-    boolean ok;
     private ListView mList;
     private ArrayList<String> arrayList;
     private MyCustomAdapter mAdapter;
-    private Button send;
     private ServerConnector classObject;
-    private Server server;
-    private boolean tcpOK = false;
     private ProgressBar progressBar;
 
     public static final MonitorObject  monitor = new MonitorObject();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_server_connector);
+        super.onCreate(savedInstanceState);
+
+        arrayList = new ArrayList<>();
+        progressBar = (ProgressBar) findViewById(R.id.serverLoadBar);
+        progressBar.setVisibility(View.VISIBLE);
+        mList = (ListView) findViewById(R.id.list);
+        mAdapter = new MyCustomAdapter(this, arrayList);
+        mList.setAdapter(mAdapter);
     }
 
-    @Override
-    public void onBackPressed() {
-        if(EventBus.getDefault().isRegistered(this))EventBus.getDefault().unregister(this);
-        TCPClientApplication.getInstance().disconnect();
-        super.onBackPressed();
-    }
-
-    public void setData(String name, String tmpPass, boolean save) {
+    /*public void setData(String name, String tmpPass, boolean save) {
         name = name.replaceAll("\n", "");
         tmpPass = tmpPass.replaceAll("\n", "");
         name = name.replaceAll("\\{", "");
@@ -74,72 +66,63 @@ public class ServerConnector extends Activity {
         if (save) {
             this.server.username = name;
             this.server.password = tmpPass;
-            ServerDb.getInstance().setPassword(server);
+            ServerDb.instance.setPassword(server);
         }
         Log.v("", "user a heslo:" + name + " \n" + tmpPass);
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        EventBus.getDefault().unregister(this);
-    }
+    }*/
 
     @Override
     public void onPause() {
         super.onPause();
-        if(EventBus.getDefault().isRegistered(this))EventBus.getDefault().unregister(this);
+        if(EventBus.getDefault().isRegistered(this)) EventBus.getDefault().unregister(this);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        TCPClientApplication.getInstance().disconnect();
     }
 
     @Override
     public void onResume() {
-        i = 0;
-        tcpOK = false;
-        if (TCPClientApplication.getInstance() != null)
-            TCPClientApplication.getInstance().disconnect();
         super.onResume();
+
         if (!EventBus.getDefault().isRegistered(this)) EventBus.getDefault().register(this);
-        startMethod();
+        start();
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        if(EventBus.getDefault().isRegistered(this))EventBus.getDefault().unregister(this);
-    }
-
-    public void changeUserData(View view) {
+    public void editLogin(String message) {
         final Dialog dialog = new Dialog(this);
         dialog.setContentView(R.layout.dialog_user);
-        dialog.setTitle(getString(R.string.login_enter));
+
         //set dialog component
+        final TextView mMessage = (TextView) dialog.findViewById(R.id.tv_note);
         final EditText mName = (EditText) dialog.findViewById(R.id.dialogName);
         final EditText mPasswd = (EditText) dialog.findViewById(R.id.dialogPasswd);
         Button dialogButton = (Button) dialog.findViewById(R.id.dialogButtonOK);
         final CheckBox savebox = (CheckBox) dialog.findViewById(R.id.dialogSaveData);
+        mMessage.setText(message);
 
-        mName.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean b) {
-                if (mName.isFocused()) mName.setText("");
-            }
-        });
-        mPasswd.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean b) {
-                if (mPasswd.isFocused()) mPasswd.setText("");
-            }
-        });
+        mName.setText(TCPClientApplication.getInstance().server.username);
+        mPasswd.setText("");
+
         // if button is clicked, close the custom dialog
         dialogButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                TCPClientApplication.getInstance().server.username = mName.getText().toString();
+                TCPClientApplication.getInstance().server.password = HashHelper.hashPasswd(mPasswd.getText().toString());
 
-                user = mName.getText().toString();
-                passwd = HashHelper.hashPasswd(mPasswd.getText().toString());
-                setData(user, passwd, savebox.isChecked());
-                messges[1] = "-;LOK;G;AUTH;{" + user + "};" + passwd;
-                //initialize();
+                // TODO: when transfer found server to stored server?
+                // TODO: save login to persistent servers
+
+                TCPClientApplication.getInstance().send("-;LOK;G;AUTH;{" +
+                        TCPClientApplication.getInstance().server.username + "};" +
+                        TCPClientApplication.getInstance().server.password);
+
+                arrayList.add(getString(R.string.sc_authorizing));
+                mAdapter.notifyDataSetChanged();
+                progressBar.setVisibility(View.VISIBLE);
                 dialog.dismiss();
             }
         });
@@ -168,13 +151,20 @@ public class ServerConnector extends Activity {
         else
             arrayList.add(getString(R.string.sc_connection_ok));
 
-        // TODO: check username and password non-existence
-
-        arrayList.add(getString(R.string.sc_authorizing));
         mAdapter.notifyDataSetChanged();
 
-        TCPClientApplication.getInstance().send("-;LOK;G;AUTH;{" + TCPClientApplication.getInstance().server.username + "};" +
-            TCPClientApplication.getInstance().server.password);
+        if (TCPClientApplication.getInstance().server.username.isEmpty() ||
+                TCPClientApplication.getInstance().server.password.isEmpty()) {
+            arrayList.add("Waiting for login..."); // TODO: strings here
+            progressBar.setVisibility(View.GONE);
+            editLogin("Enter a login");
+        } else {
+            arrayList.add(getString(R.string.sc_authorizing));
+            TCPClientApplication.getInstance().send("-;LOK;G;AUTH;{" +
+                    TCPClientApplication.getInstance().server.username + "};" +
+                    TCPClientApplication.getInstance().server.password);
+            mAdapter.notifyDataSetChanged();
+        }
     }
 
     @Subscribe
@@ -185,8 +175,13 @@ public class ServerConnector extends Activity {
             TCPClientApplication.getInstance().send("-;OR-LIST");
         } else {
             arrayList.add(getString(R.string.sc_auth_err));
-
-            // TODO: handle general disconnect
+            if (event.getParsed().size() >= 6)
+                arrayList.add(event.getParsed().get(5));
+            progressBar.setVisibility(View.GONE);
+            if (event.getParsed().size() >= 6)
+                editLogin(event.getParsed().get(5));
+            else
+                editLogin("Logging failed");
         }
         mAdapter.notifyDataSetChanged();
     }
@@ -196,7 +191,7 @@ public class ServerConnector extends Activity {
         // TODO
     }
 
-    private void raiseErrorState(final String error) {
+    /*private void raiseErrorState(final String error) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -209,21 +204,23 @@ public class ServerConnector extends Activity {
                 showDialog("Error", error);
             }
         });
-    }
+    }*/
 
-    private void startMethod() {
-        if(!EventBus.getDefault().isRegistered(this))EventBus.getDefault().register(this);
+    private void start() {
         Bundle extras = getIntent().getExtras();
         TCPClientApplication tcp = TCPClientApplication.getInstance();
+        Server server;
 
         if (tcp.connected())
             tcp.disconnect();
 
         if ( extras != null ) {
-            String value = extras.getString("server");
-            String[] tmp = value.split("\t");
-            server = ServerDb.getInstance().getServer(tmp[0]);
-            tcp.auth = true;
+            String type = extras.getString("serverType");
+            int id = extras.getInt("serverId");
+            if (type.equals("stored"))
+                server = ServerDb.instance.stored.get(id);
+            else
+                server = ServerDb.instance.found.get(id);
 
             try {
                 tcp.connect(server);
@@ -232,40 +229,11 @@ public class ServerConnector extends Activity {
                 Log.e("TCP", "Connecting", e);
             }
 
-        } else if (this.server != null) {
-            tcp.auth = true;
-            try {
-                tcp.connect(server);
-            } catch (Exception e) {
-                // TODO
-                Log.e("TCP", "Connecting", e);
-            }
         } else finish();
 
-        arrayList = new ArrayList<>();
-
-        send = (Button) findViewById(R.id.send_button);
-        progressBar = (ProgressBar) findViewById(R.id.serverLoadBar);
-        progressBar.setVisibility(View.VISIBLE); //relate the listView from java to the one created in xml
-        mList = (ListView) findViewById(R.id.list);
-        mAdapter = new MyCustomAdapter(this, arrayList);
-        mList.setAdapter(mAdapter);
-
-
-        send.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //initialize();
-            }
-
-        });
-
-        send.setClickable(false);
-        send.setText(getString(R.string.sc_authorizing));
         arrayList.clear();
         arrayList.add(getString(R.string.sc_connecting));
         mAdapter.notifyDataSetChanged();
-
     }
 
     @Subscribe
@@ -277,7 +245,7 @@ public class ServerConnector extends Activity {
     public static class MonitorObject{
     }
 
-    public void showDialog(String title, String chyba) {
+    /*public void showDialog(String title, String chyba) {
         if (chyba != null && chyba.startsWith(";"))
             chyba = chyba.substring(1);
         final Dialog dialog = new Dialog(this);
@@ -325,6 +293,6 @@ public class ServerConnector extends Activity {
             }
         });
         dialog.show();
-    }
+    }*/
 
 }

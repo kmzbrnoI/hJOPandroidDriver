@@ -23,24 +23,6 @@
             android:layout_width="match_parent"
             android:layout_height="120dp">
 
-            <Button
-                android:text="ZMĚNIT INICIÁLY"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/button3"
-                android:onClick="changeUserData"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentStart="true" />
-
-            <Button android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/send_button"
-                android:layout_gravity="right"
-                android:text="Autorizovat"
-                android:elevation="23dp"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentEnd="true" />
-
             <ProgressBar
                 style="?android:attr/progressBarStyleLarge"
                 android:layout_width="wrap_content"

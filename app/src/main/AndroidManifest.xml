@@ -46,7 +46,7 @@
             android:noHistory="true"
             android:theme="@style/AppTheme.NoActionBar" />
 
-        <activity android:name=".activities.NewServer"
+        <activity android:name=".activities.ServerEdit"
             android:launchMode="singleInstance"
             android:theme="@style/AppTheme.NoActionBar"
             android:label="@string/activity_new_server_title"

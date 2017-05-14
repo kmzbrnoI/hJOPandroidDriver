@@ -2,14 +2,17 @@ package cz.mendelu.xmarik.train_manager.activities;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.view.ContextMenu;
 import android.view.Menu;
@@ -26,42 +29,46 @@ import android.widget.Toast;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
-import java.io.IOException;
-import java.net.ServerSocket;
 import java.util.ArrayList;
 
+import cz.mendelu.xmarik.train_manager.events.FoundServersReloadEvent;
 import cz.mendelu.xmarik.train_manager.network.UDPDiscover;
 import cz.mendelu.xmarik.train_manager.storage.ControlAreaDb;
 import cz.mendelu.xmarik.train_manager.helpers.HashHelper;
 import cz.mendelu.xmarik.train_manager.R;
 import cz.mendelu.xmarik.train_manager.storage.ServerDb;
 import cz.mendelu.xmarik.train_manager.storage.TrainDb;
-import cz.mendelu.xmarik.train_manager.events.ServerReloadEvent;
-import cz.mendelu.xmarik.train_manager.events.TCPDisconnectEvent;
+import cz.mendelu.xmarik.train_manager.events.StoredServersReloadEvent;
 import cz.mendelu.xmarik.train_manager.models.Server;
 
 import static android.preference.PreferenceManager.getDefaultSharedPreferences;
 
 public class ServerSelect extends NavigationBase {
-
-    private final int port = 5880;
-    ServerSocket serverSocket;
     Button lButton;
-    ArrayList<String> array;
-    ArrayList<String> array1;
     ArrayAdapter<String> fAdapter;
-    ArrayAdapter<String> lAdapter;
-    Context context;
-    Object obj;
+    ArrayAdapter<String> sAdapter;
+    ArrayList<String> found;
+    ArrayList<String> stored;
+
     SharedPreferences sharedpreferences;
-    private ListView lServers;
-    private ListView fServers;
+    ListView sServers;
+    ListView fServers;
+
+    public enum Source {
+        FOUND,
+        STORED
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        //tady nacist ulozeny data
         setContentView(R.layout.activity_server_select);
         super.onCreate(savedInstanceState);
+
+        Object obj = this;
+        Context context = this.getApplicationContext();
+
+        // create database of servers
+        ServerDb.instance = new ServerDb();
 
         // create database of control areas
         ControlAreaDb.instance = new ControlAreaDb();
@@ -71,126 +78,84 @@ public class ServerSelect extends NavigationBase {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        get();
-        obj = this;
-        context = this.getApplicationContext();
+
         lButton = (Button) findViewById(R.id.serverButton);
-        fServers = (ListView) findViewById(R.id.farServers);
-        lServers = (ListView) findViewById(R.id.localServers);
-        EventBus.getDefault().register(this);
+        fServers = (ListView) findViewById(R.id.foundServers);
+        sServers = (ListView) findViewById(R.id.storedServers);
+
+        // load shared preferences
         sharedpreferences = getDefaultSharedPreferences(getApplicationContext());
+        if (sharedpreferences.contains("StoredServers"))
+            ServerDb.instance.loadServers(sharedpreferences.getString("StoredServers", ""));
+
+        // run UDP discover:
         ConnectivityManager connManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo mWifi = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
         if (mWifi.isConnected()) {
-            UDPDiscover udp = new UDPDiscover(context, port, this);
-            udp.execute();
-            this.lButton.setClickable(false);
+            (new UDPDiscover((WifiManager)context.getSystemService(Context.WIFI_SERVICE))).execute();
         } else Toast.makeText(getApplicationContext(),
                 R.string.conn_wifi_unavailable, Toast.LENGTH_LONG)
                 .show();
 
-        array = ServerDb.getInstance().getServersString();
-        lAdapter = new ArrayAdapter<>(this,
-                android.R.layout.simple_list_item_1, android.R.id.text1, array);
-        array1 = ServerDb.getInstance().getStoredServersString();
+        // bind ListView adapters:
+        found = new ArrayList<String>();
         fAdapter = new ArrayAdapter<>(this,
-                android.R.layout.simple_list_item_1, android.R.id.text1, array1);
-        lServers.setAdapter(lAdapter);
+                android.R.layout.simple_list_item_1, android.R.id.text1, found);
         fServers.setAdapter(fAdapter);
-        registerForContextMenu(fServers);
-        // ListView Item Click Listener
-        fServers.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
+        stored = new ArrayList<String>();
+        sAdapter = new ArrayAdapter<>(this,
+                android.R.layout.simple_list_item_1, android.R.id.text1, stored);
+        sServers.setAdapter(sAdapter);
+
+        registerForContextMenu(sServers);
+
+        fServers.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
-                // ListView Clicked item value
-                String itemValue = (String) fServers.getItemAtPosition(position);
-                AuthorizeServer(itemValue);
+                connect(Source.FOUND, position);
             }
-
         });
 
-        lButton.setOnClickListener(
-                new View.OnClickListener() {
-
-                    public void onClick(View view) {
-                        ServerDb.getInstance().clearLocalServers();
-                        array = ServerDb.getInstance().getServersString();
-
-                        lAdapter = new ArrayAdapter<>(context,
-                                android.R.layout.simple_list_item_1, android.R.id.text1, array);
-                        lServers.setAdapter(lAdapter);
-                        lAdapter.notifyDataSetChanged();
-
-                        ConnectivityManager connManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-                        NetworkInfo mWifi = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
-                        if (mWifi.isConnected()) {
-                            new UDPDiscover(context, port, (ServerSelect) obj).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-                            System.out.print("button activated");
-                            float deg = lButton.getRotation() + 720F;
-                            lButton.animate().rotation(deg).setInterpolator(new AccelerateDecelerateInterpolator());
-                        } else Toast.makeText(getApplicationContext(),
-                                R.string.conn_wifi_unavailable, Toast.LENGTH_LONG)
-                                .show();
-                        float deg = lButton.getRotation() + 360F;
-                        lButton.animate().rotation(deg).setInterpolator(new AccelerateDecelerateInterpolator());
-                    }
-                });
-        // ListView Item Click Listener
-        lServers.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
+        sServers.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
-                // ListView Clicked item value
-                String itemValue = (String) lServers.getItemAtPosition(position);
-
-                AuthorizeServer(itemValue);
+                connect(Source.STORED, position);
             }
-
-
         });
     }
 
-    /**
-     * metoda vyvolaná pokud je nalezen server na lokální síti
-     * slouží k znovu načtení dat
-     */
-    public void dataReload() {
-        lButton.setClickable(true);
-        ServerDb serverList = ServerDb.getInstance();
-        serverList.clear();
-        array = serverList.getServersString();
-        for (Server s : serverList.getServers()) {
-            for (Server c : serverList.getCustomServers())
-                if (c.equals(s)) {
-                    s.username = c.username;
-                    s.password = c.password;
-                }
+    public void updateStoredServers() {
+        stored.clear();
+        for (Server s : ServerDb.instance.stored)
+            stored.add(s.name + "\t" + s.host + "\n" + s.type);
+
+        sAdapter.notifyDataSetChanged();
+    }
+
+    public void updateFoundServers() {
+        found.clear();
+        for (Server s : ServerDb.instance.found) {
+            String statusText = s.active ? "online" : "offline";
+            found.add(s.name + "\t" + s.host + "\n" + s.type + " \t" + statusText);
         }
 
-        lAdapter = new ArrayAdapter<>(this,
-                android.R.layout.simple_list_item_1, android.R.id.text1, array);
-        lServers.setAdapter(lAdapter);
-        lAdapter.notifyDataSetChanged();
-        Toast.makeText(getApplicationContext(),
-                getString(R.string.conn_search_finished), Toast.LENGTH_LONG)
-                .show();
+        fAdapter.notifyDataSetChanged();
     }
 
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v,
                                     ContextMenu.ContextMenuInfo menuInfo) {
-        if (v.getId() == R.id.farServers) {
+        if (v.getId() == R.id.storedServers) {
             AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
-            menu.setHeaderTitle(array1.get(info.position));
+            menu.setHeaderTitle(ServerDb.instance.stored.get(info.position).host);
 
             String[] menuItems = {
                     getString(R.string.mm_connect),
                     getString(R.string.mm_change_login),
                     getString(R.string.mm_change_settings),
-                    getString(R.string.mm_info),
                     getString(R.string.mm_delete),
                     getString(R.string.mm_delete_all)
             };
@@ -201,72 +166,99 @@ public class ServerSelect extends NavigationBase {
         }
     }
 
-    /**
-     * kontextové menu zobrazené pří dlouhém stisku na položku uložených serverů
-     * pořadí vybraného serveru je zjišťováno díky indexu prvku, který událost vyvolal
-     * @param item
-     * @return
-     */
     @Override
     public boolean onContextItemSelected(MenuItem item) {
-        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+        final AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
         int menuItemIndex = item.getItemId();
-        String listItemName = array1.get(info.position);
-        String[] tmp = listItemName.split("\t");
-        //TODO dialogy k mazani
+        Server s = ServerDb.instance.stored.get(info.position);
+
         switch (menuItemIndex) {
             case 0:
-                Server tmpServer = ServerDb.getInstance().getServer(tmp[0]);
-                if (tmpServer.active) {
-                    AuthorizeServer(tmp[0]);
-                } else Toast.makeText(getApplicationContext(),
-                        R.string.conn_server_offline, Toast.LENGTH_LONG)
-                        .show();
+                if (s.active) {
+                    connect(Source.STORED, info.position);
+                } else {
+                    new AlertDialog.Builder(this)
+                            .setMessage(R.string.conn_server_offline)
+                            .setPositiveButton("yes", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    connect(Source.FOUND, info.position);
+                                }
+                            })
+                            .setNegativeButton("no", new DialogInterface.OnClickListener() { // TODO: strings here
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {}
+                            }).show();
+                }
                 break;
+
             case 1:
-                showDialog(tmp[0]);
+                changeLogin(s);
                 break;
+
             case 2:
-                Intent intent = new Intent(getBaseContext(), NewServer.class);
-                intent.putExtra("server", listItemName);
-                startActivityForResult(intent, 2);
+                Intent intent = new Intent(getBaseContext(), ServerEdit.class);
+                intent.putExtra("serverId", info.position);
+                startActivity(intent);
                 break;
+
             case 3:
-                // TODO: remove item from menu
+                ServerDb.instance.removeStoredServer(info.position);
                 break;
+
             case 4:
-                array1.remove(info.position);
-                ServerDb.getInstance().removeServer(info.position);
-                fAdapter.notifyDataSetChanged();
-                break;
-            case 5:
-                ServerDb.getInstance().clearCustomServer();
-                deleteAllServers();
+                ServerDb.instance.clearStoredServers();
                 break;
         }
         return true;
     }
 
-    public void addServer(View view) {
-        Intent intent = new Intent(this, NewServer.class);
-        startActivityForResult(intent, 1);
+    public void addServerClick(View view) {
+        startActivity(new Intent(getBaseContext(), ServerEdit.class));
     }
 
-    public void AuthorizeServer(String itemValue) {
+    public void discoverServerClick(View view) {
+        Context context = this.getApplicationContext();
+
+        ServerDb.instance.clearFoundServers();
+        fAdapter.notifyDataSetChanged();
+
+        ConnectivityManager connManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo mWifi = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+        if (mWifi.isConnected()) {
+            (new UDPDiscover((WifiManager)context.getSystemService(Context.WIFI_SERVICE))).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            float deg = lButton.getRotation() + 720F;
+            lButton.animate().rotation(deg).setInterpolator(new AccelerateDecelerateInterpolator());
+        } else {
+            new AlertDialog.Builder(this)
+                    .setMessage(R.string.conn_wifi_unavailable)
+                    .setCancelable(false)
+                    .setPositiveButton("ok", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {}
+                    }).show();
+        }
+
+        //float deg = lButton.getRotation() + 360F;
+        //lButton.animate().rotation(deg).setInterpolator(new AccelerateDecelerateInterpolator());
+    }
+
+    public void connect(Source from, int index) {
         Intent intent = new Intent(getBaseContext(), ServerConnector.class);
-        intent.putExtra("server", itemValue);
+        intent.putExtra("serverType", from == Source.FOUND ? "found" : "stored");
+        intent.putExtra("serverId", index);
         startActivityForResult(intent, 2);
     }
 
     /**
-     * metoda je vyvolána pokud je ukončena aktivita, která byla vyvolána pro výsledek
+     * This method is called when activity for result ended.
      * metoda slouží k obsloužení výsledku
      * @param requestCode číslo pro identifikaci volní (určí o kterou aktivitu se jedná)
      * @param resultCode hodnota vyjadřující zda aktivita zkončila úspěchem či nikoli
      * @param data případné návratové hodnoty
      */
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == 1) {
+        /*if (requestCode == 1) {
             array1 = ServerDb.getInstance().getStoredServersString();
             fAdapter.notifyDataSetChanged();
             //asi predelat s tim novym adapterem do ifu, pak to vali
@@ -296,7 +288,7 @@ public class ServerSelect extends NavigationBase {
                         R.string.conn_no_server_authorized, Toast.LENGTH_LONG)
                         .show();
             }
-        }
+        }*/
     }//onActivityResult
 
     @Override
@@ -309,23 +301,11 @@ public class ServerSelect extends NavigationBase {
         }
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        if (serverSocket != null) {
-            try {
-                serverSocket.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    public void showDialog(final String serverName) {
+    public void changeLogin(final Server server) {
         final Dialog dialog = new Dialog(this);
         dialog.setContentView(R.layout.dialog_user);
         dialog.setTitle("Set user data");
-        final Server server = ServerDb.getInstance().getServer(serverName);
+
         //set dialog component
         final EditText mName = (EditText) dialog.findViewById(R.id.dialogName);
         final EditText mPasswd = (EditText) dialog.findViewById(R.id.dialogPasswd);
@@ -346,33 +326,37 @@ public class ServerSelect extends NavigationBase {
     }
 
     @Subscribe
-    public void onEvent(ServerReloadEvent event) {
-        dataReload();
+    public void onEvent(StoredServersReloadEvent event) {
+        updateStoredServers();
+    }
+
+    @Subscribe
+    public void onEvent(FoundServersReloadEvent event) {
+        updateFoundServers();
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        Save();
         if(EventBus.getDefault().isRegistered(this))EventBus.getDefault().unregister(this);
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        Save();
-        if(EventBus.getDefault().isRegistered(this))EventBus.getDefault().unregister(this);
+        save();
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        get();
+        updateFoundServers();
+        updateStoredServers();
         if (!EventBus.getDefault().isRegistered(this)) EventBus.getDefault().register(this);
     }
 
-    public void Save() {
-        String n = ServerDb.getInstance().getSaveString();
+    public void save() {
+        String n = ServerDb.instance.getSaveString();
 
         SharedPreferences.Editor editor = sharedpreferences.edit();
         editor.remove("StoredServers");
@@ -381,25 +365,7 @@ public class ServerSelect extends NavigationBase {
         editor.commit();
     }
 
-    public void get() {
-        sharedpreferences = getDefaultSharedPreferences(getApplicationContext());//getSharedPreferences(myServerPreferences, Context.MODE_PRIVATE);
-        if (sharedpreferences.contains("StoredServers")) {
-            ServerDb.getInstance().loadServers(sharedpreferences.getString("StoredServers", ""));
-        }
-    }
-
-    public void deleteAllServers() {
-        sharedpreferences = getDefaultSharedPreferences(getApplicationContext());
-        SharedPreferences.Editor editor = sharedpreferences.edit();
-        editor.clear();
-        editor.remove("StoredServers");
-        editor.commit();
-        Toast.makeText(getApplicationContext(),
-                R.string.gl_all_deleted,
-                Toast.LENGTH_LONG).show();
-    }
-
-    @Subscribe
+    /*@Subscribe
     public void tcpErrorEvent(TCPDisconnectEvent event) {
         ServerDb.getInstance().deactivateServer();
         Toast.makeText(getApplicationContext(),
@@ -408,6 +374,6 @@ public class ServerSelect extends NavigationBase {
 
         Intent intent = new Intent(this, ServerSelect.class);
         startActivity(intent);
-    }
+    }*/
 
 }

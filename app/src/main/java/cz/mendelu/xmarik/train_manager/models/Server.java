@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import cz.mendelu.xmarik.train_manager.helpers.ParseHelper;
 import cz.mendelu.xmarik.train_manager.network.TCPClientApplication;
 
 /**
@@ -11,8 +12,9 @@ import cz.mendelu.xmarik.train_manager.network.TCPClientApplication;
  */
 public class Server {
     public static AtomicInteger globalId = new AtomicInteger(0);
+    public static final int DEFAULT_PORT = 5823;
 
-    public int id;
+    public int id; // TODO necessarry ?
     public String name;
     public String host;
     public int port;
@@ -31,8 +33,22 @@ public class Server {
         this.active = active;
         this.username = username;
         this.password = password;
+    }
 
-        List<Train> trains = new ArrayList<>();
+    // Create server from discovery packet.
+    // @param disovery in format:
+    //   "hJOP";verze_protokolu;typ_zarizeni;server_nazev;server_ip;server_port;server_status;server_popis
+    public Server(String discovery) {
+        ArrayList<String> parsed = ParseHelper.parse(discovery, ";", "");
+
+        this.id = globalId.incrementAndGet();
+        this.name = parsed.get(7);
+        this.host = parsed.get(4);
+        this.port = Integer.valueOf(parsed.get(5));
+        this.type = parsed.get(3);
+        this.active = parsed.get(6).equals("on");
+        this.username = "";
+        this.password = "";
     }
 
     public String getLongInfo() {

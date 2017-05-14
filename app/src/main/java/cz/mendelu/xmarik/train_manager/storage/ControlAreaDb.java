@@ -7,6 +7,7 @@ import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 
+import cz.mendelu.xmarik.train_manager.events.AreasClearedEvent;
 import cz.mendelu.xmarik.train_manager.events.AreasEvent;
 import cz.mendelu.xmarik.train_manager.events.AreasParsedEvent;
 import cz.mendelu.xmarik.train_manager.events.TCPDisconnectEvent;
@@ -46,6 +47,6 @@ public class ControlAreaDb {
     @Subscribe
     public void onEvent(TCPDisconnectEvent event) {
         this.areas.clear();
-        EventBus.getDefault().post(new AreasParsedEvent());
+        EventBus.getDefault().post(new AreasClearedEvent());
     }
 }

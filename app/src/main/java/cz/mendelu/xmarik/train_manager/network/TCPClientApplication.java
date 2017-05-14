@@ -45,15 +45,12 @@ public class TCPClientApplication extends Application {
     }
 
     public void disconnect() {
+        this.server = null;
+
         if (mTcpClient != null)
             this.mTcpClient.disconnect();
         if (listenTask != null)
             listenTask.cancel(true);
-
-        this.server = null;
-        ServerDb.getInstance().deactivateServer();
-
-        // TODO: notify everyone else
     }
 
     public void send(String message) {
@@ -152,12 +149,12 @@ public class TCPClientApplication extends Application {
                                     if (lokoData.length > 14)
                                         newTrain.setFunctionNames(lokoData[15]);
                                     ServerDb.getInstance().getActiveServer().addTrain(newTrain);
-                                    EventBus.getDefault().post(new ServerReloadEvent(serverMessage));
+                                    EventBus.getDefault().post(new StoredServersReloadEvent(serverMessage));
                                 }
                                 break;
                             case "not":
                                 t.setAuthorized(false);
-                                EventBus.getDefault().post(new ServerReloadEvent(serverMessage));
+                                EventBus.getDefault().post(new StoredServersReloadEvent(serverMessage));
                                 break;
                             case "release":
                                 //t.setAuthorized(false);
@@ -166,7 +163,7 @@ public class TCPClientApplication extends Application {
                             case "stolen":
                                 t.setAuthorized(false);
                                 t.setErr("stolen");
-                                EventBus.getDefault().post(new ServerReloadEvent(serverMessage));
+                                EventBus.getDefault().post(new StoredServersReloadEvent(serverMessage));
                                 break;
                             default:
                                 break;
@@ -174,7 +171,7 @@ public class TCPClientApplication extends Application {
                     } else if (tmp[1].equals("TOTAL")) {
                         Train train = ServerDb.getInstance().getActiveServer().getTrain(tmp[0]);
                         train.setTotalManaged(tmp[2].equals("1"));
-                        EventBus.getDefault().post(new ServerReloadEvent(serverMessage));
+                        EventBus.getDefault().post(new StoredServersReloadEvent(serverMessage));
                     } else if (tmp[1].equals("RESP")) {
                         Train train = ServerDb.getInstance().getActiveServer().getTrain(tmp[0]);
                         if (tmp[2].equals("ok")) {
@@ -183,14 +180,14 @@ public class TCPClientApplication extends Application {
                         } else {
                             train.setErr(tmp[3]);
                         }
-                        EventBus.getDefault().post(new ServerReloadEvent(serverMessage));
+                        EventBus.getDefault().post(new StoredServersReloadEvent(serverMessage));
                     } else if (tmp[1].equals("SPD")) {
                         Train train = ServerDb.getInstance().getActiveServer().getTrain(tmp[0]);
                         train.setKmhSpeed(Integer.parseInt(tmp[2]));
                         train.setSpeed(Integer.parseInt(tmp[3]));
                         train.setDirection(tmp[4].equals("1"));
                         train.setErr(null);
-                        EventBus.getDefault().post(new ServerReloadEvent(serverMessage));
+                        EventBus.getDefault().post(new StoredServersReloadEvent(serverMessage));
                     } else if (tmp[1].equals("PLEASE-RESP")) {
                         if (tmp[2].equals("ERR")||tmp[2].equals("err")) {
                             EventBus.getDefault().post(new RequestEvent(tmp[3]));
@@ -203,10 +200,10 @@ public class TCPClientApplication extends Application {
                         }
                         t.setFunction(func);
                         t.setErr(null);
-                        EventBus.getDefault().post(new ServerReloadEvent(serverMessage));
+                        EventBus.getDefault().post(new StoredServersReloadEvent(serverMessage));
                     } else if (tmp[1].equals("TOTAL")) {
                         t.setTotalManged(tmp[2].equals("1"));
-                        EventBus.getDefault().post(new ServerReloadEvent(serverMessage));
+                        EventBus.getDefault().post(new StoredServersReloadEvent(serverMessage));
                     }
                 }
             }*/

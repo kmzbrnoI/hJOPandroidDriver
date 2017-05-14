@@ -24,6 +24,7 @@ import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 
+import cz.mendelu.xmarik.train_manager.events.AreasClearedEvent;
 import cz.mendelu.xmarik.train_manager.storage.ControlAreaDb;
 import cz.mendelu.xmarik.train_manager.R;
 import cz.mendelu.xmarik.train_manager.network.TCPClientApplication;
@@ -156,6 +157,11 @@ public class TrainRequest extends NavigationBase {
 
     @Subscribe
     public void onEvent(AreasParsedEvent event) {
+        this.FillAreas();
+    }
+
+    @Subscribe
+    public void onEvent(AreasClearedEvent event) {
         this.FillAreas();
     }
 
