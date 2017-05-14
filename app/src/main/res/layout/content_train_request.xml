@@ -14,37 +14,38 @@
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
-        android:orientation="vertical" android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:weightSum="1">
-
-        <ListView
-            android:layout_width="match_parent"
-            android:layout_height="243dp"
-            android:id="@+id/nav_areas"
-            android:scrollbars="horizontal|vertical" />
-
-        <ProgressBar
-            style="@android:style/Widget.Material.Light.ProgressBar.Large"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/progressBar"
-            android:indeterminate="false"
-            tools:visibility="gone" />
-
-        <TableRow
-            android:layout_width="wrap_content"
-            android:layout_height="390dp"
-            android:layout_gravity="center_horizontal"
-            android:weightSum="1"
-            android:layout_weight="1.07">
-
-        </TableRow>
 
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+
+            <ListView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/nav_areas"
+                android:scrollbars="horizontal|vertical" />
+
+            <ProgressBar
+                style="@android:style/Widget.Material.Light.ProgressBar.Large"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/progressBar"
+                android:indeterminate="false"
+                tools:visibility="gone" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true">
 
             <TextView
                 android:text="@string/tr_disp_message"
@@ -55,7 +56,7 @@
 
             <EditText
                 android:inputType="textMultiLine"
-                android:layout_height="139dp"
+                android:layout_height="80dp"
                 android:ems="10"
                 android:lines="5"
                 android:minLines="3"
