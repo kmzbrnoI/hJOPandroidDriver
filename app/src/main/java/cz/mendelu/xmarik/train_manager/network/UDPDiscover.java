@@ -1,12 +1,9 @@
 package cz.mendelu.xmarik.train_manager.network;
 
-import android.content.Context;
 import android.net.DhcpInfo;
 import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.util.Log;
-
-import org.greenrobot.eventbus.EventBus;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
@@ -19,9 +16,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import cz.mendelu.xmarik.train_manager.activities.ServerSelect;
-import cz.mendelu.xmarik.train_manager.events.LokChangeEvent;
-import cz.mendelu.xmarik.train_manager.events.StoredServersReloadEvent;
 import cz.mendelu.xmarik.train_manager.helpers.ParseHelper;
 import cz.mendelu.xmarik.train_manager.models.Server;
 import cz.mendelu.xmarik.train_manager.storage.ServerDb;

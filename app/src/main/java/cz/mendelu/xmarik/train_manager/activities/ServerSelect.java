@@ -34,6 +34,7 @@ import org.greenrobot.eventbus.Subscribe;
 import java.util.ArrayList;
 
 import cz.mendelu.xmarik.train_manager.events.FoundServersReloadEvent;
+import cz.mendelu.xmarik.train_manager.events.TCPDisconnectEvent;
 import cz.mendelu.xmarik.train_manager.network.UDPDiscover;
 import cz.mendelu.xmarik.train_manager.storage.ControlAreaDb;
 import cz.mendelu.xmarik.train_manager.helpers.HashHelper;
@@ -246,49 +247,8 @@ public class ServerSelect extends NavigationBase {
         Intent intent = new Intent(getBaseContext(), ServerConnector.class);
         intent.putExtra("serverType", from == Source.FOUND ? "found" : "stored");
         intent.putExtra("serverId", index);
-        startActivityForResult(intent, 2);
+        startActivity(intent);
     }
-
-    /**
-     * This method is called when activity for result ended.
-     * metoda slouží k obsloužení výsledku
-     * @param requestCode číslo pro identifikaci volní (určí o kterou aktivitu se jedná)
-     * @param resultCode hodnota vyjadřující zda aktivita zkončila úspěchem či nikoli
-     * @param data případné návratové hodnoty
-     */
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        /*if (requestCode == 1) {
-            array1 = ServerDb.getInstance().getStoredServersString();
-            fAdapter.notifyDataSetChanged();
-            //asi predelat s tim novym adapterem do ifu, pak to vali
-            fAdapter = new ArrayAdapter<>(this,
-                    android.R.layout.simple_list_item_1, android.R.id.text1, array1);
-            fAdapter.notifyDataSetChanged();
-            fServers.setAdapter(fAdapter);
-            fAdapter.notifyDataSetChanged();
-            String txt = ServerDb.getInstance().getServerStoreString();
-            SharedPreferences.Editor editor = sharedpreferences.edit();
-            editor.putString("storedServers", txt);
-            //editor.commit();
-            editor.apply();
-            if (resultCode == RESULT_OK) {
-                array1 = ServerDb.getInstance().getStoredServersString();
-                fAdapter.notifyDataSetChanged();
-            }else if (resultCode == RESULT_CANCELED) {
-                //Do nothing?
-            }
-        } else if (requestCode == 2) {
-            if (resultCode == RESULT_OK) {
-                Toast.makeText(getApplicationContext(),
-                        R.string.conn_connected, Toast.LENGTH_LONG)
-                        .show();
-            } else {
-                Toast.makeText(getApplicationContext(),
-                        R.string.conn_no_server_authorized, Toast.LENGTH_LONG)
-                        .show();
-            }
-        }*/
-    }//onActivityResult
 
     @Override
     public void onBackPressed() {
@@ -368,15 +328,9 @@ public class ServerSelect extends NavigationBase {
         editor.commit();
     }
 
-    /*@Subscribe
+    @Subscribe
     public void tcpErrorEvent(TCPDisconnectEvent event) {
-        ServerDb.getInstance().deactivateServer();
-        Toast.makeText(getApplicationContext(),
-                event.getError(),
-                Toast.LENGTH_LONG).show();
 
-        Intent intent = new Intent(this, ServerSelect.class);
-        startActivity(intent);
-    }*/
+    }
 
 }

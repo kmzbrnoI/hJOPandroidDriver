@@ -39,8 +39,6 @@ public class ServerConnector extends Activity {
     private ServerConnector classObject;
     private ProgressBar progressBar;
 
-    public static final MonitorObject  monitor = new MonitorObject();
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         setContentView(R.layout.activity_server_connector);
@@ -53,23 +51,6 @@ public class ServerConnector extends Activity {
         mAdapter = new MyCustomAdapter(this, arrayList);
         mList.setAdapter(mAdapter);
     }
-
-    /*public void setData(String name, String tmpPass, boolean save) {
-        name = name.replaceAll("\n", "");
-        tmpPass = tmpPass.replaceAll("\n", "");
-        name = name.replaceAll("\\{", "");
-        tmpPass = tmpPass.replaceAll("\\{", "");
-        name = name.replaceAll("\\}", "");
-        tmpPass = tmpPass.replaceAll("\\}", "");
-        this.user = name;
-        this.passwd = tmpPass;
-        if (save) {
-            this.server.username = name;
-            this.server.password = tmpPass;
-            ServerDb.instance.setPassword(server);
-        }
-        Log.v("", "user a heslo:" + name + " \n" + tmpPass);
-    }*/
 
     @Override
     public void onPause() {
@@ -196,21 +177,6 @@ public class ServerConnector extends Activity {
         // TODO
     }
 
-    /*private void raiseErrorState(final String error) {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                i = 0;
-                send.setClickable(true);
-                send.setText(R.string.gl_repeat);
-                arrayList.add(error);
-                mAdapter.notifyDataSetChanged();
-                progressBar.setVisibility(View.GONE);
-                showDialog("Error", error);
-            }
-        });
-    }*/
-
     private void start() {
         Bundle extras = getIntent().getExtras();
         TCPClientApplication tcp = TCPClientApplication.getInstance();
@@ -246,58 +212,5 @@ public class ServerConnector extends Activity {
         // connection established -> begin handshake
         TCPClientApplication.getInstance().send("-;HELLO;1.0");
     }
-
-    public static class MonitorObject{
-    }
-
-    /*public void showDialog(String title, String chyba) {
-        if (chyba != null && chyba.startsWith(";"))
-            chyba = chyba.substring(1);
-        final Dialog dialog = new Dialog(this);
-        dialog.setContentView(R.layout.dialog_user);
-        dialog.setTitle(title);
-        //set dialog component
-        final EditText mName = (EditText) dialog.findViewById(R.id.dialogName);
-        final EditText mPasswd = (EditText) dialog.findViewById(R.id.dialogPasswd);
-        Button dialogButton = (Button) dialog.findViewById(R.id.dialogButtonOK);
-        final CheckBox save = (CheckBox) dialog.findViewById(R.id.dialogSaveData);
-        TextView error = (TextView) dialog.findViewById(R.id.errorMessage);
-        if(chyba != null) {
-            error.setText(chyba);
-        } else {
-            error.setText("");
-        }
-        mName.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean b) {
-                if (mName.isFocused()) mName.setText("");
-            }
-        });
-        mPasswd.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean b) {
-                if (mPasswd.isFocused()) mPasswd.setText("");
-            }
-        });
-        // if button is clicked, close the custom dialog
-        dialogButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-            }
-        });
-        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-            @Override
-            public void onDismiss(DialogInterface dialogInterface) {
-                user = mName.getText().toString();
-                passwd = HashHelper.hashPasswd(mPasswd.getText().toString());
-                if (save.isChecked()) {
-                    setData(user, passwd, true);
-                } else setData(user, passwd, false);
-                messges[1] = "-;LOK;G;AUTH;{" + user + "};" + passwd;
-            }
-        });
-        dialog.show();
-    }*/
 
 }
