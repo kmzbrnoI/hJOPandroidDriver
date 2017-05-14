@@ -164,17 +164,7 @@ public class TrainRequest extends NavigationBase {
     @Subscribe
     public void onEvent(TCPDisconnectEvent event) {
         dialog.dismiss();
-
-        // TODO:  move this to parent object?
-        new AlertDialog.Builder(this)
-                .setMessage(getString(R.string.disconnected))
-                .setCancelable(false)
-                .setPositiveButton("ok", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        startActivity(new Intent(getBaseContext(), ServerSelect.class));
-                    }
-                }).show();
+        super.onEvent(event);
     }
 
     public void b_requestClick(View v) {
@@ -229,8 +219,8 @@ public class TrainRequest extends NavigationBase {
 
     @Override
     public void onDestroy() {
-        super.onDestroy();
         if (EventBus.getDefault().isRegistered(this)) EventBus.getDefault().unregister(this);
+        super.onDestroy();
     }
 
 }

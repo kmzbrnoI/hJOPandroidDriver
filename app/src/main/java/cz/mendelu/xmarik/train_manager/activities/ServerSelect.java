@@ -34,7 +34,6 @@ import org.greenrobot.eventbus.Subscribe;
 import java.util.ArrayList;
 
 import cz.mendelu.xmarik.train_manager.events.FoundServersReloadEvent;
-import cz.mendelu.xmarik.train_manager.events.TCPDisconnectEvent;
 import cz.mendelu.xmarik.train_manager.network.UDPDiscover;
 import cz.mendelu.xmarik.train_manager.storage.ControlAreaDb;
 import cz.mendelu.xmarik.train_manager.helpers.HashHelper;
@@ -300,14 +299,14 @@ public class ServerSelect extends NavigationBase {
 
     @Override
     public void onPause() {
-        super.onPause();
         if(EventBus.getDefault().isRegistered(this))EventBus.getDefault().unregister(this);
+        super.onPause();
     }
 
     @Override
     public void onStop() {
-        super.onStop();
         save();
+        super.onStop();
     }
 
     @Override
@@ -326,11 +325,6 @@ public class ServerSelect extends NavigationBase {
         editor.clear();
         editor.putString("StoredServers", n);
         editor.commit();
-    }
-
-    @Subscribe
-    public void onEvent(TCPDisconnectEvent event) {
-
     }
 
 }

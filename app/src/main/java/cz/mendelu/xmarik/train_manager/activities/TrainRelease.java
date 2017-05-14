@@ -78,7 +78,7 @@ public class TrainRelease extends NavigationBase {
 
         });
 
-        EventBus.getDefault().register(this);
+        if(!EventBus.getDefault().isRegistered(this)) EventBus.getDefault().register(this);
     }
 
     @Subscribe
@@ -148,21 +148,14 @@ public class TrainRelease extends NavigationBase {
     }
 
     @Override
-    public void onPause() {
-        super.onPause();
-        if(EventBus.getDefault().isRegistered(this))EventBus.getDefault().unregister(this);
-    }
-
-    @Override
     public void onResume() {
         super.onResume();
-        if(!EventBus.getDefault().isRegistered(this))EventBus.getDefault().register(this);
         updateHVList();
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if(EventBus.getDefault().isRegistered(this))EventBus.getDefault().unregister(this);
+        if(EventBus.getDefault().isRegistered(this)) EventBus.getDefault().unregister(this);
     }
 }

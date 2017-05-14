@@ -108,6 +108,4 @@ public class TCPClientApplication extends Application {
         }
     }
 
-    // TODO: subscribe criticcal errors from thread
-
 }

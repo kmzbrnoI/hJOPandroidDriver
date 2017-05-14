@@ -1,6 +1,7 @@
 package cz.mendelu.xmarik.train_manager.activities;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -9,13 +10,18 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.widget.TextView;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+
 import cz.mendelu.xmarik.train_manager.R;
+import cz.mendelu.xmarik.train_manager.events.TCPDisconnectEvent;
 
 /**
  * Class NavigationBase implements base class for all activities, which want to have navigation
@@ -54,6 +60,8 @@ public class NavigationBase extends AppCompatActivity
         } catch (PackageManager.NameNotFoundException e) {
             Log.e("Version", "App version exception!", e);
         }
+
+        if (!EventBus.getDefault().isRegistered(this)) EventBus.getDefault().register(this);
     }
 
     /**
@@ -105,4 +113,23 @@ public class NavigationBase extends AppCompatActivity
                 return super.onOptionsItemSelected(item);
         }
     }
+
+    @Subscribe
+    public void onEvent(TCPDisconnectEvent event) {
+        new AlertDialog.Builder(this)
+                .setMessage(getString(R.string.disconnected))
+                .setCancelable(false)
+                .setPositiveButton("ok", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                    }
+                }).show();
+    }
+
+    @Override
+    public void onDestroy() {
+        if (EventBus.getDefault().isRegistered(this)) EventBus.getDefault().unregister(this);
+        super.onDestroy();
+    }
+
 }

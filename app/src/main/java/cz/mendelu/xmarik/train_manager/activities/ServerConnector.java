@@ -29,7 +29,6 @@ import cz.mendelu.xmarik.train_manager.events.GlobalAuthEvent;
 import cz.mendelu.xmarik.train_manager.models.Server;
 import cz.mendelu.xmarik.train_manager.storage.ServerDb;
 import cz.mendelu.xmarik.train_manager.network.TCPClientApplication;
-import cz.mendelu.xmarik.train_manager.events.TCPDisconnectEvent;
 import cz.mendelu.xmarik.train_manager.events.HandShakeEvent;
 
 public class ServerConnector extends Activity {
@@ -141,7 +140,7 @@ public class ServerConnector extends Activity {
 
         if (TCPClientApplication.getInstance().server.username.isEmpty() ||
                 TCPClientApplication.getInstance().server.password.isEmpty()) {
-            arrayList.add(getString(R.string.sc_auth_wait)); // TODO: strings here
+            arrayList.add(getString(R.string.sc_auth_wait));
             progressBar.setVisibility(View.GONE);
             editLogin("Enter a login");
         } else {
@@ -172,11 +171,6 @@ public class ServerConnector extends Activity {
         mAdapter.notifyDataSetChanged();
     }
 
-    @Subscribe
-    public void onEvent(TCPDisconnectEvent event) {
-        // TODO
-    }
-
     private void start() {
         Bundle extras = getIntent().getExtras();
         TCPClientApplication tcp = TCPClientApplication.getInstance();
@@ -196,8 +190,9 @@ public class ServerConnector extends Activity {
             try {
                 tcp.connect(server);
             } catch (Exception e) {
-                // TODO
                 Log.e("TCP", "Connecting", e);
+                arrayList.add(e.toString());
+                mAdapter.notifyDataSetChanged();
             }
 
         } else finish();

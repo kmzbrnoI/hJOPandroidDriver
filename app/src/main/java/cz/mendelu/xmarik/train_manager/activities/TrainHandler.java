@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import cz.mendelu.xmarik.train_manager.events.TCPDisconnectEvent;
 import cz.mendelu.xmarik.train_manager.storage.TrainDb;
 import cz.mendelu.xmarik.train_manager.models.TrainFunction;
 import cz.mendelu.xmarik.train_manager.adapters.FunctionCheckBoxAdapter;
@@ -146,6 +147,8 @@ public class TrainHandler extends NavigationBase {
 
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if (updating) return;
+
                 if (b) {
                     if (!multitrack.contains(train))
                         multitrack.add(train);
@@ -159,6 +162,7 @@ public class TrainHandler extends NavigationBase {
         chb_total.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if (updating) return;
                 train.setTotal(b);
             }
         });
@@ -296,7 +300,7 @@ public class TrainHandler extends NavigationBase {
     }
 
     public void ib_StatusClick(View v) {
-        // TODO?
+        // nothing here yet
     }
 
     @Subscribe
@@ -313,6 +317,22 @@ public class TrainHandler extends NavigationBase {
     @Subscribe
     public void onEvent(LokRemoveEvent event) {
         this.fillHVs();
+    }
+
+    @Subscribe
+    public void onEvent(TCPDisconnectEvent event) {
+        updating = true;
+        managed_str.clear();
+        managed.clear();
+
+        s_spinner.setEnabled(false);
+        managed_str.add(getString(R.string.ta_no_loks));
+
+        train = null;
+        this.updateGUTtoHV();
+
+        updating = false;
+        super.onEvent(event);
     }
 
     @Subscribe
