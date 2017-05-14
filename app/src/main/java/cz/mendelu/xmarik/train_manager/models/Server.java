@@ -14,7 +14,6 @@ public class Server {
     public static AtomicInteger globalId = new AtomicInteger(0);
     public static final int DEFAULT_PORT = 5823;
 
-    public int id; // TODO necessarry ?
     public String name;
     public String host;
     public int port;
@@ -25,7 +24,6 @@ public class Server {
     public String password;
 
     public Server(String name, String host, int port, boolean active, String type, String username, String password) {
-        this.id = globalId.incrementAndGet();
         this.name = name;
         this.host = host;
         this.port = port;
@@ -41,7 +39,6 @@ public class Server {
     public Server(String discovery) {
         ArrayList<String> parsed = ParseHelper.parse(discovery, ";", "");
 
-        this.id = globalId.incrementAndGet();
         this.name = parsed.get(7);
         this.host = parsed.get(4);
         this.port = Integer.valueOf(parsed.get(5));
