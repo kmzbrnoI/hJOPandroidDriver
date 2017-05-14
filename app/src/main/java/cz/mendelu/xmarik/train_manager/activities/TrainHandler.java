@@ -2,6 +2,7 @@ package cz.mendelu.xmarik.train_manager.activities;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
@@ -36,8 +37,6 @@ import cz.mendelu.xmarik.train_manager.events.LokRemoveEvent;
 import cz.mendelu.xmarik.train_manager.events.LokRespEvent;
 import cz.mendelu.xmarik.train_manager.models.Train;
 
-// TODO: timer on speed change
-
 public class TrainHandler extends NavigationBase {
     private List<Train> managed;
     private List<Train> multitrack;
@@ -45,7 +44,6 @@ public class TrainHandler extends NavigationBase {
     private ArrayAdapter<String> managed_adapter;
     private Train train;
     private boolean updating;
-    private Long timer;
     private Context context;
 
     private SeekBar sb_speed;
@@ -59,7 +57,16 @@ public class TrainHandler extends NavigationBase {
     private ListView lv_functions;
     private TextView tv_kmhSpeed;
 
-    @SuppressWarnings("deprecation")
+    Handler timerHandler = new Handler();
+    Runnable timerRunnable = new Runnable() {
+        @Override
+        public void run() {
+            if (!updating && train != null && train.total && train.stepsSpeed != sb_speed.getProgress())
+                train.setSpeedSteps(sb_speed.getProgress());
+            timerHandler.postDelayed(this, 100);
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setContentView(R.layout.activity_train_handler);
@@ -73,7 +80,6 @@ public class TrainHandler extends NavigationBase {
 
         managed = new ArrayList<>();
         multitrack = new ArrayList<>();
-        timer = System.currentTimeMillis();
 
         sb_speed = (SeekBar) findViewById(R.id.speedkBar1);
         s_direction = (Switch) findViewById(R.id.handlerDirection1);
@@ -156,29 +162,6 @@ public class TrainHandler extends NavigationBase {
                 train.setTotal(b);
             }
         });
-
-        sb_speed.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress,
-                                          boolean fromUser) {
-                // TODO: this is really bad solution, it puts the first speed, not the last!
-                if (timer < System.currentTimeMillis())
-                    timer = System.currentTimeMillis() + 200;
-                    train.setSpeedSteps(progress);
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-
-            }
-        });
-
     }
 
     private void fillHVs() {
@@ -355,6 +338,7 @@ public class TrainHandler extends NavigationBase {
     @Override
     protected void onPause() {
         b_idleClick((Button)findViewById(R.id.startButton1));
+        timerHandler.removeCallbacks(timerRunnable);
         super.onPause();
     }
 
@@ -373,6 +357,7 @@ public class TrainHandler extends NavigationBase {
     public void onResume() {
         super.onResume();
         this.fillHVs();
+        timerHandler.postDelayed(timerRunnable, 100);
         if(!EventBus.getDefault().isRegistered(this)) EventBus.getDefault().register(this);
     }
 
