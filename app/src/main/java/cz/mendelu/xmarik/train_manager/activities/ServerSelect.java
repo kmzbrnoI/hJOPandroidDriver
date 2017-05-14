@@ -22,8 +22,10 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.greenrobot.eventbus.EventBus;
@@ -238,9 +240,6 @@ public class ServerSelect extends NavigationBase {
                         public void onClick(DialogInterface dialog, int which) {}
                     }).show();
         }
-
-        //float deg = lButton.getRotation() + 360F;
-        //lButton.animate().rotation(deg).setInterpolator(new AccelerateDecelerateInterpolator());
     }
 
     public void connect(Source from, int index) {
@@ -304,15 +303,19 @@ public class ServerSelect extends NavigationBase {
     public void changeLogin(final Server server) {
         final Dialog dialog = new Dialog(this);
         dialog.setContentView(R.layout.dialog_user);
-        dialog.setTitle("Set user data");
 
         //set dialog component
         final EditText mName = (EditText) dialog.findViewById(R.id.dialogName);
         final EditText mPasswd = (EditText) dialog.findViewById(R.id.dialogPasswd);
         Button dialogButton = (Button) dialog.findViewById(R.id.dialogButtonOK);
-        // if button is clicked, close the custom dialog
-        if (server.password != null) mPasswd.setText(server.password);
-        if (server.username != null) mName.setText(server.username);
+        final TextView mMessage = (TextView) dialog.findViewById(R.id.tv_note);
+        final CheckBox savebox = (CheckBox) dialog.findViewById(R.id.dialogSaveData);
+
+        mMessage.setText("Edit login");
+        mName.setText(server.username);
+        mPasswd.setText("");
+        savebox.setChecked(true);
+        savebox.setEnabled(false);
 
         dialogButton.setOnClickListener(new View.OnClickListener() {
             @Override

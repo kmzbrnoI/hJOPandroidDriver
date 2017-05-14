@@ -29,7 +29,7 @@ public class ServerEdit extends AppCompatActivity {
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
-            server = ServerDb.instance.stored.get(Integer.valueOf(extras.getString("serverId")));
+            server = ServerDb.instance.stored.get(extras.getInt("serverId"));
 
             nameText.setText(server.name);
             ipAdrText.setText(server.host);
