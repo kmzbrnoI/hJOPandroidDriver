@@ -37,7 +37,6 @@ import cz.mendelu.xmarik.train_manager.events.RequestEvent;
 public class TrainRequest extends NavigationBase {
 
     Context context;
-    ProgressBar mProgressBar;
     ArrayAdapter<String> lAdapter;
     Button sendButton;
     EditText messageForServer;
@@ -79,12 +78,10 @@ public class TrainRequest extends NavigationBase {
 
         connectionDialog = new AlertDialog.Builder(this);
 
-        mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
         areas_lv = (ListView) findViewById(R.id.nav_areas);
         sendButton = (Button) findViewById(R.id.b_request);
         messageForServer = (EditText) findViewById(R.id.authMessage);
         focused = -1;
-        mProgressBar.setVisibility(View.GONE);
 
         areas_data = new ArrayList<String>();
         lAdapter = new ArrayAdapter<>(this,
@@ -151,7 +148,6 @@ public class TrainRequest extends NavigationBase {
                         public void onClick(DialogInterface dialog, int which) {}
                     }).show();
             dialog.dismiss();
-            mProgressBar.setVisibility(View.GONE);
         }
     }
 
@@ -167,7 +163,6 @@ public class TrainRequest extends NavigationBase {
 
     @Subscribe
     public void onEvent(TCPDisconnectEvent event) {
-        mProgressBar.setVisibility(View.GONE);
         dialog.dismiss();
 
         // TODO:  move this to parent object?
@@ -198,14 +193,12 @@ public class TrainRequest extends NavigationBase {
                 ControlAreaDb.instance.areas.get(focused).id + ";" + messageForServer.getText().toString());
 
         dialog.setTitle(getString(R.string.tr_info_request_requesting));
-        mProgressBar.setVisibility(View.VISIBLE);
         dialogMessage.setText(R.string.tr_info_request_sent);
         dialog.show();
     }
 
     private void cancelRequest() {
         TCPClientApplication.getInstance().send("-;LOK;G;CANCEL");
-        mProgressBar.setVisibility(View.GONE);
     }
 
     @Override
