@@ -113,8 +113,13 @@ public class ServerConnector extends Activity {
                 TCPClientApplication.getInstance().server.username = mName.getText().toString();
                 TCPClientApplication.getInstance().server.password = HashHelper.hashPasswd(mPasswd.getText().toString());
 
-                if (savebox.isChecked())
-                    ServerDb.instance.transferLoginToSaved(TCPClientApplication.getInstance().server);
+                if (savebox.isChecked()) {
+                    if (ServerDb.instance.isStoredServer(TCPClientApplication.getInstance().server.host,
+                            TCPClientApplication.getInstance().server.port))
+                        ServerDb.instance.transferLoginToSaved(TCPClientApplication.getInstance().server);
+                    else
+                        ServerDb.instance.addStoredServer(TCPClientApplication.getInstance().server);
+                }
 
                 TCPClientApplication.getInstance().send("-;LOK;G;AUTH;{" +
                         TCPClientApplication.getInstance().server.username + "};" +

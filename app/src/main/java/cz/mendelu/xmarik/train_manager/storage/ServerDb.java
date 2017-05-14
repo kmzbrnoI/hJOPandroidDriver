@@ -86,6 +86,13 @@ public class ServerDb {
         return false;
     }
 
+    public boolean isStoredServer(String host, int port) {
+        for (Server s : stored)
+            if (s.host.equals(host) && s.port == port)
+                return true;
+        return false;
+    }
+
     public void transferLoginToSaved(Server found) {
         for(Server s : stored) {
             if (s != found && s.host.equals(found.host) && s.port == found.port) {
