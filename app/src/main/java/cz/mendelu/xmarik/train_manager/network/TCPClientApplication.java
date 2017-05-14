@@ -26,7 +26,7 @@ import cz.mendelu.xmarik.train_manager.storage.ServerDb;
 public class TCPClientApplication extends Application {
     static TCPClientApplication instance;
 
-    public Server server = null; // TODO should be private and with getter
+    public Server server = null;
 
     public boolean auth = false;
     TCPClient mTcpClient;

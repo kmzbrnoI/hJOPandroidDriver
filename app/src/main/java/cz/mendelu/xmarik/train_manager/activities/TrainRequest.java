@@ -122,7 +122,7 @@ public class TrainRequest extends NavigationBase {
 
         areas_lv.setEnabled(ControlAreaDb.instance.areas.size() > 0);
         if (ControlAreaDb.instance.areas.size() == 0)
-            areas_data.add("No areas!"); // TODO: string here
+            areas_data.add(getString(R.string.tr_no_areas));
 
         for(ControlArea c : ControlAreaDb.instance.areas)
             areas_data.add(c.name);
@@ -141,7 +141,7 @@ public class TrainRequest extends NavigationBase {
             dialogMessage.setText(R.string.tr_info_waiting_disp);
         } else if (event.getParsed().get(4).toUpperCase().equals("ERR")) {
             new AlertDialog.Builder(this)
-                    .setMessage(event.getParsed().size() >= 6 ? event.getParsed().get(5) : "General error!") // TODO: strings
+                    .setMessage(event.getParsed().size() >= 6 ? event.getParsed().get(5) : getString(R.string.general_error))
                     .setCancelable(false)
                     .setPositiveButton("ok", new DialogInterface.OnClickListener() {
                         @Override
@@ -167,7 +167,7 @@ public class TrainRequest extends NavigationBase {
 
         // TODO:  move this to parent object?
         new AlertDialog.Builder(this)
-                .setMessage("Disconnected from server!") // TODO: strings
+                .setMessage(getString(R.string.disconnected))
                 .setCancelable(false)
                 .setPositiveButton("ok", new DialogInterface.OnClickListener() {
                     @Override
@@ -180,7 +180,7 @@ public class TrainRequest extends NavigationBase {
     public void b_requestClick(View v) {
         if (areas_lv.getItemAtPosition(focused) == null) {
             new AlertDialog.Builder(this)
-                    .setMessage("You must select area!") // TODO: strings
+                    .setMessage(getString(R.string.tr_no_area_selected))
                     .setCancelable(false)
                     .setPositiveButton("ok", new DialogInterface.OnClickListener() {
                         @Override

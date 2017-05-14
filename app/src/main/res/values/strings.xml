@@ -24,6 +24,7 @@
     <string name="ta_direction_backwards">backward</string>
     <string name="ta_idle">Idle</string>
     <string name="ta_emergency_stop">Emergency STOP</string>
+    <string name="ta_no_loks">No trains.</string>
 
     <string name="tr_disp_message">Optional message for the dispatcher:</string>
     <string name="tr_send_request">Send request</string>
@@ -31,9 +32,12 @@
     <string name="tr_info_request_sent">Request sent, waiting for server response.</string>
     <string name="tr_info_waiting_disp">Request sent, waiting for dispatcher response.</string>
     <string name="tr_info_request_requesting">"Request in progress "</string>
+    <string name="tr_no_areas">No areas.</string>
+    <string name="tr_no_area_selected">You must select an area!</string>
 
     <string name="trl_release">Release</string>
     <string name="trl_loko_released">Train released.</string>
+    <string name="trl_no_train_selected">You must select a train!</string>
 
     <string name="conn_servers_discovered">Discovered servers</string>
     <string name="conn_servers_saved">Saved servers</string>
@@ -71,6 +75,10 @@
 
     <string name="save">Save</string>
     <string name="cancel">Cancel</string>
+    <string name="disconnected">Disconnected from server!</string>
+    <string name="general_error">General error!</string>
+    <string name="yes">yes</string>
+    <string name="no">no</string>
 
     <string name="sc_connecting">Connecting...</string>
     <string name="sc_authorizing">Authorizing...</string>
@@ -80,6 +88,7 @@
     <string name="sc_auth_ok">Sucessfully authorized</string>
     <string name="sc_auth_err">Authorization problem!</string>
     <string name="sc_version_warning">Server uses other protocol version, application may misbehave!</string>
+    <string name="sc_auth_wait">Waiting for login...</string>
 
     <string name="about">hJOP Driver allows you to become an engine driver and control one or more
         engines on the model railroad. It fully cooperates with hJOP.\nhttp://hjop.kmz-brno.cz/"</string>

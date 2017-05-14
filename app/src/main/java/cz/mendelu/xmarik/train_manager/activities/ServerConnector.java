@@ -141,7 +141,7 @@ public class ServerConnector extends Activity {
 
         if (TCPClientApplication.getInstance().server.username.isEmpty() ||
                 TCPClientApplication.getInstance().server.password.isEmpty()) {
-            arrayList.add("Waiting for login..."); // TODO: strings here
+            arrayList.add(getString(R.string.sc_auth_wait)); // TODO: strings here
             progressBar.setVisibility(View.GONE);
             editLogin("Enter a login");
         } else {

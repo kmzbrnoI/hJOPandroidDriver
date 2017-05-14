@@ -182,13 +182,13 @@ public class ServerSelect extends NavigationBase {
                 } else {
                     new AlertDialog.Builder(this)
                             .setMessage(R.string.conn_server_offline)
-                            .setPositiveButton("yes", new DialogInterface.OnClickListener() {
+                            .setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     connect(Source.FOUND, info.position);
                                 }
                             })
-                            .setNegativeButton("no", new DialogInterface.OnClickListener() { // TODO: strings here
+                            .setNegativeButton(getString(R.string.no), new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {}
                             }).show();

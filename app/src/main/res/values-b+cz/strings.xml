@@ -24,6 +24,7 @@
     <string name="ta_direction_backwards">vzad</string>
     <string name="ta_idle">Idle</string>
     <string name="ta_emergency_stop">Nouzové STOP</string>
+    <string name="ta_no_loks">Žádné vlaky.</string>
 
     <string name="tr_disp_message">Volitelná zpráva pro dispečera:</string>
     <string name="tr_send_request">Odeslat žádost</string>
@@ -31,9 +32,12 @@
     <string name="tr_info_request_sent">Žádost odeslána, čekám na odpověď serveru.</string>
     <string name="tr_info_waiting_disp">Žádost odeslána, čekám na dispečera.</string>
     <string name="tr_info_request_requesting">"Probíhá žádost do stanice "</string>
+    <string name="tr_no_areas">Žádné oblasti řízení.</string>
+    <string name="tr_no_area_selected">Musíte vybrat oblast řízení!</string>
 
     <string name="trl_release">Uvolnit</string>
     <string name="trl_loko_released">Lokomotiva uvolněna.</string>
+    <string name="trl_no_train_selected">Musíte vybrat hnací vozidlo!</string>
 
     <string name="conn_servers_discovered">Nalezené servery</string>
     <string name="conn_servers_saved">Uložené servery</string>
@@ -69,6 +73,13 @@
     <string name="mm_delete">Smazat</string>
     <string name="mm_delete_all">Smazat všechny servery</string>
 
+    <string name="save">Uložit</string>
+    <string name="cancel">Zrušit</string>
+    <string name="disconnected">Odpojeno od serveru!</string>
+    <string name="general_error">Všeobecná chyba!</string>
+    <string name="yes">ano</string>
+    <string name="no">ne</string>
+
     <string name="sc_connecting">Navazuji komunikaci...</string>
     <string name="sc_authorizing">Autorizuji...</string>
     <string name="sc_getting_ors">Získávám oblasti řízení...</string>
@@ -77,9 +88,7 @@
     <string name="sc_auth_ok">Úspěšně autorizováno</string>
     <string name="sc_auth_err">Autorizace se nezdařila!</string>
     <string name="sc_version_warning">Server využívá jiný komunikační protokol než 1.0, v komunikaci může docházet k chybám!</string>
-
-    <string name="save">Uložit</string>
-    <string name="cancel">Zrušit</string>
+    <string name="sc_auth_wait">Čekám na zadání loginu...</string>
 
     <string name="about">hJOP Driver umožňuje řízení jízdy hnacích vozidel ve spolupráci se
         softwarovým balíkem hJOP.\nhttp://hjop.kmz-brno.cz/"</string>

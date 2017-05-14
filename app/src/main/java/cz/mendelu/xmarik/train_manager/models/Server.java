@@ -51,22 +51,6 @@ public class Server {
         this.password = "";
     }
 
-    public String getLongInfo() {
-        return "Server :" + name + "\n" +
-                "Ip: " + host + "\n" +
-                "Port: " + port + "\n" +
-                "Type: " + type + "\n" +
-                "Active: " + ((TCPClientApplication.getInstance().server == this &&
-                TCPClientApplication.getInstance().connected()) ? "yes" : "no");
-    }
-
-    @Override
-    public String toString() {
-        return "Server --" + name + "--" +
-                "| ip=" + host +
-                "| port=" + port + ' ';
-    }
-
     public String getStringData() {
         String statusText = this.active ? "online" : "offline";
         String stringData = this.name + "\t" + this.host + "\n" + this.type + " \t" + statusText;

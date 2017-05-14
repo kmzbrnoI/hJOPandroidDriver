@@ -171,7 +171,7 @@ public class TrainHandler extends NavigationBase {
 
         s_spinner.setEnabled(TrainDb.instance.trains.size() > 0);
         if (TrainDb.instance.trains.size() == 0)
-            managed_str.add("No trains!"); // TODO: string here
+            managed_str.add(getString(R.string.ta_no_loks));
 
         int i = 0;
         for(Train t : TrainDb.instance.trains.values()) {

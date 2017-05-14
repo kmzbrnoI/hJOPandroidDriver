@@ -102,7 +102,7 @@ public class TrainRelease extends NavigationBase {
     public void b_releaseClick(View v) {
         if (focused == -1) {
             new AlertDialog.Builder(this)
-                    .setMessage("You must select a train!") // TODO: strings
+                    .setMessage(getString(R.string.trl_no_train_selected))
                     .setCancelable(false)
                     .setPositiveButton("ok", new DialogInterface.OnClickListener() {
                         @Override
@@ -126,7 +126,7 @@ public class TrainRelease extends NavigationBase {
 
         lv_trains.setEnabled(TrainDb.instance.trains.size() > 0);
         if (TrainDb.instance.trains.size() == 0)
-            train_strings.add("No trains!"); // TODO: string here
+            train_strings.add(getString(R.string.ta_no_loks));
 
         for(Train t : TrainDb.instance.trains.values()) {
             train_strings.add(t.name + " (" + t.label + ") : " + String.valueOf(t.addr));
