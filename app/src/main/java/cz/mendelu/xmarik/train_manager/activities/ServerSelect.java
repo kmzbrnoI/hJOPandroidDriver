@@ -66,7 +66,7 @@ public class ServerSelect extends NavigationBase {
         setContentView(R.layout.activity_server_select);
         super.onCreate(savedInstanceState);
 
-        Object obj = this;
+        final Context obj = this;
         Context context = this.getApplicationContext();
 
         // create database of servers
@@ -106,16 +106,47 @@ public class ServerSelect extends NavigationBase {
         fServers.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view,
-                                    int position, long id) {
-                connect(Source.FOUND, position);
+                                    final int position, long id) {
+                if (ServerDb.instance.found.get(position).active) {
+                    connect(Source.FOUND, position);
+                } else {
+                    new AlertDialog.Builder(obj)
+                            .setMessage(R.string.conn_server_offline)
+                            .setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    connect(Source.FOUND, position);
+                                }
+                            })
+                            .setNegativeButton(getString(R.string.no), new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {}
+                            }).show();
+                }
             }
         });
 
         sServers.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view,
-                                    int position, long id) {
-                connect(Source.STORED, position);
+                                    final int position, long id) {
+                if (ServerDb.instance.stored.get(position).active) {
+                    connect(Source.STORED, position);
+                } else {
+                    new AlertDialog.Builder(obj)
+                            .setMessage(R.string.conn_server_offline)
+                            .setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    connect(Source.STORED, position);
+                                }
+                            })
+                            .setNegativeButton(getString(R.string.no), new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                }
+                            }).show();
+                }
             }
         });
 
