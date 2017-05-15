@@ -36,6 +36,7 @@ public class ServerDb {
             if (tmpS.length() > 5) {
                 Server tmpServer = new Server(attributes[0], attributes[1], Integer.parseInt(attributes[2]), false,
                         attributes[3], attributes[4], attributes[5]);
+                tmpServer.active = true;
                 if (!stored.contains(tmpServer)) stored.add(tmpServer);
             }
         }
