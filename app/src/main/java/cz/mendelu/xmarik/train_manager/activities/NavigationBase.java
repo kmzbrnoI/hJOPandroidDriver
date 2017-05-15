@@ -60,8 +60,6 @@ public class NavigationBase extends AppCompatActivity
         } catch (PackageManager.NameNotFoundException e) {
             Log.e("Version", "App version exception!", e);
         }
-
-        if (!EventBus.getDefault().isRegistered(this)) EventBus.getDefault().register(this);
     }
 
     /**
@@ -130,6 +128,12 @@ public class NavigationBase extends AppCompatActivity
     public void onStop() {
         if (EventBus.getDefault().isRegistered(this)) EventBus.getDefault().unregister(this);
         super.onStop();
+    }
+
+    @Override
+    public void onStart() {
+        if (!EventBus.getDefault().isRegistered(this)) EventBus.getDefault().register(this);
+        super.onStart();
     }
 
 }

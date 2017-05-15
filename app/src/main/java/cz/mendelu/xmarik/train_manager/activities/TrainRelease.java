@@ -148,8 +148,8 @@ public class TrainRelease extends NavigationBase {
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
+    public void onStart() {
+        super.onStart();
         updateHVList();
     }
 
