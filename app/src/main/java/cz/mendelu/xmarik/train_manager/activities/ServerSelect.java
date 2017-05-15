@@ -90,15 +90,6 @@ public class ServerSelect extends NavigationBase {
         if (sharedpreferences.contains("StoredServers"))
             ServerDb.instance.loadServers(sharedpreferences.getString("StoredServers", ""));
 
-        // run UDP discover:
-        ConnectivityManager connManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo mWifi = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
-        if (mWifi.isConnected()) {
-            (new UDPDiscover((WifiManager)context.getSystemService(Context.WIFI_SERVICE))).execute();
-        } else Toast.makeText(getApplicationContext(),
-                R.string.conn_wifi_unavailable, Toast.LENGTH_LONG)
-                .show();
-
         // bind ListView adapters:
         found = new ArrayList<String>();
         fAdapter = new ArrayAdapter<>(this,
@@ -127,6 +118,17 @@ public class ServerSelect extends NavigationBase {
                 connect(Source.STORED, position);
             }
         });
+
+        // run UDP discover:
+        ConnectivityManager connManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo mWifi = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+        if (mWifi.isConnected()) {
+            (new UDPDiscover((WifiManager)context.getSystemService(Context.WIFI_SERVICE))).execute();
+            float deg = lButton.getRotation() + 720F;
+            lButton.animate().rotation(deg).setInterpolator(new AccelerateDecelerateInterpolator());
+        } else Toast.makeText(getApplicationContext(),
+                R.string.conn_wifi_unavailable, Toast.LENGTH_LONG)
+                .show();
     }
 
     public void updateStoredServers() {
