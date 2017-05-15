@@ -40,8 +40,12 @@ public class TCPClientApplication extends Application {
     public void connect(Server server) {
         this.server = server;
         mTcpClient = new TCPClient(server.host, server.port);
+
+        if (listenTask != null && listenTask.getStatus() == AsyncTask.Status.RUNNING)
+            listenTask.cancel(true);
+
         listenTask = new ListenTask();
-        listenTask.execute();
+        listenTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     public void disconnect() {
