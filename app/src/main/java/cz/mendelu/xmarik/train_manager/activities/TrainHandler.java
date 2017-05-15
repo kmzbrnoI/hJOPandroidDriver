@@ -62,8 +62,13 @@ public class TrainHandler extends NavigationBase {
     Runnable timerRunnable = new Runnable() {
         @Override
         public void run() {
-            if (!updating && train != null && train.total && train.stepsSpeed != sb_speed.getProgress())
-                train.setSpeedSteps(sb_speed.getProgress());
+            if (!updating && train != null && train.total && train.stepsSpeed != sb_speed.getProgress()) {
+                if (multitrack.contains(train)) {
+                    for (Train s : multitrack)
+                        s.setSpeedSteps(sb_speed.getProgress());
+                } else
+                    train.setSpeedSteps(sb_speed.getProgress());
+            }
             timerHandler.postDelayed(this, 100);
         }
     };
@@ -213,9 +218,13 @@ public class TrainHandler extends NavigationBase {
 
         train.setDirection(newDir);
 
-        if (managed.contains(train)) {
-            for (Train s : managed)
-                s.setDirection(newDir);
+        if (multitrack.contains(train)) {
+            for (Train s : multitrack) {
+                if (s == train)
+                    s.setDirection(newDir);
+                else
+                    s.setDirection(!s.direction);
+            }
         } else {
             train.setDirection(newDir);
         }
@@ -338,6 +347,7 @@ public class TrainHandler extends NavigationBase {
     @Subscribe
     public void onEvent(LokRespEvent event) {
         if (train == null) return;
+        if (Integer.valueOf(event.getParsed().get(2)) != train.addr) return;
 
         tv_kmhSpeed.setText(String.format("%s km/h", Integer.toString(train.kmphSpeed)));
 
