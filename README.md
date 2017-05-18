@@ -10,6 +10,19 @@ hJOP is required for this application to work.
 Application connects directly to the main hJOPserver via WiFi and requests
 engines from railroad dispatchers.
 
+## Main Features
+
+ * Automatic server scan in local network, server select.
+ * Server database.
+ * Train request.
+ * Speed control, direction control, function control.
+ * Function meaning displaying.
+ * Idle, emergency stop.
+ * Show modell speed in kmph.
+ * Multitraction.
+ * Train release.
+ * Differentiation between total control and semi-total control.
+
 ## Contributors
 
 Application was developed as [master thesis](http://is.mendelu.cz/lide/clovek.pl?id=43049;zalozka=7;studium=77602;zp=54008)
