@@ -1,5 +1,7 @@
 # Android Driver for hJOP
 
+<a href='https://play.google.com/store/apps/details?id=cz.mendelu.xmarik.train_manager&pcampaignid=MKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png'/></a>
+
 hJOPandroidDriver is a simple application, which allows user to become an
 engine driver and control one or more engines on the model railroad. It fully
 cooperates with [hJOP](http://hjop.kmz-brno.cz) (in Czech). Importantly,
