@@ -70,7 +70,7 @@ public class ServerSelect extends NavigationBase {
         Context context = this.getApplicationContext();
 
         // create database of servers
-        ServerDb.instance = new ServerDb();
+        ServerDb.instance = new ServerDb(getDefaultSharedPreferences(getApplicationContext()));
 
         // create database of control areas
         ControlAreaDb.instance = new ControlAreaDb();
@@ -84,11 +84,6 @@ public class ServerSelect extends NavigationBase {
         lButton = (Button) findViewById(R.id.serverButton);
         fServers = (ListView) findViewById(R.id.foundServers);
         sServers = (ListView) findViewById(R.id.storedServers);
-
-        // load shared preferences
-        sharedpreferences = getDefaultSharedPreferences(getApplicationContext());
-        if (sharedpreferences.contains("StoredServers"))
-            ServerDb.instance.loadServers(sharedpreferences.getString("StoredServers", ""));
 
         // bind ListView adapters:
         found = new ArrayList<String>();
@@ -337,27 +332,11 @@ public class ServerSelect extends NavigationBase {
     }
 
     @Override
-    public void onStop() {
-        save();
-        super.onStop();
-    }
-
-    @Override
     public void onResume() {
         super.onResume();
         updateFoundServers();
         updateStoredServers();
         if (!EventBus.getDefault().isRegistered(this)) EventBus.getDefault().register(this);
-    }
-
-    public void save() {
-        String n = ServerDb.instance.getSaveString();
-
-        SharedPreferences.Editor editor = sharedpreferences.edit();
-        editor.remove("StoredServers");
-        editor.clear();
-        editor.putString("StoredServers", n);
-        editor.commit();
     }
 
 }

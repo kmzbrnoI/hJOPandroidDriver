@@ -71,11 +71,13 @@ public class ServerEdit extends AppCompatActivity {
 
         if (server == null) {
             ServerDb.instance.addStoredServer(new Server(name, ipAdr, Integer.parseInt(port), false, about, "", ""));
+            ServerDb.instance.saveServers();
         } else {
             server.name = name;
             server.port = Integer.parseInt(port);
             server.type = about;
             server.active = false;
+            ServerDb.instance.saveServers();
             EventBus.getDefault().post(new StoredServersReloadEvent());
         }
 

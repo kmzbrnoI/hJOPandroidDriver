@@ -1,5 +1,7 @@
 package cz.mendelu.xmarik.train_manager.storage;
 
+import android.content.SharedPreferences;
+
 import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
@@ -12,25 +14,23 @@ import cz.mendelu.xmarik.train_manager.models.Server;
  * Class for in memmory store servers, during run.
  */
 public class ServerDb {
+    SharedPreferences preferences;
     public static ServerDb instance;
     public ArrayList<Server> found;
     public ArrayList<Server> stored;
 
-    public ServerDb() {
+    public ServerDb(SharedPreferences preferences) {
         this.found = new ArrayList<>();
         this.stored = new ArrayList<>();
+
+        this.preferences = preferences;
+        this.loadServers();
     }
 
-    public String getSaveString() {
-        String saveString = "";
-        for (Server s : this.stored) {
-            saveString = saveString + s.getSaveDataString() + "|";
-        }
-        return saveString;
-    }
+    public void loadServers() {
+        if (!preferences.contains("StoredServers")) return;
+        String[] serverString = preferences.getString("StoredServers", "").split("\\|");
 
-    public void loadServers(String servers) {
-        String[] serverString = servers.split("\\|");
         for (String tmpS : serverString) {
             String[] attributes = tmpS.split(";");
             if (tmpS.length() > 5) {
@@ -42,8 +42,21 @@ public class ServerDb {
         }
     }
 
+    public void saveServers() {
+        String saveString = "";
+        for (Server s : this.stored)
+            saveString = saveString + s.getSaveDataString() + "|";
+
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.remove("StoredServers");
+        editor.clear();
+        editor.putString("StoredServers", saveString);
+        editor.commit();
+    }
+
     public void clearStoredServers() {
         this.stored.clear();
+        this.saveServers();
         EventBus.getDefault().post(new StoredServersReloadEvent());
     }
 
@@ -54,6 +67,7 @@ public class ServerDb {
 
     public void addStoredServer(Server server) {
         this.stored.add(server);
+        this.saveServers();
         EventBus.getDefault().post(new StoredServersReloadEvent());
     }
 
@@ -76,6 +90,7 @@ public class ServerDb {
     public void removeStoredServer(int position) {
         if (position <= stored.size()) {
             this.stored.remove(position);
+            this.saveServers();
             EventBus.getDefault().post(new StoredServersReloadEvent());
         }
     }
@@ -101,6 +116,7 @@ public class ServerDb {
                 s.password = found.password;
             }
         }
+        this.saveServers();
     }
 
 }
