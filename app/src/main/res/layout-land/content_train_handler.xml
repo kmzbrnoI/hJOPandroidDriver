@@ -117,22 +117,14 @@
                     android:gravity="center"
                     android:layout_marginTop="5dp"/>
 
-                <LinearLayout
-                    android:orientation="horizontal"
+                <SeekBar
                     android:layout_width="match_parent"
                     android:layout_height="49dp"
-                    android:layout_weight="0.57"
-                    android:id="@+id/linearLayout2" >
-
-                    <SeekBar
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:id="@+id/speedkBar1"
-                        android:layout_weight="1"
-                        android:max="30"
-                        android:indeterminate="false"
-                        android:layout_gravity="center_vertical" />
-                </LinearLayout>
+                    android:id="@+id/speedkBar1"
+                    android:layout_weight="1"
+                    android:max="30"
+                    android:indeterminate="false"
+                    android:layout_gravity="center_vertical" />
 
             </LinearLayout>
         </ScrollView>
