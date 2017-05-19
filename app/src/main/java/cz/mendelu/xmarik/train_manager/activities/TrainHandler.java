@@ -117,20 +117,11 @@ public class TrainHandler extends NavigationBase {
             }
         });
 
-        s_direction.setOnClickListener(new CompoundButton.OnClickListener() {
+        s_direction.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onClick(View view) {
-                onDirectionChange(!s_direction.isChecked());
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                onDirectionChange(!isChecked);
             }
-        });
-
-        s_direction.setOnGenericMotionListener(new CompoundButton.OnGenericMotionListener() {
-            @Override
-            public boolean onGenericMotion(View view, MotionEvent motionEvent) {
-                onDirectionChange(!s_direction.isChecked());
-                return false;
-            }
-
         });
 
         s_spinner.setOnItemSelectedListener(new Spinner.OnItemSelectedListener() {
