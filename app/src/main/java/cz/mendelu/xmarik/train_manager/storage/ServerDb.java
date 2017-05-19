@@ -56,6 +56,12 @@ public class ServerDb {
 
     public void clearStoredServers() {
         this.stored.clear();
+
+        for (Server s : found) {
+            s.username = "";
+            s.password = "";
+        }
+
         this.saveServers();
         EventBus.getDefault().post(new StoredServersReloadEvent());
     }
@@ -89,6 +95,13 @@ public class ServerDb {
 
     public void removeStoredServer(int position) {
         if (position <= stored.size()) {
+            for (Server s : found) {
+                if (s.host.equals(stored.get(position).host) && s.port == stored.get(position).port) {
+                    s.username = "";
+                    s.password = "";
+                }
+            }
+
             this.stored.remove(position);
             this.saveServers();
             EventBus.getDefault().post(new StoredServersReloadEvent());
