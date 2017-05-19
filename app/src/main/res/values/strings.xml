@@ -47,6 +47,8 @@
     <string name="conn_no_server_authorized">No server authorized.</string>
     <string name="conn_search_finished">Server discovery finished.</string>
     <string name="conn_server_offline">Server is offline, really connect to server?</string>
+    <string name="conn_delete_server">Really delete server?</string>
+    <string name="conn_delete_all">Really delete all servers?</string>
 
     <string name="gl_new_loko">New train</string>
     <string name="gl_all_deleted">All servers deleted.</string>

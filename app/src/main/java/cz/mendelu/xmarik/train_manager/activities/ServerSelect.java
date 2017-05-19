@@ -233,11 +233,33 @@ public class ServerSelect extends NavigationBase {
                 break;
 
             case 3:
-                ServerDb.instance.removeStoredServer(info.position);
+                new AlertDialog.Builder(this)
+                        .setMessage(R.string.conn_delete_server)
+                        .setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                ServerDb.instance.removeStoredServer(info.position);
+                            }
+                        })
+                        .setNegativeButton(getString(R.string.no), new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {}
+                        }).show();
                 break;
 
             case 4:
-                ServerDb.instance.clearStoredServers();
+                new AlertDialog.Builder(this)
+                        .setMessage(R.string.conn_delete_all)
+                        .setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                ServerDb.instance.clearStoredServers();
+                            }
+                        })
+                        .setNegativeButton(getString(R.string.no), new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {}
+                        }).show();
                 break;
         }
         return true;

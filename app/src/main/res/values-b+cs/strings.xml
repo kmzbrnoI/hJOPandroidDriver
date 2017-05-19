@@ -47,6 +47,8 @@
     <string name="conn_no_server_authorized">Nebyl autorizován žádný server.</string>
     <string name="conn_search_finished">Vyhledávání serverů dokončeno.</string>
     <string name="conn_server_offline">Server je offline, skutečně se připojit?</string>
+    <string name="conn_delete_server">Opravdu smazat server?</string>
+    <string name="conn_delete_all">Opravdu smazat všechny servery?</string>
 
     <string name="gl_new_loko">Nová lokomotiva</string>
     <string name="gl_all_deleted">Všechny servery byly smazány.</string>
