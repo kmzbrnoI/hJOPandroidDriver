@@ -186,9 +186,6 @@ public class TrainHandler extends NavigationBase {
             if (!managed.contains(multitrack.get(i)))
                 multitrack.remove(i);
 
-        chb_group.setEnabled(managed.size() >= 2);
-        if (managed.size() < 2) chb_group.setChecked(false);
-
         s_spinner.setSelection(index);
         if (TrainDb.instance.trains.size() > 0)
             train = managed.get(0);
@@ -224,9 +221,10 @@ public class TrainHandler extends NavigationBase {
     private void updateGUTtoHV() {
         this.updating = true;
         try {
-            chb_group.setEnabled(train != null);
+            chb_group.setEnabled(train != null && managed.size() >= 2);
             chb_total.setEnabled(train != null);
             lv_functions.setEnabled(train != null);
+            if (managed.size() < 2) chb_group.setChecked(false);
 
             if (train == null) {
                 sb_speed.setProgress(0);
@@ -353,7 +351,6 @@ public class TrainHandler extends NavigationBase {
         sb_speed.setEnabled(enabled);
         b_stop.setEnabled(enabled);
         b_idle.setEnabled(enabled);
-        chb_group.setEnabled(enabled);
     }
 
     @Override
