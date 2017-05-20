@@ -21,7 +21,9 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
 import cz.mendelu.xmarik.train_manager.R;
+import cz.mendelu.xmarik.train_manager.events.GlobalAuthEvent;
 import cz.mendelu.xmarik.train_manager.events.TCPDisconnectEvent;
+import cz.mendelu.xmarik.train_manager.network.TCPClientApplication;
 
 /**
  * Class NavigationBase implements base class for all activities, which want to have navigation
@@ -122,6 +124,22 @@ public class NavigationBase extends AppCompatActivity
                     public void onClick(DialogInterface dialog, int which) {
                     }
                 }).show();
+    }
+
+    @Subscribe
+    public void onEvent(GlobalAuthEvent event) {
+        if (event.getParsed().get(4).toUpperCase().equals("NOT")) {
+            // authorization canceled -> disconnect
+            new AlertDialog.Builder(this)
+                    .setMessage(event.getParsed().get(5))
+                    .setCancelable(false)
+                    .setPositiveButton("ok", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            TCPClientApplication.getInstance().disconnect();
+                        }
+                    }).show();
+        }
     }
 
     @Override
