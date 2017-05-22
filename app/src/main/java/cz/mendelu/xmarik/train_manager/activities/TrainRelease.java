@@ -21,6 +21,7 @@ import org.greenrobot.eventbus.Subscribe;
 import java.util.ArrayList;
 
 import cz.mendelu.xmarik.train_manager.R;
+import cz.mendelu.xmarik.train_manager.events.TCPDisconnectEvent;
 import cz.mendelu.xmarik.train_manager.storage.TrainDb;
 import cz.mendelu.xmarik.train_manager.events.LokAddEvent;
 import cz.mendelu.xmarik.train_manager.events.LokChangeEvent;
@@ -57,8 +58,6 @@ public class TrainRelease extends NavigationBase {
                 android.R.layout.simple_list_item_1, android.R.id.text1, train_strings);
         lv_trains.setAdapter(hvs_adapter);
 
-        updateHVList();
-
         lv_trains.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override
@@ -83,12 +82,35 @@ public class TrainRelease extends NavigationBase {
         Toast.makeText(getApplicationContext(),
                 R.string.trl_loko_released, Toast.LENGTH_LONG)
                 .show();
+
         updateHVList();
+        b_send.setEnabled(true);
+        b_send.setText(R.string.trl_release);
     }
 
     @Subscribe
     public void onEvent(LokChangeEvent event) {
         updateHVList();
+    }
+
+    @Subscribe
+    public void onEvent(TCPDisconnectEvent event) {
+        focused = -1;
+        if (lastSelected != null) {
+            lastSelected.setBackgroundColor(Color.rgb(238, 238, 238));
+            lastSelected = null;
+        }
+
+        trains.clear();
+        train_strings.clear();
+        train_strings.add(getString(R.string.ta_no_loks));
+        hvs_adapter.notifyDataSetChanged();
+
+        lv_trains.setEnabled(false);
+        b_send.setEnabled(true);
+        b_send.setText(R.string.trl_release);
+
+        super.onEvent(event);
     }
 
     @Subscribe
@@ -108,6 +130,9 @@ public class TrainRelease extends NavigationBase {
             return;
         }
 
+        lv_trains.setEnabled(false);
+        b_send.setEnabled(false);
+        b_send.setText(R.string.trl_releasing);
         trains.get(focused).release();
     }
 
@@ -139,15 +164,17 @@ public class TrainRelease extends NavigationBase {
             if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            EventBus.getDefault().unregister(this);
+                if(EventBus.getDefault().isRegistered(this)) EventBus.getDefault().unregister(this);
             super.onBackPressed();
         }
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
+    public void onResume() {
+        super.onResume();
         updateHVList();
+        b_send.setEnabled(true);
+        b_send.setText(R.string.trl_release);
     }
 
     @Override

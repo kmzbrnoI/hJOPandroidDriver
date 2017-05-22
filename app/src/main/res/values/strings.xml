@@ -36,6 +36,7 @@
     <string name="tr_no_area_selected">You must select an area!</string>
 
     <string name="trl_release">Release</string>
+    <string name="trl_releasing">Releasing...</string>
     <string name="trl_loko_released">Train released.</string>
     <string name="trl_no_train_selected">You must select a train!</string>
 

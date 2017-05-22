@@ -36,6 +36,7 @@
     <string name="tr_no_area_selected">Musíte vybrat oblast řízení!</string>
 
     <string name="trl_release">Uvolnit</string>
+    <string name="trl_releasing">Uvolňuji...</string>
     <string name="trl_loko_released">Lokomotiva uvolněna.</string>
     <string name="trl_no_train_selected">Musíte vybrat hnací vozidlo!</string>
 
