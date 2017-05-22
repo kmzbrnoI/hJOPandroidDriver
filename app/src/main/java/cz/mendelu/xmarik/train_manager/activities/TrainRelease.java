@@ -36,7 +36,6 @@ public class TrainRelease extends NavigationBase {
 
     Button b_send;
     ListView lv_trains;
-    AlertDialog.Builder connectionDialog;
     View lastSelected;
 
     @Override
@@ -46,8 +45,6 @@ public class TrainRelease extends NavigationBase {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        connectionDialog = new AlertDialog.Builder(this);
 
         context = this;
         lv_trains = (ListView) findViewById(R.id.acquiredTrains);
