@@ -89,6 +89,10 @@ public class Train {
         TCPClientApplication.getInstance().send("-;LOK;" + String.valueOf(this.addr) + ";RELEASE");
     }
 
+    public void please() {
+        TCPClientApplication.getInstance().send("-;LOK;" + String.valueOf(this.addr) + ";PLEASE");
+    }
+
     public void emergencyStop() {
         kmphSpeed = 0;
         stepsSpeed = 0;

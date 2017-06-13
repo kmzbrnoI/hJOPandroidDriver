@@ -65,7 +65,8 @@ public class TrainDb {
                 EventBus.getDefault().post(new LokAddEvent(addr));
             }
 
-        } else if (event.getParsed().get(4).toUpperCase().equals("RELEASE")) {
+        } else if (event.getParsed().get(4).toUpperCase().equals("RELEASE") ||
+                   event.getParsed().get(4).toUpperCase().equals("NOT")) {
             if (!trains.containsKey(addr)) return;
             trains.remove(addr);
             EventBus.getDefault().post(new LokRemoveEvent(addr));
@@ -73,6 +74,7 @@ public class TrainDb {
         } else if (event.getParsed().get(4).toUpperCase().equals("STOLEN")) {
             if (!trains.containsKey(addr)) return;
             trains.get(addr).stolen = true;
+            trains.get(addr).total = false;
             EventBus.getDefault().post(new LokChangeEvent(addr));
         }
     }

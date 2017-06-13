@@ -62,10 +62,11 @@ public class TrainHandler extends NavigationBase {
     Runnable timerRunnable = new Runnable() {
         @Override
         public void run() {
-            if (!updating && train != null && train.total && train.stepsSpeed != sb_speed.getProgress()) {
+            if (!updating && train != null && train.total && !train.stolen && train.stepsSpeed != sb_speed.getProgress()) {
                 if (multitrack.contains(train)) {
                     for (Train s : multitrack)
-                        s.setSpeedSteps(sb_speed.getProgress());
+                        if (!s.stolen)
+                            s.setSpeedSteps(sb_speed.getProgress());
                 } else
                     train.setSpeedSteps(sb_speed.getProgress());
             }
@@ -210,7 +211,7 @@ public class TrainHandler extends NavigationBase {
             for (Train s : multitrack) {
                 if (s == train)
                     s.setDirection(newDir);
-                else
+                else if (!s.stolen)
                     s.setDirection(!s.direction);
             }
         } else {
@@ -222,8 +223,8 @@ public class TrainHandler extends NavigationBase {
         this.updating = true;
         try {
             chb_group.setEnabled(train != null && managed.size() >= 2);
-            chb_total.setEnabled(train != null);
-            lv_functions.setEnabled(train != null);
+            chb_total.setEnabled(train != null && !train.stolen);
+            lv_functions.setEnabled(train != null && !train.stolen);
             if (managed.size() < 2) chb_group.setChecked(false);
 
             if (train == null) {
@@ -263,7 +264,10 @@ public class TrainHandler extends NavigationBase {
                         R.layout.lok_function, new ArrayList<>(Arrays.asList(train.function)));
                 lv_functions.setAdapter(dataAdapter);
 
-                ib_status.setImageResource(R.drawable.ic_circle_green);
+                if (train.stolen)
+                    ib_status.setImageResource(R.drawable.ic_circle_yellow);
+                else
+                    ib_status.setImageResource(R.drawable.ic_circle_green);
             }
         }
         finally {
@@ -291,14 +295,16 @@ public class TrainHandler extends NavigationBase {
         if (train == null) return;
         if (multitrack.contains(train)) {
             for (Train t : multitrack)
-                t.setSpeedSteps(0);
+                if (!t.stolen)
+                    t.setSpeedSteps(0);
         } else {
             train.setSpeedSteps(0);
         }
     }
 
     public void ib_StatusClick(View v) {
-        // nothing here yet
+        if (train != null && train.stolen)
+            train.please();
     }
 
     @Subscribe
