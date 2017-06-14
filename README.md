@@ -32,7 +32,8 @@ however the current maintainer is [Jan Horacek](http://apophis.cz/)
 
 ## Licence
 
-TODO
+This project in available under
+[Apache License v2.0](https://www.apache.org/licenses/LICENSE-2.0).
 
 ## Development
 
