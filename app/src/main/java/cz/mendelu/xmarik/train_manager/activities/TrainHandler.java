@@ -276,7 +276,8 @@ public class TrainHandler extends NavigationBase {
     }
 
     public void onFuncChanged(int index, Boolean newState) {
-        train.setFunc(index, newState);
+        if (train != null && !train.stolen)
+            train.setFunc(index, newState);
     }
 
     public void b_stopClick(View view) {
