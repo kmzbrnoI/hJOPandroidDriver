@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -146,9 +147,7 @@ public class ServerSelect extends NavigationBase {
         });
 
         // run UDP discover:
-        ConnectivityManager connManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo mWifi = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
-        if (mWifi.isConnected()) {
+        if (isWifiOnAndConnected()) {
             (new UDPDiscover((WifiManager)context.getSystemService(Context.WIFI_SERVICE))).execute();
             float deg = lButton.getRotation() + 720F;
             lButton.animate().rotation(deg).setInterpolator(new AccelerateDecelerateInterpolator());
@@ -275,9 +274,7 @@ public class ServerSelect extends NavigationBase {
         ServerDb.instance.clearFoundServers();
         fAdapter.notifyDataSetChanged();
 
-        ConnectivityManager connManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo mWifi = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
-        if (mWifi.isConnected()) {
+        if (isWifiOnAndConnected()) {
             (new UDPDiscover((WifiManager)context.getSystemService(Context.WIFI_SERVICE))).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             float deg = lButton.getRotation() + 720F;
             lButton.animate().rotation(deg).setInterpolator(new AccelerateDecelerateInterpolator());
@@ -289,6 +286,19 @@ public class ServerSelect extends NavigationBase {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {}
                     }).show();
+        }
+    }
+
+    private boolean isWifiOnAndConnected() {
+        Context context = this.getApplicationContext();
+        WifiManager wifiMgr = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+
+        if (wifiMgr.isWifiEnabled()) { // Wi-Fi adapter is ON
+            WifiInfo wifiInfo = wifiMgr.getConnectionInfo();
+            return !( wifiInfo.getNetworkId() == -1 );
+        }
+        else {
+            return false; // Wi-Fi adapter is OFF
         }
     }
 
