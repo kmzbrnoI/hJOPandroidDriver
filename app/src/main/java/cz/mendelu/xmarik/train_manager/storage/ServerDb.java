@@ -1,6 +1,7 @@
 package cz.mendelu.xmarik.train_manager.storage;
 
 import android.content.SharedPreferences;
+import android.util.Log;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -32,12 +33,16 @@ public class ServerDb {
         String[] serverString = preferences.getString("StoredServers", "").split("\\|");
 
         for (String tmpS : serverString) {
-            String[] attributes = tmpS.split(";");
-            if (tmpS.length() > 5) {
-                Server tmpServer = new Server(attributes[0], attributes[1], Integer.parseInt(attributes[2]), false,
-                        attributes[3], attributes[4], attributes[5]);
-                tmpServer.active = true;
-                if (!stored.contains(tmpServer)) stored.add(tmpServer);
+            try {
+                String[] attributes = tmpS.split(";");
+                if (attributes.length > 5) {
+                    Server tmpServer = new Server(attributes[0], attributes[1], Integer.parseInt(attributes[2]), false,
+                            attributes[3], attributes[4], attributes[5]);
+                    tmpServer.active = true;
+                    if (!stored.contains(tmpServer)) stored.add(tmpServer);
+                }
+            } catch (Exception e){
+                Log.e("ServerDb", "loadServers: " + e.getMessage());
             }
         }
     }
