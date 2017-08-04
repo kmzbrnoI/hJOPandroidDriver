@@ -75,6 +75,9 @@ public class TCPClient {
         try {
             InetAddress serverAddr = InetAddress.getByName(serverIp);
             socket = new Socket(serverAddr, serverPort);
+
+            // disable Nagle's algorithm to make connection low-latency
+            socket.setTcpNoDelay(true);
         } catch (Exception e) {
             EventBus.getDefault().post(new TCPDisconnectEvent("Cannot connect to socket"));
         }
