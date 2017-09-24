@@ -211,7 +211,7 @@ public class ServerSelect extends NavigationBase {
                             .setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
-                                    connect(Source.FOUND, info.position);
+                                    connect(Source.STORED, info.position);
                                 }
                             })
                             .setNegativeButton(getString(R.string.no), new DialogInterface.OnClickListener() {
