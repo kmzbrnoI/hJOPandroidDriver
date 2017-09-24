@@ -330,7 +330,7 @@ public class ServerSelect extends NavigationBase {
         final TextView mMessage = (TextView) dialog.findViewById(R.id.tv_note);
         final CheckBox savebox = (CheckBox) dialog.findViewById(R.id.dialogSaveData);
 
-        mMessage.setText("Edit login");
+        mMessage.setText(R.string.mm_change_login);
         mName.setText(server.username);
         mPasswd.setText("");
         savebox.setChecked(true);
