@@ -299,7 +299,8 @@ public class TrainHandler extends NavigationBase {
                 if (!t.stolen)
                     t.setSpeedSteps(0);
         } else {
-            train.setSpeedSteps(0);
+            if (train.total && !train.stolen)
+                train.setSpeedSteps(0);
         }
     }
 
