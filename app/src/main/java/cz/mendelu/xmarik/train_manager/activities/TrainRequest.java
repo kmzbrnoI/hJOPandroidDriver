@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -94,9 +95,8 @@ public class TrainRequest extends NavigationBase {
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
                 view.setBackgroundColor(Color.rgb(153, 204, 255));
-                if (lastSelected != null && !lastSelected.equals(view)) {
-                    lastSelected.setBackgroundColor(Color.rgb(238, 238, 238));
-                }
+                if (lastSelected != null && !lastSelected.equals(view))
+                    lastSelected.setBackgroundColor(0); // transparent color
                 lastSelected = view;
                 focused = position;
             }
@@ -115,7 +115,7 @@ public class TrainRequest extends NavigationBase {
     void FillAreas() {
         focused = -1;
         if (lastSelected != null) {
-            lastSelected.setBackgroundColor(Color.rgb(238, 238, 238));
+            lastSelected.setBackgroundColor(0); // transparent color
             lastSelected = null;
         }
 

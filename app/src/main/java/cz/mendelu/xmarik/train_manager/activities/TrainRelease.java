@@ -66,9 +66,8 @@ public class TrainRelease extends NavigationBase {
                                     int position, long id) {
                 // ListView Clicked item index
                 view.setBackgroundColor(Color.rgb(153,204,255));
-                if (lastSelected != null && !lastSelected.equals(view)) {
-                    lastSelected.setBackgroundColor(Color.rgb(238,238,238));
-                }
+                if (lastSelected != null && !lastSelected.equals(view))
+                    lastSelected.setBackgroundColor(0); // transparent color
                 lastSelected = view;
                 focused = position;
             }
@@ -98,7 +97,7 @@ public class TrainRelease extends NavigationBase {
     public void onEventMainThread(TCPDisconnectEvent event) {
         focused = -1;
         if (lastSelected != null) {
-            lastSelected.setBackgroundColor(Color.rgb(238, 238, 238));
+            lastSelected.setBackgroundColor(0); // transparent color
             lastSelected = null;
         }
 
@@ -140,7 +139,7 @@ public class TrainRelease extends NavigationBase {
     private void updateHVList() {
         focused = -1;
         if (lastSelected != null) {
-            lastSelected.setBackgroundColor(Color.rgb(238, 238, 238));
+            lastSelected.setBackgroundColor(0); // transparent color
             lastSelected = null;
         }
 
