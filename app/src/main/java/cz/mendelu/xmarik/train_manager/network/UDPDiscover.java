@@ -26,7 +26,7 @@ import cz.mendelu.xmarik.train_manager.storage.ServerDb;
  */
 public class UDPDiscover extends AsyncTask<String, Void, String> {
     public static final int DEFAULT_PORT = 5880;
-    private static final int TIMEOUT_MS = 500;
+    private static final int TIMEOUT_MS = 800;
 
     WifiManager mWifi;
     Server toAdd = null;
