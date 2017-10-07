@@ -25,6 +25,7 @@
     <string name="ta_idle">Idle</string>
     <string name="ta_emergency_stop">Nouzové STOP</string>
     <string name="ta_no_loks">Žádné vlaky.</string>
+    <string name="ta_toggle">Krátce</string>
 
     <string name="tr_disp_message">Volitelná zpráva pro dispečera:</string>
     <string name="tr_send_request">Odeslat žádost</string>

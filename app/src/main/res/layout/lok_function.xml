@@ -5,22 +5,42 @@
     android:orientation="vertical"
     android:padding="6dip" >
 
-    <CheckBox
-        android:id="@+id/checkBox1"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:focusable="false"
-        android:focusableInTouchMode="false"
-        android:text="CheckBox" />
+        android:weightSum="1">
 
-    <TextView
-        android:id="@+id/code"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/checkBox1"
-        android:layout_alignBottom="@+id/checkBox1"
-        android:layout_toRightOf="@+id/checkBox1"
-        android:text="TextView" />
+        <CheckBox
+            android:id="@+id/chb_func"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:text="" />
+
+        <TextView
+            android:id="@+id/code"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/checkBox1"
+            android:layout_alignBottom="@+id/checkBox1"
+            android:layout_toRightOf="@+id/checkBox1"
+            android:text="F0: example function" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:text="@string/ta_toggle"
+            android:textAllCaps="false"
+            android:id="@+id/toggle" />
+
+    </LinearLayout>
 
 </RelativeLayout>

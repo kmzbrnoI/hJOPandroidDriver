@@ -108,17 +108,6 @@ public class TrainHandler extends NavigationBase {
         this.fillHVs();
 
         // GUI events:
-
-        lv_functions.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            public void onItemClick(AdapterView<?> parent, View view,
-                                    int position, long id) {
-                if (updating) return;
-                CheckBox chb = (CheckBox)view.findViewById(R.id.checkBox1);
-                chb.toggle();
-                train.setFunc(position, chb.isChecked());
-            }
-        });
-
         s_direction.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -241,7 +230,7 @@ public class TrainHandler extends NavigationBase {
 
                 //set custom adapter with check boxes to list view
                 FunctionCheckBoxAdapter dataAdapter = new FunctionCheckBoxAdapter(context,
-                        R.layout.lok_function, new ArrayList<>(Arrays.asList(TrainFunction.DEF_FUNCTION)));
+                        R.layout.lok_function, new ArrayList<>(Arrays.asList(TrainFunction.DEF_FUNCTION)), false);
                 lv_functions.setAdapter(dataAdapter);
 
                 ib_status.setImageResource(R.drawable.ic_circle_gray);
@@ -262,7 +251,7 @@ public class TrainHandler extends NavigationBase {
 
                 //set custom adapter with check boxes to list view
                 FunctionCheckBoxAdapter dataAdapter = new FunctionCheckBoxAdapter(context,
-                        R.layout.lok_function, new ArrayList<>(Arrays.asList(train.function)));
+                        R.layout.lok_function, new ArrayList<>(Arrays.asList(train.function)), true);
                 lv_functions.setAdapter(dataAdapter);
 
                 if (train.stolen)

@@ -25,6 +25,7 @@
     <string name="ta_idle">Idle</string>
     <string name="ta_emergency_stop">Emergency STOP</string>
     <string name="ta_no_loks">No trains.</string>
+    <string name="ta_toggle">Toggle</string>
 
     <string name="tr_disp_message">Optional message for the dispatcher:</string>
     <string name="tr_send_request">Send request</string>
