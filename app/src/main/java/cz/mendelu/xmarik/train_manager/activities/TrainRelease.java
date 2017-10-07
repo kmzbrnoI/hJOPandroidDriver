@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 
@@ -77,8 +78,8 @@ public class TrainRelease extends NavigationBase {
         if(!EventBus.getDefault().isRegistered(this)) EventBus.getDefault().register(this);
     }
 
-    @Subscribe
-    public void onEvent(LokRemoveEvent event) {
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEventMainThread(LokRemoveEvent event) {
         Toast.makeText(getApplicationContext(),
                 R.string.trl_loko_released, Toast.LENGTH_LONG)
                 .show();
@@ -88,13 +89,13 @@ public class TrainRelease extends NavigationBase {
         b_send.setText(R.string.trl_release);
     }
 
-    @Subscribe
-    public void onEvent(LokChangeEvent event) {
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEventMainThread(LokChangeEvent event) {
         updateHVList();
     }
 
-    @Subscribe
-    public void onEvent(TCPDisconnectEvent event) {
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEventMainThread(TCPDisconnectEvent event) {
         focused = -1;
         if (lastSelected != null) {
             lastSelected.setBackgroundColor(Color.rgb(238, 238, 238));
@@ -110,11 +111,11 @@ public class TrainRelease extends NavigationBase {
         b_send.setEnabled(true);
         b_send.setText(R.string.trl_release);
 
-        super.onEvent(event);
+        super.onEventMainThread(event);
     }
 
-    @Subscribe
-    public void onEvent(LokAddEvent event) {
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEventMainThreadMainThread(LokAddEvent event) {
         updateHVList();
     }
 

@@ -6,6 +6,7 @@ import android.util.Log;
 
 import org.greenrobot.eventbus.EventBus;
 
+import java.io.UnsupportedEncodingException;
 import java.net.ConnectException;
 import java.util.ArrayList;
 
@@ -23,14 +24,13 @@ import cz.mendelu.xmarik.train_manager.storage.ServerDb;
  * TCPClient.
  */
 
-public class TCPClientApplication extends Application {
+public class TCPClientApplication extends Application implements TCPClient.OnMessageReceivedListener {
     static TCPClientApplication instance;
 
     public Server server = null;
 
     public boolean auth = false;
-    TCPClient mTcpClient;
-    private ListenTask listenTask;
+    TCPClient mTcpClient = null;
 
     public static TCPClientApplication getInstance() {
         if (instance == null) instance = new TCPClientApplication();
@@ -38,14 +38,12 @@ public class TCPClientApplication extends Application {
     }
 
     public void connect(Server server) {
+        if (mTcpClient != null && mTcpClient.connected())
+            mTcpClient.disconnect();
+
         this.server = server;
         mTcpClient = new TCPClient(server.host, server.port);
-
-        if (listenTask != null && listenTask.getStatus() == AsyncTask.Status.RUNNING)
-            listenTask.cancel(true);
-
-        listenTask = new ListenTask();
-        listenTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        mTcpClient.listen(this);
     }
 
     public void disconnect() {
@@ -53,8 +51,6 @@ public class TCPClientApplication extends Application {
 
         if (mTcpClient != null)
             this.mTcpClient.disconnect();
-        if (listenTask != null)
-            listenTask.cancel(true);
     }
 
     public void send(String message) {
@@ -70,46 +66,28 @@ public class TCPClientApplication extends Application {
 
     public boolean connected() { return (mTcpClient != null && mTcpClient.connected()); }
 
-    public class ListenTask extends AsyncTask<String, String, TCPClient> {
-        @Override
-        protected TCPClient doInBackground(String... message) {
+    public void onMessageReceived(String message) {
+        ArrayList<String> parsed = ParseHelper.parse(message, ";", "");
 
-            mTcpClient.listen(new TCPClient.OnMessageReceived()  {
-                @Override
-                public void messageReceived(String message) {
-                    publishProgress(message);
-                }
-            });
+        if (parsed.size() < 2 || !parsed.get(0).equals("-")) return;
+        parsed.set(1, parsed.get(1).toUpperCase());
 
-            return null;
+        if (parsed.get(1).equals("HELLO")) {
+            EventBus.getDefault().post(new HandShakeEvent(parsed));
+
+        } else if (parsed.get(1).equals("OR-LIST")) {
+            EventBus.getDefault().post(new AreasEvent(parsed));
+
+        } else if (parsed.get(1).equals("LOK")) {
+            if (parsed.size() < 3) return;
+            if (parsed.get(2).equals("G")) {
+                if (parsed.get(3).toUpperCase().equals("AUTH"))
+                    EventBus.getDefault().post(new GlobalAuthEvent(parsed));
+                else if (parsed.get(3).toUpperCase().equals("PLEASE-RESP"))
+                    EventBus.getDefault().post(new RequestEvent(parsed));
+            } else
+                EventBus.getDefault().post(new LokEvent(parsed));
         }
 
-        @Override
-        protected void onProgressUpdate(String... values) {
-            super.onProgressUpdate(values);
-
-            ArrayList<String> parsed = ParseHelper.parse(values[0], ";", "");
-
-            if (parsed.size() < 2 || !parsed.get(0).equals("-")) return;
-            parsed.set(1, parsed.get(1).toUpperCase());
-
-            if (parsed.get(1).equals("HELLO")) {
-                EventBus.getDefault().post(new HandShakeEvent(parsed));
-
-            } else if (parsed.get(1).equals("OR-LIST")) {
-                EventBus.getDefault().post(new AreasEvent(parsed));
-
-            } else if (parsed.get(1).equals("LOK")) {
-                if (parsed.size() < 3) return;
-                if (parsed.get(2).equals("G")) {
-                    if (parsed.get(3).toUpperCase().equals("AUTH"))
-                        EventBus.getDefault().post(new GlobalAuthEvent(parsed));
-                    else if (parsed.get(3).toUpperCase().equals("PLEASE-RESP"))
-                        EventBus.getDefault().post(new RequestEvent(parsed));
-                } else
-                    EventBus.getDefault().post(new LokEvent(parsed));
-            }
-        }
     }
-
 }

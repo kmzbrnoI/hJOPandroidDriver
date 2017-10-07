@@ -22,6 +22,7 @@ import android.widget.TextView;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -309,24 +310,24 @@ public class TrainHandler extends NavigationBase {
             train.please();
     }
 
-    @Subscribe
-    public void onEvent(LokChangeEvent event) {
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEventMainThread(LokChangeEvent event) {
         if (train != null && event.getAddr() == train.addr)
             this.updateGUTtoHV();
     }
 
-    @Subscribe
-    public void onEvent(LokAddEvent event) {
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEventMainThread(LokAddEvent event) {
         this.fillHVs();
     }
 
-    @Subscribe
-    public void onEvent(LokRemoveEvent event) {
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEventMainThread(LokRemoveEvent event) {
         this.fillHVs();
     }
 
-    @Subscribe
-    public void onEvent(TCPDisconnectEvent event) {
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEventMainThread(TCPDisconnectEvent event) {
         updating = true;
         managed_str.clear();
         managed.clear();
@@ -338,11 +339,11 @@ public class TrainHandler extends NavigationBase {
         this.updateGUTtoHV();
 
         updating = false;
-        super.onEvent(event);
+        super.onEventMainThread(event);
     }
 
-    @Subscribe
-    public void onEvent(LokRespEvent event) {
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEventMainThread(LokRespEvent event) {
         if (train == null) return;
         if (Integer.valueOf(event.getParsed().get(2)) != train.addr) return;
 

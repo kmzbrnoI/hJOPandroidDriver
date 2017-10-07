@@ -7,12 +7,17 @@ import org.greenrobot.eventbus.EventBus;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.ConnectException;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 import cz.mendelu.xmarik.train_manager.events.ConnectionEstablishedEvent;
 import cz.mendelu.xmarik.train_manager.events.TCPDisconnectEvent;
@@ -26,9 +31,11 @@ public class TCPClient {
     public int serverPort;
 
     private Socket socket = null;
-    private PrintWriter out;
-    private BufferedReader in;
+    private final Object m_socket_lock = new Object();
     private boolean mRun = false;
+
+    WriteThread wt = null;
+    ReadThread rt = null;
 
     public TCPClient(String ip, int port) {
         this.serverIp = ip;
@@ -36,29 +43,44 @@ public class TCPClient {
     }
 
     public void send(String message) throws ConnectException {
-        if (out == null)
+        if (!socket.isConnected() || wt == null || !wt.isAlive())
             throw new ConnectException("Not connected!");
 
-        out.println(message);
-        out.flush();
-
-        if (out.checkError()) {
-            Log.e("TCP", "Socket send error, closing");
-            disconnect();
-        }
+        wt.send((message+'\n').getBytes(StandardCharsets.UTF_8));
     }
 
     public void disconnect() {
+        disconnect(true, true);
+    }
+
+    public void disconnect(boolean wait_read, boolean wait_write) {
         mRun = false;
         if (socket != null) {
             try {
                 socket.close();
+
+                if (wait_write) {
+                    wt.interrupt();
+                    try {
+                        wt.join();
+                    } catch(InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                if (wait_read) {
+                    rt.interrupt();
+                    try {
+                        rt.join();
+                    } catch(InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+
             } catch (IOException e) {
                 e.printStackTrace();
             } finally {
                 socket = null;
-                in = null;
-                out = null;
             }
         }
         EventBus.getDefault().post(new TCPDisconnectEvent("Disconnect"));
@@ -66,60 +88,162 @@ public class TCPClient {
 
     public boolean connected() { return socket != null; }
 
-    public void listen(OnMessageReceived listener) {
-        String serverMessage = null;
+    public void listen(OnMessageReceivedListener listener) {
         mRun = true;
-
         if (socket != null) return;
+        SocketThread st = new SocketThread(serverIp, serverPort, listener);
+        st.start();
+    }
 
-        try {
-            InetAddress serverAddr = InetAddress.getByName(serverIp);
-            socket = new Socket(serverAddr, serverPort);
+    public class SocketThread extends Thread {
+        public String m_serverIp;
+        public int m_serverPort;
+        OnMessageReceivedListener m_listener;
 
-            // disable Nagle's algorithm to make connection low-latency
-            socket.setTcpNoDelay(true);
-        } catch (Exception e) {
-            EventBus.getDefault().post(new TCPDisconnectEvent("Cannot connect to socket"));
+        SocketThread(String serverIp, int serverPort, OnMessageReceivedListener listener) {
+            m_serverIp = serverIp;
+            m_serverPort = serverPort;
+            m_listener = listener;
         }
 
-        if (socket == null) {
-            EventBus.getDefault().post(new TCPDisconnectEvent("Socket not initialized!"));
-            return;
-        }
+        public void run() {
+            try {
+                InetAddress serverAddr = InetAddress.getByName(serverIp);
+                socket = new Socket(serverAddr, serverPort);
 
-        try {
-            //send the message to the server
-            out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(socket.getOutputStream())), true);
-            in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-
-            EventBus.getDefault().post(new ConnectionEstablishedEvent());
-
-            while (mRun) {
-                serverMessage = in.readLine();
-
-                try {
-                    if (serverMessage != null && listener != null)
-                        listener.messageReceived(serverMessage);
-                } catch (Exception e) {
-                    Log.e("TCP", "Socket message error", e);
-                }
-
+                // disable Nagle's algorithm to make connection low-latency
+                socket.setTcpNoDelay(true);
+            } catch (Exception e) {
+                Log.e("TCP", "Cannot connect to socket", e);
+                EventBus.getDefault().post(new TCPDisconnectEvent("Cannot connect to socket"));
+                return;
             }
 
-        } catch (Exception e) {
-            Log.e("TCP", "Socket general error", e);
-            EventBus.getDefault().post(new TCPDisconnectEvent("Socket general error"));
+            if (socket == null) {
+                Log.e("TCP", "Socket not initialized");
+                EventBus.getDefault().post(new TCPDisconnectEvent("Socket not initialized!"));
+                return;
+            }
 
-        } finally {
-            //the socket must be closed. It is not possible to reconnect to this socket
-            // after it is closed, which means a new socket instance has to be created.
-            disconnect();
+            wt = new WriteThread(socket);
+            wt.start();
+            rt = new ReadThread(socket, m_listener);
+            rt.start();
+
+            EventBus.getDefault().post(new ConnectionEstablishedEvent());
         }
     }
 
-    //Declare the interface. The method messageReceived(String message) will must be implemented in the MyActivity
-    //class at on asynckTask doInBackground
-    public interface OnMessageReceived {
-        public void messageReceived(String message);
+    public interface OnMessageReceivedListener {
+        public void onMessageReceived(String message);
+    }
+
+    public class WriteThread extends Thread {
+        private Socket m_socket;
+        private final Object m_lock = new Object();
+        private ArrayList<byte[]> m_queue = new ArrayList<>();
+
+        WriteThread(Socket s) {
+            m_socket = s;
+        }
+
+        public void run() {
+            OutputStream str;
+            try {
+                str = m_socket.getOutputStream();
+            } catch(IOException e) {
+                Log.e("TCP", "Socket IO exception", e);
+                disconnect(true, false);
+                return;
+            }
+
+            synchronized(m_lock) {
+                while(!isInterrupted() && !m_socket.isClosed()) {
+                    try {
+                        m_lock.wait();
+                    } catch(InterruptedException ex) { }
+
+                    for(byte[] data : m_queue) {
+                        try {
+                            str.write(data);
+
+                        } catch(IOException e) {
+                            disconnect(true, false);
+                            return;
+                        }
+                    }
+                    m_queue.clear();
+                }
+            }
+        }
+
+        public void send(byte[] data) {
+            synchronized(m_lock) {
+                m_queue.add(data);
+                m_lock.notify();
+            }
+        }
+    }
+
+    public class ReadThread extends Thread {
+        private Socket m_socket;
+        private OnMessageReceivedListener m_listener;
+        private BufferedReader in;
+
+        ReadThread(Socket s, OnMessageReceivedListener listener) {
+            m_socket = s;
+            m_listener = listener;
+        }
+
+        public void run() {
+            byte[] buffer = new byte[8192];
+            int total_len = 0, new_len;
+
+            InputStream str;
+            try {
+                str = m_socket.getInputStream();
+            } catch(IOException e) {
+                Log.e("TCP", "Socket IO exception", e);
+                disconnect(false, true);
+                return;
+            }
+
+            while(!isInterrupted() && !m_socket.isClosed()) {
+                try {
+                    new_len = str.read(buffer, total_len, 8192-total_len);
+                    if (new_len == 0)
+                        continue;
+                    else if (new_len == -1) {
+                        disconnect(false, true);
+                        return;
+                    }
+
+                    total_len += new_len;
+
+                    int last = 0;
+                    for (int i = 0; i < total_len; i++) {
+                        if (buffer[i] == '\n') {
+                            byte[] range = Arrays.copyOfRange(buffer, last, i);
+
+                            int end;
+                            if (i > 0 && buffer[i-1] == '\r')
+                                end = i-1 - last;
+                            else
+                                end = i - last;
+
+                            m_listener.onMessageReceived(new String(range, 0, end));
+                            last = i+1;
+                        }
+                    }
+
+                    for (int i = 0; i < total_len-last; i++)
+                        buffer[i] = buffer[i+last];
+                    total_len = total_len - last;
+                } catch(IOException e) {
+                    disconnect(false, true);
+                    return;
+                }
+            }
+        }
     }
 }

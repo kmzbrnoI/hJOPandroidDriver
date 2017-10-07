@@ -31,6 +31,7 @@ import android.widget.Toast;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 
@@ -347,13 +348,13 @@ public class ServerSelect extends NavigationBase {
         dialog.show();
     }
 
-    @Subscribe
-    public void onEvent(StoredServersReloadEvent event) {
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEventMainThread(StoredServersReloadEvent event) {
         updateStoredServers();
     }
 
-    @Subscribe
-    public void onEvent(FoundServersReloadEvent event) {
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEventMainThread(FoundServersReloadEvent event) {
         updateFoundServers();
     }
 

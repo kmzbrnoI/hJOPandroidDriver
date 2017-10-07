@@ -21,6 +21,7 @@ import android.widget.TextView;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 
@@ -130,13 +131,13 @@ public class TrainRequest extends NavigationBase {
         lAdapter.notifyDataSetChanged();
     }
 
-    @Subscribe
-    public void onEvent(LokAddEvent event) {
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEventMainThread(LokAddEvent event) {
         startActivity(new Intent(this, TrainHandler.class));
     }
 
-    @Subscribe
-    public void onEvent(RequestEvent event) {
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEventMainThread(RequestEvent event) {
         if (event.getParsed().get(4).toUpperCase().equals("OK")) {
             dialogMessage.setText(R.string.tr_info_waiting_disp);
         } else if (event.getParsed().get(4).toUpperCase().equals("ERR")) {
@@ -151,20 +152,20 @@ public class TrainRequest extends NavigationBase {
         }
     }
 
-    @Subscribe
-    public void onEvent(AreasParsedEvent event) {
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEventMainThread(AreasParsedEvent event) {
         this.FillAreas();
     }
 
-    @Subscribe
-    public void onEvent(AreasClearedEvent event) {
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEventMainThread(AreasClearedEvent event) {
         this.FillAreas();
     }
 
-    @Subscribe
-    public void onEvent(TCPDisconnectEvent event) {
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEventMainThread(TCPDisconnectEvent event) {
         dialog.dismiss();
-        super.onEvent(event);
+        super.onEventMainThread(event);
     }
 
     public void b_requestClick(View v) {

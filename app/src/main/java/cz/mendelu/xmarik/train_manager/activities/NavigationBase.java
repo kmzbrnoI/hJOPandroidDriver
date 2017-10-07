@@ -19,6 +19,7 @@ import android.widget.TextView;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import cz.mendelu.xmarik.train_manager.R;
 import cz.mendelu.xmarik.train_manager.events.GlobalAuthEvent;
@@ -114,8 +115,8 @@ public class NavigationBase extends AppCompatActivity
         }
     }
 
-    @Subscribe
-    public void onEvent(TCPDisconnectEvent event) {
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEventMainThread(TCPDisconnectEvent event) {
         new AlertDialog.Builder(this)
                 .setMessage(getString(R.string.disconnected))
                 .setCancelable(false)
@@ -126,8 +127,8 @@ public class NavigationBase extends AppCompatActivity
                 }).show();
     }
 
-    @Subscribe
-    public void onEvent(GlobalAuthEvent event) {
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEventMainThread(GlobalAuthEvent event) {
         if (event.getParsed().get(4).toUpperCase().equals("NOT")) {
             // authorization canceled -> disconnect
             new AlertDialog.Builder(this)

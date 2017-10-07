@@ -17,10 +17,12 @@ import android.widget.Toast;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 
 import cz.mendelu.xmarik.train_manager.events.AreasParsedEvent;
+import cz.mendelu.xmarik.train_manager.events.TCPDisconnectEvent;
 import cz.mendelu.xmarik.train_manager.helpers.HashHelper;
 import cz.mendelu.xmarik.train_manager.adapters.MyCustomAdapter;
 import cz.mendelu.xmarik.train_manager.R;
@@ -60,7 +62,8 @@ public class ServerConnector extends Activity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        TCPClientApplication.getInstance().disconnect();
+        if (TCPClientApplication.getInstance().connected())
+            TCPClientApplication.getInstance().disconnect();
     }
 
     @Override
@@ -114,8 +117,8 @@ public class ServerConnector extends Activity {
         dialog.show();
     }
 
-    @Subscribe
-    public void onEvent(AreasParsedEvent event) {
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEventMainThread(AreasParsedEvent event) {
         arrayList.add(getString(R.string.sc_done));
         mAdapter.notifyDataSetChanged();
 
@@ -129,8 +132,8 @@ public class ServerConnector extends Activity {
         startActivity(intent);
     }
 
-    @Subscribe
-    public void onEvent(HandShakeEvent event) {
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEventMainThread(HandShakeEvent event) {
         if ((event.getParsed().size() < 3) || (!event.getParsed().get(2).equals("1.0")))
             arrayList.add(getString(R.string.sc_version_warning));
         else
@@ -152,8 +155,8 @@ public class ServerConnector extends Activity {
         }
     }
 
-    @Subscribe
-    public void onEvent(GlobalAuthEvent event) {
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEventMainThread(GlobalAuthEvent event) {
         if (event.getParsed().get(4).toUpperCase().equals("OK")) {
             arrayList.add(getString(R.string.sc_auth_ok));
             arrayList.add(getString(R.string.sc_getting_ors));
@@ -179,7 +182,7 @@ public class ServerConnector extends Activity {
         if (tcp.connected())
             tcp.disconnect();
 
-        if ( extras != null ) {
+        if (extras != null) {
             String type = extras.getString("serverType");
             int id = extras.getInt("serverId");
             if (type.equals("stored"))
@@ -202,10 +205,16 @@ public class ServerConnector extends Activity {
         mAdapter.notifyDataSetChanged();
     }
 
-    @Subscribe
-    public void onEvent(ConnectionEstablishedEvent event) {
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEventMainThread(ConnectionEstablishedEvent event) {
         // connection established -> begin handshake
         TCPClientApplication.getInstance().send("-;HELLO;1.0");
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEventMainThread(TCPDisconnectEvent event) {
+        arrayList.add(getString(R.string.disconnected));
+        progressBar.setVisibility(View.GONE);
+        mAdapter.notifyDataSetChanged();
+    }
 }
