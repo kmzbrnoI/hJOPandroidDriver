@@ -169,7 +169,7 @@ public class ServerConnector extends Activity {
             if (event.getParsed().size() >= 6)
                 editLogin(event.getParsed().get(5));
             else
-                editLogin("Logging failed");
+                editLogin(getString(R.string.sc_auth_err));
         }
         mAdapter.notifyDataSetChanged();
     }
