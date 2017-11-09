@@ -8,6 +8,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
@@ -279,6 +280,28 @@ public class TrainHandler extends NavigationBase {
             this.updating = false;
         }
     }
+
+
+    @Override
+    public boolean dispatchKeyEvent(KeyEvent event) {
+        int action = event.getAction();
+        int keyCode = event.getKeyCode();
+        switch (keyCode) {
+            case KeyEvent.KEYCODE_VOLUME_UP:
+                if (action == KeyEvent.ACTION_DOWN && sb_speed.isEnabled() && sb_speed.getProgress()<sb_speed.getMax()) {
+                    sb_speed.setProgress(sb_speed.getProgress()+1);
+                }
+                return true;
+            case KeyEvent.KEYCODE_VOLUME_DOWN:
+                if (action == KeyEvent.ACTION_DOWN && sb_speed.isEnabled() && sb_speed.getProgress()>0) {
+                    sb_speed.setProgress(sb_speed.getProgress()-1);
+                }
+                return true;
+            default:
+                return super.dispatchKeyEvent(event);
+        }
+    }
+
 
     public void onFuncChanged(int index, Boolean newState) {
         if (train != null && !train.stolen)
