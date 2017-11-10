@@ -1,10 +1,12 @@
 package cz.mendelu.xmarik.train_manager.activities;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.view.MotionEvent;
 import android.view.View;
@@ -58,6 +60,7 @@ public class TrainHandler extends NavigationBase {
     private ImageButton ib_status;
     private ListView lv_functions;
     private TextView tv_kmhSpeed;
+    private ImageButton ib_release;
 
     Handler timerHandler = new Handler();
     Runnable timerRunnable = new Runnable() {
@@ -95,6 +98,7 @@ public class TrainHandler extends NavigationBase {
         b_stop = (Button) findViewById(R.id.stopButton1);
         chb_group = (CheckBox) findViewById(R.id.goupManaged1);
         ib_status = (ImageButton) findViewById(R.id.ib_status);
+        ib_release = (ImageButton) findViewById(R.id.ib_release);
         lv_functions = (ListView) findViewById(R.id.checkBoxView1);
         tv_kmhSpeed = (TextView) findViewById(R.id.kmh1);
         chb_total = (CheckBox) findViewById(R.id.totalManaged);
@@ -151,6 +155,13 @@ public class TrainHandler extends NavigationBase {
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 if (updating) return;
                 train.setTotal(b);
+            }
+        });
+
+        ib_release.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ib_ReleaseClick(v);
             }
         });
     }
@@ -225,6 +236,7 @@ public class TrainHandler extends NavigationBase {
                 chb_group.setChecked(false);
                 tv_kmhSpeed.setText("- km/h");
                 chb_total.setChecked(false);
+                ib_release.setEnabled(false);
 
                 this.setEnabled(false);
 
@@ -246,6 +258,7 @@ public class TrainHandler extends NavigationBase {
                 chb_group.setChecked(multitrack.contains(train));
                 tv_kmhSpeed.setText(String.format("%s km/h", Integer.toString(train.kmphSpeed)));
                 chb_total.setChecked(train.total);
+                ib_release.setEnabled(true);
 
                 this.setEnabled(train.total);
 
@@ -259,6 +272,8 @@ public class TrainHandler extends NavigationBase {
                 else
                     ib_status.setImageResource(R.drawable.ic_circle_green);
             }
+
+            ib_release.setAlpha(ib_release.isEnabled() ? 1f : 0.5f);
         }
         finally {
             this.updating = false;
@@ -297,6 +312,26 @@ public class TrainHandler extends NavigationBase {
     public void ib_StatusClick(View v) {
         if (train != null && train.stolen)
             train.please();
+    }
+
+    public void ib_ReleaseClick(View v) {
+        if (train == null) return;
+
+        new AlertDialog.Builder(this)
+                .setMessage(getString(R.string.trl_really) + " " + train.name + "?")
+                .setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        train.release();
+                        ib_release.setEnabled(false);
+                        ib_release.setAlpha(ib_release.isEnabled() ? 1f : 0.5f);
+                    }
+                })
+                .setNegativeButton(getString(R.string.no), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {}
+                }).show();
+
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

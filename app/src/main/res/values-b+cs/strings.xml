@@ -40,6 +40,7 @@
     <string name="trl_releasing">Uvolňuji...</string>
     <string name="trl_loko_released">Lokomotiva uvolněna.</string>
     <string name="trl_no_train_selected">Musíte vybrat hnací vozidlo!</string>
+    <string name="trl_really">Opravdu uvolnit lokomotivu</string>
 
     <string name="conn_servers_discovered">Nalezené servery</string>
     <string name="conn_servers_saved">Uložené servery</string>

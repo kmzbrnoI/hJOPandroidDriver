@@ -40,6 +40,7 @@
     <string name="trl_releasing">Releasing...</string>
     <string name="trl_loko_released">Train released.</string>
     <string name="trl_no_train_selected">You must select a train!</string>
+    <string name="trl_really">Really release a train</string>
 
     <string name="conn_servers_discovered">Discovered servers</string>
     <string name="conn_servers_saved">Saved servers</string>
