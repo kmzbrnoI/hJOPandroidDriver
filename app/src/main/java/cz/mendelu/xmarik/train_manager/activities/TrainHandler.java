@@ -32,6 +32,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import cz.mendelu.xmarik.train_manager.events.TCPDisconnectEvent;
+import cz.mendelu.xmarik.train_manager.storage.SettingsDb;
 import cz.mendelu.xmarik.train_manager.storage.TrainDb;
 import cz.mendelu.xmarik.train_manager.models.TrainFunction;
 import cz.mendelu.xmarik.train_manager.adapters.FunctionCheckBoxAdapter;
@@ -281,19 +282,22 @@ public class TrainHandler extends NavigationBase {
         }
     }
 
-
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
+        if (!SettingsDb.instance.getSpeedVolume() || !sb_speed.isEnabled()) {
+            return super.dispatchKeyEvent(event);
+        }
+
         int action = event.getAction();
         int keyCode = event.getKeyCode();
         switch (keyCode) {
             case KeyEvent.KEYCODE_VOLUME_UP:
-                if (action == KeyEvent.ACTION_DOWN && sb_speed.isEnabled() && sb_speed.getProgress()<sb_speed.getMax()) {
+                if (action == KeyEvent.ACTION_DOWN && sb_speed.isEnabled() && sb_speed.getProgress() < sb_speed.getMax()) {
                     sb_speed.setProgress(sb_speed.getProgress()+1);
                 }
                 return true;
             case KeyEvent.KEYCODE_VOLUME_DOWN:
-                if (action == KeyEvent.ACTION_DOWN && sb_speed.isEnabled() && sb_speed.getProgress()>0) {
+                if (action == KeyEvent.ACTION_DOWN && sb_speed.isEnabled() && sb_speed.getProgress() > 0) {
                     sb_speed.setProgress(sb_speed.getProgress()-1);
                 }
                 return true;
@@ -301,7 +305,6 @@ public class TrainHandler extends NavigationBase {
                 return super.dispatchKeyEvent(event);
         }
     }
-
 
     public void onFuncChanged(int index, Boolean newState) {
         if (train != null && !train.stolen)
