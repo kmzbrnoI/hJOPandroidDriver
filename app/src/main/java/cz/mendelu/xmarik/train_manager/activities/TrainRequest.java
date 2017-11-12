@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.support.v4.graphics.ColorUtils;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AlertDialog;
@@ -94,7 +95,8 @@ public class TrainRequest extends NavigationBase {
             @Override
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
-                view.setBackgroundColor(Color.rgb(153, 204, 255));
+                int c = ColorUtils.setAlphaComponent(getResources().getColor(R.color.colorPrimary), 0x44);
+                view.setBackgroundColor(c);
                 if (lastSelected != null && !lastSelected.equals(view))
                     lastSelected.setBackgroundColor(0); // transparent color
                 lastSelected = view;
