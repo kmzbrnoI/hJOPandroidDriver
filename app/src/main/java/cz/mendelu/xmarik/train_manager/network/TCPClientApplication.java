@@ -17,7 +17,6 @@ import cz.mendelu.xmarik.train_manager.events.LokEvent;
 import cz.mendelu.xmarik.train_manager.events.RequestEvent;
 import cz.mendelu.xmarik.train_manager.helpers.ParseHelper;
 import cz.mendelu.xmarik.train_manager.models.Server;
-import cz.mendelu.xmarik.train_manager.storage.ServerDb;
 
 /**
  * TCPClientApplication is a singleton, whicch handles connection with the server. It encapsules
