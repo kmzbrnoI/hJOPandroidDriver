@@ -7,8 +7,8 @@ android {
         applicationId "cz.mendelu.xmarik.train_manager"
         minSdkVersion 19
         targetSdkVersion 24
-        versionCode 8
-        versionName "1.0"
+        versionCode 9
+        versionName "1.1"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
