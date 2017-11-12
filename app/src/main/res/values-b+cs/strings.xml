@@ -10,12 +10,14 @@
     <string name="activity_train_request_title">Vyberte cílovou oblast řízení</string>
     <string name="activity_about_title">O aplikaci</string>
     <string name="activity_new_server_title">Nový server</string>
+    <string name="activity_settings_title">Nastavení</string>
 
     <string name="hamburger_server_select_title">Výběr serveru</string>
     <string name="hamburger_train_handler">Řízení vlaku</string>
     <string name="hamburger_train_request_title">Žádost o vlak</string>
     <string name="hamburger_train_release_title">Uvolnění vlaku</string>
     <string name="hamburger_about_title">O aplikaci</string>
+    <string name="hamburger_settings_title">Nastavení</string>
 
     <string name="ta_new_loko">Přijata nová lokomotiva.</string>
     <string name="ta_multitraction">Multitrakce</string>
@@ -94,6 +96,8 @@
     <string name="sc_auth_err">Autorizace se nezdařila!</string>
     <string name="sc_version_warning">Server využívá jiný komunikační protokol než 1.0, v komunikaci může docházet k chybám!</string>
     <string name="sc_auth_wait">Čekám na zadání loginu...</string>
+
+    <string name="set_spped_volume">Použít tlačítka nastavení hlasitosti k nastavování rychlosti</string>
 
     <string name="about">hJOP Driver umožňuje řízení jízdy hnacích vozidel ve spolupráci se
         softwarovým balíkem hJOP.\nhttp://hjop.kmz-brno.cz/"</string>

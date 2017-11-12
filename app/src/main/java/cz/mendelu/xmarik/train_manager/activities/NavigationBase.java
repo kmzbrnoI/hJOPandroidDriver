@@ -86,6 +86,9 @@ public class NavigationBase extends AppCompatActivity
         } else if (id == R.id.nav_train_request) {
             startActivity(new Intent(this, TrainRequest.class));
 
+        } else if (id == R.id.nav_settings) {
+            startActivity(new Intent(this, Settings.class));
+
         } else if (id == R.id.nav_train_release) {
             startActivity(new Intent(this, TrainRelease.class));
         }

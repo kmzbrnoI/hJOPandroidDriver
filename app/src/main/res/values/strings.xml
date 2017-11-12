@@ -10,12 +10,14 @@
     <string name="activity_train_request_title">Select a station</string>
     <string name="activity_about_title">About</string>
     <string name="activity_new_server_title">New server</string>
+    <string name="activity_settings_title">Settings</string>
 
     <string name="hamburger_server_select_title">Server select</string>
     <string name="hamburger_train_handler">Train control</string>
     <string name="hamburger_train_request_title">Train request</string>
     <string name="hamburger_train_release_title">Train release</string>
     <string name="hamburger_about_title">About</string>
+    <string name="hamburger_settings_title">Settings</string>
 
     <string name="ta_new_loko">New locomotive received.</string>
     <string name="ta_multitraction">Multitraction</string>
@@ -94,6 +96,8 @@
     <string name="sc_auth_err">Authorization problem!</string>
     <string name="sc_version_warning">Server uses other protocol version, application may misbehave!</string>
     <string name="sc_auth_wait">Waiting for login...</string>
+
+    <string name="set_spped_volume">Use volume buttons to control speed</string>
 
     <string name="about">hJOP Driver allows you to become an engine driver and control one or more
         engines on the model railroad. It fully cooperates with hJOP.\nhttp://hjop.kmz-brno.cz/"</string>

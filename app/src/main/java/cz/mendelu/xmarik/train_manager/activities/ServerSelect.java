@@ -39,6 +39,7 @@ import cz.mendelu.xmarik.train_manager.storage.ControlAreaDb;
 import cz.mendelu.xmarik.train_manager.helpers.HashHelper;
 import cz.mendelu.xmarik.train_manager.R;
 import cz.mendelu.xmarik.train_manager.storage.ServerDb;
+import cz.mendelu.xmarik.train_manager.storage.SettingsDb;
 import cz.mendelu.xmarik.train_manager.storage.TrainDb;
 import cz.mendelu.xmarik.train_manager.events.StoredServersReloadEvent;
 import cz.mendelu.xmarik.train_manager.models.Server;
@@ -68,15 +69,19 @@ public class ServerSelect extends NavigationBase {
 
         final Context obj = this;
         Context context = this.getApplicationContext();
+        SharedPreferences sp = getDefaultSharedPreferences(getApplicationContext());
 
         // create database of servers
-        ServerDb.instance = new ServerDb(getDefaultSharedPreferences(getApplicationContext()));
+        ServerDb.instance = new ServerDb(sp);
 
         // create database of control areas
         ControlAreaDb.instance = new ControlAreaDb();
 
         // create database of trains
         TrainDb.instance = new TrainDb();
+
+        // create settings storage
+        SettingsDb.instance = new SettingsDb(sp);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
