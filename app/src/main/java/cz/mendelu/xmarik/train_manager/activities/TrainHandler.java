@@ -2,6 +2,7 @@ package cz.mendelu.xmarik.train_manager.activities;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.view.GravityCompat;
@@ -22,6 +23,7 @@ import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -374,6 +376,13 @@ public class TrainHandler extends NavigationBase {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventMainThread(LokRemoveEvent event) {
         this.fillHVs();
+
+        Toast.makeText(getApplicationContext(),
+                R.string.trl_loko_released, Toast.LENGTH_LONG)
+                .show();
+
+        if (TrainDb.instance.trains.size() == 0)
+            startActivity(new Intent(this, TrainRequest.class));
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

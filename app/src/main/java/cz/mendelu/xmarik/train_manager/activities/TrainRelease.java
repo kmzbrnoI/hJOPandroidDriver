@@ -2,6 +2,7 @@ package cz.mendelu.xmarik.train_manager.activities;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.graphics.ColorUtils;
@@ -88,6 +89,9 @@ public class TrainRelease extends NavigationBase {
         updateHVList();
         b_send.setEnabled(true);
         b_send.setText(R.string.trl_release);
+
+        if (TrainDb.instance.trains.size() == 0)
+            startActivity(new Intent(this, TrainRequest.class));
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
