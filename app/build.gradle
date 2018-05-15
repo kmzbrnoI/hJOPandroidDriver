@@ -1,13 +1,13 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 24
+    compileSdkVersion 26
     buildToolsVersion '25.0.0'
     defaultConfig {
         applicationId "cz.mendelu.xmarik.train_manager"
         minSdkVersion 19
-        targetSdkVersion 24
-        versionCode 11
+        targetSdkVersion 26
+        versionCode 12
         versionName "1.3"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
