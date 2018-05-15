@@ -15,9 +15,9 @@
         <activity
             android:name=".activities.ServerSelect"
             android:launchMode="singleInstance"
-            android:label="@string/activity_server_select_title"
+            android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
-            <intent-filter android:label="@string/app_name">
+            <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>

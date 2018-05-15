@@ -84,6 +84,7 @@ public class ServerSelect extends NavigationBase {
         SettingsDb.instance = new SettingsDb(sp);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitle(getString(R.string.activity_server_select_title));
         setSupportActionBar(toolbar);
 
         lButton = (Button) findViewById(R.id.serverButton);
