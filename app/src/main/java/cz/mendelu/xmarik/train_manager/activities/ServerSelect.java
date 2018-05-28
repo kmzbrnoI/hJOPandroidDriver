@@ -282,7 +282,13 @@ public class ServerSelect extends NavigationBase {
         if (isWifiOnAndConnected()) {
             (new UDPDiscover((WifiManager)context.getSystemService(Context.WIFI_SERVICE))).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             float deg = lButton.getRotation() + 720F;
-            lButton.animate().rotation(deg).setInterpolator(new AccelerateDecelerateInterpolator());
+            lButton.setClickable(false);
+            lButton.animate().rotation(deg).setInterpolator(new AccelerateDecelerateInterpolator()).withEndAction(new Runnable() {
+                @Override
+                public void run() {
+                    lButton.setClickable(true);
+                }
+            });
         } else {
             new AlertDialog.Builder(this)
                     .setMessage(R.string.conn_wifi_unavailable)
