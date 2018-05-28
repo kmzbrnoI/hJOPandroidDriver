@@ -68,7 +68,7 @@
     <string name="ns_warning_invalid_characters">Název nesmí obsahovat sekvenci "--"</string>
     <string name="ns_warning_invalid_address">Adresa není v platném ipV4 formátu a ani se nejedná o doménové jméno.</string>
 
-    <string name="login_enter">Zadejte přihlašovací údaje</string>
+    <string name="login_enter">Zadejte login</string>
     <string name="login_username">Uživatelské jméno</string>
     <string name="login_password">Heslo</string>
     <string name="login_save">Uložit login</string>
