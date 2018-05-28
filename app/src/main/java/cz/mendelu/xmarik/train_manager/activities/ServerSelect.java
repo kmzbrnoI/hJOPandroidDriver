@@ -281,9 +281,9 @@ public class ServerSelect extends NavigationBase {
 
         if (isWifiOnAndConnected()) {
             (new UDPDiscover((WifiManager)context.getSystemService(Context.WIFI_SERVICE))).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-            float deg = lButton.getRotation() + 720F;
+            float deg = lButton.getRotation() + (360 * 4);
             lButton.setClickable(false);
-            lButton.animate().rotation(deg).setInterpolator(new AccelerateDecelerateInterpolator()).withEndAction(new Runnable() {
+            lButton.animate().rotation(deg).setDuration(2000).setInterpolator(new AccelerateDecelerateInterpolator()).withEndAction(new Runnable() {
                 @Override
                 public void run() {
                     lButton.setClickable(true);
