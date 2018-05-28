@@ -24,7 +24,7 @@ import cz.mendelu.xmarik.train_manager.storage.ServerDb;
 /**
  * UDPDiscover discovers hJOPservers in local network.
  */
-public class UDPDiscover extends AsyncTask<String, Void, String> {
+public class UDPDiscover extends AsyncTask<String, Server, String> {
     public static final int DEFAULT_PORT = 5880;
     private static final int TIMEOUT_MS = 800;
 
@@ -64,14 +64,9 @@ public class UDPDiscover extends AsyncTask<String, Void, String> {
      */
     private void listenForResponses(DatagramSocket socket)
             throws IOException {
-        long start = System.currentTimeMillis();
         byte[] buf = new byte[1024];
 
-        // Loop and try to receive responses until the timeout elapses. We'll
-        // get
-        // back the packet we just sent out, which isn't terribly helpful, but
-        // we'll
-        // discard it in parseResponse because the cmd is wrong.
+        // Loop and try to receive responses until the timeout elapses.
         try {
             while (true) {
                 DatagramPacket packet = new DatagramPacket(buf, buf.length);
@@ -79,13 +74,12 @@ public class UDPDiscover extends AsyncTask<String, Void, String> {
                 String s = new String(packet.getData(), 0, packet.getLength());
 
                 Server server = parseServerMessage(s);
-                if (server != null && !ServerDb.instance.isFoundServer(server.host, server.port)) {
-                    toAdd = server;
-                    this.publishProgress();
+                if (server != null) {
+                    this.publishProgress(server);
                 }
             }
         } catch (SocketTimeoutException e) {
-            Log.e("listening exception", "S: time out '" + e + "'");
+            Log.i("listening exception", "S: time out '" + e + "'"); // timeout OK
         }
     }
 
@@ -161,10 +155,9 @@ public class UDPDiscover extends AsyncTask<String, Void, String> {
     }
 
     @Override
-    protected void onProgressUpdate(Void... progress) {
-        if (toAdd != null) {
-            ServerDb.instance.addFoundServer(toAdd);
-            toAdd = null;
+    protected void onProgressUpdate(Server... progress) {
+        if (!ServerDb.instance.isFoundServer(progress[0].host, progress[0].port)) {
+            ServerDb.instance.addFoundServer(progress[0]);
         }
     }
 
