@@ -51,14 +51,14 @@ public class FunctionCheckBoxAdapter extends ArrayAdapter<TrainFunction> {
             holder.name.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
                     TrainFunction trainFunc = (TrainFunction)((CheckBox)v).getTag();
-                    ((TrainHandler)(((ContextWrapper)v.getContext()).getBaseContext())).onFuncChanged(trainFunc.num, ((CheckBox)v).isChecked());
+                    ((TrainHandler)((ContextWrapper)v.getContext())).onFuncChanged(trainFunc.num, ((CheckBox)v).isChecked());
                 }
             });
 
             holder.toggle.setOnClickListener(new View.OnClickListener() {
                 public void onClick(final View v) {
                     final TrainFunction trainFunc = (TrainFunction)((Button)v).getTag();
-                    ((TrainHandler)(((ContextWrapper)v.getContext()).getBaseContext())).onFuncChanged(trainFunc.num, true);
+                    ((TrainHandler)((ContextWrapper)v.getContext())).onFuncChanged(trainFunc.num, true);
                     final CheckBox c = (CheckBox) ((View)v.getParent()).findViewById(R.id.chb_func);
                     c.setChecked(true);
                     v.setEnabled(false);
@@ -69,7 +69,7 @@ public class FunctionCheckBoxAdapter extends ArrayAdapter<TrainFunction> {
                         @Override
                         public void run()
                         {
-                            ((TrainHandler)(((ContextWrapper)v.getContext()).getBaseContext())).onFuncChanged(trainFunc.num, false);
+                            ((TrainHandler)((ContextWrapper)v.getContext())).onFuncChanged(trainFunc.num, false);
                             c.setChecked(false);
                             v.setEnabled(true);
                         }
