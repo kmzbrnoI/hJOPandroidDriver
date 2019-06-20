@@ -20,6 +20,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import cz.mendelu.xmarik.train_manager.events.AreasParsedEvent;
 import cz.mendelu.xmarik.train_manager.events.TCPDisconnectEvent;
@@ -39,6 +40,8 @@ public class ServerConnector extends Activity {
     private MyCustomAdapter mAdapter;
     private ServerConnector classObject;
     private ProgressBar progressBar;
+
+    public static final String[] serverSupportedVersions = {"1.0", "1.1"};
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -134,7 +137,7 @@ public class ServerConnector extends Activity {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventMainThread(HandShakeEvent event) {
-        if ((event.getParsed().size() < 3) || (!event.getParsed().get(2).equals("1.0")))
+        if ((event.getParsed().size() < 3) || (!Arrays.asList(serverSupportedVersions).contains(event.getParsed().get(2))))
             arrayList.add(getString(R.string.sc_version_warning));
         else
             arrayList.add(getString(R.string.sc_connection_ok));
