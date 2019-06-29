@@ -97,7 +97,8 @@
     <string name="sc_version_warning">Server uses other protocol version, application may misbehave!</string>
     <string name="sc_auth_wait">Waiting for login...</string>
 
-    <string name="set_spped_volume">Use volume buttons to control speed</string>
+    <string name="set_speed_volume">Use volume buttons to control speed</string>
+    <string name="only_available_functions">Show only available functions</string>
 
     <string name="about">hJOP Driver allows you to become an engine driver and control one or more
         engines on the model railroad. It fully cooperates with hJOP.\nhttp://hjop.kmz-brno.cz/"</string>

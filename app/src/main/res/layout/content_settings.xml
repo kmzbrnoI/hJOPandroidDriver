@@ -22,8 +22,16 @@
         <Switch
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/set_spped_volume"
+            android:layout_marginBottom="10dp"
+            android:text="@string/set_speed_volume"
             android:id="@+id/sVolumeSpeed" />
+
+        <Switch
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:text="@string/only_available_functions"
+            android:id="@+id/sOnlyAvailableFunctions" />
 
     </LinearLayout>
 

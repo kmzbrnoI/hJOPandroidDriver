@@ -29,6 +29,14 @@ public class Settings extends NavigationBase {
             }
         });
 
+        Switch onlyAvailableFunctions = (Switch)findViewById(R.id.sOnlyAvailableFunctions);
+        onlyAvailableFunctions.setChecked(SettingsDb.instance.getOnlyAvailableFunctions());
+        onlyAvailableFunctions.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                SettingsDb.instance.setOnlyAvailableFunctions(isChecked);
+            }
+        });
     }
 
     @Override

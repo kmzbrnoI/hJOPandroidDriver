@@ -97,7 +97,8 @@
     <string name="sc_version_warning">Server využívá jiný komunikační protokol než 1.0, v komunikaci může docházet k chybám!</string>
     <string name="sc_auth_wait">Čekám na zadání loginu...</string>
 
-    <string name="set_spped_volume">Použít tlačítka nastavení hlasitosti k nastavování rychlosti</string>
+    <string name="set_speed_volume">Použít tlačítka nastavení hlasitosti k nastavování rychlosti</string>
+    <string name="only_available_functions">Zobrazovat jen dostupné funkce</string>
 
     <string name="about">hJOP Driver umožňuje řízení jízdy hnacích vozidel ve spolupráci se
         softwarovým balíkem hJOP.\nhttp://hjop.kmz-brno.cz/"</string>
