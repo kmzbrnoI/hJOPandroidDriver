@@ -44,10 +44,10 @@ public class FunctionCheckBoxAdapter extends ArrayAdapter<TrainFunction> {
             convertView = vi.inflate(R.layout.lok_function, null);
             holder = new ViewHolder();
             holder.code = (TextView) convertView.findViewById(R.id.code);
-            holder.name = (CheckBox) convertView.findViewById(R.id.chb_func);
+            holder.chb_func = (CheckBox) convertView.findViewById(R.id.chb_func);
             convertView.setTag(holder);
 
-            holder.name.setOnClickListener(new View.OnClickListener() {
+            holder.chb_func.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
                     chb_onClick((CheckBox)v);
                 }
@@ -56,8 +56,10 @@ public class FunctionCheckBoxAdapter extends ArrayAdapter<TrainFunction> {
             convertView.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
                     CheckBox chb = ((CheckBox)v.findViewById(R.id.chb_func));
-                    chb.toggle();
-                    chb_onClick(chb);
+                    if (chb.isEnabled()) {
+                        chb.toggle();
+                        chb_onClick(chb);
+                    }
                 }
             });
 
@@ -69,11 +71,9 @@ public class FunctionCheckBoxAdapter extends ArrayAdapter<TrainFunction> {
         holder.code.setText(function.name.equals("") ?
              "F" + String.valueOf(function.num) : "F" + String.valueOf(function.num) + ": " + function.name);
 
-        holder.name.setText("");
-        holder.name.setChecked(function.checked);
-        holder.name.setTag(function);
-        holder.name.setEnabled(m_enabled);
-        convertView.setEnabled(m_enabled);
+        holder.chb_func.setChecked(function.checked);
+        holder.chb_func.setTag(function);
+        holder.chb_func.setEnabled(m_enabled);
 
         return convertView;
     }
@@ -100,8 +100,7 @@ public class FunctionCheckBoxAdapter extends ArrayAdapter<TrainFunction> {
 
     private class ViewHolder {
         TextView code;
-        CheckBox name;
-        Button toggle;
+        CheckBox chb_func;
     }
 
 }
