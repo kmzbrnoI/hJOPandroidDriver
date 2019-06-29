@@ -1,14 +1,14 @@
 package cz.mendelu.xmarik.train_manager.models;
 
-enum TrainFunctionType {
-    PERMANENT,
-    MOMENTARY,
-}
-
 /**
  * Decoder function, e. g. F0-F28.
  */
 public class TrainFunction {
+    public enum TrainFunctionType {
+        PERMANENT,
+        MOMENTARY,
+    }
+
     public int num;
     public String name;
     public boolean checked;

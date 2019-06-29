@@ -49,17 +49,15 @@ public class FunctionCheckBoxAdapter extends ArrayAdapter<TrainFunction> {
 
             holder.name.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
-                    TrainFunction trainFunc = (TrainFunction)((CheckBox)v).getTag();
-                    ((TrainHandler)((ContextWrapper)v.getContext())).onFuncChanged(trainFunc.num, ((CheckBox)v).isChecked());
+                    chb_onClick((CheckBox)v);
                 }
             });
 
             convertView.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
                     CheckBox chb = ((CheckBox)v.findViewById(R.id.chb_func));
-                    TrainFunction trainFunc = (TrainFunction)chb.getTag();
                     chb.toggle();
-                    ((TrainHandler) ((ContextWrapper) v.getContext())).onFuncChanged(trainFunc.num, chb.isChecked());
+                    chb_onClick(chb);
                 }
             });
 
@@ -74,13 +72,30 @@ public class FunctionCheckBoxAdapter extends ArrayAdapter<TrainFunction> {
         holder.name.setText("");
         holder.name.setChecked(function.checked);
         holder.name.setTag(function);
-        holder.toggle.setTag(function);
-
         holder.name.setEnabled(m_enabled);
-        holder.toggle.setEnabled(m_enabled);
         convertView.setEnabled(m_enabled);
 
         return convertView;
+    }
+
+    void chb_onClick(CheckBox chb) {
+        final CheckBox c = chb;
+        final TrainFunction trainFunc = (TrainFunction)chb.getTag();
+        ((TrainHandler) ((ContextWrapper) chb.getContext())).onFuncChanged(trainFunc.num, chb.isChecked());
+
+        if (trainFunc.type == TrainFunction.TrainFunctionType.MOMENTARY && trainFunc.checked) {
+            chb.setEnabled(false);
+
+            Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    c.setChecked(false);
+                    ((TrainHandler) ((ContextWrapper)c.getContext())).onFuncChanged(trainFunc.num, c.isChecked());
+                    c.setEnabled(true);
+                }
+            }, 750);
+        }
     }
 
     private class ViewHolder {
