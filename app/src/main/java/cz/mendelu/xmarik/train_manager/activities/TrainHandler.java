@@ -269,8 +269,18 @@ public class TrainHandler extends NavigationBase {
                 this.setEnabled(train.total);
 
                 //set custom adapter with check boxes to list view
+                ArrayList<TrainFunction> functions;
+                if (SettingsDb.instance.getOnlyAvailableFunctions()) {
+                    // just own filter
+                    functions = new ArrayList<TrainFunction>();
+                    for (int i = 0; i < train.function.length; i++)
+                        if (!train.function[i].name.equals(""))
+                            functions.add(train.function[i]);
+                } else {
+                    functions = new ArrayList<>(Arrays.asList(train.function));
+                }
                 FunctionCheckBoxAdapter dataAdapter = new FunctionCheckBoxAdapter(context,
-                        R.layout.lok_function, new ArrayList<>(Arrays.asList(train.function)), true);
+                        R.layout.lok_function, functions, true);
                 lv_functions.setAdapter(dataAdapter);
 
                 if (train.stolen)
