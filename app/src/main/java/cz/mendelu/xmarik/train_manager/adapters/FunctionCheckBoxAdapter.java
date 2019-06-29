@@ -19,7 +19,7 @@ import cz.mendelu.xmarik.train_manager.models.TrainFunction;
 import cz.mendelu.xmarik.train_manager.activities.TrainHandler;
 
 /**
- * FunctionCheckBoxAdapter is a ListView` checkbox itesm with behavior connected to function
+ * FunctionCheckBoxAdapter is a ListView` checkbox items with behavior connected to function
  * setting.
  */
 public class FunctionCheckBoxAdapter extends ArrayAdapter<TrainFunction> {
@@ -45,35 +45,12 @@ public class FunctionCheckBoxAdapter extends ArrayAdapter<TrainFunction> {
             holder = new ViewHolder();
             holder.code = (TextView) convertView.findViewById(R.id.code);
             holder.name = (CheckBox) convertView.findViewById(R.id.chb_func);
-            holder.toggle = (Button) convertView.findViewById(R.id.toggle);
             convertView.setTag(holder);
 
             holder.name.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
                     TrainFunction trainFunc = (TrainFunction)((CheckBox)v).getTag();
                     ((TrainHandler)((ContextWrapper)v.getContext())).onFuncChanged(trainFunc.num, ((CheckBox)v).isChecked());
-                }
-            });
-
-            holder.toggle.setOnClickListener(new View.OnClickListener() {
-                public void onClick(final View v) {
-                    final TrainFunction trainFunc = (TrainFunction)((Button)v).getTag();
-                    ((TrainHandler)((ContextWrapper)v.getContext())).onFuncChanged(trainFunc.num, true);
-                    final CheckBox c = (CheckBox) ((View)v.getParent()).findViewById(R.id.chb_func);
-                    c.setChecked(true);
-                    v.setEnabled(false);
-
-                    Handler handler = new Handler();
-                    handler.postDelayed(new Runnable()
-                    {
-                        @Override
-                        public void run()
-                        {
-                            ((TrainHandler)((ContextWrapper)v.getContext())).onFuncChanged(trainFunc.num, false);
-                            c.setChecked(false);
-                            v.setEnabled(true);
-                        }
-                    }, 500);
                 }
             });
 
