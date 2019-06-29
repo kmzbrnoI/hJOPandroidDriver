@@ -12,7 +12,7 @@ public class ParseHelper {
         ArrayList<String> result = new ArrayList<>();
         String s = "";
         int plain_cnt = 0;
-        if (text == "") return new ArrayList<>();
+        if (text.equals("")) return new ArrayList<>();
 
         for (int i = 0; i < text.length(); i++) {
             if (text.charAt(i) == '{') {
