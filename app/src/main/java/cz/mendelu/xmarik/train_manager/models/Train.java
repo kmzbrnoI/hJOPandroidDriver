@@ -28,7 +28,7 @@ public class Train {
     /** Constructs train from server string.
      * @param data in format: název|majitel|označení|poznámka|DCC adresa|třída|číslo soupravy|
             orientace stanovište A|funkce|rychlost ve stupních|rychlost km/h|směr|
-            id oblasti řízení|cv_take|cv_release|func_vyznamy
+            id oblasti řízení|cv_take|cv_release|func_vyznamy|func_type
      */
     public Train(String data) {
         updateFromServerString(data);
@@ -37,6 +37,7 @@ public class Train {
     public void updateFromServerString(String data) {
         ArrayList<String> parsed = ParseHelper.parse(data, "|", "");
         ArrayList<String> functionStrs = ParseHelper.parse(parsed.get(15), ";", "");
+        String functionTypes = (parsed.size() > 16) ? parsed.get(16) : "";
 
         name = parsed.get(0);
         owner = parsed.get(1);
@@ -51,9 +52,10 @@ public class Train {
 
         function = new TrainFunction[parsed.get(8).length()];
         for (int i = 0; i < function.length; i++) {
-            String desc = "";
-            if (i < functionStrs.size()) desc = functionStrs.get(i);
-            this.function[i] = new TrainFunction(i, desc, parsed.get(8).charAt(i) == '1');
+            String desc = (i < functionStrs.size()) ? functionStrs.get(i) : "";
+            char status = (i < parsed.get(8).length()) ? parsed.get(8).charAt(i) : '0';
+            char type = (i < functionTypes.length()) ? functionTypes.charAt(i) : 'P';
+            this.function[i] = new TrainFunction(i, desc, status == '1', type);
         }
     }
 
