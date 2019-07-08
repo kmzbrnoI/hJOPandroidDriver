@@ -8,6 +8,7 @@ import org.greenrobot.eventbus.EventBus;
 
 import java.io.UnsupportedEncodingException;
 import java.net.ConnectException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
 import cz.mendelu.xmarik.train_manager.events.AreasEvent;
@@ -76,6 +77,13 @@ public class TCPClientApplication extends Application implements TCPClient.OnMes
 
         } else if (parsed.get(1).equals("OR-LIST")) {
             EventBus.getDefault().post(new AreasEvent(parsed));
+
+        } else if ((parsed.get(1).equals("PING")) && (parsed.size() > 2) && (parsed.get(2).toUpperCase().equals("REQ-RESP"))) {
+            if (parsed.size() >= 4) {
+                this.send("-;PONG;"+parsed.get(3)+'\n');
+            } else {
+                this.send("-;PONG\n");
+            }
 
         } else if (parsed.get(1).equals("LOK")) {
             if (parsed.size() < 3) return;
