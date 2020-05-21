@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.wifi.SupplicantState;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
@@ -306,7 +307,7 @@ public class ServerSelect extends NavigationBase {
 
         if (wifiMgr.isWifiEnabled()) { // Wi-Fi adapter is ON
             WifiInfo wifiInfo = wifiMgr.getConnectionInfo();
-            return !( wifiInfo.getNetworkId() == -1 );
+            return ( wifiInfo.getSupplicantState() == SupplicantState.COMPLETED );
         }
         else {
             return false; // Wi-Fi adapter is OFF
