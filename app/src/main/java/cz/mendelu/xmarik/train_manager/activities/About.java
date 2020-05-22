@@ -34,7 +34,7 @@ public class About extends NavigationBase {
     }
 
     public void linkhJOP(View v) {
-        Uri uriUrl = Uri.parse("http://hjop.kmz-brno.cz/");
+        Uri uriUrl = Uri.parse("https://hjop.kmz-brno.cz/");
         Intent launchBrowser = new Intent(Intent.ACTION_VIEW, uriUrl);
         startActivity(launchBrowser);
     }
