@@ -3,6 +3,8 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/hJOPandroidDriver.iml" filepath="$PROJECT_DIR$/hJOPandroidDriver.iml" group="hJOPandroidDriver" />
+      <module fileurl="file://$PROJECT_DIR$/app/hJOPandroidDriver-app.iml" filepath="$PROJECT_DIR$/app/hJOPandroidDriver-app.iml" group="hJOPandroidDriver/app" />
       <module fileurl="file://$PROJECT_DIR$/hJOPdriver.iml" filepath="$PROJECT_DIR$/hJOPdriver.iml" />
     </modules>
   </component>
