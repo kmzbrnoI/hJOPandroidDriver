@@ -63,41 +63,40 @@ public class Train {
         if (this.direction == direction) return;
         this.direction = direction;
         String strDir = direction ? "1" : "0";
-        TCPClientApplication.getInstance().send("-;LOK;" + String.valueOf(this.addr) + ";D;" + strDir);
+        TCPClientApplication.getInstance().send("-;LOK;" + this.addr + ";D;" + strDir);
     }
 
     public void setSpeedSteps(int steps) {
         if (this.stepsSpeed == steps) return;
         this.stepsSpeed = steps;
-        TCPClientApplication.getInstance().send("-;LOK;" + String.valueOf(this.addr) + ";SP-S;" + steps);
+        TCPClientApplication.getInstance().send("-;LOK;" + this.addr + ";SP-S;" + steps);
     }
 
     public void setFunc(int id, boolean state) {
         if (function[id].checked == state) return;
         function[id].checked = state;
         String strState = state ? "1" : "0";
-        TCPClientApplication.getInstance().send("-;LOK;" + String.valueOf(this.addr) + ";F;" +
-                String.valueOf(id) + ";" + strState);
+        TCPClientApplication.getInstance().send("-;LOK;" + this.addr + ";F;" + id + ";" + strState);
     }
 
     public void setTotal(boolean total) {
         if (this.total == total) return;
         this.total = total;
         String strTotal = total ? "1" : "0";
-        TCPClientApplication.getInstance().send("-;LOK;" + String.valueOf(this.addr) + ";TOTAL;" + strTotal);
+        TCPClientApplication.getInstance().send("-;LOK;" + this.addr + ";TOTAL;" + strTotal);
     }
 
     public void release() {
-        TCPClientApplication.getInstance().send("-;LOK;" + String.valueOf(this.addr) + ";RELEASE");
+        TCPClientApplication.getInstance().send("-;LOK;" + this.addr + ";RELEASE");
     }
 
     public void please() {
-        TCPClientApplication.getInstance().send("-;LOK;" + String.valueOf(this.addr) + ";PLEASE");
+        TCPClientApplication.getInstance().send("-;LOK;" + this.addr + ";PLEASE");
     }
 
     public void emergencyStop() {
         kmphSpeed = 0;
         stepsSpeed = 0;
-        TCPClientApplication.getInstance().send("-;LOK;" + String.valueOf(this.addr) + ";STOP");
+        TCPClientApplication.getInstance().send("-;LOK;" + this.addr + ";STOP");
     }
 }

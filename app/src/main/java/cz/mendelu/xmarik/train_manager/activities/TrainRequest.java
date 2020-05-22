@@ -1,7 +1,6 @@
 package cz.mendelu.xmarik.train_manager.activities;
 
 import android.app.Dialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -36,7 +35,6 @@ import cz.mendelu.xmarik.train_manager.events.RequestEvent;
 
 public class TrainRequest extends NavigationBase {
 
-    Context context;
     ArrayAdapter<String> lAdapter;
     Button sendButton;
     EditText messageForServer;
@@ -55,14 +53,14 @@ public class TrainRequest extends NavigationBase {
         setContentView(R.layout.activity_train_request);
         super.onCreate(savedInstanceState);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         dialog = new Dialog(this);
         dialog.setContentView(R.layout.dialog_train_request);
         dialog.setTitle(R.string.tr_request);
-        dialogMessage = (TextView) dialog.findViewById(R.id.dialogMessage);
-        dialogButton = (Button) dialog.findViewById(R.id.cancelButton);
+        dialogMessage = dialog.findViewById(R.id.dialogMessage);
+        dialogButton = dialog.findViewById(R.id.cancelButton);
         dialogButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -78,12 +76,12 @@ public class TrainRequest extends NavigationBase {
 
         connectionDialog = new AlertDialog.Builder(this);
 
-        areas_lv = (ListView) findViewById(R.id.nav_areas);
-        sendButton = (Button) findViewById(R.id.b_request);
-        messageForServer = (EditText) findViewById(R.id.authMessage);
+        areas_lv = findViewById(R.id.nav_areas);
+        sendButton = findViewById(R.id.b_request);
+        messageForServer = findViewById(R.id.authMessage);
         focused = -1;
 
-        areas_data = new ArrayList<String>();
+        areas_data = new ArrayList<>();
         lAdapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_list_item_1, android.R.id.text1, areas_data);
 
@@ -193,7 +191,7 @@ public class TrainRequest extends NavigationBase {
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {

@@ -45,7 +45,8 @@ import cz.mendelu.xmarik.train_manager.storage.TrainDb;
 import cz.mendelu.xmarik.train_manager.events.StoredServersReloadEvent;
 import cz.mendelu.xmarik.train_manager.models.Server;
 
-import static android.preference.PreferenceManager.getDefaultSharedPreferences;
+import static androidx.preference.PreferenceManager.getDefaultSharedPreferences;
+
 
 public class ServerSelect extends NavigationBase {
     Button lButton;
@@ -54,14 +55,13 @@ public class ServerSelect extends NavigationBase {
     ArrayList<String> found;
     ArrayList<String> stored;
 
-    SharedPreferences sharedpreferences;
     ListView sServers;
     ListView fServers;
 
     public enum Source {
         FOUND,
         STORED
-    };
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,21 +84,21 @@ public class ServerSelect extends NavigationBase {
         // create settings storage
         SettingsDb.instance = new SettingsDb(sp);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle(getString(R.string.activity_server_select_title));
         setSupportActionBar(toolbar);
 
-        lButton = (Button) findViewById(R.id.serverButton);
-        fServers = (ListView) findViewById(R.id.foundServers);
-        sServers = (ListView) findViewById(R.id.storedServers);
+        lButton = findViewById(R.id.serverButton);
+        fServers = findViewById(R.id.foundServers);
+        sServers = findViewById(R.id.storedServers);
 
         // bind ListView adapters:
-        found = new ArrayList<String>();
+        found = new ArrayList<>();
         fAdapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_list_item_1, android.R.id.text1, found);
         fServers.setAdapter(fAdapter);
 
-        stored = new ArrayList<String>();
+        stored = new ArrayList<>();
         sAdapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_list_item_1, android.R.id.text1, stored);
         sServers.setAdapter(sAdapter);
@@ -323,7 +323,7 @@ public class ServerSelect extends NavigationBase {
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
@@ -336,11 +336,11 @@ public class ServerSelect extends NavigationBase {
         dialog.setContentView(R.layout.dialog_user);
 
         //set dialog component
-        final EditText mName = (EditText) dialog.findViewById(R.id.dialogName);
-        final EditText mPasswd = (EditText) dialog.findViewById(R.id.dialogPasswd);
-        Button dialogButton = (Button) dialog.findViewById(R.id.dialogButtonOK);
-        final TextView mMessage = (TextView) dialog.findViewById(R.id.tv_note);
-        final CheckBox savebox = (CheckBox) dialog.findViewById(R.id.dialogSaveData);
+        final EditText mName = dialog.findViewById(R.id.dialogName);
+        final EditText mPasswd = dialog.findViewById(R.id.dialogPasswd);
+        Button dialogButton = dialog.findViewById(R.id.dialogButtonOK);
+        final TextView mMessage = dialog.findViewById(R.id.tv_note);
+        final CheckBox savebox = dialog.findViewById(R.id.dialogSaveData);
 
         mMessage.setText(R.string.mm_change_login);
         mName.setText(server.username);

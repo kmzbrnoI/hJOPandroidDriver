@@ -2,7 +2,6 @@ package cz.mendelu.xmarik.train_manager.activities;
 
 import android.app.Activity;
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -25,7 +24,7 @@ import java.util.Arrays;
 import cz.mendelu.xmarik.train_manager.events.AreasParsedEvent;
 import cz.mendelu.xmarik.train_manager.events.TCPDisconnectEvent;
 import cz.mendelu.xmarik.train_manager.helpers.HashHelper;
-import cz.mendelu.xmarik.train_manager.adapters.MyCustomAdapter;
+import cz.mendelu.xmarik.train_manager.adapters.TextViewAdapter;
 import cz.mendelu.xmarik.train_manager.R;
 import cz.mendelu.xmarik.train_manager.events.ConnectionEstablishedEvent;
 import cz.mendelu.xmarik.train_manager.events.GlobalAuthEvent;
@@ -35,10 +34,8 @@ import cz.mendelu.xmarik.train_manager.network.TCPClientApplication;
 import cz.mendelu.xmarik.train_manager.events.HandShakeEvent;
 
 public class ServerConnector extends Activity {
-    private ListView mList;
     private ArrayList<String> arrayList;
-    private MyCustomAdapter mAdapter;
-    private ServerConnector classObject;
+    private TextViewAdapter mAdapter;
     private ProgressBar progressBar;
 
     public static final String[] serverSupportedVersions = {"1.0", "1.1"};
@@ -49,10 +46,10 @@ public class ServerConnector extends Activity {
         super.onCreate(savedInstanceState);
 
         arrayList = new ArrayList<>();
-        progressBar = (ProgressBar) findViewById(R.id.serverLoadBar);
+        progressBar = findViewById(R.id.serverLoadBar);
         progressBar.setVisibility(View.VISIBLE);
-        mList = (ListView) findViewById(R.id.list);
-        mAdapter = new MyCustomAdapter(this, arrayList);
+        ListView mList = findViewById(R.id.list);
+        mAdapter = new TextViewAdapter(this, arrayList);
         mList.setAdapter(mAdapter);
     }
 
@@ -82,11 +79,11 @@ public class ServerConnector extends Activity {
         dialog.setContentView(R.layout.dialog_user);
 
         //set dialog component
-        final TextView mMessage = (TextView) dialog.findViewById(R.id.tv_note);
-        final EditText mName = (EditText) dialog.findViewById(R.id.dialogName);
-        final EditText mPasswd = (EditText) dialog.findViewById(R.id.dialogPasswd);
-        Button dialogButton = (Button) dialog.findViewById(R.id.dialogButtonOK);
-        final CheckBox savebox = (CheckBox) dialog.findViewById(R.id.dialogSaveData);
+        final TextView mMessage = dialog.findViewById(R.id.tv_note);
+        final EditText mName = dialog.findViewById(R.id.dialogName);
+        final EditText mPasswd = dialog.findViewById(R.id.dialogPasswd);
+        Button dialogButton = dialog.findViewById(R.id.dialogButtonOK);
+        final CheckBox savebox = dialog.findViewById(R.id.dialogSaveData);
         mMessage.setText(message);
 
         mName.setText(TCPClientApplication.getInstance().server.username);

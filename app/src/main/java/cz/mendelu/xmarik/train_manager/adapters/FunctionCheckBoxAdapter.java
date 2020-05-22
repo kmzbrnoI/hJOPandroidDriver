@@ -42,8 +42,8 @@ public class FunctionCheckBoxAdapter extends ArrayAdapter<TrainFunction> {
         if (convertView == null) {
             convertView = vi.inflate(R.layout.lok_function, null);
             holder = new ViewHolder();
-            holder.code = (TextView) convertView.findViewById(R.id.code);
-            holder.chb_func = (CheckBox) convertView.findViewById(R.id.chb_func);
+            holder.code = convertView.findViewById(R.id.code);
+            holder.chb_func = convertView.findViewById(R.id.chb_func);
             convertView.setTag(holder);
 
             holder.chb_func.setOnClickListener(new View.OnClickListener() {
@@ -54,7 +54,7 @@ public class FunctionCheckBoxAdapter extends ArrayAdapter<TrainFunction> {
 
             convertView.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
-                    CheckBox chb = ((CheckBox)v.findViewById(R.id.chb_func));
+                    CheckBox chb = v.findViewById(R.id.chb_func);
                     if (chb.isEnabled()) {
                         chb.toggle();
                         chb_onClick(chb);
@@ -68,7 +68,7 @@ public class FunctionCheckBoxAdapter extends ArrayAdapter<TrainFunction> {
         TrainFunction function = trainList.get(position);
 
         holder.code.setText(function.name.equals("") ?
-             "F" + String.valueOf(function.num) : "F" + String.valueOf(function.num) + ": " + function.name);
+             "F" + function.num : "F" + function.num + ": " + function.name);
 
         holder.chb_func.setChecked(function.checked);
         holder.chb_func.setTag(function);
@@ -77,10 +77,10 @@ public class FunctionCheckBoxAdapter extends ArrayAdapter<TrainFunction> {
         return convertView;
     }
 
-    void chb_onClick(CheckBox chb) {
+    private void chb_onClick(CheckBox chb) {
         final CheckBox c = chb;
         final TrainFunction trainFunc = (TrainFunction)chb.getTag();
-        ((TrainHandler) ((ContextWrapper) chb.getContext())).onFuncChanged(trainFunc.num, chb.isChecked());
+        ((TrainHandler) chb.getContext()).onFuncChanged(trainFunc.num, chb.isChecked());
 
         if (trainFunc.type == TrainFunction.TrainFunctionType.MOMENTARY && trainFunc.checked) {
             chb.setEnabled(false);
@@ -90,14 +90,14 @@ public class FunctionCheckBoxAdapter extends ArrayAdapter<TrainFunction> {
                 @Override
                 public void run() {
                     c.setChecked(false);
-                    ((TrainHandler) ((ContextWrapper)c.getContext())).onFuncChanged(trainFunc.num, c.isChecked());
+                    ((TrainHandler) c.getContext()).onFuncChanged(trainFunc.num, c.isChecked());
                     c.setEnabled(true);
                 }
             }, 750);
         }
     }
 
-    private class ViewHolder {
+    private static class ViewHolder {
         TextView code;
         CheckBox chb_func;
     }

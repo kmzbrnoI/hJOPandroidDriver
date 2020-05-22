@@ -1,7 +1,7 @@
 package cz.mendelu.xmarik.train_manager.models;
 
 /**
- * ControlArea represents signle station at the railroad. Each station consists of id and name.
+ * ControlArea represents single station at the railroad. Each station consists of id and name.
  */
 public class ControlArea {
     public String id;

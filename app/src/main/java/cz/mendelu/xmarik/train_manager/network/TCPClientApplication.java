@@ -1,14 +1,11 @@
 package cz.mendelu.xmarik.train_manager.network;
 
 import android.app.Application;
-import android.os.AsyncTask;
 import android.util.Log;
 
 import org.greenrobot.eventbus.EventBus;
 
-import java.io.UnsupportedEncodingException;
 import java.net.ConnectException;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
 import cz.mendelu.xmarik.train_manager.events.AreasEvent;
@@ -29,7 +26,6 @@ public class TCPClientApplication extends Application implements TCPClient.OnMes
 
     public Server server = null;
 
-    public boolean auth = false;
     TCPClient mTcpClient = null;
 
     public static TCPClientApplication getInstance() {

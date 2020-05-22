@@ -88,7 +88,7 @@ public class TrainHandler extends NavigationBase {
         super.onCreate(savedInstanceState);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         updating = false;
@@ -97,20 +97,20 @@ public class TrainHandler extends NavigationBase {
         managed = new ArrayList<>();
         multitrack = new ArrayList<>();
 
-        sb_speed = (SeekBar) findViewById(R.id.speedkBar1);
-        s_direction = (Switch) findViewById(R.id.handlerDirection1);
-        b_idle = (Button) findViewById(R.id.startButton1);
-        b_stop = (Button) findViewById(R.id.stopButton1);
-        chb_group = (CheckBox) findViewById(R.id.goupManaged1);
-        ib_status = (ImageButton) findViewById(R.id.ib_status);
-        ib_release = (ImageButton) findViewById(R.id.ib_release);
-        lv_functions = (ListView) findViewById(R.id.checkBoxView1);
-        tv_kmhSpeed = (TextView) findViewById(R.id.kmh1);
-        chb_total = (CheckBox) findViewById(R.id.totalManaged);
+        sb_speed = findViewById(R.id.speedkBar1);
+        s_direction = findViewById(R.id.handlerDirection1);
+        b_idle = findViewById(R.id.startButton1);
+        b_stop = findViewById(R.id.stopButton1);
+        chb_group = findViewById(R.id.goupManaged1);
+        ib_status = findViewById(R.id.ib_status);
+        ib_release = findViewById(R.id.ib_release);
+        lv_functions = findViewById(R.id.checkBoxView1);
+        tv_kmhSpeed = findViewById(R.id.kmh1);
+        chb_total = findViewById(R.id.totalManaged);
 
         // fill spinner
-        s_spinner = (Spinner)findViewById(R.id.spinner1);
-        managed_str = new ArrayList<String>();
+        s_spinner = findViewById(R.id.spinner1);
+        managed_str = new ArrayList<>();
         managed_adapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_list_item_1, android.R.id.text1, managed_str);
         s_spinner.setAdapter(managed_adapter);
@@ -149,8 +149,7 @@ public class TrainHandler extends NavigationBase {
                     if (!multitrack.contains(train))
                         multitrack.add(train);
                 } else {
-                    if (multitrack.contains(train))
-                        multitrack.remove(train);
+                    multitrack.remove(train);
                 }
             }
         });
@@ -183,7 +182,7 @@ public class TrainHandler extends NavigationBase {
         int i = 0;
         for(Train t : TrainDb.instance.trains.values()) {
             managed.add(t);
-            managed_str.add(t.name + " (" + t.label + ") : " + String.valueOf(t.addr));
+            managed_str.add(t.name + " (" + t.label + ") : " + t.addr);
             if (t == train) index = i;
             i++;
         }
@@ -271,7 +270,7 @@ public class TrainHandler extends NavigationBase {
                 ArrayList<TrainFunction> functions;
                 if (SettingsDb.instance.getOnlyAvailableFunctions()) {
                     // just own filter
-                    functions = new ArrayList<TrainFunction>();
+                    functions = new ArrayList<>();
                     for (int i = 0; i < train.function.length; i++)
                         if (!train.function[i].name.equals(""))
                             functions.add(train.function[i]);
@@ -415,7 +414,7 @@ public class TrainHandler extends NavigationBase {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventMainThread(LokRespEvent event) {
         if (train == null) return;
-        if (Integer.valueOf(event.getParsed().get(2)) != train.addr) return;
+        if (Integer.parseInt(event.getParsed().get(2)) != train.addr) return;
 
         tv_kmhSpeed.setText(String.format("%s km/h", Integer.toString(train.kmphSpeed)));
 
@@ -434,18 +433,18 @@ public class TrainHandler extends NavigationBase {
 
     @Override
     protected void onPause() {
-        b_idleClick((Button)findViewById(R.id.startButton1));
+        b_idleClick(findViewById(R.id.startButton1));
         timerHandler.removeCallbacks(timerRunnable);
         super.onPause();
     }
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            b_idleClick((Button)findViewById(R.id.startButton1));
+            b_idleClick(findViewById(R.id.startButton1));
             super.onBackPressed();
         }
     }

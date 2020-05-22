@@ -1,11 +1,9 @@
 package cz.mendelu.xmarik.train_manager.models;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import cz.mendelu.xmarik.train_manager.helpers.ParseHelper;
-import cz.mendelu.xmarik.train_manager.network.TCPClientApplication;
 
 /**
  * Class Server represents a single server. Server contains database of all trains.
@@ -41,7 +39,7 @@ public class Server {
 
         this.name = parsed.get(7);
         this.host = parsed.get(4);
-        this.port = Integer.valueOf(parsed.get(5));
+        this.port = Integer.parseInt(parsed.get(5));
         this.type = parsed.get(3);
         this.active = parsed.get(6).equals("on");
         this.username = "";
@@ -50,13 +48,11 @@ public class Server {
 
     public String getStringData() {
         String statusText = this.active ? "online" : "offline";
-        String stringData = this.name + "\t" + this.host + "\n" + this.type + " \t" + statusText;
-        return stringData;
+        return this.name + "\t" + this.host + "\n" + this.type + " \t" + statusText;
     }
 
     public String getStoredStringData() {
-        String stringData = this.name + "\t" + this.host + "\n" + this.type;
-        return stringData;
+        return this.name + "\t" + this.host + "\n" + this.type;
     }
 
     public String getSaveDataString() {

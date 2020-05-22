@@ -46,16 +46,16 @@ public class TrainRelease extends NavigationBase {
         setContentView(R.layout.activity_train_release);
         super.onCreate(savedInstanceState);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         context = this;
-        lv_trains = (ListView) findViewById(R.id.acquiredTrains);
-        b_send = (Button) findViewById(R.id.trainBoxButton);
+        lv_trains = findViewById(R.id.acquiredTrains);
+        b_send = findViewById(R.id.trainBoxButton);
         focused = -1;
 
-        trains = new ArrayList<Train>();
-        train_strings = new ArrayList<String>();
+        trains = new ArrayList<>();
+        train_strings = new ArrayList<>();
         hvs_adapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_list_item_1, android.R.id.text1, train_strings);
         lv_trains.setAdapter(hvs_adapter);
@@ -156,7 +156,7 @@ public class TrainRelease extends NavigationBase {
             train_strings.add(getString(R.string.ta_no_loks));
 
         for(Train t : TrainDb.instance.trains.values()) {
-            train_strings.add(t.name + " (" + t.label + ") : " + String.valueOf(t.addr));
+            train_strings.add(t.name + " (" + t.label + ") : " + t.addr);
             trains.add(t);
         }
 
@@ -165,7 +165,7 @@ public class TrainRelease extends NavigationBase {
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
             if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {

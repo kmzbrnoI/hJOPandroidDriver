@@ -17,10 +17,10 @@ public class Settings extends NavigationBase {
         setContentView(R.layout.activity_settings);
         super.onCreate(savedInstanceState);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        Switch volume = (Switch)findViewById(R.id.sVolumeSpeed);
+        Switch volume = findViewById(R.id.sVolumeSpeed);
         volume.setChecked(SettingsDb.instance.getSpeedVolume());
         volume.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -29,7 +29,7 @@ public class Settings extends NavigationBase {
             }
         });
 
-        Switch onlyAvailableFunctions = (Switch)findViewById(R.id.sOnlyAvailableFunctions);
+        Switch onlyAvailableFunctions = findViewById(R.id.sOnlyAvailableFunctions);
         onlyAvailableFunctions.setChecked(SettingsDb.instance.getOnlyAvailableFunctions());
         onlyAvailableFunctions.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -41,7 +41,7 @@ public class Settings extends NavigationBase {
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {

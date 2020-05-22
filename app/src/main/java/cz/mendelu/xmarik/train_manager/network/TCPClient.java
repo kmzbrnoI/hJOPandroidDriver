@@ -4,14 +4,9 @@ import android.util.Log;
 
 import org.greenrobot.eventbus.EventBus;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
 import java.net.ConnectException;
 import java.net.InetAddress;
 import java.net.Socket;
@@ -31,8 +26,6 @@ public class TCPClient {
     public int serverPort;
 
     private Socket socket = null;
-    private final Object m_socket_lock = new Object();
-    private boolean mRun = false;
 
     WriteThread wt = null;
     ReadThread rt = null;
@@ -54,7 +47,6 @@ public class TCPClient {
     }
 
     public void disconnect(boolean wait_read, boolean wait_write) {
-        mRun = false;
         if (socket != null) {
             try {
                 socket.close();
@@ -89,7 +81,6 @@ public class TCPClient {
     public boolean connected() { return socket != null; }
 
     public void listen(OnMessageReceivedListener listener) {
-        mRun = true;
         if (socket != null) return;
         SocketThread st = new SocketThread(serverIp, serverPort, listener);
         st.start();
@@ -188,7 +179,6 @@ public class TCPClient {
     public class ReadThread extends Thread {
         private Socket m_socket;
         private OnMessageReceivedListener m_listener;
-        private BufferedReader in;
 
         ReadThread(Socket s, OnMessageReceivedListener listener) {
             m_socket = s;

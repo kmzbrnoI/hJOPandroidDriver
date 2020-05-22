@@ -22,10 +22,10 @@ public class ServerEdit extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_server_edit);
-        nameText = (EditText) findViewById(R.id.nameText);
-        ipAdrText = (EditText) findViewById(R.id.ipText);
-        portText = (EditText) findViewById(R.id.portText);
-        aboutText = (EditText) findViewById(R.id.aboutText);
+        nameText = findViewById(R.id.nameText);
+        ipAdrText = findViewById(R.id.ipText);
+        portText = findViewById(R.id.portText);
+        aboutText = findViewById(R.id.aboutText);
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {

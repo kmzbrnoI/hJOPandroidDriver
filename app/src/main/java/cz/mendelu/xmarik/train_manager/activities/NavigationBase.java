@@ -42,22 +42,22 @@ public class NavigationBase extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         Context context = this.getApplicationContext();
 
         // Navigation Drawer open / close event
-        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
+        drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView nv = (NavigationView) findViewById(R.id.nav_view);
+        NavigationView nv = findViewById(R.id.nav_view);
         nv.setNavigationItemSelectedListener(this);
 
         // add version number to hamburger_header
         try {
-            TextView tw = ((TextView) nv.getHeaderView(0).findViewById(R.id.tv_version));
+            TextView tw = nv.getHeaderView(0).findViewById(R.id.tv_version);
             tw.setText("v" + context.getPackageManager()
                     .getPackageInfo(context.getPackageName(), 0).versionName);
         } catch (PackageManager.NameNotFoundException e) {
@@ -93,7 +93,7 @@ public class NavigationBase extends AppCompatActivity
             startActivity(new Intent(this, TrainRelease.class));
         }
 
-        DrawerLayout drawer = (DrawerLayout)findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }

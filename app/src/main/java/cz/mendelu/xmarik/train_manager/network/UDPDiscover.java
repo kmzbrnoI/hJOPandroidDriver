@@ -29,7 +29,6 @@ public class UDPDiscover extends AsyncTask<String, Server, String> {
     private static final int TIMEOUT_MS = 800;
 
     WifiManager mWifi;
-    Server toAdd = null;
 
     public UDPDiscover(WifiManager mWifi) {
         this.mWifi = mWifi;
@@ -59,7 +58,6 @@ public class UDPDiscover extends AsyncTask<String, Server, String> {
      * Listen on socket for responses, timing out after TIMEOUT_MS
      *
      * @param socket socket on which the announcement request was sent
-     * @return list of discovered servers, never null
      * @throws IOException
      */
     private void listenForResponses(DatagramSocket socket)
@@ -130,23 +128,21 @@ public class UDPDiscover extends AsyncTask<String, Server, String> {
 
     @Override
     protected String doInBackground(String... urls) {
-        ArrayList<Server> servers = null;
         try {
             DatagramSocket sock = new DatagramSocket(null);
             sock.setReuseAddress(true);
             sock.bind(new InetSocketAddress(DEFAULT_PORT));
 
-            DatagramSocket socket = sock;
-            socket.setBroadcast(true);
-            socket.setSoTimeout(TIMEOUT_MS);
+            sock.setBroadcast(true);
+            sock.setSoTimeout(TIMEOUT_MS);
 
             String message = "hJOP;1.0;regulator;mobileManager;" + this.getIPAddress(true) + ";\n";
             DatagramPacket packet = new DatagramPacket(message.getBytes(), message.length(),
                     getBroadcastAddress(), DEFAULT_PORT);
-            socket.send(packet);
+            sock.send(packet);
 
-            listenForResponses(socket);
-            socket.close();
+            listenForResponses(sock);
+            sock.close();
         } catch (Exception e) {
             Log.e("exception", "S: Received Message: '" + e + "'");
         }
