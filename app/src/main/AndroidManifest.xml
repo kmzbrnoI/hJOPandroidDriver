@@ -47,7 +47,8 @@
 
         <activity android:name=".activities.ServerEdit"
             android:launchMode="singleInstance"
-            android:theme="@style/AppTheme.NoActionBar"
+            android:theme="@style/AppTheme"
+            android:parentActivityName=".activities.ServerSelect"
             android:label="@string/activity_new_server_title"
             />
 

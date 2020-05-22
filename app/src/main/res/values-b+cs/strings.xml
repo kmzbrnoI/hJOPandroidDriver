@@ -9,7 +9,7 @@
     <string name="activity_train_release_title">Autorizované soupravy</string>
     <string name="activity_train_request_title">Vyberte cílovou oblast řízení</string>
     <string name="activity_about_title">O aplikaci</string>
-    <string name="activity_new_server_title">Nový server</string>
+    <string name="activity_new_server_title">Vlastnosti serveru</string>
     <string name="activity_settings_title">Nastavení</string>
 
     <string name="hamburger_server_select_title">Výběr serveru</string>
