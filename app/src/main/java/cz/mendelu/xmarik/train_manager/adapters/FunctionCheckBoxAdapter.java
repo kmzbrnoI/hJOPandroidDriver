@@ -2,6 +2,7 @@ package cz.mendelu.xmarik.train_manager.adapters;
 
 import android.content.Context;
 import androidx.annotation.NonNull;
+import android.content.ContextWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,7 +40,7 @@ public class FunctionCheckBoxAdapter extends ArrayAdapter<TrainFunction> {
     public View getView(int position, View convertView, @NonNull ViewGroup parent) {
         ViewHolder holder;
         if (convertView == null) {
-            convertView = vi.inflate(R.layout.lok_function, null);
+            convertView = vi.inflate(R.layout.lok_function, parent, false);
             holder = new ViewHolder();
             holder.code = convertView.findViewById(R.id.code);
             holder.chb_func = convertView.findViewById(R.id.chb_func);
@@ -79,20 +80,31 @@ public class FunctionCheckBoxAdapter extends ArrayAdapter<TrainFunction> {
     private void chb_onClick(CheckBox chb) {
         final CheckBox c = chb;
         final TrainFunction trainFunc = (TrainFunction)chb.getTag();
-        ((TrainHandler) chb.getContext()).onFuncChanged(trainFunc.num, chb.isChecked());
+
+        onFuncChanged(chb, trainFunc.num);
 
         if (trainFunc.type == TrainFunction.TrainFunctionType.MOMENTARY && trainFunc.checked) {
             chb.setEnabled(false);
-
             Handler handler = new Handler();
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     c.setChecked(false);
-                    ((TrainHandler) c.getContext()).onFuncChanged(trainFunc.num, c.isChecked());
+                    onFuncChanged(c, trainFunc.num);
                     c.setEnabled(true);
                 }
             }, 750);
+        }
+    }
+
+    private void onFuncChanged(CheckBox chb, int function) {
+        Context context = getContext();
+        while (context instanceof ContextWrapper) {
+            if (context instanceof TrainHandler) {
+                ((TrainHandler) context).onFuncChanged(function, chb.isChecked());
+                break;
+            }
+            context = ((ContextWrapper)context).getBaseContext();
         }
     }
 
