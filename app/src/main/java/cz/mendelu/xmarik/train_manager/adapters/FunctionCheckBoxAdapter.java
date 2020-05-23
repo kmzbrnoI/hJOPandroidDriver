@@ -1,7 +1,6 @@
 package cz.mendelu.xmarik.train_manager.adapters;
 
 import android.content.Context;
-import android.content.ContextWrapper;
 import androidx.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;

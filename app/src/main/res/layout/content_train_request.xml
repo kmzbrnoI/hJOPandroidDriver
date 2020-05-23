@@ -56,8 +56,7 @@
                 android:maxLines="6"
                 android:id="@+id/authMessage"
                 android:layout_width="fill_parent"
-                android:scrollbars="vertical"
-                android:editable="true" />
+                android:scrollbars="vertical" />
 
             <Button
                 android:text="@string/tr_send_request"

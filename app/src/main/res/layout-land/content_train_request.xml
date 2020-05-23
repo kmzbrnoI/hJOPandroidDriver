@@ -10,7 +10,7 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="cz.mendelu.xmarik.train_manager.activities.TrainHandler"
+    tools:context="cz.mendelu.xmarik.train_manager.activities.TrainRequest"
     tools:showIn="@layout/app_bar_train_request">
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -50,8 +50,7 @@
                 android:maxLines="6"
                 android:id="@+id/authMessage"
                 android:layout_width="fill_parent"
-                android:scrollbars="vertical"
-                android:editable="true" />
+                android:scrollbars="vertical" />
 
             <Button
                 android:text="@string/tr_send_request"
