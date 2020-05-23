@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -8,81 +8,74 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
+    android:orientation="vertical"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="cz.mendelu.xmarik.train_manager.activities.ServerSelect"
     tools:showIn="@layout/app_bar_server_select">
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:orientation="vertical"
+    <LinearLayout
+        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:weightSum="1"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true">
+        android:layout_height="wrap_content">
 
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <TextView
-                android:text="@string/conn_servers_discovered"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/textView9"
-                android:layout_weight="1"
-                android:textStyle="normal|bold"
-                android:textAlignment="textStart"
-                android:textSize="24dp" />
-
-            <Button
-                android:layout_width="55dp"
-                android:layout_height="55dp"
-                android:id="@+id/serverButton"
-                android:layout_gravity="center_horizontal"
-                android:onClick="discoverServerClick"
-                android:background="@drawable/ic_refresh_new" />
-        </LinearLayout>
-
-        <ListView
-            android:layout_width="match_parent"
-            android:layout_height="187dp"
-            android:id="@+id/foundServers" />
-
-        <ImageButton
-            android:layout_width="match_parent"
+        <TextView
+            android:text="@string/conn_servers_discovered"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:id="@+id/imageButton3" />
+            android:id="@+id/textView9"
+            android:layout_weight="1"
+            android:textStyle="normal|bold"
+            android:textAlignment="textStart"
+            android:textSize="24sp" />
 
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:weightSum="1" >
-
-            <TextView
-                android:text="@string/conn_servers_saved"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/textView10"
-                android:layout_weight="1"
-                android:textAlignment="textStart"
-                android:textStyle="normal|bold"
-                android:textSize="24dp" />
-
-            <Button
-                android:layout_width="55dp"
-                android:layout_height="55dp"
-                android:id="@+id/add"
-                android:onClick="addServerClick"
-                android:layout_gravity="center_horizontal"
-                android:background="@drawable/ic_add_black_24dp" />
-
-        </LinearLayout>
-
-        <ListView
-            android:layout_width="match_parent"
-            android:layout_height="185dp"
-            android:id="@+id/storedServers" />
+        <Button
+            android:layout_width="55dp"
+            android:layout_height="55dp"
+            android:id="@+id/serverButton"
+            android:layout_gravity="center_horizontal"
+            android:onClick="discoverServerClick"
+            android:background="@drawable/ic_refresh_new" />
     </LinearLayout>
-</RelativeLayout>
+
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="187dp"
+        android:id="@+id/foundServers" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="6dp"
+        android:layout_marginVertical="12dp"
+        android:background="?android:attr/listDivider" />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:weightSum="1" >
+
+        <TextView
+            android:text="@string/conn_servers_saved"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView10"
+            android:layout_weight="1"
+            android:textAlignment="textStart"
+            android:textStyle="normal|bold"
+            android:textSize="24sp" />
+
+        <Button
+            android:layout_width="55dp"
+            android:layout_height="55dp"
+            android:id="@+id/add"
+            android:onClick="addServerClick"
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/ic_add_black_24dp" />
+
+    </LinearLayout>
+
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="185dp"
+        android:id="@+id/storedServers" />
+</LinearLayout>

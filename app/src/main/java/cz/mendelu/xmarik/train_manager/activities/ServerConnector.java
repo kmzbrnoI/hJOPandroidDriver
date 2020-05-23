@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -76,6 +77,7 @@ public class ServerConnector extends Activity {
 
     public void editLogin(String message) {
         final Dialog dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.dialog_user);
 
         //set dialog component

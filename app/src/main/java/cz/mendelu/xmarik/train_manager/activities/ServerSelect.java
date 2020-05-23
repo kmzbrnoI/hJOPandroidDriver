@@ -18,6 +18,7 @@ import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -333,6 +334,7 @@ public class ServerSelect extends NavigationBase {
 
     public void changeLogin(final Server server) {
         final Dialog dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.dialog_user);
 
         //set dialog component

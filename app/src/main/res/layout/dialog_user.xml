@@ -12,16 +12,16 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="note here"
             android:layout_marginBottom="2pt"
             android:layout_gravity="center_horizontal"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:id="@+id/tv_note" />
 
-        <ImageButton
+        <View
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/imageButton3" />
+            android:layout_height="4dp"
+            android:background="@android:color/darker_gray"
+            android:layout_marginBottom="8dp"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -60,7 +60,6 @@
             android:text="@string/login_save"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_above="@+id/dialogButtonOK"
             android:layout_marginStart="11dp"
             android:layout_marginBottom="11dp"
             android:id="@+id/dialogSaveData"
@@ -70,9 +69,7 @@
             android:id="@+id/dialogButtonOK"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text=" Ok "
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true" />
+            android:text="OK" />
 
     </LinearLayout>
 
