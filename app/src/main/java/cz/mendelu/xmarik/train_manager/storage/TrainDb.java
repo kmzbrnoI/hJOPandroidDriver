@@ -107,7 +107,7 @@ public class TrainDb {
     public void respEvent(LokEvent event) {
         Train t = trains.get(Integer.valueOf(event.getParsed().get(2)));
         if (event.getParsed().get(4).toUpperCase().equals("OK"))
-            t.kmphSpeed = Integer.valueOf(event.getParsed().get(5));
+            t.kmphSpeed = Integer.parseInt(event.getParsed().get(6));
 
         EventBus.getDefault().post(new LokRespEvent(event.getParsed()));
     }
