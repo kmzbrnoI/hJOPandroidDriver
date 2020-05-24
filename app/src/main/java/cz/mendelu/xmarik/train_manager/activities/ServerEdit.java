@@ -69,7 +69,7 @@ public class ServerEdit extends AppCompatActivity {
         ipAdr = ipAdrText.getText().toString();
         about = aboutText.getText().toString();
 
-        if (name.equals("") || port.equals("") || ipAdr.equals("")) {
+        if (port.equals("") || ipAdr.equals("")) {
             new AlertDialog.Builder(this)
                     .setMessage(R.string.ns_warning_compulsory)
                     .setCancelable(false)
@@ -97,6 +97,7 @@ public class ServerEdit extends AppCompatActivity {
         } else {
             server.name = name;
             server.port = Integer.parseInt(port);
+            server.host = ipAdr;
             server.type = about;
             server.active = false;
             ServerDb.instance.saveServers();
