@@ -12,6 +12,8 @@ import androidx.appcompat.widget.Toolbar;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -33,7 +35,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import cz.mendelu.xmarik.train_manager.events.DccEvent;
 import cz.mendelu.xmarik.train_manager.events.TCPDisconnectEvent;
+import cz.mendelu.xmarik.train_manager.network.TCPClientApplication;
 import cz.mendelu.xmarik.train_manager.storage.SettingsDb;
 import cz.mendelu.xmarik.train_manager.storage.TrainDb;
 import cz.mendelu.xmarik.train_manager.models.TrainFunction;
@@ -62,6 +66,7 @@ public class TrainHandler extends NavigationBase {
     private Button b_idle;
     private CheckBox chb_group;
     private ImageButton ib_status;
+    private ImageButton ib_dcc;
     private ListView lv_functions;
     private TextView tv_kmhSpeed;
     private ImageButton ib_release;
@@ -103,6 +108,7 @@ public class TrainHandler extends NavigationBase {
         b_stop = findViewById(R.id.stopButton1);
         chb_group = findViewById(R.id.goupManaged1);
         ib_status = findViewById(R.id.ib_status);
+        ib_dcc = findViewById(R.id.ib_dcc);
         ib_release = findViewById(R.id.ib_release);
         lv_functions = findViewById(R.id.checkBoxView1);
         tv_kmhSpeed = findViewById(R.id.kmh1);
@@ -168,6 +174,14 @@ public class TrainHandler extends NavigationBase {
                 ib_ReleaseClick(v);
             }
         });
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        // show DCC stop when DCC status is known and different from GO
+        Boolean dccState = TCPClientApplication.getInstance().dccState;
+        updateDccState(dccState == null || dccState);
     }
 
     private void fillHVs() {
@@ -291,6 +305,21 @@ public class TrainHandler extends NavigationBase {
         }
         finally {
             this.updating = false;
+        }
+    }
+
+    private void updateDccState(boolean enabled) {
+        if (enabled) {
+            ib_dcc.clearAnimation();
+            ib_dcc.setAlpha(0.0f);
+        }
+        else {
+            Animation blink = new AlphaAnimation(0.0f, 1.0f);
+            blink.setDuration(250);
+            blink.setRepeatMode(Animation.REVERSE);
+            blink.setRepeatCount(Animation.INFINITE);
+            ib_dcc.setAlpha(1.0f);
+            ib_dcc.startAnimation(blink);
         }
     }
 
@@ -422,6 +451,11 @@ public class TrainHandler extends NavigationBase {
             ib_status.setImageResource(R.drawable.ic_circle_green);
         else
             ib_status.setImageResource(R.drawable.ic_circle_red);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEventMainThread(DccEvent event) {
+        updateDccState(event.getParsed().get(2).toUpperCase().equals("GO"));
     }
 
     private void setEnabled(boolean enabled) {

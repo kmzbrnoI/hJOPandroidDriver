@@ -38,20 +38,40 @@
             android:layout_height="match_parent" />
 
         <CheckBox
+            android:id="@+id/goupManaged1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:checked="false"
             android:text="@string/ta_multitraction"
-            android:id="@+id/goupManaged1"
-            android:checked="false" />
+            android:textAlignment="center" />
 
-        <ImageButton
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/ib_status"
-            android:background="@null"
-            android:src="@drawable/ic_circle_green"
-            android:onClick="ib_StatusClick"
-            android:scaleType="fitCenter" />
+            android:orientation="horizontal"
+            android:gravity="center">
+
+            <ImageButton
+                android:id="@+id/ib_status"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:background="@null"
+                android:onClick="ib_StatusClick"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_circle_green" />
+
+            <ImageButton
+                android:id="@+id/ib_dcc"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:background="@null"
+                android:scaleType="fitCenter"
+                android:alpha="0"
+                android:src="@drawable/ic_circle_stop" />
+
+        </LinearLayout>
 
     </LinearLayout>
 

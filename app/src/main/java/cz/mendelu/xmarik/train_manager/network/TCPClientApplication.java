@@ -9,6 +9,7 @@ import java.net.ConnectException;
 import java.util.ArrayList;
 
 import cz.mendelu.xmarik.train_manager.events.AreasEvent;
+import cz.mendelu.xmarik.train_manager.events.DccEvent;
 import cz.mendelu.xmarik.train_manager.events.GlobalAuthEvent;
 import cz.mendelu.xmarik.train_manager.events.HandShakeEvent;
 import cz.mendelu.xmarik.train_manager.events.LokEvent;
@@ -25,6 +26,7 @@ public class TCPClientApplication extends Application implements TCPClient.OnMes
     static TCPClientApplication instance;
 
     public Server server = null;
+    public Boolean dccState = null;
 
     TCPClient mTcpClient = null;
 
@@ -44,6 +46,7 @@ public class TCPClientApplication extends Application implements TCPClient.OnMes
 
     public void disconnect() {
         this.server = null;
+        this.dccState = null;
 
         if (mTcpClient != null)
             this.mTcpClient.disconnect();
@@ -73,6 +76,10 @@ public class TCPClientApplication extends Application implements TCPClient.OnMes
 
         } else if (parsed.get(1).equals("OR-LIST")) {
             EventBus.getDefault().post(new AreasEvent(parsed));
+
+        } else if ((parsed.get(1).equals("DCC")) && (parsed.size() > 2)) {
+            this.dccState = (parsed.get(2).equals("GO"));
+            EventBus.getDefault().post(new DccEvent(parsed));
 
         } else if ((parsed.get(1).equals("PING")) && (parsed.size() > 2) && (parsed.get(2).toUpperCase().equals("REQ-RESP"))) {
             if (parsed.size() >= 4) {
