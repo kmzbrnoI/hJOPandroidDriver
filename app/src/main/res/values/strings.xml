@@ -99,6 +99,7 @@
 
     <string name="set_speed_volume">Use volume buttons to control speed</string>
     <string name="only_available_functions">Show only available functions</string>
+    <string name="theme">Theme</string>
 
     <string name="about">hJOP Driver allows you to become an engine driver and control one or more engines on the model railroad. It fully cooperates with hJOP.\nhttps://hjop.kmz-brno.cz/</string>
     <string name="contributors">This application was created as a master thesis by Miroslav Marik at the

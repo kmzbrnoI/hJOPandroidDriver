@@ -1,14 +1,17 @@
 package cz.mendelu.xmarik.train_manager.activities;
 
 import android.os.Bundle;
+
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.widget.Toolbar;
-import android.widget.CompoundButton;
-import android.widget.Switch;
+import androidx.preference.ListPreference;
+import androidx.preference.Preference;
+import androidx.preference.PreferenceFragmentCompat;
 
+import cz.mendelu.xmarik.train_manager.MainApplication;
 import cz.mendelu.xmarik.train_manager.R;
-import cz.mendelu.xmarik.train_manager.storage.SettingsDb;
 
 public class Settings extends NavigationBase {
 
@@ -17,26 +20,14 @@ public class Settings extends NavigationBase {
         setContentView(R.layout.activity_settings);
         super.onCreate(savedInstanceState);
 
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.content_settings, new SettingsFragment())
+                .commit()
+        ;
+
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        Switch volume = findViewById(R.id.sVolumeSpeed);
-        volume.setChecked(SettingsDb.instance.getSpeedVolume());
-        volume.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                SettingsDb.instance.setSpeedVolume(isChecked);
-            }
-        });
-
-        Switch onlyAvailableFunctions = findViewById(R.id.sOnlyAvailableFunctions);
-        onlyAvailableFunctions.setChecked(SettingsDb.instance.getOnlyAvailableFunctions());
-        onlyAvailableFunctions.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                SettingsDb.instance.setOnlyAvailableFunctions(isChecked);
-            }
-        });
     }
 
     @Override
@@ -46,6 +37,25 @@ public class Settings extends NavigationBase {
             drawer.closeDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
+        }
+    }
+
+    public static class SettingsFragment extends PreferenceFragmentCompat {
+        @Override
+        public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
+            setPreferencesFromResource(R.xml.root_preferences, rootKey);
+
+            ListPreference theme = getPreferenceScreen().findPreference("theme");
+            if (theme != null) {
+                theme.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+                    @Override
+                    public boolean onPreferenceChange(Preference preference, Object value) {
+                        int mode = MainApplication.getTheme(value.toString());
+                        AppCompatDelegate.setDefaultNightMode(mode);
+                        return true;
+                    }
+                });
+            }
         }
     }
 

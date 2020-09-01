@@ -41,7 +41,7 @@
                 android:id="@+id/serverButton"
                 android:layout_gravity="center_horizontal"
                 android:onClick="discoverServerClick"
-                android:background="@drawable/ic_refresh_new" />
+                android:background="@drawable/ic_refresh_black_24dp" />
         </LinearLayout>
 
         <ListView

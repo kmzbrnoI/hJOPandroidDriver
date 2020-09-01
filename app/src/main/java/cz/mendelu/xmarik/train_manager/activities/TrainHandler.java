@@ -3,12 +3,17 @@ package cz.mendelu.xmarik.train_manager.activities;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
+
+import androidx.appcompat.widget.SwitchCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.Toolbar;
+import androidx.preference.PreferenceManager;
+
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
@@ -23,7 +28,6 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.SeekBar;
 import android.widget.Spinner;
-import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,7 +42,6 @@ import java.util.List;
 import cz.mendelu.xmarik.train_manager.events.DccEvent;
 import cz.mendelu.xmarik.train_manager.events.TCPDisconnectEvent;
 import cz.mendelu.xmarik.train_manager.network.TCPClientApplication;
-import cz.mendelu.xmarik.train_manager.storage.SettingsDb;
 import cz.mendelu.xmarik.train_manager.storage.TrainDb;
 import cz.mendelu.xmarik.train_manager.models.TrainFunction;
 import cz.mendelu.xmarik.train_manager.adapters.FunctionCheckBoxAdapter;
@@ -57,9 +60,12 @@ public class TrainHandler extends NavigationBase {
     private Train train;
     private boolean updating;
     private Context context;
+    private boolean confSpeedVolume;
+    private boolean confAvailableFunctions;
+
 
     private SeekBar sb_speed;
-    private Switch s_direction;
+    private SwitchCompat s_direction;
     private CheckBox chb_total;
     private Spinner s_spinner;
     private Button b_stop;
@@ -179,6 +185,9 @@ public class TrainHandler extends NavigationBase {
     @Override
     public void onStart() {
         super.onStart();
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        confSpeedVolume = preferences.getBoolean("SpeedVolume", false);
+        confAvailableFunctions = preferences.getBoolean("OnlyAvailableFunctions", true);
         // show DCC stop when DCC status is known and different from GO
         Boolean dccState = TCPClientApplication.getInstance().dccState;
         updateDccState(dccState == null || dccState);
@@ -282,7 +291,7 @@ public class TrainHandler extends NavigationBase {
 
                 //set custom adapter with check boxes to list view
                 ArrayList<TrainFunction> functions;
-                if (SettingsDb.instance.getOnlyAvailableFunctions()) {
+                if (confAvailableFunctions) {
                     // just own filter
                     functions = new ArrayList<>();
                     for (int i = 0; i < train.function.length; i++)
@@ -325,7 +334,7 @@ public class TrainHandler extends NavigationBase {
 
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
-        if (!SettingsDb.instance.getSpeedVolume() || !sb_speed.isEnabled()) {
+        if (!confSpeedVolume || !sb_speed.isEnabled()) {
             return super.dispatchKeyEvent(event);
         }
 
