@@ -74,7 +74,7 @@
                 android:orientation="vertical"
                 android:weightSum="1">
 
-                <Switch
+                <androidx.appcompat.widget.SwitchCompat
                     android:layout_width="136dp"
                     android:layout_height="46dp"
                     android:textOff="@string/ta_direction_backwards"

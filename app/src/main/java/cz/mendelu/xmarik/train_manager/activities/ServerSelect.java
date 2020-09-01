@@ -41,7 +41,6 @@ import cz.mendelu.xmarik.train_manager.storage.ControlAreaDb;
 import cz.mendelu.xmarik.train_manager.helpers.HashHelper;
 import cz.mendelu.xmarik.train_manager.R;
 import cz.mendelu.xmarik.train_manager.storage.ServerDb;
-import cz.mendelu.xmarik.train_manager.storage.SettingsDb;
 import cz.mendelu.xmarik.train_manager.storage.TrainDb;
 import cz.mendelu.xmarik.train_manager.events.StoredServersReloadEvent;
 import cz.mendelu.xmarik.train_manager.models.Server;
@@ -81,9 +80,6 @@ public class ServerSelect extends NavigationBase {
 
         // create database of trains
         TrainDb.instance = new TrainDb();
-
-        // create settings storage
-        SettingsDb.instance = new SettingsDb(sp);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle(getString(R.string.activity_server_select_title));
