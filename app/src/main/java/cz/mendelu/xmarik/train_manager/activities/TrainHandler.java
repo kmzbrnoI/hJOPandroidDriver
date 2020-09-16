@@ -39,6 +39,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import cz.kudlav.scomview.ScomView;
 import cz.mendelu.xmarik.train_manager.events.DccEvent;
 import cz.mendelu.xmarik.train_manager.events.TCPDisconnectEvent;
 import cz.mendelu.xmarik.train_manager.network.TCPClientApplication;
@@ -75,6 +76,9 @@ public class TrainHandler extends NavigationBase {
     private ImageButton ib_dcc;
     private ListView lv_functions;
     private TextView tv_kmhSpeed;
+    private TextView tv_expSpeed;
+    private TextView tv_expSignalBlock;
+    private ScomView scom_expSignal;
     private ImageButton ib_release;
 
     Handler timerHandler = new Handler();
@@ -118,6 +122,9 @@ public class TrainHandler extends NavigationBase {
         ib_release = findViewById(R.id.ib_release);
         lv_functions = findViewById(R.id.checkBoxView1);
         tv_kmhSpeed = findViewById(R.id.kmh1);
+        tv_expSpeed = findViewById(R.id.expSpeed);
+        tv_expSignalBlock = findViewById(R.id.expSignalBlock);
+        scom_expSignal = findViewById(R.id.scom_view);
         chb_total = findViewById(R.id.totalManaged);
 
         // fill spinner
@@ -265,6 +272,10 @@ public class TrainHandler extends NavigationBase {
                 chb_total.setChecked(false);
                 ib_release.setEnabled(false);
 
+                tv_expSpeed.setText("- km/h");
+                scom_expSignal.setCode(-1);
+                tv_expSignalBlock.setText("");
+
                 this.setEnabled(false);
 
                 //set custom adapter with check boxes to list view
@@ -283,9 +294,22 @@ public class TrainHandler extends NavigationBase {
                     s_direction.setText(R.string.ta_direction_backwards);
 
                 chb_group.setChecked(multitrack.contains(train));
-                tv_kmhSpeed.setText(String.format("%s km/h", Integer.toString(train.kmphSpeed)));
+                tv_kmhSpeed.setText(String.format("%s km/h", train.kmphSpeed));
                 chb_total.setChecked(train.total);
                 ib_release.setEnabled(true);
+
+                if (train.expSpeed != -1)
+                    tv_expSpeed.setText(String.format("%s km/h", train.expSpeed));
+                else tv_expSpeed.setText("- km/h");
+
+                if (train.expSignalCode != -1) {
+                    scom_expSignal.setCode(train.expSignalCode);
+                    tv_expSignalBlock.setText(train.expSignalBlock);
+                }
+                else {
+                    scom_expSignal.setCode(-1);
+                    tv_expSignalBlock.setText("");
+                }
 
                 this.setEnabled(train.total);
 
@@ -454,7 +478,7 @@ public class TrainHandler extends NavigationBase {
         if (train == null) return;
         if (Integer.parseInt(event.getParsed().get(2)) != train.addr) return;
 
-        tv_kmhSpeed.setText(String.format("%s km/h", Integer.toString(train.kmphSpeed)));
+        tv_kmhSpeed.setText(String.format("%s km/h", train.kmphSpeed));
 
         if (event.getParsed().get(4).toUpperCase().equals("OK"))
             ib_status.setImageResource(R.drawable.ic_circle_green);

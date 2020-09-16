@@ -42,6 +42,10 @@ public class TrainDb {
                 respEvent(event);
             else if (event.getParsed().get(3).toUpperCase().equals("TOTAL"))
                 totalEvent(event);
+            else if (event.getParsed().get(3).toUpperCase().equals("NAV"))
+                expSignEvent(event);
+            else if (event.getParsed().get(3).toUpperCase().equals("EXPECTED-SPEED"))
+                expSpdEvent(event);
         } catch (Exception e) {
             Log.e("Lok parse", "Error", e);
         }
@@ -117,6 +121,28 @@ public class TrainDb {
         if (!trains.containsKey(addr)) return;
         Train t = trains.get(addr);
         t.total = event.getParsed().get(4).equals("1");
+        EventBus.getDefault().post(new LokChangeEvent(addr));
+    }
+
+    public void expSignEvent(LokEvent event) {
+        int addr = Integer.parseInt(event.getParsed().get(2));
+        if (!trains.containsKey(addr)) return;
+        Train t = trains.get(addr);
+        t.expSignalBlock = event.getParsed().get(4);
+        try {
+            t.expSignalCode = Integer.parseInt(event.getParsed().get(5));
+        } catch (NumberFormatException e) {
+            t.expSignalCode = -1;
+        }
+        EventBus.getDefault().post(new LokChangeEvent(addr));
+    }
+
+    public void expSpdEvent(LokEvent event) {
+        int addr = Integer.parseInt(event.getParsed().get(2));
+        if (!trains.containsKey(addr)) return;
+        Train t = trains.get(addr);
+        String expSpeed = event.getParsed().get(4);
+        t.expSpeed = (!expSpeed.equals("-")) ? Integer.parseInt(expSpeed) : -1;
         EventBus.getDefault().post(new LokChangeEvent(addr));
     }
 
