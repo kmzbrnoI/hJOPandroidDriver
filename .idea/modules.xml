@@ -2,12 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" group="hJOPdriver/app" />
-      <module fileurl="file://$PROJECT_DIR$/dev-hJOPandroidDriver.iml" filepath="$PROJECT_DIR$/dev-hJOPandroidDriver.iml" group="hJOPandroidDriver" />
-      <module fileurl="file://$PROJECT_DIR$/app/dev-hJOPandroidDriver-app.iml" filepath="$PROJECT_DIR$/app/dev-hJOPandroidDriver-app.iml" group="hJOPandroidDriver/app" />
-      <module fileurl="file://$PROJECT_DIR$/hJOPandroidDriver.iml" filepath="$PROJECT_DIR$/hJOPandroidDriver.iml" group="hJOPandroidDriver" />
-      <module fileurl="file://$PROJECT_DIR$/app/hJOPandroidDriver-app.iml" filepath="$PROJECT_DIR$/app/hJOPandroidDriver-app.iml" group="hJOPandroidDriver/app" />
-      <module fileurl="file://$PROJECT_DIR$/hJOPdriver.iml" filepath="$PROJECT_DIR$/hJOPdriver.iml" group="hJOPdriver" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/ScomView/ScomView.iml" filepath="$PROJECT_DIR$/.idea/modules/ScomView/ScomView.iml" group="hJOPandroidDriver/ScomView" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/app.iml" group="hJOPandroidDriver/app" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/hJOPandroidDriver.iml" filepath="$PROJECT_DIR$/.idea/hJOPandroidDriver.iml" group="hJOPandroidDriver" />
     </modules>
   </component>
 </project>

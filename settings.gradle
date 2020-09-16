@@ -1,1 +1,2 @@
+include ':ScomView'
 include ':app'

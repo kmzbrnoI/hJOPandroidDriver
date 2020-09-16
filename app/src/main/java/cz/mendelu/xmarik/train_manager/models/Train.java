@@ -24,6 +24,9 @@ public class Train {
     public boolean direction = false;
     public boolean total = false;
     public boolean stolen = false;
+    public int expSignalCode = -1;
+    public String expSignalBlock;
+    public int expSpeed = -1;
 
     /** Constructs train from server string.
      * @param data in format: název|majitel|označení|poznámka|DCC adresa|třída|číslo soupravy|

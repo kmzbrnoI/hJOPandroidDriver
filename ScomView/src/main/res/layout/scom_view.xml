@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/root"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/ic_signal"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:padding="6dp">
+
+    <cz.kudlav.scomview.Light
+        android:id="@+id/yellow_top"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_margin="2dp"
+        android:layout_weight="1"
+        android:alpha="0.2"
+        custom:light_color="#ffff00" />
+
+    <cz.kudlav.scomview.Light
+        android:id="@+id/green"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_margin="2dp"
+        android:layout_weight="1"
+        android:alpha="0.2"
+        custom:light_color="#00ff00" />
+
+    <cz.kudlav.scomview.Light
+        android:id="@+id/red"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_margin="2dp"
+        android:layout_weight="1"
+        android:alpha="0.2"
+        custom:light_color="#ff0000" />
+
+    <cz.kudlav.scomview.Light
+        android:id="@+id/white"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_margin="2dp"
+        android:layout_weight="1"
+        android:alpha="0.2"
+        custom:light_color="#ffffff" />
+
+    <cz.kudlav.scomview.Light
+        android:id="@+id/yellow_bottom"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_margin="2dp"
+        android:layout_weight="1"
+        android:alpha="0.2"
+        custom:light_color="#ffff00" />
+
+</LinearLayout>
