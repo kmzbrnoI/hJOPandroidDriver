@@ -25,10 +25,11 @@ engines from railroad dispatchers.
 
 ## Contributors
 
-Application was developed as [master thesis](http://is.mendelu.cz/lide/clovek.pl?id=43049;zalozka=7;studium=77602;zp=54008)
-at Mendel University in Brno by [Miroslav Marik](http://is.mendelu.cz/lide/clovek.pl?id=43049),
+Application was developed as [master thesis](https://is.mendelu.cz/zp/index.pl?podrobnosti_zp=54008)
+at Mendel University in Brno by [Miroslav Marik](https://www.linkedin.com/in/miroslav-mařík-27a939b4),
 however the current maintainer is [Jan Horacek](http://apophis.cz/)
 ([jan.horacek@kmz-brno.cz](mailto:jan.horacek@kmz-brno.cz)).
+Another contributor is [Vladan Kudláč](https://kudlav.github.io/).
 
 ## Licence
 
