@@ -5,8 +5,8 @@ android {
     defaultConfig {
         applicationId "cz.mendelu.xmarik.train_manager"
         minSdkVersion 19
-        versionCode 18
-        versionName "1.9"
+        versionCode 19
+        versionName "1.10"
         targetSdkVersion 29
     }
     buildTypes {
