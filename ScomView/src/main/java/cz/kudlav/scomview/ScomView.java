@@ -34,8 +34,8 @@ public class ScomView extends LinearLayout {
 
         slowBlink.setRepeatMode(Animation.REVERSE);
         slowBlink.setRepeatCount(Animation.INFINITE);
-        slowBlink.setDuration(300); // 54x per minute
-        slowBlink.setStartOffset(800);
+        slowBlink.setDuration(100); // 54x per minute
+        slowBlink.setStartOffset(400);
 
         View root = findViewById(R.id.root);
         root.setOnClickListener(new View.OnClickListener() {
