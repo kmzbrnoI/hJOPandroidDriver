@@ -118,8 +118,14 @@ public class ScomView extends LinearLayout {
                     white.on();
                     break;
                 case 15:
-                    title = "Rychlost 40 km/h, opakování návěsti Výstraha";
+                    title = "40 km/h, opakování návěsti Výstraha";
                     yellowTop.on();
+                    white.on();
+                    yellowBottom.on();
+                    break;
+                case 16:
+                    title = "40 km/h, opakování návěsti očekávej 40 km/h";
+                    yellowTop.blink(slowBlink);
                     white.on();
                     yellowBottom.on();
                     break;
