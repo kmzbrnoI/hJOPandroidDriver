@@ -95,11 +95,11 @@ public class ScomView extends LinearLayout {
                     break;
                 case 9:
                     title = "Dovolen zajištěný posun";
-                    red.on();
                     white.on();
                     break;
                 case 10:
                     title = "Dovolen nezajištěný posun";
+                    red.on();
                     white.on();
                     break;
                 case 11:
