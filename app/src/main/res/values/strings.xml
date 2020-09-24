@@ -44,8 +44,8 @@
     <string name="trl_no_train_selected">You must select a train!</string>
     <string name="trl_really">Really release a train</string>
 
-    <string name="conn_servers_discovered">Discovered servers</string>
-    <string name="conn_servers_saved">Saved servers</string>
+    <string name="conn_servers_found">Discovered servers</string>
+    <string name="conn_servers_stored">Saved servers</string>
     <string name="conn_wifi_unavailable">WiFi connection is not available.</string>
     <string name="conn_connected">Connected and authorized.</string>
     <string name="conn_connection_error">Failed to connect to the server.</string>
@@ -54,6 +54,8 @@
     <string name="conn_server_offline">Server is offline, really connect to server?</string>
     <string name="conn_delete_server">Really delete server?</string>
     <string name="conn_delete_all">Really delete all servers?</string>
+    <string name="conn_refresh">Refresh</string>
+    <string name="conn_add">Add</string>
 
     <string name="gl_new_loko">New train</string>
     <string name="gl_all_deleted">All servers deleted.</string>

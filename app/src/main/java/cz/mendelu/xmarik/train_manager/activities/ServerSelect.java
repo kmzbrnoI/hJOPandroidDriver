@@ -1,75 +1,47 @@
 package cz.mendelu.xmarik.train_manager.activities;
 
-import android.app.Dialog;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.wifi.SupplicantState;
-import android.net.wifi.WifiInfo;
-import android.net.wifi.WifiManager;
-import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.View;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.widget.Toolbar;
-import android.view.ContextMenu;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.Window;
-import android.view.animation.AccelerateDecelerateInterpolator;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.EditText;
-import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.Toast;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.viewpager2.adapter.FragmentStateAdapter;
+import androidx.viewpager2.widget.ViewPager2;
 
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.tabs.TabLayout;
+import com.google.android.material.tabs.TabLayoutMediator;
 
-import java.util.ArrayList;
-
-import cz.mendelu.xmarik.train_manager.events.FoundServersReloadEvent;
-import cz.mendelu.xmarik.train_manager.network.UDPDiscover;
-import cz.mendelu.xmarik.train_manager.storage.ControlAreaDb;
-import cz.mendelu.xmarik.train_manager.helpers.HashHelper;
 import cz.mendelu.xmarik.train_manager.R;
+import cz.mendelu.xmarik.train_manager.storage.ControlAreaDb;
 import cz.mendelu.xmarik.train_manager.storage.ServerDb;
 import cz.mendelu.xmarik.train_manager.storage.TrainDb;
-import cz.mendelu.xmarik.train_manager.events.StoredServersReloadEvent;
-import cz.mendelu.xmarik.train_manager.models.Server;
 
 import static androidx.preference.PreferenceManager.getDefaultSharedPreferences;
 
 
 public class ServerSelect extends NavigationBase {
-    Button lButton;
-    ArrayAdapter<String> fAdapter;
-    ArrayAdapter<String> sAdapter;
-    ArrayList<String> found;
-    ArrayList<String> stored;
 
-    ListView sServers;
-    ListView fServers;
+    private static final int NUM_PAGES = 2;
 
-    public enum Source {
-        FOUND,
-        STORED
-    }
+    TabAdapter tabAdapter;
+    FloatingActionButton flbAdd;
+    FloatingActionButton flbRefresh;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setContentView(R.layout.activity_server_select);
         super.onCreate(savedInstanceState);
 
-        final Context obj = this;
-        Context context = this.getApplicationContext();
+        flbAdd = findViewById(R.id.flbAdd);
+        flbRefresh = findViewById(R.id.flbRefresh);
+
         SharedPreferences sp = getDefaultSharedPreferences(getApplicationContext());
 
         // create database of servers
@@ -81,241 +53,40 @@ public class ServerSelect extends NavigationBase {
         // create database of trains
         TrainDb.instance = new TrainDb();
 
+        // set toolbar
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle(getString(R.string.activity_server_select_title));
         setSupportActionBar(toolbar);
 
-        lButton = findViewById(R.id.serverButton);
-        fServers = findViewById(R.id.foundServers);
-        sServers = findViewById(R.id.storedServers);
+        // set tabs
+        ViewPager2 viewPager = findViewById(R.id.servers_pager);
+        TabLayout tabLayout = findViewById(R.id.servers_tabs);
+        tabAdapter = new TabAdapter(this);
+        viewPager.setAdapter(tabAdapter);
+        new TabLayoutMediator(tabLayout, viewPager, (tab, position) -> {
+            if (position == 0) tab.setText(getString(R.string.conn_servers_found));
+            else tab.setText(getString(R.string.conn_servers_stored));
+        }).attach();
 
-        // bind ListView adapters:
-        found = new ArrayList<>();
-        fAdapter = new ArrayAdapter<>(this,
-                android.R.layout.simple_list_item_1, android.R.id.text1, found);
-        fServers.setAdapter(fAdapter);
-
-        stored = new ArrayList<>();
-        sAdapter = new ArrayAdapter<>(this,
-                android.R.layout.simple_list_item_1, android.R.id.text1, stored);
-        sServers.setAdapter(sAdapter);
-
-        registerForContextMenu(sServers);
-
-        fServers.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view,
-                                    final int position, long id) {
-                if (ServerDb.instance.found.get(position).active) {
-                    connect(Source.FOUND, position);
-                } else {
-                    new AlertDialog.Builder(obj)
-                            .setMessage(R.string.conn_server_offline)
-                            .setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    connect(Source.FOUND, position);
-                                }
-                            })
-                            .setNegativeButton(getString(R.string.no), new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {}
-                            }).show();
+            public void onTabSelected(TabLayout.Tab tab) {
+                if (tab.getPosition() == 0) {
+                    flbAdd.hide();
+                    flbRefresh.show();
+                }
+                else {
+                    flbRefresh.hide();
+                    flbAdd.show();
                 }
             }
-        });
 
-        sServers.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view,
-                                    final int position, long id) {
-                if (ServerDb.instance.stored.get(position).active) {
-                    connect(Source.STORED, position);
-                } else {
-                    new AlertDialog.Builder(obj)
-                            .setMessage(R.string.conn_server_offline)
-                            .setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    connect(Source.STORED, position);
-                                }
-                            })
-                            .setNegativeButton(getString(R.string.no), new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                }
-                            }).show();
-                }
-            }
+            public void onTabUnselected(TabLayout.Tab tab) {}
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {}
         });
-
-        // run UDP discover:
-        if (isWifiOnAndConnected()) {
-            (new UDPDiscover((WifiManager)context.getSystemService(Context.WIFI_SERVICE))).execute();
-            float deg = lButton.getRotation() + 720F;
-            lButton.animate().rotation(deg).setInterpolator(new AccelerateDecelerateInterpolator());
-        } else Toast.makeText(getApplicationContext(),
-                R.string.conn_wifi_unavailable, Toast.LENGTH_LONG)
-                .show();
-    }
-
-    public void updateStoredServers() {
-        stored.clear();
-        for (Server s : ServerDb.instance.stored)
-            stored.add(s.name + "\t" + s.host + "\n" + s.type);
-
-        sAdapter.notifyDataSetChanged();
-    }
-
-    public void updateFoundServers() {
-        found.clear();
-        for (Server s : ServerDb.instance.found) {
-            String statusText = s.active ? "online" : "offline";
-            found.add(s.name + "\t" + s.host + "\n" + s.type + " \t" + statusText);
-        }
-
-        fAdapter.notifyDataSetChanged();
-    }
-
-    @Override
-    public void onCreateContextMenu(ContextMenu menu, View v,
-                                    ContextMenu.ContextMenuInfo menuInfo) {
-        if (v.getId() == R.id.storedServers) {
-            AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
-            menu.setHeaderTitle(ServerDb.instance.stored.get(info.position).host);
-
-            String[] menuItems = {
-                    getString(R.string.mm_connect),
-                    getString(R.string.mm_change_login),
-                    getString(R.string.mm_change_settings),
-                    getString(R.string.mm_delete),
-                    getString(R.string.mm_delete_all)
-            };
-
-            for (int i = 0; i < menuItems.length; i++) {
-                menu.add(Menu.NONE, i, i, menuItems[i]);
-            }
-        }
-    }
-
-    @Override
-    public boolean onContextItemSelected(MenuItem item) {
-        final AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-        int menuItemIndex = item.getItemId();
-        Server s = ServerDb.instance.stored.get(info.position);
-
-        switch (menuItemIndex) {
-            case 0:
-                if (s.active) {
-                    connect(Source.STORED, info.position);
-                } else {
-                    new AlertDialog.Builder(this)
-                            .setMessage(R.string.conn_server_offline)
-                            .setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    connect(Source.STORED, info.position);
-                                }
-                            })
-                            .setNegativeButton(getString(R.string.no), new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {}
-                            }).show();
-                }
-                break;
-
-            case 1:
-                changeLogin(s);
-                break;
-
-            case 2:
-                Intent intent = new Intent(getBaseContext(), ServerEdit.class);
-                intent.putExtra("serverId", info.position);
-                startActivity(intent);
-                break;
-
-            case 3:
-                new AlertDialog.Builder(this)
-                        .setMessage(R.string.conn_delete_server)
-                        .setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                ServerDb.instance.removeStoredServer(info.position);
-                            }
-                        })
-                        .setNegativeButton(getString(R.string.no), new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {}
-                        }).show();
-                break;
-
-            case 4:
-                new AlertDialog.Builder(this)
-                        .setMessage(R.string.conn_delete_all)
-                        .setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                ServerDb.instance.clearStoredServers();
-                            }
-                        })
-                        .setNegativeButton(getString(R.string.no), new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {}
-                        }).show();
-                break;
-        }
-        return true;
-    }
-
-    public void addServerClick(View view) {
-        startActivity(new Intent(getBaseContext(), ServerEdit.class));
-    }
-
-    public void discoverServerClick(View view) {
-        Context context = this.getApplicationContext();
-
-        ServerDb.instance.clearFoundServers();
-        fAdapter.notifyDataSetChanged();
-
-        if (isWifiOnAndConnected()) {
-            (new UDPDiscover((WifiManager)context.getSystemService(Context.WIFI_SERVICE))).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-            float deg = lButton.getRotation() + (360 * 4);
-            lButton.setClickable(false);
-            lButton.animate().rotation(deg).setDuration(2000).setInterpolator(new AccelerateDecelerateInterpolator()).withEndAction(new Runnable() {
-                @Override
-                public void run() {
-                    lButton.setClickable(true);
-                }
-            });
-        } else {
-            new AlertDialog.Builder(this)
-                    .setMessage(R.string.conn_wifi_unavailable)
-                    .setCancelable(false)
-                    .setPositiveButton("ok", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {}
-                    }).show();
-        }
-    }
-
-    private boolean isWifiOnAndConnected() {
-        Context context = this.getApplicationContext();
-        WifiManager wifiMgr = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
-
-        if (wifiMgr.isWifiEnabled()) { // Wi-Fi adapter is ON
-            WifiInfo wifiInfo = wifiMgr.getConnectionInfo();
-            return ( wifiInfo.getSupplicantState() == SupplicantState.COMPLETED );
-        }
-        else {
-            return false; // Wi-Fi adapter is OFF
-        }
-    }
-
-    public void connect(Source from, int index) {
-        Intent intent = new Intent(getBaseContext(), ServerConnector.class);
-        intent.putExtra("serverType", from == Source.FOUND ? "found" : "stored");
-        intent.putExtra("serverId", index);
-        startActivity(intent);
     }
 
     @Override
@@ -328,57 +99,35 @@ public class ServerSelect extends NavigationBase {
         }
     }
 
-    public void changeLogin(final Server server) {
-        final Dialog dialog = new Dialog(this);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setContentView(R.layout.dialog_user);
-
-        //set dialog component
-        final EditText mName = dialog.findViewById(R.id.dialogName);
-        final EditText mPasswd = dialog.findViewById(R.id.dialogPasswd);
-        Button dialogButton = dialog.findViewById(R.id.dialogButtonOK);
-        final TextView mMessage = dialog.findViewById(R.id.tv_note);
-        final CheckBox savebox = dialog.findViewById(R.id.dialogSaveData);
-
-        mMessage.setText(R.string.mm_change_login);
-        mName.setText(server.username);
-        mPasswd.setText("");
-        savebox.setChecked(true);
-        savebox.setEnabled(false);
-
-        dialogButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                server.password = HashHelper.hashPasswd(mPasswd.getText().toString());
-                server.username = mName.getText().toString();
-                dialog.dismiss();
-            }
-        });
-        dialog.show();
+    public void discoverServers(View view) {
+        Fragment fragment = tabAdapter.getFragment("0");
+        if (fragment instanceof ServerSelectFound) ((ServerSelectFound) fragment).discoverServers();
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onEventMainThread(StoredServersReloadEvent event) {
-        updateStoredServers();
+    public void addServer(View view) {
+        startActivity(new Intent(view.getContext(), ServerEdit.class));
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onEventMainThread(FoundServersReloadEvent event) {
-        updateFoundServers();
-    }
+    private class TabAdapter extends FragmentStateAdapter {
 
-    @Override
-    public void onPause() {
-        if(EventBus.getDefault().isRegistered(this))EventBus.getDefault().unregister(this);
-        super.onPause();
-    }
+        public TabAdapter(@NonNull FragmentActivity fragmentActivity) {
+            super(fragmentActivity);
+        }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        updateFoundServers();
-        updateStoredServers();
-        if (!EventBus.getDefault().isRegistered(this)) EventBus.getDefault().register(this);
-    }
+        @NonNull
+        @Override
+        public Fragment createFragment(int position) {
+            return (position == 0) ? new ServerSelectFound() : new ServerSelectStored();
+        }
 
+        @Override
+        public int getItemCount() {
+            return NUM_PAGES;
+        }
+
+        public Fragment getFragment(String index) {
+            return getSupportFragmentManager().findFragmentByTag("f" + index);
+        }
+
+    }
 }
