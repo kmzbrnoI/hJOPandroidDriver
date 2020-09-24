@@ -44,8 +44,8 @@
     <string name="trl_no_train_selected">Musíte vybrat hnací vozidlo!</string>
     <string name="trl_really">Opravdu uvolnit lokomotivu</string>
 
-    <string name="conn_servers_discovered">Nalezené servery</string>
-    <string name="conn_servers_saved">Uložené servery</string>
+    <string name="conn_servers_found">Nalezené servery</string>
+    <string name="conn_servers_stored">Uložené servery</string>
     <string name="conn_wifi_unavailable">Wifi připojení není dostupné.</string>
     <string name="conn_connected">Připojeno a autorizováno.</string>
     <string name="conn_connection_error">Připojení k serveru se nezdařilo.</string>
@@ -54,6 +54,8 @@
     <string name="conn_server_offline">Server je offline, skutečně se připojit?</string>
     <string name="conn_delete_server">Opravdu smazat server?</string>
     <string name="conn_delete_all">Opravdu smazat všechny servery?</string>
+    <string name="conn_refresh">Obnovit</string>
+    <string name="conn_add">Přidat</string>
 
     <string name="gl_new_loko">Nová lokomotiva</string>
     <string name="gl_all_deleted">Všechny servery byly smazány.</string>

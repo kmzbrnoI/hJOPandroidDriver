@@ -1,8 +1,5 @@
 <resources>
 
-    <attr name="ic_add" format="reference"/>
-    <attr name="ic_refresh" format="reference"/>
-
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.DayNight">
         <item name="colorPrimary">@color/colorPrimary</item>
@@ -10,8 +7,6 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="actionBarTheme">@style/ActionBarTheme</item>
         <item name="actionBarStyle">@style/ActionBar</item>
-        <item name="ic_add">@drawable/ic_add_black_24dp</item>
-        <item name="ic_refresh">@drawable/ic_refresh_black_24dp</item>
     </style>
 
     <style name="AppTheme.NoActionBar">
