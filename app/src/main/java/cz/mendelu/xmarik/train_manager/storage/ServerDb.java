@@ -34,10 +34,10 @@ public class ServerDb {
 
         for (String tmpS : serverString) {
             try {
-                String[] attributes = tmpS.split(";");
+                String[] attributes = tmpS.split(";", -1);
                 if (attributes.length > 5) {
-                    Server tmpServer = new Server(attributes[0], attributes[1], Integer.parseInt(attributes[2]), false,
-                            attributes[3], attributes[4], attributes[5]);
+                    Server tmpServer = new Server(attributes[0], attributes[1], Integer.parseInt(attributes[2]),
+                            false, attributes[3], attributes[4], attributes[5]);
                     tmpServer.active = true;
                     if (!stored.contains(tmpServer)) stored.add(tmpServer);
                 }
@@ -48,14 +48,14 @@ public class ServerDb {
     }
 
     public void saveServers() {
-        String saveString = "";
+        StringBuilder saveString = new StringBuilder();
         for (Server s : this.stored)
-            saveString = saveString + s.getSaveDataString() + "|";
+            saveString.append(s.getSaveDataString()).append("|");
 
         SharedPreferences.Editor editor = preferences.edit();
         editor.remove("StoredServers");
         editor.clear();
-        editor.putString("StoredServers", saveString);
+        editor.putString("StoredServers", saveString.toString());
         editor.commit();
     }
 
