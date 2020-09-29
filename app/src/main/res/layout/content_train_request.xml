@@ -9,8 +9,7 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="cz.mendelu.xmarik.train_manager.activities.TrainRequest"
-    tools:showIn="@layout/app_bar_train_request">
+    tools:context="cz.mendelu.xmarik.train_manager.activities.TrainRequest">
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
