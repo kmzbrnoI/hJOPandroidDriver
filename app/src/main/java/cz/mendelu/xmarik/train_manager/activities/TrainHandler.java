@@ -37,6 +37,7 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import cz.kudlav.scomview.ScomView;
@@ -203,17 +204,17 @@ public class TrainHandler extends NavigationBase {
     private void fillHVs() {
         managed_str.clear();
         managed.clear();
-        int index = 0;
 
         s_spinner.setEnabled(TrainDb.instance.trains.size() > 0);
         if (TrainDb.instance.trains.size() == 0)
             managed_str.add(getString(R.string.ta_no_loks));
 
+        managed = new ArrayList<>(TrainDb.instance.trains.values());
+        Collections.sort(managed, (train1, train2) -> train1.addr - train2.addr);
         int i = 0;
-        for(Train t : TrainDb.instance.trains.values()) {
-            managed.add(t);
+        for(Train t : managed) {
             managed_str.add(t.name + " (" + t.label + ") : " + t.addr);
-            if (t == train) index = i;
+            if (t == train) s_spinner.setSelection(i);
             i++;
         }
 
@@ -222,7 +223,6 @@ public class TrainHandler extends NavigationBase {
             if (!managed.contains(multitrack.get(i)))
                 multitrack.remove(i);
 
-        s_spinner.setSelection(index);
         if (TrainDb.instance.trains.size() > 0)
             train = managed.get(0);
         else
