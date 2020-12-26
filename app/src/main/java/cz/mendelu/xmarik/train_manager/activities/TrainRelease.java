@@ -1,7 +1,6 @@
 package cz.mendelu.xmarik.train_manager.activities;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import androidx.core.graphics.ColorUtils;
@@ -10,7 +9,6 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.Toolbar;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
@@ -60,20 +58,14 @@ public class TrainRelease extends NavigationBase {
                 android.R.layout.simple_list_item_1, android.R.id.text1, train_strings);
         lv_trains.setAdapter(hvs_adapter);
 
-        lv_trains.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view,
-                                    int position, long id) {
-                // ListView Clicked item index
-                int c = ColorUtils.setAlphaComponent(getResources().getColor(R.color.colorPrimary), 0x44);
-                view.setBackgroundColor(c);
-                if (lastSelected != null && !lastSelected.equals(view))
-                    lastSelected.setBackgroundColor(0); // transparent color
-                lastSelected = view;
-                focused = position;
-            }
-
+        lv_trains.setOnItemClickListener((parent, view, position, id) -> {
+            // ListView Clicked item index
+            int c = ColorUtils.setAlphaComponent(getResources().getColor(R.color.colorPrimary), 0x44);
+            view.setBackgroundColor(c);
+            if (lastSelected != null && !lastSelected.equals(view))
+                lastSelected.setBackgroundColor(0); // transparent color
+            lastSelected = view;
+            focused = position;
         });
 
         if(!EventBus.getDefault().isRegistered(this)) EventBus.getDefault().register(this);
@@ -128,10 +120,7 @@ public class TrainRelease extends NavigationBase {
             new AlertDialog.Builder(this)
                     .setMessage(getString(R.string.trl_no_train_selected))
                     .setCancelable(false)
-                    .setPositiveButton("ok", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {}
-                    }).show();
+                    .setPositiveButton("ok", (dialog, which) -> {} ).show();
             return;
         }
 

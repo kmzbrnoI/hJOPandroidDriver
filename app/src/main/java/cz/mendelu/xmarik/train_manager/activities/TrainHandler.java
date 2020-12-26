@@ -1,7 +1,6 @@
 package cz.mendelu.xmarik.train_manager.activities;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -23,7 +22,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.SeekBar;
@@ -137,12 +135,9 @@ public class TrainHandler extends NavigationBase {
         this.fillHVs();
 
         // GUI events:
-        s_direction.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                onDirectionChange(!isChecked);
-            }
-        });
+        s_direction.setOnCheckedChangeListener((buttonView, isChecked) ->
+                onDirectionChange(!isChecked)
+        );
 
         s_spinner.setOnItemSelectedListener(new Spinner.OnItemSelectedListener() {
             @Override
@@ -159,35 +154,22 @@ public class TrainHandler extends NavigationBase {
 
         });
 
-        chb_group.setOnCheckedChangeListener(new CheckBox.OnCheckedChangeListener() {
+        chb_group.setOnCheckedChangeListener((compoundButton, b) -> {
+            if (updating) return;
 
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                if (updating) return;
-
-                if (b) {
-                    if (!multitrack.contains(train))
-                        multitrack.add(train);
-                } else {
-                    multitrack.remove(train);
-                }
+            if (b) {
+                if (!multitrack.contains(train))
+                    multitrack.add(train);
+            } else {
+                multitrack.remove(train);
             }
         });
 
-        chb_total.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                if (updating) return;
-                train.setTotal(b);
-            }
+        chb_total.setOnCheckedChangeListener((compoundButton, b) -> {
+            if (!updating) train.setTotal(b);
         });
 
-        ib_release.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ib_ReleaseClick(v);
-            }
-        });
+        ib_release.setOnClickListener(this::ib_ReleaseClick);
     }
 
     @Override
@@ -419,19 +401,12 @@ public class TrainHandler extends NavigationBase {
 
         new AlertDialog.Builder(this)
                 .setMessage(getString(R.string.trl_really) + " " + train.name + "?")
-                .setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        train.release();
-                        ib_release.setEnabled(false);
-                        ib_release.setAlpha(ib_release.isEnabled() ? 1f : 0.5f);
-                    }
+                .setPositiveButton(getString(R.string.yes), (dialog, which) -> {
+                    train.release();
+                    ib_release.setEnabled(false);
+                    ib_release.setAlpha(ib_release.isEnabled() ? 1f : 0.5f);
                 })
-                .setNegativeButton(getString(R.string.no), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {}
-                }).show();
-
+                .setNegativeButton(getString(R.string.no), (dialog, which) -> {}).show();
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

@@ -1,6 +1,5 @@
 package cz.mendelu.xmarik.train_manager.activities;
 
-import android.content.DialogInterface;
 import android.os.Bundle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -53,13 +52,11 @@ public class ServerEdit extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.menu_save:
-                save(item.getActionView());
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+        if (item.getItemId() == R.id.menu_save) {
+            save(item.getActionView());
+            return true;
         }
+        return super.onOptionsItemSelected(item);
     }
 
     public void save(View view) {
@@ -73,10 +70,7 @@ public class ServerEdit extends AppCompatActivity {
             new AlertDialog.Builder(this)
                     .setMessage(R.string.ns_warning_compulsory)
                     .setCancelable(false)
-                    .setPositiveButton("ok", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {}
-                    }).show();
+                    .setPositiveButton("ok", (dialog, which) -> {} ).show();
             return;
         }
 
@@ -84,10 +78,7 @@ public class ServerEdit extends AppCompatActivity {
             new AlertDialog.Builder(this)
                     .setMessage(R.string.ns_warning_invalid_characters)
                     .setCancelable(false)
-                    .setPositiveButton("ok", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {}
-                    }).show();
+                    .setPositiveButton("ok", (dialog, which) -> {} ).show();
             return;
         }
 
@@ -105,9 +96,5 @@ public class ServerEdit extends AppCompatActivity {
         }
 
         finish();
-    }
-
-    public void back(View view) {
-        onBackPressed();
     }
 }

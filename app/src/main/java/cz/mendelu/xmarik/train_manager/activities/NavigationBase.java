@@ -1,9 +1,6 @@
 package cz.mendelu.xmarik.train_manager.activities;
 
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import com.google.android.material.navigation.NavigationView;
@@ -13,7 +10,6 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.widget.TextView;
 
@@ -21,6 +17,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import cz.mendelu.xmarik.train_manager.BuildConfig;
 import cz.mendelu.xmarik.train_manager.R;
 import cz.mendelu.xmarik.train_manager.events.GlobalAuthEvent;
 import cz.mendelu.xmarik.train_manager.events.TCPDisconnectEvent;
@@ -43,7 +40,6 @@ public class NavigationBase extends AppCompatActivity
         super.onCreate(savedInstanceState);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
-        Context context = this.getApplicationContext();
 
         // Navigation Drawer open / close event
         drawer = findViewById(R.id.drawer_layout);
@@ -56,13 +52,8 @@ public class NavigationBase extends AppCompatActivity
         nv.setNavigationItemSelectedListener(this);
 
         // add version number to hamburger_header
-        try {
-            TextView tw = nv.getHeaderView(0).findViewById(R.id.tv_version);
-            tw.setText("v" + context.getPackageManager()
-                    .getPackageInfo(context.getPackageName(), 0).versionName);
-        } catch (PackageManager.NameNotFoundException e) {
-            Log.e("Version", "App version exception!", e);
-        }
+        TextView tw = nv.getHeaderView(0).findViewById(R.id.tv_version);
+        tw.setText(String.format("v%s", BuildConfig.VERSION_NAME));
     }
 
     /**
@@ -104,18 +95,15 @@ public class NavigationBase extends AppCompatActivity
      */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                if(drawer.isDrawerOpen(GravityCompat.START)) {
-                    drawer.closeDrawer(GravityCompat.START);
-                }
-                else {
-                    drawer.openDrawer(GravityCompat.START);
-                }
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+        if (item.getItemId() == android.R.id.home) {
+            if (drawer.isDrawerOpen(GravityCompat.START)) {
+                drawer.closeDrawer(GravityCompat.START);
+            } else {
+                drawer.openDrawer(GravityCompat.START);
+            }
+            return true;
         }
+        return super.onOptionsItemSelected(item);
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -123,11 +111,8 @@ public class NavigationBase extends AppCompatActivity
         new AlertDialog.Builder(this)
                 .setMessage(getString(R.string.disconnected))
                 .setCancelable(false)
-                .setPositiveButton("ok", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                    }
-                }).show();
+                .setPositiveButton("ok", (dialog, which) -> {} )
+                .show();
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -137,12 +122,9 @@ public class NavigationBase extends AppCompatActivity
             new AlertDialog.Builder(this)
                     .setMessage(event.getParsed().get(5))
                     .setCancelable(false)
-                    .setPositiveButton("ok", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            TCPClientApplication.getInstance().disconnect();
-                        }
-                    }).show();
+                    .setPositiveButton("ok", (dialog, which) ->
+                            TCPClientApplication.getInstance().disconnect()
+                    ).show();
         }
     }
 
