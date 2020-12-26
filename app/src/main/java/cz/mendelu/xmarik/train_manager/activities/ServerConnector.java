@@ -92,29 +92,26 @@ public class ServerConnector extends Activity {
         mPasswd.setText("");
 
         // if button is clicked, close the custom dialog
-        dialogButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                TCPClientApplication.getInstance().server.username = mName.getText().toString();
-                TCPClientApplication.getInstance().server.password = HashHelper.hashPasswd(mPasswd.getText().toString());
+        dialogButton.setOnClickListener(v -> {
+            TCPClientApplication.getInstance().server.username = mName.getText().toString();
+            TCPClientApplication.getInstance().server.password = HashHelper.hashPasswd(mPasswd.getText().toString());
 
-                if (savebox.isChecked()) {
-                    if (ServerDb.instance.isStoredServer(TCPClientApplication.getInstance().server.host,
-                            TCPClientApplication.getInstance().server.port))
-                        ServerDb.instance.transferLoginToSaved(TCPClientApplication.getInstance().server);
-                    else
-                        ServerDb.instance.addStoredServer(TCPClientApplication.getInstance().server);
-                }
-
-                TCPClientApplication.getInstance().send("-;LOK;G;AUTH;{" +
-                        TCPClientApplication.getInstance().server.username + "};" +
-                        TCPClientApplication.getInstance().server.password);
-
-                arrayList.add(getString(R.string.sc_authorizing));
-                mAdapter.notifyDataSetChanged();
-                progressBar.setVisibility(View.VISIBLE);
-                dialog.dismiss();
+            if (savebox.isChecked()) {
+                if (ServerDb.instance.isStoredServer(TCPClientApplication.getInstance().server.host,
+                        TCPClientApplication.getInstance().server.port))
+                    ServerDb.instance.transferLoginToSaved(TCPClientApplication.getInstance().server);
+                else
+                    ServerDb.instance.addStoredServer(TCPClientApplication.getInstance().server);
             }
+
+            TCPClientApplication.getInstance().send("-;LOK;G;AUTH;{" +
+                    TCPClientApplication.getInstance().server.username + "};" +
+                    TCPClientApplication.getInstance().server.password);
+
+            arrayList.add(getString(R.string.sc_authorizing));
+            mAdapter.notifyDataSetChanged();
+            progressBar.setVisibility(View.VISIBLE);
+            dialog.dismiss();
         });
         dialog.show();
     }

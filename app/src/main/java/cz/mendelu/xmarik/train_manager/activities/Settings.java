@@ -7,7 +7,6 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.widget.Toolbar;
 import androidx.preference.ListPreference;
-import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 
 import cz.mendelu.xmarik.train_manager.MainApplication;
@@ -47,13 +46,10 @@ public class Settings extends NavigationBase {
 
             ListPreference theme = getPreferenceScreen().findPreference("theme");
             if (theme != null) {
-                theme.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-                    @Override
-                    public boolean onPreferenceChange(Preference preference, Object value) {
-                        int mode = MainApplication.getTheme(value.toString());
-                        AppCompatDelegate.setDefaultNightMode(mode);
-                        return true;
-                    }
+                theme.setOnPreferenceChangeListener((preference, value) -> {
+                    int mode = MainApplication.getTheme(value.toString());
+                    AppCompatDelegate.setDefaultNightMode(mode);
+                    return true;
                 });
             }
         }

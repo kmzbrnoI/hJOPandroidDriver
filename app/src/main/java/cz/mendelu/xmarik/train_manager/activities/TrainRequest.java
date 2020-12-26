@@ -1,7 +1,6 @@
 package cz.mendelu.xmarik.train_manager.activities;
 
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import androidx.core.graphics.ColorUtils;
@@ -10,7 +9,6 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.Toolbar;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -61,18 +59,8 @@ public class TrainRequest extends NavigationBase {
         dialog.setTitle(R.string.tr_request);
         dialogMessage = dialog.findViewById(R.id.dialogMessage);
         dialogButton = dialog.findViewById(R.id.cancelButton);
-        dialogButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-            }
-        });
-        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-            @Override
-            public void onDismiss(DialogInterface dialogInterface) {
-                cancelRequest();
-            }
-        });
+        dialogButton.setOnClickListener(v -> dialog.dismiss());
+        dialog.setOnDismissListener(dialogInterface -> cancelRequest());
 
         connectionDialog = new AlertDialog.Builder(this);
 
@@ -85,25 +73,17 @@ public class TrainRequest extends NavigationBase {
         lAdapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_list_item_1, android.R.id.text1, areas_data);
 
-        areas_lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view,
-                                    int position, long id) {
-                int c = ColorUtils.setAlphaComponent(getResources().getColor(R.color.colorPrimary), 0x44);
-                view.setBackgroundColor(c);
-                if (lastSelected != null && !lastSelected.equals(view))
-                    lastSelected.setBackgroundColor(0); // transparent color
-                lastSelected = view;
-                focused = position;
-            }
+        areas_lv.setOnItemClickListener((parent, view, position, id) -> {
+            int c = ColorUtils.setAlphaComponent(getResources().getColor(R.color.colorPrimary), 0x44);
+            view.setBackgroundColor(c);
+            if (lastSelected != null && !lastSelected.equals(view))
+                lastSelected.setBackgroundColor(0); // transparent color
+            lastSelected = view;
+            focused = position;
         });
 
-        messageForServer.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean b) {
-                if (messageForServer.isFocused()) messageForServer.setText("");
-            }
+        messageForServer.setOnFocusChangeListener((view, b) -> {
+            if (messageForServer.isFocused()) messageForServer.setText("");
         });
 
         areas_lv.setAdapter(lAdapter);
@@ -141,10 +121,7 @@ public class TrainRequest extends NavigationBase {
             new AlertDialog.Builder(this)
                     .setMessage(event.getParsed().size() >= 6 ? event.getParsed().get(5) : getString(R.string.general_error))
                     .setCancelable(false)
-                    .setPositiveButton("ok", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {}
-                    }).show();
+                    .setPositiveButton("ok", (dialog, which) -> {} ).show();
             dialog.dismiss();
         }
     }
@@ -170,10 +147,7 @@ public class TrainRequest extends NavigationBase {
             new AlertDialog.Builder(this)
                     .setMessage(getString(R.string.tr_no_area_selected))
                     .setCancelable(false)
-                    .setPositiveButton("ok", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {}
-                    }).show();
+                    .setPositiveButton("ok", (dialog, which) -> {} ).show();
             return;
         }
 
