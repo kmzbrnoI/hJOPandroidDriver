@@ -205,10 +205,12 @@ public class TrainHandler extends NavigationBase {
             if (!managed.contains(multitrack.get(i)))
                 multitrack.remove(i);
 
-        if (TrainDb.instance.trains.size() > 0)
-            train = managed.get(0);
-        else
-            train = null;
+        if (train != null && !TrainDb.instance.trains.containsValue(train)) {
+            if (!TrainDb.instance.trains.isEmpty())
+                train = managed.get(0);
+            else
+                train = null;
+        }
 
         managed_adapter.notifyDataSetChanged();
         this.updateGUTtoHV();
