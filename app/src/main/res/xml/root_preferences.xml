@@ -25,6 +25,7 @@
     <SwitchPreference
         app:key="OnlyAvailableFunctions"
         app:title="@string/only_available_functions"
+        app:defaultValue="true"
         app:useSimpleSummaryProvider="true" />
 
     <ListPreference
