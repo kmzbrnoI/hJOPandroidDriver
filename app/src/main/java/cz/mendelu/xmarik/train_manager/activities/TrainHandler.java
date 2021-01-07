@@ -205,7 +205,7 @@ public class TrainHandler extends NavigationBase {
             if (!managed.contains(multitrack.get(i)))
                 multitrack.remove(i);
 
-        if (train != null && !TrainDb.instance.trains.containsValue(train)) {
+        if (train == null || !TrainDb.instance.trains.containsValue(train)) {
             if (!TrainDb.instance.trains.isEmpty())
                 train = managed.get(0);
             else
