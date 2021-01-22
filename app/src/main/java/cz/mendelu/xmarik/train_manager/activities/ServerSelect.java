@@ -1,7 +1,6 @@
 package cz.mendelu.xmarik.train_manager.activities;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 
@@ -19,11 +18,6 @@ import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
 import cz.mendelu.xmarik.train_manager.R;
-import cz.mendelu.xmarik.train_manager.storage.ControlAreaDb;
-import cz.mendelu.xmarik.train_manager.storage.ServerDb;
-import cz.mendelu.xmarik.train_manager.storage.TrainDb;
-
-import static androidx.preference.PreferenceManager.getDefaultSharedPreferences;
 
 
 public class ServerSelect extends NavigationBase {
@@ -41,17 +35,6 @@ public class ServerSelect extends NavigationBase {
 
         flbAdd = findViewById(R.id.flbAdd);
         flbRefresh = findViewById(R.id.flbRefresh);
-
-        SharedPreferences sp = getDefaultSharedPreferences(getApplicationContext());
-
-        // create database of servers
-        ServerDb.instance = new ServerDb(sp);
-
-        // create database of control areas
-        ControlAreaDb.instance = new ControlAreaDb();
-
-        // create database of trains
-        TrainDb.instance = new TrainDb();
 
         // set toolbar
         Toolbar toolbar = findViewById(R.id.toolbar);

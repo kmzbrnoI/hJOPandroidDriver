@@ -62,6 +62,7 @@ public class TrainHandler extends NavigationBase {
     private Context context;
     private boolean confSpeedVolume;
     private boolean confAvailableFunctions;
+    private Toolbar toolbar;
 
 
     private SeekBar sb_speed;
@@ -102,7 +103,7 @@ public class TrainHandler extends NavigationBase {
         super.onCreate(savedInstanceState);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
-        Toolbar toolbar = findViewById(R.id.toolbar);
+        toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         updating = false;
@@ -125,6 +126,12 @@ public class TrainHandler extends NavigationBase {
         tv_expSignalBlock = findViewById(R.id.expSignalBlock);
         scom_expSignal = findViewById(R.id.scom_view);
         chb_total = findViewById(R.id.totalManaged);
+
+        // select train
+        int train_addr = getIntent().getIntExtra("train_addr", -1);
+        if (train_addr != -1) {
+            train = TrainDb.instance.trains.get(train_addr);
+        }
 
         // fill spinner
         s_spinner = findViewById(R.id.spinner1);
@@ -184,18 +191,18 @@ public class TrainHandler extends NavigationBase {
     }
 
     private void fillHVs() {
-        managed_str.clear();
-        managed.clear();
-
-        s_spinner.setEnabled(TrainDb.instance.trains.size() > 0);
-        if (TrainDb.instance.trains.size() == 0)
-            managed_str.add(getString(R.string.ta_no_loks));
-
         managed = new ArrayList<>(TrainDb.instance.trains.values());
+        managed_str.clear();
+
+        if (managed.isEmpty()) {
+            this.finish();
+            return;
+        }
+
         Collections.sort(managed, (train1, train2) -> train1.addr - train2.addr);
         int i = 0;
         for(Train t : managed) {
-            managed_str.add(t.name + " (" + t.label + ") : " + t.addr);
+            managed_str.add(t.getTitle());
             if (t == train) s_spinner.setSelection(i);
             i++;
         }
@@ -205,12 +212,10 @@ public class TrainHandler extends NavigationBase {
             if (!managed.contains(multitrack.get(i)))
                 multitrack.remove(i);
 
-        if (train == null || !TrainDb.instance.trains.containsValue(train)) {
-            if (!TrainDb.instance.trains.isEmpty())
-                train = managed.get(0);
-            else
-                train = null;
-        }
+        if (train == null || !TrainDb.instance.trains.containsValue(train))
+            train = managed.get(0);
+
+        toolbar.setTitle(train.getTitle());
 
         managed_adapter.notifyDataSetChanged();
         this.updateGUTtoHV();
@@ -239,90 +244,53 @@ public class TrainHandler extends NavigationBase {
     }
 
     private void updateGUTtoHV() {
+        if (train == null) {
+            this.finish();
+            return;
+        }
+
         this.updating = true;
-        try {
-            chb_group.setEnabled(train != null && managed.size() >= 2);
-            chb_total.setEnabled(train != null && !train.stolen);
-            lv_functions.setEnabled(train != null && !train.stolen);
-            if (managed.size() < 2) chb_group.setChecked(false);
 
-            if (train == null) {
-                sb_speed.setProgress(0);
-                s_direction.setChecked(false);
-                s_direction.setText("-");
+        if (managed.size() < 2) chb_group.setChecked(false);
+        sb_speed.setProgress(train.stepsSpeed);
+        s_direction.setChecked(!train.direction);
+        if (!train.direction)
+            s_direction.setText(R.string.ta_direction_forward);
+        else
+            s_direction.setText(R.string.ta_direction_backwards);
 
-                chb_group.setChecked(false);
-                tv_kmhSpeed.setText("- km/h");
-                chb_total.setChecked(false);
-                ib_release.setEnabled(false);
+        chb_group.setChecked(multitrack.contains(train));
+        tv_kmhSpeed.setText(String.format("%s km/h", train.kmphSpeed));
+        chb_total.setChecked(train.total);
 
-                tv_expSpeed.setText("- km/h");
-                scom_expSignal.setCode(-1);
-                tv_expSignalBlock.setText("");
+        if (train.expSpeed != -1)
+            tv_expSpeed.setText(String.format("%s km/h", train.expSpeed));
+        else tv_expSpeed.setText("- km/h");
 
-                this.setEnabled(false);
+        scom_expSignal.setCode(train.expSignalCode);
+        tv_expSignalBlock.setText( (train.expSignalCode != -1) ? train.expSignalBlock : "" );
 
-                //set custom adapter with check boxes to list view
-                FunctionCheckBoxAdapter dataAdapter = new FunctionCheckBoxAdapter(context,
-                        R.layout.lok_function, new ArrayList<>(Arrays.asList(TrainFunction.DEF_FUNCTION)), false);
-                lv_functions.setAdapter(dataAdapter);
-
-                ib_status.setImageResource(R.drawable.ic_circle_gray);
-
-            } else {
-                sb_speed.setProgress(train.stepsSpeed);
-                s_direction.setChecked(!train.direction);
-                if (!train.direction)
-                    s_direction.setText(R.string.ta_direction_forward);
-                else
-                    s_direction.setText(R.string.ta_direction_backwards);
-
-                chb_group.setChecked(multitrack.contains(train));
-                tv_kmhSpeed.setText(String.format("%s km/h", train.kmphSpeed));
-                chb_total.setChecked(train.total);
-                ib_release.setEnabled(true);
-
-                if (train.expSpeed != -1)
-                    tv_expSpeed.setText(String.format("%s km/h", train.expSpeed));
-                else tv_expSpeed.setText("- km/h");
-
-                if (train.expSignalCode != -1) {
-                    scom_expSignal.setCode(train.expSignalCode);
-                    tv_expSignalBlock.setText(train.expSignalBlock);
-                }
-                else {
-                    scom_expSignal.setCode(-1);
-                    tv_expSignalBlock.setText("");
-                }
-
-                this.setEnabled(train.total);
-
-                //set custom adapter with check boxes to list view
-                ArrayList<TrainFunction> functions;
-                if (confAvailableFunctions) {
-                    // just own filter
-                    functions = new ArrayList<>();
-                    for (int i = 0; i < train.function.length; i++)
-                        if (!train.function[i].name.equals(""))
-                            functions.add(train.function[i]);
-                } else {
-                    functions = new ArrayList<>(Arrays.asList(train.function));
-                }
-                FunctionCheckBoxAdapter dataAdapter = new FunctionCheckBoxAdapter(context,
-                        R.layout.lok_function, functions, true);
-                lv_functions.setAdapter(dataAdapter);
-
-                if (train.stolen)
-                    ib_status.setImageResource(R.drawable.ic_circle_yellow);
-                else
-                    ib_status.setImageResource(R.drawable.ic_circle_green);
-            }
-
-            ib_release.setAlpha(ib_release.isEnabled() ? 1f : 0.5f);
+        //set custom adapter with check boxes to list view
+        ArrayList<TrainFunction> functions;
+        if (confAvailableFunctions) {
+            // just own filter
+            functions = new ArrayList<>();
+            for (int i = 0; i < train.function.length; i++)
+                if (!train.function[i].name.equals(""))
+                    functions.add(train.function[i]);
+        } else {
+            functions = new ArrayList<>(Arrays.asList(train.function));
         }
-        finally {
-            this.updating = false;
-        }
+        FunctionCheckBoxAdapter dataAdapter = new FunctionCheckBoxAdapter(context,
+                R.layout.lok_function, functions, true);
+        lv_functions.setAdapter(dataAdapter);
+
+        if (train.stolen)
+            ib_status.setImageResource(R.drawable.ic_circle_yellow);
+        else
+            ib_status.setImageResource(R.drawable.ic_circle_green);
+
+        this.updating = false;
     }
 
     private void updateDccState(boolean enabled) {
@@ -342,7 +310,7 @@ public class TrainHandler extends NavigationBase {
 
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
-        if (!confSpeedVolume || !sb_speed.isEnabled()) {
+        if (!confSpeedVolume) {
             return super.dispatchKeyEvent(event);
         }
 
@@ -350,12 +318,12 @@ public class TrainHandler extends NavigationBase {
         int keyCode = event.getKeyCode();
         switch (keyCode) {
             case KeyEvent.KEYCODE_VOLUME_UP:
-                if (action == KeyEvent.ACTION_DOWN && sb_speed.isEnabled() && sb_speed.getProgress() < sb_speed.getMax()) {
+                if (action == KeyEvent.ACTION_DOWN && sb_speed.getProgress() < sb_speed.getMax()) {
                     sb_speed.setProgress(sb_speed.getProgress()+1);
                 }
                 return true;
             case KeyEvent.KEYCODE_VOLUME_DOWN:
-                if (action == KeyEvent.ACTION_DOWN && sb_speed.isEnabled() && sb_speed.getProgress() > 0) {
+                if (action == KeyEvent.ACTION_DOWN && sb_speed.getProgress() > 0) {
                     sb_speed.setProgress(sb_speed.getProgress()-1);
                 }
                 return true;
@@ -402,13 +370,14 @@ public class TrainHandler extends NavigationBase {
         if (train == null) return;
 
         new AlertDialog.Builder(this)
-                .setMessage(getString(R.string.trl_really) + " " + train.name + "?")
-                .setPositiveButton(getString(R.string.yes), (dialog, which) -> {
-                    train.release();
-                    ib_release.setEnabled(false);
-                    ib_release.setAlpha(ib_release.isEnabled() ? 1f : 0.5f);
-                })
+                .setMessage(getString(R.string.ta_release_really) + " " + train.name + "?")
+                .setPositiveButton(getString(R.string.yes), (dialog, which) -> train.release())
                 .setNegativeButton(getString(R.string.no), (dialog, which) -> {}).show();
+    }
+
+    public void setTrain(Train t) {
+        train = t;
+        this.fillHVs();
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -419,15 +388,17 @@ public class TrainHandler extends NavigationBase {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventMainThread(LokAddEvent event) {
+        super.onEventMainThread(event);
         this.fillHVs();
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventMainThread(LokRemoveEvent event) {
+        super.onEventMainThread(event);
         this.fillHVs();
 
         Toast.makeText(getApplicationContext(),
-                R.string.trl_loko_released, Toast.LENGTH_LONG)
+                R.string.ta_release_ok, Toast.LENGTH_LONG)
                 .show();
 
         if (TrainDb.instance.trains.size() == 0)
@@ -440,7 +411,6 @@ public class TrainHandler extends NavigationBase {
         managed_str.clear();
         managed.clear();
 
-        s_spinner.setEnabled(false);
         managed_str.add(getString(R.string.ta_no_loks));
 
         train = null;
@@ -466,13 +436,6 @@ public class TrainHandler extends NavigationBase {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventMainThread(DccEvent event) {
         updateDccState(event.getParsed().get(2).toUpperCase().equals("GO"));
-    }
-
-    private void setEnabled(boolean enabled) {
-        s_direction.setEnabled(enabled);
-        sb_speed.setEnabled(enabled);
-        b_stop.setEnabled(enabled);
-        b_idle.setEnabled(enabled);
     }
 
     @Override

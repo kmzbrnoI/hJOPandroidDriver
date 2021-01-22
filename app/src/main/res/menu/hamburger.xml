@@ -5,33 +5,28 @@
         <item
             android:id="@+id/nav_server"
             android:icon="@drawable/ic_dns_black_24dp"
-            android:title="@string/hamburger_server_select_title" />
-    </group>
-
-    <group android:id="@+id/group_train">
-        <item
-            android:id="@+id/nav_train_control"
-            android:icon="@drawable/ic_train_black_24dp"
-            android:title="@string/hamburger_train_handler" />
+            android:title="@string/hamburger_server_select_title"
+            android:orderInCategory="0" />
         <item
             android:id="@+id/nav_train_request"
             android:icon="@drawable/ic_get_app_black_24dp"
-            android:title="@string/hamburger_train_request_title" />
-        <item
-            android:id="@+id/nav_train_release"
-            android:icon="@drawable/ic_eject_black_24dp"
-            android:title="@string/hamburger_train_release_title" />
+            android:title="@string/hamburger_train_request_title"
+            android:orderInCategory="0" />
     </group>
+
+    <group android:id="@+id/group_train" />
 
     <group android:id="@+id/group_about">
         <item
             android:id="@+id/nav_settings"
             android:icon="@drawable/ic_settings_black_24dp"
-            android:title="@string/hamburger_settings_title" />
+            android:title="@string/hamburger_settings_title"
+            android:orderInCategory="2" />
          <item
             android:id="@+id/nav_about"
             android:icon="@drawable/ic_info_black_24dp"
-            android:title="@string/hamburger_about_title" />
+            android:title="@string/hamburger_about_title"
+            android:orderInCategory="2" />
     </group>
 
 </menu>

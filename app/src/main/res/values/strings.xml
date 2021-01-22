@@ -6,16 +6,13 @@
 
     <string name="activity_server_select_title">Select a server</string>
     <string name="activity_train_handler_title">Train control</string>
-    <string name="activity_train_release_title">Authorized trains</string>
     <string name="activity_train_request_title">Select a station</string>
     <string name="activity_about_title">About</string>
     <string name="activity_new_server_title">Server properties</string>
     <string name="activity_settings_title">Settings</string>
 
     <string name="hamburger_server_select_title">Server select</string>
-    <string name="hamburger_train_handler">Train control</string>
     <string name="hamburger_train_request_title">Train request</string>
-    <string name="hamburger_train_release_title">Train release</string>
     <string name="hamburger_about_title">About</string>
     <string name="hamburger_settings_title">Settings</string>
 
@@ -28,6 +25,9 @@
     <string name="ta_emergency_stop">Emergency STOP</string>
     <string name="ta_no_loks">No trains.</string>
     <string name="ta_toggle">Toggle</string>
+    <string name="ta_release">Release</string>
+    <string name="ta_release_ok">Train released.</string>
+    <string name="ta_release_really">Really release a train</string>
 
     <string name="tr_disp_message">Optional message for the dispatcher:</string>
     <string name="tr_send_request">Send request</string>
@@ -37,12 +37,6 @@
     <string name="tr_info_request_requesting">"Request in progress "</string>
     <string name="tr_no_areas">No areas.</string>
     <string name="tr_no_area_selected">You must select an area!</string>
-
-    <string name="trl_release">Release</string>
-    <string name="trl_releasing">Releasing...</string>
-    <string name="trl_loko_released">Train released.</string>
-    <string name="trl_no_train_selected">You must select a train!</string>
-    <string name="trl_really">Really release a train</string>
 
     <string name="conn_servers_found">Discovered servers</string>
     <string name="conn_servers_stored">Saved servers</string>

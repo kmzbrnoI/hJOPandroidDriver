@@ -30,12 +30,6 @@
             android:label="@string/activity_train_handler_title"
             android:theme="@style/AppTheme.NoActionBar" />
 
-        <activity
-            android:name=".activities.TrainRelease"
-            android:launchMode="singleInstance"
-            android:label="@string/activity_train_release_title"
-            android:theme="@style/AppTheme.NoActionBar" />
-
         <activity android:name=".activities.TrainRequest"
             android:launchMode="singleInstance"
             android:label="@string/activity_train_request_title"

@@ -102,4 +102,8 @@ public class Train {
         stepsSpeed = 0;
         TCPClientApplication.getInstance().send("-;LOK;" + this.addr + ";STOP");
     }
+
+    public String getTitle() {
+        return this.name + " (" + this.label + ") : " + this.addr;
+    }
 }
