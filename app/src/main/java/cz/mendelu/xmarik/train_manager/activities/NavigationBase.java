@@ -10,6 +10,8 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+
+import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
@@ -17,11 +19,19 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.util.ArrayList;
+import java.util.Collections;
+
 import cz.mendelu.xmarik.train_manager.BuildConfig;
 import cz.mendelu.xmarik.train_manager.R;
 import cz.mendelu.xmarik.train_manager.events.GlobalAuthEvent;
+import cz.mendelu.xmarik.train_manager.events.LokAddEvent;
+import cz.mendelu.xmarik.train_manager.events.LokRemoveEvent;
 import cz.mendelu.xmarik.train_manager.events.TCPDisconnectEvent;
+import cz.mendelu.xmarik.train_manager.models.Train;
 import cz.mendelu.xmarik.train_manager.network.TCPClientApplication;
+import cz.mendelu.xmarik.train_manager.storage.TrainDb;
+
 
 /**
  * Class NavigationBase implements base class for all activities, which want to have navigation
@@ -35,7 +45,9 @@ public class NavigationBase extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     DrawerLayout drawer;
+    Menu menu;
 
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
@@ -50,6 +62,8 @@ public class NavigationBase extends AppCompatActivity
 
         NavigationView nv = findViewById(R.id.nav_view);
         nv.setNavigationItemSelectedListener(this);
+
+        menu = nv.getMenu();
 
         // add version number to hamburger_header
         TextView tw = nv.getHeaderView(0).findViewById(R.id.tv_version);
@@ -71,17 +85,12 @@ public class NavigationBase extends AppCompatActivity
         } else if (id == R.id.nav_about) {
             startActivity(new Intent(this, About.class));
 
-        } else if (id == R.id.nav_train_control) {
-            startActivity(new Intent(this, TrainHandler.class));
-
         } else if (id == R.id.nav_train_request) {
             startActivity(new Intent(this, TrainRequest.class));
 
         } else if (id == R.id.nav_settings) {
             startActivity(new Intent(this, Settings.class));
 
-        } else if (id == R.id.nav_train_release) {
-            startActivity(new Intent(this, TrainRelease.class));
         }
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
@@ -128,6 +137,16 @@ public class NavigationBase extends AppCompatActivity
         }
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEventMainThread(LokAddEvent event) {
+        this.updateTrainGroup();
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEventMainThread(LokRemoveEvent event) {
+        this.updateTrainGroup();
+    }
+
     @Override
     public void onStop() {
         if (EventBus.getDefault().isRegistered(this)) EventBus.getDefault().unregister(this);
@@ -138,6 +157,29 @@ public class NavigationBase extends AppCompatActivity
     public void onStart() {
         if (!EventBus.getDefault().isRegistered(this)) EventBus.getDefault().register(this);
         super.onStart();
+
+        this.updateTrainGroup();
+    }
+
+    private void updateTrainGroup() {
+        menu.removeGroup(R.id.group_train);
+        ArrayList<Train> trains = new ArrayList<>(TrainDb.instance.trains.values());
+        Collections.sort(trains, (train1, train2) -> train1.addr - train2.addr);
+
+        for(Train t : trains) {
+            MenuItem item = menu.add(R.id.group_train, Menu.NONE, 1, t.getTitle());
+            item.setIcon(R.drawable.ic_train_black_24dp);
+            item.setOnMenuItemClickListener(item1 -> {
+                if (this instanceof TrainHandler) {
+                    ((TrainHandler) this).setTrain(t);
+                } else {
+                    Intent intent = new Intent(this, TrainHandler.class);
+                    intent.putExtra("train_addr", t.addr);
+                    startActivity(intent);
+                }
+                return false;
+            });
+        }
     }
 
 }

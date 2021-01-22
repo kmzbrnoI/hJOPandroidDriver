@@ -110,6 +110,7 @@ public class TrainRequest extends NavigationBase {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventMainThread(LokAddEvent event) {
+        super.onEventMainThread(event);
         startActivity(new Intent(this, TrainHandler.class));
     }
 

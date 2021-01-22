@@ -18,7 +18,7 @@
                 android:layout_width="@android:dimen/app_icon_size"
                 android:layout_height="@android:dimen/app_icon_size"
                 android:layout_gravity="right"
-                android:contentDescription="@string/trl_release"
+                android:contentDescription="@string/ta_release"
                 android:background="@null"
                 android:src="@drawable/ic_eject_white" />
 

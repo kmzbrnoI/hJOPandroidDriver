@@ -5,6 +5,10 @@ import android.content.SharedPreferences;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.preference.PreferenceManager;
 
+import cz.mendelu.xmarik.train_manager.storage.ControlAreaDb;
+import cz.mendelu.xmarik.train_manager.storage.ServerDb;
+import cz.mendelu.xmarik.train_manager.storage.TrainDb;
+
 public class MainApplication extends Application {
     @Override
     public void onCreate() {
@@ -13,6 +17,15 @@ public class MainApplication extends Application {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         int mode = getTheme(sharedPreferences.getString("theme", ""));
         AppCompatDelegate.setDefaultNightMode(mode);
+
+        // create database of servers
+        ServerDb.instance = new ServerDb(sharedPreferences);
+
+        // create database of control areas
+        ControlAreaDb.instance = new ControlAreaDb();
+
+        // create database of trains
+        TrainDb.instance = new TrainDb();
     }
 
     /**
