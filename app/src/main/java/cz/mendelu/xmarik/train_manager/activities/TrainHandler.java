@@ -18,14 +18,11 @@ import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.SeekBar;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -52,11 +49,10 @@ import cz.mendelu.xmarik.train_manager.events.LokRemoveEvent;
 import cz.mendelu.xmarik.train_manager.events.LokRespEvent;
 import cz.mendelu.xmarik.train_manager.models.Train;
 
+
 public class TrainHandler extends NavigationBase {
     private List<Train> managed;
     private List<Train> multitrack;
-    private List<String> managed_str;
-    private ArrayAdapter<String> managed_adapter;
     private Train train;
     private boolean updating;
     private Context context;
@@ -68,7 +64,6 @@ public class TrainHandler extends NavigationBase {
     private SeekBar sb_speed;
     private SwitchCompat s_direction;
     private CheckBox chb_total;
-    private Spinner s_spinner;
     private Button b_stop;
     private Button b_idle;
     private CheckBox chb_group;
@@ -133,33 +128,12 @@ public class TrainHandler extends NavigationBase {
             train = TrainDb.instance.trains.get(train_addr);
         }
 
-        // fill spinner
-        s_spinner = findViewById(R.id.spinner1);
-        managed_str = new ArrayList<>();
-        managed_adapter = new ArrayAdapter<>(this,
-                android.R.layout.simple_list_item_1, android.R.id.text1, managed_str);
-        s_spinner.setAdapter(managed_adapter);
         this.fillHVs();
 
         // GUI events:
         s_direction.setOnCheckedChangeListener((buttonView, isChecked) ->
                 onDirectionChange(!isChecked)
         );
-
-        s_spinner.setOnItemSelectedListener(new Spinner.OnItemSelectedListener() {
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
-            }
-
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
-                if (position >= managed.size()) return;
-                train = managed.get(position);
-                updateGUTtoHV();
-            }
-
-        });
 
         chb_group.setOnCheckedChangeListener((compoundButton, b) -> {
             if (updating) return;
@@ -192,7 +166,6 @@ public class TrainHandler extends NavigationBase {
 
     private void fillHVs() {
         managed = new ArrayList<>(TrainDb.instance.trains.values());
-        managed_str.clear();
 
         if (managed.isEmpty()) {
             this.finish();
@@ -200,15 +173,9 @@ public class TrainHandler extends NavigationBase {
         }
 
         Collections.sort(managed, (train1, train2) -> train1.addr - train2.addr);
-        int i = 0;
-        for(Train t : managed) {
-            managed_str.add(t.getTitle());
-            if (t == train) s_spinner.setSelection(i);
-            i++;
-        }
 
         // update multitraction
-        for (i = multitrack.size()-1; i >= 0; i--)
+        for (int i = multitrack.size() - 1; i >= 0; i--)
             if (!managed.contains(multitrack.get(i)))
                 multitrack.remove(i);
 
@@ -217,7 +184,6 @@ public class TrainHandler extends NavigationBase {
 
         toolbar.setTitle(train.getTitle());
 
-        managed_adapter.notifyDataSetChanged();
         this.updateGUTtoHV();
     }
 
@@ -408,10 +374,7 @@ public class TrainHandler extends NavigationBase {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventMainThread(TCPDisconnectEvent event) {
         updating = true;
-        managed_str.clear();
         managed.clear();
-
-        managed_str.add(getString(R.string.ta_no_loks));
 
         train = null;
         this.updateGUTtoHV();
