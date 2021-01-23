@@ -41,10 +41,27 @@
                     android:layout_weight="1"
                     android:orientation="vertical">
 
-                    <Spinner
-                        android:id="@+id/spinner1"
+                    <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="40dp" />
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <CheckBox
+                            android:id="@+id/totalManaged"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/ta_total" />
+
+                        <CheckBox
+                            android:id="@+id/goupManaged1"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:checked="false"
+                            android:text="@string/ta_multitraction" />
+                    </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -95,28 +112,6 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1" />
 
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal">
-
-                        <CheckBox
-                            android:id="@+id/totalManaged"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="@string/ta_total" />
-
-                        <CheckBox
-                            android:id="@+id/goupManaged1"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:checked="false"
-                            android:text="@string/ta_multitraction" />
                     </LinearLayout>
 
                     <LinearLayout
