@@ -206,7 +206,11 @@ public class TrainHandler extends NavigationBase {
 
         this.updating = true;
 
+        chb_group.setEnabled(managed.size() >= 2);
+        chb_total.setEnabled(!train.stolen);
+        lv_functions.setEnabled(train != null && !train.stolen);
         if (managed.size() < 2) chb_group.setChecked(false);
+
         sb_speed.setProgress(train.stepsSpeed);
         s_direction.setChecked(!train.direction);
         if (!train.direction)
@@ -224,6 +228,8 @@ public class TrainHandler extends NavigationBase {
 
         scom_expSignal.setCode(train.expSignalCode);
         tv_expSignalBlock.setText( (train.expSignalCode != -1) ? train.expSignalBlock : "" );
+
+        this.setEnabled(train.total);
 
         //set custom adapter with check boxes to list view
         ArrayList<TrainFunction> functions;
@@ -386,6 +392,13 @@ public class TrainHandler extends NavigationBase {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventMainThread(DccEvent event) {
         updateDccState(event.getParsed().get(2).toUpperCase().equals("GO"));
+    }
+
+    private void setEnabled(boolean enabled) {
+        s_direction.setEnabled(enabled);
+        sb_speed.setEnabled(enabled);
+        b_stop.setEnabled(enabled);
+        b_idle.setEnabled(enabled);
     }
 
     @Override
