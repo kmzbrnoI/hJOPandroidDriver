@@ -52,7 +52,6 @@ import cz.mendelu.xmarik.train_manager.models.Train;
 
 public class TrainHandler extends NavigationBase {
     private List<Train> managed;
-    private List<Train> multitrack;
     private Train train;
     private boolean updating;
     private Context context;
@@ -81,10 +80,10 @@ public class TrainHandler extends NavigationBase {
         @Override
         public void run() {
             if (!updating && train != null && train.total && !train.stolen && train.stepsSpeed != sb_speed.getProgress()) {
-                if (multitrack.contains(train)) {
-                    for (Train s : multitrack)
-                        if (!s.stolen)
-                            s.setSpeedSteps(sb_speed.getProgress());
+                if (train.multitrack) {
+                    for (Train t : TrainDb.instance.trains.values())
+                        if (t.multitrack && !t.stolen)
+                            t.setSpeedSteps(sb_speed.getProgress());
                 } else
                     train.setSpeedSteps(sb_speed.getProgress());
             }
@@ -105,7 +104,6 @@ public class TrainHandler extends NavigationBase {
         context = this;
 
         managed = new ArrayList<>();
-        multitrack = new ArrayList<>();
 
         sb_speed = findViewById(R.id.speedkBar1);
         s_direction = findViewById(R.id.handlerDirection1);
@@ -135,15 +133,9 @@ public class TrainHandler extends NavigationBase {
                 onDirectionChange(!isChecked)
         );
 
-        chb_group.setOnCheckedChangeListener((compoundButton, b) -> {
+        chb_group.setOnCheckedChangeListener((compoundButton, value) -> {
             if (updating) return;
-
-            if (b) {
-                if (!multitrack.contains(train))
-                    multitrack.add(train);
-            } else {
-                multitrack.remove(train);
-            }
+            train.multitrack = value;
         });
 
         chb_total.setOnCheckedChangeListener((compoundButton, b) -> {
@@ -174,11 +166,6 @@ public class TrainHandler extends NavigationBase {
 
         Collections.sort(managed, (train1, train2) -> train1.addr - train2.addr);
 
-        // update multitraction
-        for (int i = multitrack.size() - 1; i >= 0; i--)
-            if (!managed.contains(multitrack.get(i)))
-                multitrack.remove(i);
-
         if (train == null || !TrainDb.instance.trains.containsValue(train))
             train = managed.get(0);
 
@@ -197,12 +184,14 @@ public class TrainHandler extends NavigationBase {
 
         train.setDirection(newDir);
 
-        if (multitrack.contains(train)) {
-            for (Train s : multitrack) {
-                if (s == train)
-                    s.setDirection(newDir);
-                else if (!s.stolen)
-                    s.setDirection(!s.direction);
+        if (train.multitrack) {
+            for (Train t : TrainDb.instance.trains.values()) {
+                if (t.multitrack) {
+                    if (t == train)
+                        t.setDirection(newDir);
+                    else if (!t.stolen)
+                        t.setDirection(!t.direction);
+                }
             }
         } else {
             train.setDirection(newDir);
@@ -225,7 +214,7 @@ public class TrainHandler extends NavigationBase {
         else
             s_direction.setText(R.string.ta_direction_backwards);
 
-        chb_group.setChecked(multitrack.contains(train));
+        chb_group.setChecked(train.multitrack);
         tv_kmhSpeed.setText(String.format("%s km/h", train.kmphSpeed));
         chb_total.setChecked(train.total);
 
@@ -305,9 +294,9 @@ public class TrainHandler extends NavigationBase {
 
     public void b_stopClick(View view) {
         sb_speed.setProgress(0);
-        if (multitrack.contains(train)) {
-            for (Train t : multitrack)
-                t.emergencyStop();
+        if (train.multitrack) {
+            for (Train t : TrainDb.instance.trains.values())
+                if (t.multitrack) t.emergencyStop();
         } else {
             train.emergencyStop();
         }
@@ -317,13 +306,11 @@ public class TrainHandler extends NavigationBase {
         sb_speed.setProgress(0);
 
         if (train == null) return;
-        if (multitrack.contains(train)) {
-            for (Train t : multitrack)
-                if (!t.stolen)
-                    t.setSpeedSteps(0);
+        if (train.multitrack) {
+            for (Train t : TrainDb.instance.trains.values())
+                if (t.multitrack && !t.stolen) t.setSpeedSteps(0);
         } else {
-            if (train.total && !train.stolen)
-                train.setSpeedSteps(0);
+            if (train.total && !train.stolen) train.setSpeedSteps(0);
         }
     }
 

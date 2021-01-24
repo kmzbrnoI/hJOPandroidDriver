@@ -16,7 +16,7 @@ public class Train {
     public String note;
     public int addr;
     public String kind;
-    public TrainFunction function[];
+    public TrainFunction[] function;
 
     // state:
     public int stepsSpeed = 0;
@@ -27,6 +27,9 @@ public class Train {
     public int expSignalCode = -1;
     public String expSignalBlock;
     public int expSpeed = -1;
+
+    // client-side props
+    public boolean multitrack = false;
 
     /** Constructs train from server string.
      * @param data in format: název|majitel|označení|poznámka|DCC adresa|třída|číslo soupravy|
