@@ -23,7 +23,7 @@ import cz.mendelu.xmarik.train_manager.models.Train;
 public class TrainDb {
     public static TrainDb instance;
 
-    public Map<Integer, Train> trains = new HashMap<Integer, Train>();
+    public Map<Integer, Train> trains = new HashMap<>();
 
     public TrainDb() {
         if (!EventBus.getDefault().isRegistered(this)) EventBus.getDefault().register(this);
@@ -56,14 +56,15 @@ public class TrainDb {
 
         if (event.getParsed().get(4).toUpperCase().equals("OK") ||
                 event.getParsed().get(4).toUpperCase().equals("TOTAL")) {
-            if (trains.containsValue(addr)) {
-                trains.get(addr).total = event.getParsed().get(4).toUpperCase().equals("TOTAL");
-                trains.get(addr).stolen = false;
+            Train t = trains.get(addr);
+            if (t != null) {
+                t.total = event.getParsed().get(4).toUpperCase().equals("TOTAL");
+                t.stolen = false;
                 if (event.getParsed().size() >= 7)
                     trains.get(addr).updateFromServerString(event.getParsed().get(5));
                 EventBus.getDefault().post(new LokChangeEvent(addr));
             } else {
-                Train t = new Train(event.getParsed().get(5));
+                t = new Train(event.getParsed().get(5));
                 t.total = event.getParsed().get(4).toUpperCase().equals("TOTAL");
                 trains.put(addr, t);
                 EventBus.getDefault().post(new LokAddEvent(addr));
@@ -76,10 +77,12 @@ public class TrainDb {
             EventBus.getDefault().post(new LokRemoveEvent(addr));
 
         } else if (event.getParsed().get(4).toUpperCase().equals("STOLEN")) {
-            if (!trains.containsKey(addr)) return;
-            trains.get(addr).stolen = true;
-            trains.get(addr).total = false;
-            EventBus.getDefault().post(new LokChangeEvent(addr));
+            Train t = trains.get(addr);
+            if (t != null) {
+                t.stolen = true;
+                t.total = false;
+                EventBus.getDefault().post(new LokChangeEvent(addr));
+            }
         }
     }
 
@@ -87,10 +90,10 @@ public class TrainDb {
         Train t = trains.get(Integer.valueOf(event.getParsed().get(2)));
         String[] f = event.getParsed().get(4).split("-");
         if (f.length == 1) {
-            t.function[Integer.valueOf(f[0])].checked = (event.getParsed().get(5).equals("1"));
+            t.function[Integer.parseInt(f[0])].checked = (event.getParsed().get(5).equals("1"));
         } else if (f.length == 2) {
-            int from = Integer.valueOf(f[0]);
-            int to = Integer.valueOf(f[1]);
+            int from = Integer.parseInt(f[0]);
+            int to = Integer.parseInt(f[1]);
 
             for (int i = from; i <= to; i++)
                 t.function[i].checked = (event.getParsed().get(5).charAt(i-from) == '1');
@@ -101,8 +104,8 @@ public class TrainDb {
 
     public void spdEvent(LokEvent event) {
         Train t = trains.get(Integer.valueOf(event.getParsed().get(2)));
-        t.kmphSpeed = Integer.valueOf(event.getParsed().get(4));
-        t.stepsSpeed = Integer.valueOf(event.getParsed().get(5));
+        t.kmphSpeed = Integer.parseInt(event.getParsed().get(4));
+        t.stepsSpeed = Integer.parseInt(event.getParsed().get(5));
         t.direction = (event.getParsed().get(6).equals("1"));
 
         EventBus.getDefault().post(new LokChangeEvent(t.addr));
