@@ -32,8 +32,6 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 
 import cz.kudlav.scomview.ScomView;
 import cz.mendelu.xmarik.train_manager.events.DccEvent;
@@ -51,7 +49,6 @@ import cz.mendelu.xmarik.train_manager.models.Train;
 
 
 public class TrainHandler extends NavigationBase {
-    private List<Train> managed;
     private Train train;
     private boolean updating;
     private Context context;
@@ -102,8 +99,6 @@ public class TrainHandler extends NavigationBase {
 
         updating = false;
         context = this;
-
-        managed = new ArrayList<>();
 
         sb_speed = findViewById(R.id.speedkBar1);
         s_direction = findViewById(R.id.handlerDirection1);
@@ -157,17 +152,17 @@ public class TrainHandler extends NavigationBase {
     }
 
     private void fillHVs() {
-        managed = new ArrayList<>(TrainDb.instance.trains.values());
-
-        if (managed.isEmpty()) {
+        if (TrainDb.instance.trains.isEmpty()) {
             this.finish();
             return;
         }
 
-        Collections.sort(managed, (train1, train2) -> train1.addr - train2.addr);
-
-        if (train == null || !TrainDb.instance.trains.containsValue(train))
-            train = managed.get(0);
+        if (train == null || !TrainDb.instance.trains.containsValue(train)) {
+            int min_addr = Integer.MAX_VALUE;
+            for (Train t: TrainDb.instance.trains.values())
+                if (min_addr > t.addr) min_addr = t.addr;
+            train = TrainDb.instance.trains.get(min_addr);
+        }
 
         toolbar.setTitle(train.getTitle());
 
@@ -206,10 +201,10 @@ public class TrainHandler extends NavigationBase {
 
         this.updating = true;
 
-        chb_group.setEnabled(managed.size() >= 2);
+        chb_group.setEnabled(TrainDb.instance.trains.size() >= 2);
         chb_total.setEnabled(!train.stolen);
         lv_functions.setEnabled(train != null && !train.stolen);
-        if (managed.size() < 2) chb_group.setChecked(false);
+        if (TrainDb.instance.trains.size() < 2) chb_group.setChecked(false);
 
         sb_speed.setProgress(train.stepsSpeed);
         s_direction.setChecked(!train.direction);
@@ -367,7 +362,6 @@ public class TrainHandler extends NavigationBase {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventMainThread(TCPDisconnectEvent event) {
         updating = true;
-        managed.clear();
 
         train = null;
         this.updateGUTtoHV();
