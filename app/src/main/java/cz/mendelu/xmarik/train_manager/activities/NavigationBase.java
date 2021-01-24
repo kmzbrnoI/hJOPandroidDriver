@@ -13,6 +13,7 @@ import androidx.appcompat.widget.Toolbar;
 
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 
 import org.greenrobot.eventbus.EventBus;
@@ -55,8 +56,14 @@ public class NavigationBase extends AppCompatActivity
 
         // Navigation Drawer open / close event
         drawer = findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle( this, drawer, toolbar,
+                R.string.navigation_drawer_open, R.string.navigation_drawer_close) {
+
+            public void onDrawerOpened(View drawerView) {
+                super.onDrawerOpened(drawerView);
+                updateTrainGroup();
+            }
+        };
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
@@ -168,7 +175,14 @@ public class NavigationBase extends AppCompatActivity
 
         for(Train t : trains) {
             MenuItem item = menu.add(R.id.group_train, Menu.NONE, 1, t.getTitle());
-            item.setIcon(R.drawable.ic_train_black_24dp);
+            // Set icon
+            if (t.total) {
+                if (t.multitrack) item.setIcon(R.drawable.ic_train_multi_24dp);
+                else item.setIcon(R.drawable.ic_train_control_24dp);
+            } else {
+                if (t.stepsSpeed == 0) item.setIcon(R.drawable.ic_train_stop_24dp);
+                else item.setIcon(R.drawable.ic_train_speed_24dp);
+            }
             item.setOnMenuItemClickListener(item1 -> {
                 if (this instanceof TrainHandler) {
                     ((TrainHandler) this).setTrain(t);
