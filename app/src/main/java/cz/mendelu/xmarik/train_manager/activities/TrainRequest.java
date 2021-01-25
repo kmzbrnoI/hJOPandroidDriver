@@ -111,7 +111,9 @@ public class TrainRequest extends NavigationBase {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventMainThread(LokAddEvent event) {
         super.onEventMainThread(event);
-        startActivity(new Intent(this, TrainHandler.class));
+        Intent intent = (new Intent(this, TrainHandler.class));;
+        intent.putExtra("train_addr", event.getAddr());
+        startActivity(intent);
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

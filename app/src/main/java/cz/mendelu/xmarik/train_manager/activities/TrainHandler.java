@@ -151,6 +151,17 @@ public class TrainHandler extends NavigationBase {
         updateDccState(dccState == null || dccState);
     }
 
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        // select train
+        int train_addr = intent.getIntExtra("train_addr", -1);
+        if (train_addr != -1) {
+            train = TrainDb.instance.trains.get(train_addr);
+            this.fillHVs();
+        }
+    }
+
     private void fillHVs() {
         if (TrainDb.instance.trains.isEmpty()) {
             this.finish();
