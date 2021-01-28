@@ -15,6 +15,9 @@
     <string name="hamburger_train_request_title">Žádost o vlak</string>
     <string name="hamburger_about_title">O aplikaci</string>
     <string name="hamburger_settings_title">Nastavení</string>
+    <string name="hamburger_state_unauthenticated">Nepřihlášen</string>
+    <string name="hamburger_state_server">Server:</string>
+    <string name="hamburger_state_disconnected">nepřipojen</string>
 
     <string name="ta_new_loko">Přijata nová lokomotiva.</string>
     <string name="ta_multitraction">Multitrakce</string>
