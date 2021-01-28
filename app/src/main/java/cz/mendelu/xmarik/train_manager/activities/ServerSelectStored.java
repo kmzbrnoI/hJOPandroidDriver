@@ -87,7 +87,7 @@ public class ServerSelectStored extends Fragment {
         servers.clear();
         for (Server s : ServerDb.instance.stored) {
             servers.add(new String[]{
-                    s.name + "\u00A0\u00A0" + s.host,
+                    s.getTitle(),
                     s.type
             });
         }

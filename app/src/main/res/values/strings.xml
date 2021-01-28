@@ -15,6 +15,9 @@
     <string name="hamburger_train_request_title">Train request</string>
     <string name="hamburger_about_title">About</string>
     <string name="hamburger_settings_title">Settings</string>
+    <string name="hamburger_state_unauthenticated">Not logged in</string>
+    <string name="hamburger_state_server">Server:</string>
+    <string name="hamburger_state_disconnected">disconnected</string>
 
     <string name="ta_new_loko">New locomotive received.</string>
     <string name="ta_multitraction">Multitraction</string>

@@ -46,13 +46,8 @@ public class Server {
         this.password = "";
     }
 
-    public String getStringData() {
-        String statusText = this.active ? "online" : "offline";
-        return this.name + "\t" + this.host + "\n" + this.type + " \t" + statusText;
-    }
-
-    public String getStoredStringData() {
-        return this.name + "\t" + this.host + "\n" + this.type;
+    public String getTitle() {
+        return this.name + "\u00A0\u00A0" + this.host;
     }
 
     public String getSaveDataString() {

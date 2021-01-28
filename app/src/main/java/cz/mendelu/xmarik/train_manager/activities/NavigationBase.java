@@ -29,6 +29,7 @@ import cz.mendelu.xmarik.train_manager.events.GlobalAuthEvent;
 import cz.mendelu.xmarik.train_manager.events.LokAddEvent;
 import cz.mendelu.xmarik.train_manager.events.LokRemoveEvent;
 import cz.mendelu.xmarik.train_manager.events.TCPDisconnectEvent;
+import cz.mendelu.xmarik.train_manager.models.Server;
 import cz.mendelu.xmarik.train_manager.models.Train;
 import cz.mendelu.xmarik.train_manager.network.TCPClientApplication;
 import cz.mendelu.xmarik.train_manager.storage.TrainDb;
@@ -47,6 +48,9 @@ public class NavigationBase extends AppCompatActivity
 
     DrawerLayout drawer;
     Menu menu;
+    MenuItem miTrainRequest;
+    TextView tvUser;
+    TextView tvServer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,8 +76,12 @@ public class NavigationBase extends AppCompatActivity
 
         menu = nv.getMenu();
 
+        miTrainRequest = menu.findItem(R.id.nav_train_request);
+        tvUser = nv.getHeaderView(0).findViewById(R.id.tv_hamburger_user);
+        tvServer = nv.getHeaderView(0).findViewById(R.id.tv_hamburger_server);
+
         // add version number to hamburger_header
-        TextView tw = nv.getHeaderView(0).findViewById(R.id.tv_version);
+        TextView tw = findViewById(R.id.tv_version);
         tw.setText(String.format("v%s", BuildConfig.VERSION_NAME));
     }
 
@@ -129,6 +137,7 @@ public class NavigationBase extends AppCompatActivity
                 .setCancelable(false)
                 .setPositiveButton("ok", (dialog, which) -> {} )
                 .show();
+        updateServer();
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -142,6 +151,7 @@ public class NavigationBase extends AppCompatActivity
                             TCPClientApplication.getInstance().disconnect()
                     ).show();
         }
+        updateServer();
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -166,6 +176,7 @@ public class NavigationBase extends AppCompatActivity
         super.onStart();
 
         this.updateTrainGroup();
+        this.updateServer();
     }
 
     private void updateTrainGroup() {
@@ -193,6 +204,19 @@ public class NavigationBase extends AppCompatActivity
                 }
                 return false;
             });
+        }
+    }
+
+    private void updateServer() {
+        boolean connected = TCPClientApplication.getInstance().connected();
+        miTrainRequest.setVisible(connected);
+        if (connected) {
+            Server server = TCPClientApplication.getInstance().server;
+            tvUser.setText(server.username);
+            tvServer.setText(server.getTitle());
+        } else {
+            tvUser.setText(R.string.hamburger_state_unauthenticated);
+            tvServer.setText(R.string.hamburger_state_disconnected);
         }
     }
 

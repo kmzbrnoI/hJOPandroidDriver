@@ -91,8 +91,8 @@ public class ServerSelectFound extends Fragment {
         servers.clear();
         for (Server s : ServerDb.instance.found) {
             servers.add(new String[]{
-                    s.name + "\u00A0\u00A0" + s.host,
-                    s.type + "\u00A0\u00A0" + (s.active ? "online" : "offline")
+                    s.getTitle(),
+                    s.type + "\t" + (s.active ? "online" : "offline")
             });
         }
         refreshLayout.setRefreshing(false);
