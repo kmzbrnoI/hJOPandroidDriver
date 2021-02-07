@@ -70,7 +70,7 @@ public class ServerEdit extends AppCompatActivity {
             new AlertDialog.Builder(this)
                     .setMessage(R.string.ns_warning_compulsory)
                     .setCancelable(false)
-                    .setPositiveButton("ok", (dialog, which) -> {} ).show();
+                    .setPositiveButton(R.string.dialog_ok, (dialog, which) -> {} ).show();
             return;
         }
 
@@ -78,7 +78,7 @@ public class ServerEdit extends AppCompatActivity {
             new AlertDialog.Builder(this)
                     .setMessage(R.string.ns_warning_invalid_characters)
                     .setCancelable(false)
-                    .setPositiveButton("ok", (dialog, which) -> {} ).show();
+                    .setPositiveButton(R.string.dialog_ok, (dialog, which) -> {} ).show();
             return;
         }
 
