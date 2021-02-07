@@ -4,7 +4,10 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/ScomView/ScomView.iml" filepath="$PROJECT_DIR$/.idea/modules/ScomView/ScomView.iml" group="hJOPandroidDriver/ScomView" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/app.iml" group="hJOPandroidDriver/app" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/dev.hJOPandroidDriver.iml" filepath="$PROJECT_DIR$/.idea/modules/dev.hJOPandroidDriver.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/hJOPandroidDriver.iml" filepath="$PROJECT_DIR$/.idea/hJOPandroidDriver.iml" group="hJOPandroidDriver" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/ScomView/hJOPandroidDriver.ScomView.iml" filepath="$PROJECT_DIR$/.idea/modules/ScomView/hJOPandroidDriver.ScomView.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/hJOPandroidDriver.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/hJOPandroidDriver.app.iml" />
     </modules>
   </component>
 </project>
