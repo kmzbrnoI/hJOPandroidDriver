@@ -1,6 +1,5 @@
 package cz.mendelu.xmarik.train_manager.activities;
 
-import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,10 +9,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -175,30 +172,22 @@ public class ServerSelectStored extends Fragment {
     }
 
     public void changeLogin(final Server server) {
-        final Dialog dialog = new Dialog(view.getContext());
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setContentView(R.layout.dialog_user);
+        View dialogView = this.getLayoutInflater().inflate(R.layout.dialog_user, null);
+        final EditText mName = dialogView.findViewById(R.id.dialogName);
+        final EditText mPasswd = dialogView.findViewById(R.id.dialogPasswd);
+        final CheckBox savebox = dialogView.findViewById(R.id.dialogSaveData);
 
-        //set dialog component
-        final EditText mName = dialog.findViewById(R.id.dialogName);
-        final EditText mPasswd = dialog.findViewById(R.id.dialogPasswd);
-        Button dialogButton = dialog.findViewById(R.id.dialogButtonOK);
-        final TextView mMessage = dialog.findViewById(R.id.tv_note);
-        final CheckBox savebox = dialog.findViewById(R.id.dialogSaveData);
-
-        mMessage.setText(R.string.mm_change_login);
         mName.setText(server.username);
-        mPasswd.setText("");
-        savebox.setChecked(true);
         savebox.setEnabled(false);
 
-        dialogButton.setOnClickListener(__ -> {
-            server.password = HashHelper.hashPasswd(mPasswd.getText().toString());
-            server.username = mName.getText().toString();
-            dialog.dismiss();
-        });
-
-        dialog.show();
+        new AlertDialog.Builder(view.getContext())
+                .setView(dialogView)
+                .setTitle(R.string.mm_change_login)
+                .setPositiveButton(R.string.dialog_ok, (dialog1, which) -> {
+                    server.password = HashHelper.hashPasswd(mPasswd.getText().toString());
+                    server.username = mName.getText().toString();
+                })
+                .show();
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
