@@ -1,6 +1,5 @@
 package cz.mendelu.xmarik.train_manager.activities;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -12,6 +11,7 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -32,7 +32,7 @@ import cz.mendelu.xmarik.train_manager.storage.ServerDb;
 import cz.mendelu.xmarik.train_manager.network.TCPClientApplication;
 import cz.mendelu.xmarik.train_manager.events.HandShakeEvent;
 
-public class ServerConnector extends Activity {
+public class ServerConnector extends AppCompatActivity {
     private ArrayList<String> arrayList;
     private TextViewAdapter mAdapter;
     private ProgressBar progressBar;
