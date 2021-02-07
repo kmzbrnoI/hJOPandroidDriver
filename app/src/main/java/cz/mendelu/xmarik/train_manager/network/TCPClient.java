@@ -36,7 +36,7 @@ public class TCPClient {
     }
 
     public void send(String message) throws ConnectException {
-        if (!socket.isConnected() || wt == null || !wt.isAlive())
+        if (socket != null && !socket.isConnected() || wt == null || !wt.isAlive())
             throw new ConnectException("Not connected!");
 
         wt.send((message+'\n').getBytes(StandardCharsets.UTF_8));
