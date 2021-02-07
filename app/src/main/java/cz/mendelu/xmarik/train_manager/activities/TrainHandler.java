@@ -124,17 +124,19 @@ public class TrainHandler extends NavigationBase {
         this.fillHVs();
 
         // GUI events:
-        s_direction.setOnCheckedChangeListener((buttonView, isChecked) ->
-                onDirectionChange(!isChecked)
+        s_direction.setOnCheckedChangeListener((buttonView, checked) ->
+                onDirectionChange(!checked)
         );
 
-        chb_group.setOnCheckedChangeListener((compoundButton, value) -> {
-            if (updating) return;
-            train.multitrack = value;
+        chb_group.setOnCheckedChangeListener((compoundButton, checked) -> {
+            if (!updating) train.multitrack = checked;
         });
 
-        chb_total.setOnCheckedChangeListener((compoundButton, b) -> {
-            if (!updating) train.setTotal(b);
+        chb_total.setOnCheckedChangeListener((compoundButton, checked) -> {
+            if (!updating) {
+                train.setTotal(checked);
+                if (!checked) train.multitrack = false;
+            }
         });
 
         ib_release.setOnClickListener(this::ib_ReleaseClick);
@@ -212,10 +214,8 @@ public class TrainHandler extends NavigationBase {
 
         this.updating = true;
 
-        chb_group.setEnabled(TrainDb.instance.trains.size() >= 2);
         chb_total.setEnabled(!train.stolen);
         lv_functions.setEnabled(train != null && !train.stolen);
-        if (TrainDb.instance.trains.size() < 2) chb_group.setChecked(false);
 
         sb_speed.setProgress(train.stepsSpeed);
         s_direction.setChecked(!train.direction);
@@ -224,7 +224,14 @@ public class TrainHandler extends NavigationBase {
         else
             s_direction.setText(R.string.ta_direction_backwards);
 
+        if (TrainDb.instance.trains.size() < 2) {
+            train.multitrack = false;
+            chb_group.setEnabled(false);
+        } else {
+            chb_group.setEnabled(train.total && !train.stolen);
+        }
         chb_group.setChecked(train.multitrack);
+
         tv_kmhSpeed.setText(String.format("%s km/h", train.kmphSpeed));
         chb_total.setChecked(train.total);
 
