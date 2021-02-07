@@ -124,7 +124,7 @@ public class TrainRequest extends NavigationBase {
             new AlertDialog.Builder(this)
                     .setMessage(event.getParsed().size() >= 6 ? event.getParsed().get(5) : getString(R.string.general_error))
                     .setCancelable(false)
-                    .setPositiveButton("ok", (dialog, which) -> {} ).show();
+                    .setPositiveButton(R.string.dialog_ok, (dialog, which) -> {} ).show();
             dialog.dismiss();
         }
     }
@@ -150,7 +150,7 @@ public class TrainRequest extends NavigationBase {
             new AlertDialog.Builder(this)
                     .setMessage(getString(R.string.tr_no_area_selected))
                     .setCancelable(false)
-                    .setPositiveButton("ok", (dialog, which) -> {} ).show();
+                    .setPositiveButton(R.string.dialog_ok, (dialog, which) -> {} ).show();
             return;
         }
 

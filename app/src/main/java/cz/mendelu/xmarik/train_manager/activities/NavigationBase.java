@@ -135,7 +135,7 @@ public class NavigationBase extends AppCompatActivity
         new AlertDialog.Builder(this)
                 .setMessage(getString(R.string.disconnected))
                 .setCancelable(false)
-                .setPositiveButton("ok", (dialog, which) -> {} )
+                .setPositiveButton(R.string.dialog_ok, (dialog, which) -> {} )
                 .show();
         updateServer();
     }
@@ -147,7 +147,7 @@ public class NavigationBase extends AppCompatActivity
             new AlertDialog.Builder(this)
                     .setMessage(event.getParsed().get(5))
                     .setCancelable(false)
-                    .setPositiveButton("ok", (dialog, which) ->
+                    .setPositiveButton(R.string.dialog_ok, (dialog, which) ->
                             TCPClientApplication.getInstance().disconnect()
                     ).show();
         }
