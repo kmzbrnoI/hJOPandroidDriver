@@ -1,19 +1,17 @@
 package cz.mendelu.xmarik.train_manager.activities;
 
 import android.app.Activity;
-import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.view.Window;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AlertDialog;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -76,44 +74,37 @@ public class ServerConnector extends Activity {
     }
 
     public void editLogin(String message) {
-        final Dialog dialog = new Dialog(this);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setContentView(R.layout.dialog_user);
-
-        //set dialog component
-        final TextView mMessage = dialog.findViewById(R.id.tv_note);
-        final EditText mName = dialog.findViewById(R.id.dialogName);
-        final EditText mPasswd = dialog.findViewById(R.id.dialogPasswd);
-        Button dialogButton = dialog.findViewById(R.id.dialogButtonOK);
-        final CheckBox savebox = dialog.findViewById(R.id.dialogSaveData);
-        mMessage.setText(message);
+        View dialogView = this.getLayoutInflater().inflate(R.layout.dialog_user, null);
+        final EditText mName = dialogView.findViewById(R.id.dialogName);
+        final EditText mPasswd = dialogView.findViewById(R.id.dialogPasswd);
+        final CheckBox savebox = dialogView.findViewById(R.id.dialogSaveData);
 
         mName.setText(TCPClientApplication.getInstance().server.username);
-        mPasswd.setText("");
 
-        // if button is clicked, close the custom dialog
-        dialogButton.setOnClickListener(v -> {
-            TCPClientApplication.getInstance().server.username = mName.getText().toString();
-            TCPClientApplication.getInstance().server.password = HashHelper.hashPasswd(mPasswd.getText().toString());
+        new AlertDialog.Builder(this)
+                .setView(dialogView)
+                .setTitle(message)
+                .setPositiveButton(R.string.dialog_ok, (dialog, which) -> {
+                    TCPClientApplication.getInstance().server.username = mName.getText().toString();
+                    TCPClientApplication.getInstance().server.password = HashHelper.hashPasswd(mPasswd.getText().toString());
 
-            if (savebox.isChecked()) {
-                if (ServerDb.instance.isStoredServer(TCPClientApplication.getInstance().server.host,
-                        TCPClientApplication.getInstance().server.port))
-                    ServerDb.instance.transferLoginToSaved(TCPClientApplication.getInstance().server);
-                else
-                    ServerDb.instance.addStoredServer(TCPClientApplication.getInstance().server);
-            }
+                    if (savebox.isChecked()) {
+                        if (ServerDb.instance.isStoredServer(TCPClientApplication.getInstance().server.host,
+                                TCPClientApplication.getInstance().server.port))
+                            ServerDb.instance.transferLoginToSaved(TCPClientApplication.getInstance().server);
+                        else
+                            ServerDb.instance.addStoredServer(TCPClientApplication.getInstance().server);
+                    }
 
-            TCPClientApplication.getInstance().send("-;LOK;G;AUTH;{" +
-                    TCPClientApplication.getInstance().server.username + "};" +
-                    TCPClientApplication.getInstance().server.password);
+                    TCPClientApplication.getInstance().send("-;LOK;G;AUTH;{" +
+                            TCPClientApplication.getInstance().server.username + "};" +
+                            TCPClientApplication.getInstance().server.password);
 
-            arrayList.add(getString(R.string.sc_authorizing));
-            mAdapter.notifyDataSetChanged();
-            progressBar.setVisibility(View.VISIBLE);
-            dialog.dismiss();
-        });
-        dialog.show();
+                    arrayList.add(getString(R.string.sc_authorizing));
+                    mAdapter.notifyDataSetChanged();
+                    progressBar.setVisibility(View.VISIBLE);
+                })
+                .show();
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

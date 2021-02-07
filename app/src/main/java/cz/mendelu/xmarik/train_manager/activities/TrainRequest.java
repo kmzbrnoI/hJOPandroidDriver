@@ -37,10 +37,8 @@ public class TrainRequest extends NavigationBase {
     Button sendButton;
     EditText messageForServer;
     int focused;
-    AlertDialog.Builder connectionDialog;
     Dialog dialog;
     TextView dialogMessage;
-    Button dialogButton;
     View lastSelected;
 
     ListView areas_lv;
@@ -54,15 +52,13 @@ public class TrainRequest extends NavigationBase {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        dialog = new Dialog(this);
-        dialog.setContentView(R.layout.dialog_train_request);
-        dialog.setTitle(R.string.tr_request);
-        dialogMessage = dialog.findViewById(R.id.dialogMessage);
-        dialogButton = dialog.findViewById(R.id.cancelButton);
-        dialogButton.setOnClickListener(v -> dialog.dismiss());
-        dialog.setOnDismissListener(dialogInterface -> cancelRequest());
-
-        connectionDialog = new AlertDialog.Builder(this);
+        View dialogView = this.getLayoutInflater().inflate(R.layout.dialog_train_request, null);
+        dialogMessage = dialogView.findViewById(R.id.dialogMessage);
+        dialog = new AlertDialog.Builder(this)
+                .setView(dialogView)
+                .setNegativeButton(R.string.cancel, null)
+                .setOnDismissListener(dialogInterface -> cancelRequest())
+                .create();
 
         areas_lv = findViewById(R.id.nav_areas);
         sendButton = findViewById(R.id.b_request);
@@ -157,7 +153,6 @@ public class TrainRequest extends NavigationBase {
         TCPClientApplication.getInstance().send("-;LOK;G;PLEASE;" +
                 ControlAreaDb.instance.areas.get(focused).id + ";" + messageForServer.getText().toString());
 
-        dialog.setTitle(getString(R.string.tr_info_request_requesting));
         dialogMessage.setText(R.string.tr_info_request_sent);
         dialog.show();
     }

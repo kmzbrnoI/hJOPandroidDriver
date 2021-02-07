@@ -40,10 +40,8 @@
 
     <string name="tr_disp_message">Volitelná zpráva pro dispečera:</string>
     <string name="tr_send_request">Odeslat žádost</string>
-    <string name="tr_request">Žádost</string>
     <string name="tr_info_request_sent">Žádost odeslána, čekám na odpověď serveru.</string>
     <string name="tr_info_waiting_disp">Žádost odeslána, čekám na dispečera.</string>
-    <string name="tr_info_request_requesting">"Probíhá žádost do stanice "</string>
     <string name="tr_no_areas">Žádné oblasti řízení.</string>
     <string name="tr_no_area_selected">Musíte vybrat oblast řízení!</string>
 
