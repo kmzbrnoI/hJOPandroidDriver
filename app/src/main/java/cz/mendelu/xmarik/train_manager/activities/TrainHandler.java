@@ -32,6 +32,7 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 
 import cz.kudlav.scomview.ScomView;
 import cz.mendelu.xmarik.train_manager.events.DccEvent;
@@ -129,7 +130,19 @@ public class TrainHandler extends NavigationBase {
         );
 
         chb_group.setOnCheckedChangeListener((compoundButton, checked) -> {
-            if (!updating) train.multitrack = checked;
+            if (!updating) {
+                train.multitrack = checked;
+                if (checked) {
+                    displayGroupDialog();
+                } else {
+                    for (Train t : TrainDb.instance.trains.values()) {
+                        if (t.multitrack) {
+                            displayUngroupDialog();
+                            break;
+                        }
+                    }
+                }
+            }
         });
 
         chb_total.setOnCheckedChangeListener((compoundButton, checked) -> {
@@ -350,6 +363,43 @@ public class TrainHandler extends NavigationBase {
     public void setTrain(Train t) {
         train = t;
         this.fillHVs();
+    }
+
+    private void displayGroupDialog() {
+        final ArrayList<Train> trains = new ArrayList<>(TrainDb.instance.trains.values());
+        Collections.sort(trains, (train1, train2) -> train1.addr - train2.addr);
+        final CharSequence[] trainsTitle = new CharSequence[trains.size()];
+        final boolean[] trainsChecked = new boolean[trains.size()];
+        for (int i = 0; i < trains.size(); i++) {
+            trainsTitle[i] = trains.get(i).getTitle();
+            trainsChecked[i] = trains.get(i).multitrack;
+        }
+        new AlertDialog.Builder(this)
+                .setTitle(R.string.ta_dialog_group_title)
+                .setMultiChoiceItems(trainsTitle, trainsChecked, (dialog, index, check) ->
+                        trainsChecked[index] = check
+                )
+                .setPositiveButton(R.string.dialog_ok, (dialog, which) -> {
+                    for (int i = 0; i < trains.size(); i++) {
+                        final Train t = trains.get(i);
+                        if (t.multitrack != trainsChecked[i]) {
+                            if (!t.total) t.setTotal(true);
+                            t.multitrack = trainsChecked[i];
+                        }
+                    }
+                })
+                .show();
+    }
+
+    private void displayUngroupDialog() {
+        new AlertDialog.Builder(this)
+                .setMessage(R.string.ta_dialog_ungroup_msg)
+                .setPositiveButton(R.string.ta_dialog_ungroup_ok, (dialog, which) -> {
+                    for (Train t : TrainDb.instance.trains.values())
+                        t.multitrack = false;
+                })
+                .setNegativeButton(R.string.ta_dialog_ungroup_cancel, null)
+                .show();
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
