@@ -13,6 +13,7 @@ import cz.mendelu.xmarik.train_manager.events.LokChangeEvent;
 import cz.mendelu.xmarik.train_manager.events.LokEvent;
 import cz.mendelu.xmarik.train_manager.events.LokRemoveEvent;
 import cz.mendelu.xmarik.train_manager.events.LokRespEvent;
+import cz.mendelu.xmarik.train_manager.events.LokTotalChangeErrorEvent;
 import cz.mendelu.xmarik.train_manager.events.TCPDisconnectEvent;
 import cz.mendelu.xmarik.train_manager.models.Train;
 
@@ -123,8 +124,13 @@ public class TrainDb {
         int addr = Integer.parseInt(event.getParsed().get(2));
         if (!trains.containsKey(addr)) return;
         Train t = trains.get(addr);
-        t.total = event.getParsed().get(4).equals("1");
-        EventBus.getDefault().post(new LokChangeEvent(addr));
+        boolean total = event.getParsed().get(4).equals("1");
+        if (t.total == total) {
+            EventBus.getDefault().post(new LokChangeEvent(addr));
+        } else {
+            t.total = total;
+            EventBus.getDefault().post(new LokTotalChangeErrorEvent(addr, total));
+        }
     }
 
     public void expSignEvent(LokEvent event) {

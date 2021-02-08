@@ -1,8 +1,6 @@
 <resources>
     <string name="app_name">hJOP Driver</string>
 
-    <string name="dialog_ok">OK</string>
-
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
@@ -89,6 +87,9 @@
     <string name="general_error">Všeobecná chyba!</string>
     <string name="yes">ano</string>
     <string name="no">ne</string>
+    <string name="dialog_ok">OK</string>
+    <string name="total_on_error">Lokomotivu %1$s se nepodařilo převzít do Ručního řízení!</string>
+    <string name="total_off_error">Nepodařilo se zrušit Ruční řízení lokomotivy %1$s!</string>
 
     <string name="sc_connecting">Navazuji komunikaci...</string>
     <string name="sc_authorizing">Autorizuji...</string>
