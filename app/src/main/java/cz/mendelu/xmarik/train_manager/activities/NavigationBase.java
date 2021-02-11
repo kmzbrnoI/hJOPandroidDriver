@@ -173,15 +173,15 @@ public class NavigationBase extends AppCompatActivity
     }
 
     @Override
-    public void onStop() {
+    public void onPause() {
         if (EventBus.getDefault().isRegistered(this)) EventBus.getDefault().unregister(this);
-        super.onStop();
+        super.onPause();
     }
 
     @Override
-    public void onStart() {
+    public void onResume() {
+        super.onResume();
         if (!EventBus.getDefault().isRegistered(this)) EventBus.getDefault().register(this);
-        super.onStart();
 
         this.updateTrainGroup();
         this.updateServer();
