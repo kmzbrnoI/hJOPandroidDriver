@@ -52,6 +52,7 @@ import cz.mendelu.xmarik.train_manager.models.Train;
 public class TrainHandler extends NavigationBase {
     private Train train;
     private boolean updating;
+    private boolean error;
     private Context context;
     private boolean confSpeedVolume;
     private boolean confAvailableFunctions;
@@ -272,10 +273,7 @@ public class TrainHandler extends NavigationBase {
                 R.layout.lok_function, functions, true);
         lv_functions.setAdapter(dataAdapter);
 
-        if (train.stolen)
-            ib_status.setImageResource(R.drawable.ic_circle_yellow);
-        else
-            ib_status.setImageResource(R.drawable.ic_circle_green);
+        this.updateStatus(false);
 
         this.updating = false;
     }
@@ -292,6 +290,18 @@ public class TrainHandler extends NavigationBase {
             blink.setRepeatCount(Animation.INFINITE);
             ib_dcc.setAlpha(1.0f);
             ib_dcc.startAnimation(blink);
+        }
+    }
+
+    private void updateStatus(boolean error) {
+        this.error = error;
+        if (train.stolen) {
+            ib_status.setImageResource(R.drawable.ic_circle_yellow);
+        } else if (error) {
+            ib_status.setImageResource(R.drawable.ic_circle_red);
+            Toast.makeText(this, R.string.ta_state_err, Toast.LENGTH_SHORT).show();
+        } else {
+            ib_status.setImageResource(R.drawable.ic_circle_green);
         }
     }
 
@@ -347,8 +357,14 @@ public class TrainHandler extends NavigationBase {
     }
 
     public void ib_StatusClick(View v) {
-        if (train != null && train.stolen)
+        if (train.stolen) {
             train.please();
+            Toast.makeText(this, R.string.ta_state_stolen, Toast.LENGTH_SHORT).show();
+        } else if (this.error) {
+            Toast.makeText(this, R.string.ta_state_err, Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(this, R.string.ta_state_ok, Toast.LENGTH_SHORT).show();
+        }
     }
 
     public void ib_ReleaseClick(View v) {
@@ -445,10 +461,7 @@ public class TrainHandler extends NavigationBase {
 
         tv_kmhSpeed.setText(String.format("%s km/h", train.kmphSpeed));
 
-        if (event.getParsed().get(4).toUpperCase().equals("OK"))
-            ib_status.setImageResource(R.drawable.ic_circle_green);
-        else
-            ib_status.setImageResource(R.drawable.ic_circle_red);
+        this.updateStatus(!event.getParsed().get(4).toUpperCase().equals("OK"));
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

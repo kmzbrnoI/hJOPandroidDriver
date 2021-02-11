@@ -35,6 +35,9 @@
     <string name="ta_dialog_ungroup_msg">Vypnout multitrakci u ostatních lokomotiv?</string>
     <string name="ta_dialog_ungroup_ok">OK</string>
     <string name="ta_dialog_ungroup_cancel">Ponechat</string>
+    <string name="ta_state_ok">Řízení lokomotivy v pořádku</string>
+    <string name="ta_state_err">Chyba posledního povelu</string>
+    <string name="ta_state_stolen">Získávám zpět řízení lokomotivy</string>
 
     <string name="tr_disp_message">Volitelná zpráva pro dispečera:</string>
     <string name="tr_send_request">Odeslat žádost</string>
