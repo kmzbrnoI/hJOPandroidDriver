@@ -477,7 +477,7 @@ public class TrainHandler extends NavigationBase {
     }
 
     @Override
-    protected void onPause() {
+    public void onPause() {
         b_idleClick(findViewById(R.id.startButton1));
         timerHandler.removeCallbacks(timerRunnable);
         super.onPause();
