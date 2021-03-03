@@ -221,7 +221,10 @@ public class NavigationBase extends AppCompatActivity
         if (connected) {
             Server server = TCPClientApplication.getInstance().server;
             tvUser.setText(server.username);
-            tvServer.setText(server.getTitle());
+            if (!server.name.isEmpty())
+                tvServer.setText(server.name);
+            else
+                tvServer.setText(server.host);
         } else {
             tvUser.setText(R.string.hamburger_state_unauthenticated);
             tvServer.setText(R.string.hamburger_state_disconnected);
