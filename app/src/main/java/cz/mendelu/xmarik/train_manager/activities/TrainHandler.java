@@ -383,12 +383,15 @@ public class TrainHandler extends NavigationBase {
 
     private void displayGroupDialog() {
         final ArrayList<Train> trains = new ArrayList<>(TrainDb.instance.trains.values());
+        trains.remove(this.train);
         Collections.sort(trains, (train1, train2) -> train1.addr - train2.addr);
         final CharSequence[] trainsTitle = new CharSequence[trains.size()];
         final boolean[] trainsChecked = new boolean[trains.size()];
-        for (int i = 0; i < trains.size(); i++) {
-            trainsTitle[i] = trains.get(i).getTitle();
-            trainsChecked[i] = trains.get(i).multitrack;
+        int i = 0;
+		for (Train train: trains) {
+            trainsTitle[i] = train.getTitle();
+            trainsChecked[i] = train.multitrack;
+            i++;
         }
         new AlertDialog.Builder(this)
                 .setTitle(R.string.ta_dialog_group_title)
@@ -396,11 +399,11 @@ public class TrainHandler extends NavigationBase {
                         trainsChecked[index] = check
                 )
                 .setPositiveButton(R.string.dialog_ok, (dialog, which) -> {
-                    for (int i = 0; i < trains.size(); i++) {
-                        final Train t = trains.get(i);
-                        if (t.multitrack != trainsChecked[i]) {
-                            if (!t.total) t.setTotal(true);
-                            t.multitrack = trainsChecked[i];
+                    for (int j = 0; j < trainsChecked.length; j++) {
+                        Train train = trains.get(j);
+                        if (train.multitrack != trainsChecked[j]) {
+                            if (!train.total) train.setTotal(true);
+                            train.multitrack = !train.multitrack;
                         }
                     }
                 })
