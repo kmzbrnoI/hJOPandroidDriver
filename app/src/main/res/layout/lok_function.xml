@@ -1,34 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:padding="6dip" >
+    android:padding="6dip">
 
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
+    <CheckBox
+        android:id="@+id/chb_func"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:weightSum="1">
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+        android:text="" />
 
-        <CheckBox
-            android:id="@+id/chb_func"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:focusable="false"
-            android:focusableInTouchMode="false"
-            android:text="" />
+    <TextView
+        android:id="@+id/code"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="wrap_content"
+        android:text="F0: example function" />
 
-        <TextView
-            android:id="@+id/code"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBaseline="@+id/checkBox1"
-            android:layout_alignBottom="@+id/checkBox1"
-            android:layout_toRightOf="@+id/checkBox1"
-            android:text="F0: example function" />
-
-    </LinearLayout>
-
-</RelativeLayout>
+</LinearLayout>
