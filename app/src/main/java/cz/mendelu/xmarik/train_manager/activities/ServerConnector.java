@@ -85,7 +85,7 @@ public class ServerConnector extends AppCompatActivity {
                 .setView(dialogView)
                 .setTitle(message)
                 .setPositiveButton(R.string.dialog_ok, (dialog, which) -> {
-                    TCPClientApplication.getInstance().server.username = mName.getText().toString();
+                    TCPClientApplication.getInstance().server.username = mName.getText().toString().trim();
                     TCPClientApplication.getInstance().server.password = HashHelper.hashPasswd(mPasswd.getText().toString());
 
                     if (savebox.isChecked()) {
