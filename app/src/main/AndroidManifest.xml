@@ -26,7 +26,7 @@
 
         <activity
             android:name=".activities.TrainHandler"
-            android:launchMode="singleTask"
+            android:launchMode="singleInstance"
             android:label="@string/activity_train_handler_title"
             android:theme="@style/AppTheme.NoActionBar" />
 

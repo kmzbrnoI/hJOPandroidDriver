@@ -180,7 +180,7 @@ public class TrainHandler extends NavigationBase {
 
     private void fillHVs() {
         if (TrainDb.instance.trains.isEmpty()) {
-            this.finish();
+            startRequestActivity();
             return;
         }
 
@@ -222,7 +222,7 @@ public class TrainHandler extends NavigationBase {
 
     private void updateGUTtoHV() {
         if (train == null) {
-            this.finish();
+            startRequestActivity();
             return;
         }
 
@@ -419,6 +419,11 @@ public class TrainHandler extends NavigationBase {
                 })
                 .setNegativeButton(R.string.ta_dialog_ungroup_cancel, null)
                 .show();
+    }
+
+    private void startRequestActivity() {
+        startActivity(new Intent(this, TrainRequest.class));
+        this.finish();
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
