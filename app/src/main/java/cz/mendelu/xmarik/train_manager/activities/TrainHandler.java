@@ -62,7 +62,6 @@ public class TrainHandler extends NavigationBase {
     private SeekBar sb_speed;
     private SwitchCompat s_direction;
     private CheckBox chb_total;
-    private Button b_stop;
     private Button b_idle;
     private CheckBox chb_group;
     private ImageButton ib_status;
@@ -105,7 +104,6 @@ public class TrainHandler extends NavigationBase {
         sb_speed = findViewById(R.id.speedkBar1);
         s_direction = findViewById(R.id.handlerDirection1);
         b_idle = findViewById(R.id.startButton1);
-        b_stop = findViewById(R.id.stopButton1);
         chb_group = findViewById(R.id.goupManaged1);
         ib_status = findViewById(R.id.ib_status);
         ib_dcc = findViewById(R.id.ib_dcc);
@@ -480,7 +478,6 @@ public class TrainHandler extends NavigationBase {
     private void setEnabled(boolean enabled) {
         s_direction.setEnabled(enabled);
         sb_speed.setEnabled(enabled);
-        b_stop.setEnabled(enabled);
         b_idle.setEnabled(enabled);
     }
 
