@@ -150,9 +150,11 @@ public class TrainRequest extends NavigationBase {
             return;
         }
 
-        TCPClientApplication.getInstance().send("-;LOK;G;PLEASE;" +
-                ControlAreaDb.instance.areas.get(focused).id + ";" + messageForServer.getText().toString());
+        ControlArea area = ControlAreaDb.instance.areas.get(focused);
+        TCPClientApplication.getInstance().send("-;LOK;G;PLEASE;" + area.id + ";" +
+                messageForServer.getText().toString());
 
+        dialog.setTitle(area.name);
         dialogMessage.setText(R.string.tr_info_request_sent);
         dialog.show();
     }
