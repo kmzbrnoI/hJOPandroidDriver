@@ -1,7 +1,7 @@
 package cz.mendelu.xmarik.train_manager.models;
 
 import java.util.ArrayList;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.Objects;
 
 import cz.mendelu.xmarik.train_manager.helpers.ParseHelper;
 
@@ -9,9 +9,6 @@ import cz.mendelu.xmarik.train_manager.helpers.ParseHelper;
  * Class Server represents a single server. Server contains database of all trains.
  */
 public class Server {
-    public static AtomicInteger globalId = new AtomicInteger(0);
-    public static final int DEFAULT_PORT = 5823;
-
     public String name;
     public String host;
     public int port;
@@ -47,7 +44,7 @@ public class Server {
     }
 
     public String getTitle() {
-        return this.name + "\u00A0\u00A0" + this.host;
+        return this.name.isEmpty() ? this.host : this.name + "\u00A0\u00A0" + this.host;
     }
 
     public String getSaveDataString() {
@@ -64,7 +61,7 @@ public class Server {
 
         if (port != server.port) return false;
         if (!name.equals(server.name)) return false;
-        return host != null ? host.equals(server.host) : server.host == null;
+        return Objects.equals(host, server.host);
     }
 
     @Override
