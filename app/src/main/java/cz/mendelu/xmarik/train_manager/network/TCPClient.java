@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.ConnectException;
+import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
@@ -99,7 +100,14 @@ public class TCPClient {
 
         public void run() {
             try {
-                InetAddress serverAddr = InetAddress.getByName(serverIp);
+                InetAddress[] addresses = InetAddress.getAllByName(serverIp);
+                InetAddress serverAddr = null;
+                for (InetAddress addr: addresses) {
+                    if (addr instanceof Inet4Address) {
+                        serverAddr = addr;
+                        break;
+                    }
+                }
                 socket = new Socket(serverAddr, serverPort);
 
                 // disable Nagle's algorithm to make connection low-latency
