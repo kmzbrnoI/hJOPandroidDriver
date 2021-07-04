@@ -107,9 +107,8 @@ public class Train {
     }
 
     public String getTitle() {
-        String title = this.name;
+        String title = this.addr + " : " + this.name;
         if (!this.label.isEmpty()) title += " (" + this.label + ")";
-        title += " : " + this.addr;
         return title;
     }
 }
