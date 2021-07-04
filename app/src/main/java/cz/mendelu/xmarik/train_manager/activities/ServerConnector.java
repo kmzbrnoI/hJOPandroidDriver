@@ -203,7 +203,7 @@ public class ServerConnector extends AppCompatActivity {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventMainThread(TCPDisconnectEvent event) {
-        arrayList.add(getString(R.string.disconnected));
+        arrayList.add(getString(R.string.disconnected) + "\n(" + event.getError() + ")");
         progressBar.setVisibility(View.GONE);
         mAdapter.notifyDataSetChanged();
     }
