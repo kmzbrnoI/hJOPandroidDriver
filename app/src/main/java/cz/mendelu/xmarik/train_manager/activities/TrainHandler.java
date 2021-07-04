@@ -58,6 +58,7 @@ public class TrainHandler extends NavigationBase {
     private boolean confSpeedVolume;
     private boolean confAvailableFunctions;
     private Toolbar toolbar;
+    private FunctionCheckBoxAdapter functionAdapter;
 
 
     private SeekBar sb_speed;
@@ -115,6 +116,9 @@ public class TrainHandler extends NavigationBase {
         tv_expSignalBlock = findViewById(R.id.expSignalBlock);
         scom_expSignal = findViewById(R.id.scom_view);
         chb_total = findViewById(R.id.totalManaged);
+
+        functionAdapter = new FunctionCheckBoxAdapter(context, R.layout.lok_function);
+        lv_functions.setAdapter(functionAdapter);
 
         // select train
         int train_addr;
@@ -277,9 +281,8 @@ public class TrainHandler extends NavigationBase {
         } else {
             functions = new ArrayList<>(Arrays.asList(train.function));
         }
-        FunctionCheckBoxAdapter dataAdapter = new FunctionCheckBoxAdapter(context,
-                R.layout.lok_function, functions, true);
-        lv_functions.setAdapter(dataAdapter);
+        functionAdapter.clear();
+        functionAdapter.addAll(functions);
 
         this.updateStatus(false);
 

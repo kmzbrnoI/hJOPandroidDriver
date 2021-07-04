@@ -1,37 +1,30 @@
 package cz.mendelu.xmarik.train_manager.adapters;
 
 import android.content.Context;
-import androidx.annotation.NonNull;
 import android.content.ContextWrapper;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.TextView;
-import android.os.Handler;
 
-import java.util.ArrayList;
+import androidx.annotation.NonNull;
 
 import cz.mendelu.xmarik.train_manager.R;
-import cz.mendelu.xmarik.train_manager.models.TrainFunction;
 import cz.mendelu.xmarik.train_manager.activities.TrainHandler;
+import cz.mendelu.xmarik.train_manager.models.TrainFunction;
 
 /**
- * FunctionCheckBoxAdapter is a ListView` checkbox items with behavior connected to function
+ * FunctionCheckBoxAdapter is a ListView checkbox items with behavior connected to function
  * setting.
  */
 public class FunctionCheckBoxAdapter extends ArrayAdapter<TrainFunction> {
-    private LayoutInflater vi;
-    private ArrayList<TrainFunction> trainList;
-    private boolean m_enabled;
+    private final LayoutInflater vi;
 
-    public FunctionCheckBoxAdapter(Context context, int textViewResourceId,
-                                   ArrayList<TrainFunction> trainList, boolean enabled) {
-        super(context, textViewResourceId, trainList);
-        this.trainList = new ArrayList<>();
-        this.trainList.addAll(trainList);
-        this.m_enabled = enabled;
+    public FunctionCheckBoxAdapter(Context context, int textViewResourceId) {
+        super(context, textViewResourceId);
         vi = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
@@ -46,33 +39,25 @@ public class FunctionCheckBoxAdapter extends ArrayAdapter<TrainFunction> {
             holder.chb_func = convertView.findViewById(R.id.chb_func);
             convertView.setTag(holder);
 
-            holder.chb_func.setOnClickListener(new View.OnClickListener() {
-                public void onClick(View v) {
-                    chb_onClick((CheckBox)v);
+            holder.chb_func.setOnClickListener(v -> chb_onClick((CheckBox)v));
+
+            convertView.setOnClickListener(v -> {
+                CheckBox chb = v.findViewById(R.id.chb_func);
+                if (chb.isEnabled()) {
+                    chb.toggle();
+                    chb_onClick(chb);
                 }
             });
-
-            convertView.setOnClickListener(new View.OnClickListener() {
-                public void onClick(View v) {
-                    CheckBox chb = v.findViewById(R.id.chb_func);
-                    if (chb.isEnabled()) {
-                        chb.toggle();
-                        chb_onClick(chb);
-                    }
-                }
-            });
-
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
-        TrainFunction function = trainList.get(position);
+        TrainFunction function = getItem(position);
 
         holder.code.setText(function.name.equals("") ?
              "F" + function.num : "F" + function.num + ": " + function.name);
 
         holder.chb_func.setChecked(function.checked);
         holder.chb_func.setTag(function);
-        holder.chb_func.setEnabled(m_enabled);
 
         return convertView;
     }
@@ -86,13 +71,10 @@ public class FunctionCheckBoxAdapter extends ArrayAdapter<TrainFunction> {
         if (trainFunc.type == TrainFunction.TrainFunctionType.MOMENTARY && trainFunc.checked) {
             chb.setEnabled(false);
             Handler handler = new Handler();
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    c.setChecked(false);
-                    onFuncChanged(c, trainFunc.num);
-                    c.setEnabled(true);
-                }
+            handler.postDelayed(() -> {
+                c.setChecked(false);
+                onFuncChanged(c, trainFunc.num);
+                c.setEnabled(true);
             }, 750);
         }
     }
