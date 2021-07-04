@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -116,10 +117,13 @@ public class TrainHandler extends NavigationBase {
         chb_total = findViewById(R.id.totalManaged);
 
         // select train
-        int train_addr = getIntent().getIntExtra("train_addr", -1);
-        if (train_addr != -1) {
+        int train_addr;
+        if (savedInstanceState != null)
+            train_addr = savedInstanceState.getInt("train_addr", -1); // from saved state
+        else
+            train_addr = getIntent().getIntExtra("train_addr", -1); // from intent
+        if (train_addr != -1)
             train = TrainDb.instance.trains.get(train_addr);
-        }
 
         this.fillHVs();
 
@@ -174,6 +178,12 @@ public class TrainHandler extends NavigationBase {
             train = TrainDb.instance.trains.get(train_addr);
             this.fillHVs();
         }
+    }
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt("train_addr", train.addr);
     }
 
     private void fillHVs() {
