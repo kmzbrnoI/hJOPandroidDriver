@@ -439,6 +439,7 @@ public class TrainHandler extends NavigationBase {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventMainThread(LokChangeEvent event) {
+        super.onEventMainThread(event);
         if (train != null && event.getAddr() == train.addr)
             this.updateGUTtoHV();
     }

@@ -28,6 +28,7 @@ import cz.mendelu.xmarik.train_manager.BuildConfig;
 import cz.mendelu.xmarik.train_manager.R;
 import cz.mendelu.xmarik.train_manager.events.GlobalAuthEvent;
 import cz.mendelu.xmarik.train_manager.events.LokAddEvent;
+import cz.mendelu.xmarik.train_manager.events.LokChangeEvent;
 import cz.mendelu.xmarik.train_manager.events.LokRemoveEvent;
 import cz.mendelu.xmarik.train_manager.events.LokTotalChangeErrorEvent;
 import cz.mendelu.xmarik.train_manager.events.TCPDisconnectEvent;
@@ -53,25 +54,24 @@ public class NavigationBase extends AppCompatActivity
     MenuItem miTrainRequest;
     TextView tvUser;
     TextView tvServer;
+    boolean isDrawerFixed;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        isDrawerFixed = getResources().getBoolean(R.bool.isDrawerFixed);
+
         Toolbar toolbar = findViewById(R.id.toolbar);
 
         // Navigation Drawer open / close event
         drawer = findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle( this, drawer, toolbar,
-                R.string.navigation_drawer_open, R.string.navigation_drawer_close) {
-
-            public void onDrawerOpened(View drawerView) {
-                super.onDrawerOpened(drawerView);
-                updateTrainGroup();
-            }
-        };
-        drawer.addDrawerListener(toggle);
-        toggle.syncState();
+        if (!isDrawerFixed) {
+            ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar,
+                    R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+            drawer.addDrawerListener(toggle);
+            toggle.syncState();
+        }
 
         NavigationView nv = findViewById(R.id.nav_view);
         nv.setNavigationItemSelectedListener(this);
@@ -111,7 +111,9 @@ public class NavigationBase extends AppCompatActivity
         }
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
+        if (!isDrawerFixed) {
+            drawer.closeDrawer(GravityCompat.START);
+        }
         return true;
     }
 
@@ -154,6 +156,11 @@ public class NavigationBase extends AppCompatActivity
                     ).show();
         }
         updateServer();
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEventMainThread(LokChangeEvent event) {
+        this.updateTrainGroup();
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
