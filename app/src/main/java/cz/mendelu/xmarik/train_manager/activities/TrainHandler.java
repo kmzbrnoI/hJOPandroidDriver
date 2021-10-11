@@ -326,12 +326,12 @@ public class TrainHandler extends NavigationBase {
         int keyCode = event.getKeyCode();
         switch (keyCode) {
             case KeyEvent.KEYCODE_VOLUME_UP:
-                if (action == KeyEvent.ACTION_DOWN && sb_speed.getProgress() < sb_speed.getMax()) {
+                if (sb_speed.isEnabled() && action == KeyEvent.ACTION_DOWN && sb_speed.getProgress() < sb_speed.getMax()) {
                     sb_speed.setProgress(sb_speed.getProgress()+1);
                 }
                 return true;
             case KeyEvent.KEYCODE_VOLUME_DOWN:
-                if (action == KeyEvent.ACTION_DOWN && sb_speed.getProgress() > 0) {
+                if (sb_speed.isEnabled() && action == KeyEvent.ACTION_DOWN && sb_speed.getProgress() > 0) {
                     sb_speed.setProgress(sb_speed.getProgress()-1);
                 }
                 return true;
