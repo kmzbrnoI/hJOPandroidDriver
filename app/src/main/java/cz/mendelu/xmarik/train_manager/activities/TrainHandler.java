@@ -3,6 +3,7 @@ package cz.mendelu.xmarik.train_manager.activities;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 
@@ -12,6 +13,7 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.Toolbar;
+import androidx.lifecycle.Observer;
 import androidx.preference.PreferenceManager;
 
 import android.view.KeyEvent;
@@ -37,8 +39,10 @@ import java.util.Collections;
 
 import cz.kudlav.scomview.ScomView;
 import cz.mendelu.xmarik.train_manager.events.DccEvent;
+import cz.mendelu.xmarik.train_manager.events.TimeEvent;
 import cz.mendelu.xmarik.train_manager.events.TCPDisconnectEvent;
 import cz.mendelu.xmarik.train_manager.network.TCPClientApplication;
+import cz.mendelu.xmarik.train_manager.storage.TimeHolder;
 import cz.mendelu.xmarik.train_manager.storage.TrainDb;
 import cz.mendelu.xmarik.train_manager.models.TrainFunction;
 import cz.mendelu.xmarik.train_manager.adapters.FunctionCheckBoxAdapter;
@@ -72,6 +76,7 @@ public class TrainHandler extends NavigationBase {
     private TextView tv_kmhSpeed;
     private TextView tv_expSpeed;
     private TextView tv_expSignalBlock;
+    private TextView tv_time;
     private ScomView scom_expSignal;
     private ImageButton ib_release;
 
@@ -114,6 +119,7 @@ public class TrainHandler extends NavigationBase {
         tv_kmhSpeed = findViewById(R.id.kmh1);
         tv_expSpeed = findViewById(R.id.expSpeed);
         tv_expSignalBlock = findViewById(R.id.expSignalBlock);
+        tv_time = findViewById(R.id.tvTime);
         scom_expSignal = findViewById(R.id.scom_view);
         chb_total = findViewById(R.id.totalManaged);
 
@@ -130,6 +136,24 @@ public class TrainHandler extends NavigationBase {
             train = TrainDb.instance.trains.get(train_addr);
 
         this.fillHVs();
+
+        // Time observers
+        TimeHolder.instance.used.observe(this, used -> {
+            if (used) {
+                TimeHolder.instance.time.observe(this, time -> tv_time.setText(time));
+            } else {
+                TimeHolder.instance.time.removeObservers(this);
+                tv_time.setText("");
+            }
+        });
+        TimeHolder.instance.running.observe(this, running -> {
+            if (running) {
+                // color normal
+                tv_time.setTextColor(getResources().getColor(R.color.colorText));
+            } else {
+                tv_time.setTextColor(getResources().getColor(R.color.colorAccent));
+            }
+        });
 
         // GUI events:
         s_direction.setOnCheckedChangeListener((buttonView, checked) ->
@@ -481,12 +505,12 @@ public class TrainHandler extends NavigationBase {
 
         tv_kmhSpeed.setText(String.format("%s km/h", train.kmphSpeed));
 
-        this.updateStatus(!event.getParsed().get(4).toUpperCase().equals("OK"));
+        this.updateStatus(!event.getParsed().get(4).equalsIgnoreCase("OK"));
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventMainThread(DccEvent event) {
-        updateDccState(event.getParsed().get(2).toUpperCase().equals("GO"));
+        updateDccState(event.getParsed().get(2).equalsIgnoreCase("GO"));
     }
 
     private void setEnabled(boolean enabled) {

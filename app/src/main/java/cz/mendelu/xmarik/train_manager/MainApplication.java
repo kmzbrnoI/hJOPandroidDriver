@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatDelegate;
 import androidx.preference.PreferenceManager;
 
 import cz.mendelu.xmarik.train_manager.storage.ControlAreaDb;
+import cz.mendelu.xmarik.train_manager.storage.TimeHolder;
 import cz.mendelu.xmarik.train_manager.storage.ServerDb;
 import cz.mendelu.xmarik.train_manager.storage.TrainDb;
 
@@ -26,6 +27,9 @@ public class MainApplication extends Application {
 
         // create database of trains
         TrainDb.instance = new TrainDb();
+
+        // create model time holder
+        TimeHolder.instance = new TimeHolder();
     }
 
     /**

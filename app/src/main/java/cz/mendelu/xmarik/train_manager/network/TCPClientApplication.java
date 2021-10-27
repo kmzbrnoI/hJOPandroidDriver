@@ -13,6 +13,7 @@ import cz.mendelu.xmarik.train_manager.events.DccEvent;
 import cz.mendelu.xmarik.train_manager.events.GlobalAuthEvent;
 import cz.mendelu.xmarik.train_manager.events.HandShakeEvent;
 import cz.mendelu.xmarik.train_manager.events.LokEvent;
+import cz.mendelu.xmarik.train_manager.events.TimeEvent;
 import cz.mendelu.xmarik.train_manager.events.RequestEvent;
 import cz.mendelu.xmarik.train_manager.helpers.ParseHelper;
 import cz.mendelu.xmarik.train_manager.models.Server;
@@ -81,7 +82,10 @@ public class TCPClientApplication extends Application implements TCPClient.OnMes
             this.dccState = (parsed.get(2).equals("GO"));
             EventBus.getDefault().post(new DccEvent(parsed));
 
-        } else if ((parsed.get(1).equals("PING")) && (parsed.size() > 2) && (parsed.get(2).toUpperCase().equals("REQ-RESP"))) {
+        } else if ((parsed.get(1).equals("MOD-CAS") && (parsed.size() > 2))) {
+            EventBus.getDefault().post(new TimeEvent(parsed));
+
+        } else if ((parsed.get(1).equals("PING")) && (parsed.size() > 2) && (parsed.get(2).equalsIgnoreCase("REQ-RESP"))) {
             if (parsed.size() >= 4) {
                 this.send("-;PONG;"+parsed.get(3)+'\n');
             } else {
@@ -91,9 +95,9 @@ public class TCPClientApplication extends Application implements TCPClient.OnMes
         } else if (parsed.get(1).equals("LOK")) {
             if (parsed.size() < 3) return;
             if (parsed.get(2).equals("G")) {
-                if (parsed.get(3).toUpperCase().equals("AUTH"))
+                if (parsed.get(3).equalsIgnoreCase("AUTH"))
                     EventBus.getDefault().post(new GlobalAuthEvent(parsed));
-                else if (parsed.get(3).toUpperCase().equals("PLEASE-RESP"))
+                else if (parsed.get(3).equalsIgnoreCase("PLEASE-RESP"))
                     EventBus.getDefault().post(new RequestEvent(parsed));
             } else
                 EventBus.getDefault().post(new LokEvent(parsed));
