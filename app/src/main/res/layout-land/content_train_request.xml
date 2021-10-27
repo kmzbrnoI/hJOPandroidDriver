@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/content_train_handler"
+    android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingBottom="@dimen/activity_vertical_margin"
@@ -10,55 +11,46 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="cz.mendelu.xmarik.train_manager.activities.TrainRequest">
+    tools:context="cz.mendelu.xmarik.train_manager.activities.TrainRequest"
+    android:baselineAligned="false">
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
+    <ListView
+        android:layout_width="0dp"
+        android:layout_weight=".50"
         android:layout_height="match_parent"
-        android:weightSum="1">
+        android:id="@+id/nav_areas"
+        android:scrollbars="horizontal|vertical" />
 
-        <ListView
-            android:layout_width="0dp"
-            android:layout_weight=".50"
-            android:layout_height="match_parent"
-            android:id="@+id/nav_areas"
-            android:scrollbars="horizontal|vertical" />
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="0dp"
+        android:layout_weight=".50"
+        android:layout_height="wrap_content">
 
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="0dp"
-            android:layout_weight=".50"
-            android:layout_height="wrap_content">
+        <TextView
+            android:text="@string/tr_disp_message"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView11"/>
 
-            <TextView
-                android:text="@string/tr_disp_message"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/textView11"
-                android:layout_weight="1" />
+        <EditText
+            android:inputType="textMultiLine"
+            android:layout_height="139dp"
+            android:ems="10"
+            android:lines="5"
+            android:minLines="3"
+            android:gravity="top|left"
+            android:maxLines="6"
+            android:id="@+id/authMessage"
+            android:layout_width="fill_parent"
+            android:scrollbars="vertical" />
 
-            <EditText
-                android:inputType="textMultiLine"
-                android:layout_height="139dp"
-                android:ems="10"
-                android:lines="5"
-                android:minLines="3"
-                android:gravity="top|left"
-                android:maxLines="6"
-                android:id="@+id/authMessage"
-                android:layout_width="fill_parent"
-                android:scrollbars="vertical" />
-
-            <Button
-                android:text="@string/tr_send_request"
-                android:layout_width="match_parent"
-                android:layout_height="68dp"
-                android:id="@+id/b_request"
-                android:onClick="b_requestClick" />
-        </LinearLayout>
-
+        <Button
+            android:text="@string/tr_send_request"
+            android:layout_width="match_parent"
+            android:layout_height="68dp"
+            android:id="@+id/b_request"
+            android:onClick="b_requestClick" />
     </LinearLayout>
 
-</RelativeLayout>
+</LinearLayout>
