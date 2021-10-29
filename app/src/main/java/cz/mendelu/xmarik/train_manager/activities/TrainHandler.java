@@ -137,23 +137,9 @@ public class TrainHandler extends NavigationBase {
 
         this.fillHVs();
 
-        // Time observers
-        TimeHolder.instance.used.observe(this, used -> {
-            if (used) {
-                TimeHolder.instance.time.observe(this, time -> tv_time.setText(time));
-            } else {
-                TimeHolder.instance.time.removeObservers(this);
-                tv_time.setText("");
-            }
-        });
-        TimeHolder.instance.running.observe(this, running -> {
-            if (running) {
-                // color normal
-                tv_time.setTextColor(getResources().getColor(R.color.colorText));
-            } else {
-                tv_time.setTextColor(getResources().getColor(R.color.colorAccent));
-            }
-        });
+        // Setup Time and DCC state observers
+        observeTime();
+        observeDccState();
 
         // GUI events:
         s_direction.setOnCheckedChangeListener((buttonView, checked) ->
@@ -192,9 +178,6 @@ public class TrainHandler extends NavigationBase {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
         confSpeedVolume = preferences.getBoolean("SpeedVolume", false);
         confAvailableFunctions = preferences.getBoolean("OnlyAvailableFunctions", true);
-        // show DCC stop when DCC status is known and different from GO
-        Boolean dccState = TCPClientApplication.getInstance().dccState;
-        updateDccState(dccState == null || dccState);
     }
 
     @Override
@@ -313,19 +296,42 @@ public class TrainHandler extends NavigationBase {
         this.updating = false;
     }
 
-    private void updateDccState(boolean enabled) {
-        if (enabled) {
-            ib_dcc.clearAnimation();
-            ib_dcc.setAlpha(0.0f);
-        }
-        else {
-            Animation blink = new AlphaAnimation(0.0f, 1.0f);
-            blink.setDuration(250);
-            blink.setRepeatMode(Animation.REVERSE);
-            blink.setRepeatCount(Animation.INFINITE);
-            ib_dcc.setAlpha(1.0f);
-            ib_dcc.startAnimation(blink);
-        }
+    private void observeTime() {
+        TimeHolder.instance.used.observe(this, used -> {
+            if (used) {
+                TimeHolder.instance.time.observe(this, time -> tv_time.setText(time));
+            } else {
+                TimeHolder.instance.time.removeObservers(this);
+                tv_time.setText("");
+            }
+        });
+        TimeHolder.instance.running.observe(this, running -> {
+            if (running) {
+                // color normal
+                tv_time.setTextColor(getResources().getColor(R.color.colorText));
+            } else {
+                tv_time.setTextColor(getResources().getColor(R.color.colorAccent));
+            }
+        });
+    }
+
+    /**
+     * Show DCC stop when DCC status is known and different from GO
+     */
+    private void observeDccState() {
+        TCPClientApplication.getInstance().dccState.observe(this, enabled -> {
+            if (!enabled) {
+                Animation blink = new AlphaAnimation(0.0f, 1.0f);
+                blink.setDuration(250);
+                blink.setRepeatMode(Animation.REVERSE);
+                blink.setRepeatCount(Animation.INFINITE);
+                ib_dcc.setAlpha(1.0f);
+                ib_dcc.startAnimation(blink);
+            } else {
+                ib_dcc.clearAnimation();
+                ib_dcc.setAlpha(0.0f);
+            }
+        });
     }
 
     private void updateStatus(boolean error) {
@@ -506,11 +512,6 @@ public class TrainHandler extends NavigationBase {
         tv_kmhSpeed.setText(String.format("%s km/h", train.kmphSpeed));
 
         this.updateStatus(!event.getParsed().get(4).equalsIgnoreCase("OK"));
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onEventMainThread(DccEvent event) {
-        updateDccState(event.getParsed().get(2).equalsIgnoreCase("GO"));
     }
 
     private void setEnabled(boolean enabled) {
