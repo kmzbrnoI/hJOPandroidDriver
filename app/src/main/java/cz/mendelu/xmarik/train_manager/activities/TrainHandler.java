@@ -36,7 +36,6 @@ import java.util.Collections;
 import cz.kudlav.scomview.ScomView;
 import cz.mendelu.xmarik.train_manager.R;
 import cz.mendelu.xmarik.train_manager.adapters.FunctionCheckBoxAdapter;
-import cz.mendelu.xmarik.train_manager.events.DccEvent;
 import cz.mendelu.xmarik.train_manager.events.LokAddEvent;
 import cz.mendelu.xmarik.train_manager.events.LokChangeEvent;
 import cz.mendelu.xmarik.train_manager.events.LokRemoveEvent;

@@ -11,7 +11,6 @@ import java.net.ConnectException;
 import java.util.ArrayList;
 
 import cz.mendelu.xmarik.train_manager.events.AreasEvent;
-import cz.mendelu.xmarik.train_manager.events.DccEvent;
 import cz.mendelu.xmarik.train_manager.events.GlobalAuthEvent;
 import cz.mendelu.xmarik.train_manager.events.HandShakeEvent;
 import cz.mendelu.xmarik.train_manager.events.LokEvent;
@@ -82,7 +81,6 @@ public class TCPClientApplication extends Application implements TCPClient.OnMes
 
         } else if ((parsed.get(1).equals("DCC")) && (parsed.size() > 2)) {
             this.dccState.postValue(parsed.get(2).equals("GO"));
-            EventBus.getDefault().post(new DccEvent(parsed));
 
         } else if ((parsed.get(1).equals("MOD-CAS") && (parsed.size() > 2))) {
             EventBus.getDefault().post(new TimeEvent(parsed));

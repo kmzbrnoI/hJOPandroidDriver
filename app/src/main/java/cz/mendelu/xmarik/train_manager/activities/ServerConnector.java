@@ -147,7 +147,7 @@ public class ServerConnector extends AppCompatActivity {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventMainThread(GlobalAuthEvent event) {
-        if (event.getParsed().get(4).toUpperCase().equals("OK")) {
+        if (event.getParsed().get(4).equalsIgnoreCase("OK")) {
             arrayList.add(getString(R.string.sc_auth_ok));
             arrayList.add(getString(R.string.sc_getting_ors));
             TCPClientApplication.getInstance().send("-;OR-LIST");
