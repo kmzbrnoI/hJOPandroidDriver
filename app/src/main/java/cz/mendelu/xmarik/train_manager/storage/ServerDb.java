@@ -56,7 +56,7 @@ public class ServerDb {
         editor.remove("StoredServers");
         editor.clear();
         editor.putString("StoredServers", saveString.toString());
-        editor.commit();
+        editor.apply();
     }
 
     public void clearStoredServers() {

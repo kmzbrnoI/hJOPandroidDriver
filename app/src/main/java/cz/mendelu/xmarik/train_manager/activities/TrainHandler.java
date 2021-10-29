@@ -1,21 +1,9 @@
 package cz.mendelu.xmarik.train_manager.activities;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.widget.SwitchCompat;
-import androidx.core.view.GravityCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.widget.Toolbar;
-import androidx.lifecycle.Observer;
-import androidx.preference.PreferenceManager;
-
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
@@ -29,6 +17,14 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.widget.SwitchCompat;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.preference.PreferenceManager;
+
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -38,27 +34,25 @@ import java.util.Arrays;
 import java.util.Collections;
 
 import cz.kudlav.scomview.ScomView;
-import cz.mendelu.xmarik.train_manager.events.DccEvent;
-import cz.mendelu.xmarik.train_manager.events.TimeEvent;
-import cz.mendelu.xmarik.train_manager.events.TCPDisconnectEvent;
-import cz.mendelu.xmarik.train_manager.network.TCPClientApplication;
-import cz.mendelu.xmarik.train_manager.storage.TimeHolder;
-import cz.mendelu.xmarik.train_manager.storage.TrainDb;
-import cz.mendelu.xmarik.train_manager.models.TrainFunction;
-import cz.mendelu.xmarik.train_manager.adapters.FunctionCheckBoxAdapter;
 import cz.mendelu.xmarik.train_manager.R;
+import cz.mendelu.xmarik.train_manager.adapters.FunctionCheckBoxAdapter;
+import cz.mendelu.xmarik.train_manager.events.DccEvent;
 import cz.mendelu.xmarik.train_manager.events.LokAddEvent;
 import cz.mendelu.xmarik.train_manager.events.LokChangeEvent;
 import cz.mendelu.xmarik.train_manager.events.LokRemoveEvent;
 import cz.mendelu.xmarik.train_manager.events.LokRespEvent;
+import cz.mendelu.xmarik.train_manager.events.TCPDisconnectEvent;
 import cz.mendelu.xmarik.train_manager.models.Train;
+import cz.mendelu.xmarik.train_manager.models.TrainFunction;
+import cz.mendelu.xmarik.train_manager.network.TCPClientApplication;
+import cz.mendelu.xmarik.train_manager.storage.TimeHolder;
+import cz.mendelu.xmarik.train_manager.storage.TrainDb;
 
 
 public class TrainHandler extends NavigationBase {
     private Train train;
     private boolean updating;
     private boolean error;
-    private Context context;
     private boolean confSpeedVolume;
     private boolean confAvailableFunctions;
     private Toolbar toolbar;
@@ -106,7 +100,6 @@ public class TrainHandler extends NavigationBase {
         setSupportActionBar(toolbar);
 
         updating = false;
-        context = this;
 
         sb_speed = findViewById(R.id.speedkBar1);
         s_direction = findViewById(R.id.handlerDirection1);
@@ -123,7 +116,7 @@ public class TrainHandler extends NavigationBase {
         scom_expSignal = findViewById(R.id.scom_view);
         chb_total = findViewById(R.id.totalManaged);
 
-        functionAdapter = new FunctionCheckBoxAdapter(context, R.layout.lok_function);
+        functionAdapter = new FunctionCheckBoxAdapter(this, R.layout.lok_function);
         lv_functions.setAdapter(functionAdapter);
 
         // select train

@@ -15,8 +15,8 @@ import cz.mendelu.xmarik.train_manager.events.DccEvent;
 import cz.mendelu.xmarik.train_manager.events.GlobalAuthEvent;
 import cz.mendelu.xmarik.train_manager.events.HandShakeEvent;
 import cz.mendelu.xmarik.train_manager.events.LokEvent;
-import cz.mendelu.xmarik.train_manager.events.TimeEvent;
 import cz.mendelu.xmarik.train_manager.events.RequestEvent;
+import cz.mendelu.xmarik.train_manager.events.TimeEvent;
 import cz.mendelu.xmarik.train_manager.helpers.ParseHelper;
 import cz.mendelu.xmarik.train_manager.models.Server;
 

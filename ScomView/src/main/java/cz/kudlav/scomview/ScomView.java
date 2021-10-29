@@ -38,11 +38,8 @@ public class ScomView extends LinearLayout {
         slowBlink.setStartOffset(400);
 
         View root = findViewById(R.id.root);
-        root.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (!title.isEmpty()) Toast.makeText(context, title, Toast.LENGTH_SHORT).show();
-            }
+        root.setOnClickListener(view -> {
+            if (!title.isEmpty()) Toast.makeText(context, title, Toast.LENGTH_SHORT).show();
         });
     }
 

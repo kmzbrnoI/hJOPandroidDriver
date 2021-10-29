@@ -107,16 +107,16 @@ public class TrainRequest extends NavigationBase {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventMainThread(LokAddEvent event) {
         super.onEventMainThread(event);
-        Intent intent = (new Intent(this, TrainHandler.class));;
+        Intent intent = (new Intent(this, TrainHandler.class));
         intent.putExtra("train_addr", event.getAddr());
         startActivity(intent);
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventMainThread(RequestEvent event) {
-        if (event.getParsed().get(4).toUpperCase().equals("OK")) {
+        if (event.getParsed().get(4).equalsIgnoreCase("OK")) {
             dialogMessage.setText(R.string.tr_info_waiting_disp);
-        } else if (event.getParsed().get(4).toUpperCase().equals("ERR")) {
+        } else if (event.getParsed().get(4).equalsIgnoreCase("ERR")) {
             new AlertDialog.Builder(this)
                     .setMessage(event.getParsed().size() >= 6 ? event.getParsed().get(5) : getString(R.string.general_error))
                     .setCancelable(false)

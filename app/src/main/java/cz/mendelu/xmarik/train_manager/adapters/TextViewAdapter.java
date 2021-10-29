@@ -15,8 +15,8 @@ import cz.mendelu.xmarik.train_manager.R;
  * TextViewAdapter is a ListView with TextView items for ServerConnector
  */
 public class TextViewAdapter extends BaseAdapter {
-    private ArrayList<String> mListItems;
-    private LayoutInflater mLayoutInflater;
+    private final ArrayList<String> mListItems;
+    private final LayoutInflater mLayoutInflater;
 
     public TextViewAdapter(Context context, ArrayList<String> arrayList) {
         mListItems = arrayList;

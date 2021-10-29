@@ -121,7 +121,7 @@ public class UDPDiscover extends AsyncTask<String, Server, String> {
                     }
                 }
             }
-        } catch (Exception ex) {
+        } catch (Exception ignored) {
         } // for now eat exceptions
         return "";
     }

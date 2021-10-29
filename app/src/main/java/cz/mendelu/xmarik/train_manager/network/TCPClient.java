@@ -134,13 +134,13 @@ public class TCPClient {
     }
 
     public interface OnMessageReceivedListener {
-        public void onMessageReceived(String message);
+        void onMessageReceived(String message);
     }
 
     public class WriteThread extends Thread {
-        private Socket m_socket;
+        private final Socket m_socket;
         private final Object m_lock = new Object();
-        private ArrayList<byte[]> m_queue = new ArrayList<>();
+        private final ArrayList<byte[]> m_queue = new ArrayList<>();
 
         WriteThread(Socket s) {
             m_socket = s;
@@ -160,7 +160,7 @@ public class TCPClient {
                 while(!isInterrupted() && !m_socket.isClosed()) {
                     try {
                         m_lock.wait();
-                    } catch(InterruptedException ex) { }
+                    } catch(InterruptedException ignored) { }
 
                     for(byte[] data : m_queue) {
                         try {
@@ -185,8 +185,8 @@ public class TCPClient {
     }
 
     public class ReadThread extends Thread {
-        private Socket m_socket;
-        private OnMessageReceivedListener m_listener;
+        private final Socket m_socket;
+        private final OnMessageReceivedListener m_listener;
 
         ReadThread(Socket s, OnMessageReceivedListener listener) {
             m_socket = s;
@@ -234,8 +234,8 @@ public class TCPClient {
                         }
                     }
 
-                    for (int i = 0; i < total_len-last; i++)
-                        buffer[i] = buffer[i+last];
+                    if (total_len - last >= 0)
+                        System.arraycopy(buffer, last, buffer, 0, total_len - last);
                     total_len = total_len - last;
                 } catch(IOException e) {
                     disconnect(false, true);
