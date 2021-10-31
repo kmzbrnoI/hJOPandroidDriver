@@ -11,6 +11,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
 
@@ -71,12 +72,7 @@ public class TimeHolder {
                 msTime += Math.round((timeNow - timeLast) * (double) multiplier);
                 timeLast = timeNow;
 
-                long sTime = msTime / 1000;
-                long hh = (sTime / 3600) % 24;
-                long mm = (sTime % 3600) / 60;
-                long ss = sTime % 60;
-
-                String newTime = String.format(Locale.getDefault(), "%d:%02d:%02d", hh, mm, ss);
+                String newTime = timeFormat.format(new Date(msTime));
 
                 Boolean run = running.getValue();
                 if (run != null && run) {
