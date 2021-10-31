@@ -34,12 +34,9 @@ import cz.mendelu.xmarik.train_manager.events.RequestEvent;
 public class TrainRequest extends NavigationBase {
 
     ArrayAdapter<String> lAdapter;
-    Button sendButton;
     EditText messageForServer;
-    int focused;
     Dialog dialog;
     TextView dialogMessage;
-    View lastSelected;
 
     ListView areas_lv;
     ArrayList<String> areas_data;
@@ -61,21 +58,20 @@ public class TrainRequest extends NavigationBase {
                 .create();
 
         areas_lv = findViewById(R.id.nav_areas);
-        sendButton = findViewById(R.id.b_request);
         messageForServer = findViewById(R.id.authMessage);
-        focused = -1;
 
         areas_data = new ArrayList<>();
         lAdapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_list_item_1, android.R.id.text1, areas_data);
 
         areas_lv.setOnItemClickListener((parent, view, position, id) -> {
-            int c = ColorUtils.setAlphaComponent(getResources().getColor(R.color.colorPrimary), 0x44);
-            view.setBackgroundColor(c);
-            if (lastSelected != null && !lastSelected.equals(view))
-                lastSelected.setBackgroundColor(0); // transparent color
-            lastSelected = view;
-            focused = position;
+            ControlArea area = ControlAreaDb.instance.areas.get(position);
+            TCPClientApplication.getInstance().send("-;LOK;G;PLEASE;" + area.id + ";" +
+                    messageForServer.getText().toString());
+
+            dialog.setTitle(area.name);
+            dialogMessage.setText(R.string.tr_info_request_sent);
+            dialog.show();
         });
 
         messageForServer.setOnFocusChangeListener((view, b) -> {
@@ -86,12 +82,6 @@ public class TrainRequest extends NavigationBase {
     }
 
     void FillAreas() {
-        focused = -1;
-        if (lastSelected != null) {
-            lastSelected.setBackgroundColor(0); // transparent color
-            lastSelected = null;
-        }
-
         areas_data.clear();
 
         areas_lv.setEnabled(ControlAreaDb.instance.areas.size() > 0);
@@ -139,24 +129,6 @@ public class TrainRequest extends NavigationBase {
     public void onEventMainThread(TCPDisconnectEvent event) {
         dialog.dismiss();
         super.onEventMainThread(event);
-    }
-
-    public void b_requestClick(View v) {
-        if (areas_lv.getItemAtPosition(focused) == null) {
-            new AlertDialog.Builder(this)
-                    .setMessage(getString(R.string.tr_no_area_selected))
-                    .setCancelable(false)
-                    .setPositiveButton(R.string.dialog_ok, (dialog, which) -> {} ).show();
-            return;
-        }
-
-        ControlArea area = ControlAreaDb.instance.areas.get(focused);
-        TCPClientApplication.getInstance().send("-;LOK;G;PLEASE;" + area.id + ";" +
-                messageForServer.getText().toString());
-
-        dialog.setTitle(area.name);
-        dialogMessage.setText(R.string.tr_info_request_sent);
-        dialog.show();
     }
 
     private void cancelRequest() {

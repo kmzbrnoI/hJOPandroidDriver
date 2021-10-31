@@ -45,12 +45,6 @@
             android:layout_width="fill_parent"
             android:scrollbars="vertical" />
 
-        <Button
-            android:text="@string/tr_send_request"
-            android:layout_width="match_parent"
-            android:layout_height="68dp"
-            android:id="@+id/b_request"
-            android:onClick="b_requestClick" />
     </LinearLayout>
 
 </LinearLayout>
