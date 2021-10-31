@@ -312,7 +312,7 @@ public class TrainHandler extends NavigationBase {
      */
     private void observeDccState() {
         TCPClientApplication.getInstance().dccState.observe(this, enabled -> {
-            if (!enabled) {
+            if (enabled != null && !enabled) {
                 Animation blink = new AlphaAnimation(0.0f, 1.0f);
                 blink.setDuration(250);
                 blink.setRepeatMode(Animation.REVERSE);
@@ -421,7 +421,7 @@ public class TrainHandler extends NavigationBase {
         final CharSequence[] trainsTitle = new CharSequence[trains.size()];
         final boolean[] trainsChecked = new boolean[trains.size()];
         int i = 0;
-		for (Train train: trains) {
+        for (Train train: trains) {
             trainsTitle[i] = train.getTitle();
             trainsChecked[i] = train.multitrack;
             i++;
