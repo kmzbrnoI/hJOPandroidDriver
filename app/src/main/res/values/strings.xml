@@ -99,7 +99,7 @@
     <string name="sc_getting_ors">Getting stations...</string>
     <string name="sc_done">Successfully connected</string>
     <string name="sc_connection_ok">Communication established</string>
-    <string name="sc_auth_ok">Sucessfully authorized</string>
+    <string name="sc_auth_ok">Successfully authorized</string>
     <string name="sc_auth_err">Authorization problem!</string>
     <string name="sc_version_warning">Server uses other protocol version, application may misbehave!</string>
     <string name="sc_auth_wait">Waiting for login...</string>
