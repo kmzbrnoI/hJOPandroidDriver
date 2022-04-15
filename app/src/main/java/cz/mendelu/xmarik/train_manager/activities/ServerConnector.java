@@ -41,7 +41,7 @@ public class ServerConnector extends AppCompatActivity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        setContentView(R.layout.activity_server_connector);
+        setContentView(R.layout.dialog_server_connector);
         super.onCreate(savedInstanceState);
 
         arrayList = new ArrayList<>();

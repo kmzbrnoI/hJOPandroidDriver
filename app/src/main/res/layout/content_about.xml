@@ -23,7 +23,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/editText1"
-            android:textSize="20sp"
+            android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
             android:autoLink="web"
             android:text="@string/about" />
 
@@ -36,7 +36,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/editText2"
-            android:textSize="20sp"
+            android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
             android:autoLink="web"
             android:text="@string/contributors" />
 
@@ -59,7 +59,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/editText3"
-            android:textSize="20sp"
+            android:textAppearance="@style/TextAppearance.AppCompat.Title"
             android:autoLink="web"
             android:gravity="center"
             android:text="hJOP" />

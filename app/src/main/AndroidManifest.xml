@@ -38,7 +38,7 @@
         <activity android:name=".activities.ServerConnector"
             android:launchMode="singleInstance"
             android:noHistory="true"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/DialogTheme" />
 
         <activity android:name=".activities.ServerEdit"
             android:launchMode="singleInstance"

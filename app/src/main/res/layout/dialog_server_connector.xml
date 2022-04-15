@@ -1,16 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    >
-    <ListView android:id="@+id/list"
+    tools:context=".activities.ServerConnector">
+
+    <ListView
+        android:id="@+id/list"
         android:layout_width="fill_parent"
         android:layout_height="0dip"
         android:layout_weight="1"
-        android:transcriptMode="alwaysScroll"
         android:cacheColorHint="#00000000"
-        android:listSelector="@android:color/transparent"/>
+        android:listSelector="@android:color/transparent"
+        android:transcriptMode="alwaysScroll" />
 
     <LinearLayout android:id="@+id/footer"
         android:layout_width="fill_parent"
@@ -21,15 +24,16 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="120dp">
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/activity_horizontal_margin">
 
             <ProgressBar
+                android:id="@+id/serverLoadBar"
                 style="?android:attr/progressBarStyleLarge"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
-                android:layout_centerHorizontal="true"
-                android:id="@+id/serverLoadBar" />
+                android:layout_centerHorizontal="true" />
         </RelativeLayout>
 
     </LinearLayout>
