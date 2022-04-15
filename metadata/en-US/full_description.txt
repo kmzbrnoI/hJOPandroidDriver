@@ -1,0 +1,3 @@
+hJOP Driver is a simple application, which allows user to become an engine driver and control one or more engines on the model railroad. It fully cooperates with <a href="http://hjop.kmz-brno.cz">hJOP</a>. Importantly, hJOP is required for this application to work.
+
+Application connects directly to the main hJOPserver via WiFi and requests engines from railroad dispatchers.

@@ -1,0 +1,3 @@
+hJOP Driver je jednoduchá aplikace, která umožňuje připojení k <a href="http://hjop.kmz-brno.cz/">hJOPserveru</a> a řízení jízdy vlaků na kolejišti ve spolupráci s dispečery.
+
+Aplikace se připojuje přímo k centrálnímu hJOPserveru, skrze který je možno žádat dispečery stanic o řízení hnacích vozidel.
