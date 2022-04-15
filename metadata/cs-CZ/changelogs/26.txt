@@ -1,0 +1,1 @@
+Připojování k serveru se zobrazí v překryvném dialogu, zlepšen vzhled stránky O aplikaci.

@@ -1,0 +1,1 @@
+Display server connector in dialog, improve style of About screen.
