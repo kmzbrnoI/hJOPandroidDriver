@@ -2,25 +2,75 @@
 <!-- Created with Inkscape (http://www.inkscape.org/) -->
 
 <svg
-   xmlns:dc="http://purl.org/dc/elements/1.1/"
-   xmlns:cc="http://creativecommons.org/ns#"
-   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-   xmlns:svg="http://www.w3.org/2000/svg"
-   xmlns="http://www.w3.org/2000/svg"
-   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
-   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    width="200mm"
    height="200mm"
    viewBox="0 0 708.66142 708.66141"
    id="svg2"
    version="1.1"
-   inkscape:version="0.91 r13725"
+   inkscape:version="1.2.1 (9c6d41e410, 2022-07-14)"
    sodipodi:docname="launcher.svg"
    inkscape:export-filename="C:\tmp\icon.png"
    inkscape:export-xdpi="65.019997"
-   inkscape:export-ydpi="65.019997">
+   inkscape:export-ydpi="65.019997"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:dc="http://purl.org/dc/elements/1.1/">
   <defs
-     id="defs4" />
+     id="defs4">
+    <inkscape:path-effect
+       effect="powerclip"
+       id="path-effect197"
+       is_visible="true"
+       lpeversion="1"
+       inverse="true"
+       flatten="false"
+       hide_clip="false"
+       message="Use fill-rule evenodd on &lt;b&gt;fill and stroke&lt;/b&gt; dialog if no flatten result after convert clip to paths." />
+    <clipPath
+       clipPathUnits="userSpaceOnUse"
+       id="clipPath185">
+      <g
+         id="g195"
+         style="display:none">
+        <rect
+           style="fill:#ffffff"
+           height="100"
+           rx="30"
+           width="200"
+           x="-317.14285"
+           y="320.93362"
+           id="rect187" />
+        <rect
+           style="fill:#ffffff"
+           height="40"
+           rx="10"
+           width="80"
+           x="-257.14285"
+           y="270.93362"
+           id="rect189" />
+        <circle
+           style="fill:#ffffff"
+           cx="-287.14285"
+           cy="535.93365"
+           r="25"
+           id="circle191" />
+        <circle
+           style="fill:#ffffff"
+           cx="-147.14285"
+           cy="535.93365"
+           r="25"
+           id="circle193" />
+      </g>
+      <path
+         id="lpe_path-effect197"
+         class="powerclip"
+         d="m -357.14285,255.93362 h 279.999997 v 340 H -357.14285 Z m 70,65 c -16.62,0 -30,13.38 -30,30 v 40 c 0,16.62 13.38,30 30,30 h 140 c 16.62,0 30,-13.38 30,-30 v -40 c 0,-16.62 -13.38,-30 -30,-30 z m 40,-50 c -5.54,0 -10,4.46 -10,10 v 20 c 0,5.54 4.46,10 10,10 h 60 c 5.54,0 10,-4.46 10,-10 v -20 c 0,-5.54 -4.46,-10 -10,-10 z m -15,265.00003 a 25,25 0 0 0 -25,-25 25,25 0 0 0 -25,25 25,25 0 0 0 25,25 25,25 0 0 0 25,-25 z m 140,0 a 25,25 0 0 0 -25,-25 25,25 0 0 0 -25,25 25,25 0 0 0 25,25 25,25 0 0 0 25,-25 z" />
+    </clipPath>
+  </defs>
   <sodipodi:namedview
      id="base"
      pagecolor="#ffffff"
@@ -29,16 +79,19 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="0.7"
-     inkscape:cx="346.36823"
-     inkscape:cy="407.34168"
+     inkscape:cx="345.71429"
+     inkscape:cy="407.85714"
      inkscape:document-units="px"
-     inkscape:current-layer="layer1"
+     inkscape:current-layer="g4156"
      showgrid="false"
-     inkscape:window-width="1920"
-     inkscape:window-height="1138"
-     inkscape:window-x="-8"
-     inkscape:window-y="-8"
-     inkscape:window-maximized="1" />
+     inkscape:window-width="2560"
+     inkscape:window-height="1373"
+     inkscape:window-x="-9"
+     inkscape:window-y="-9"
+     inkscape:window-maximized="1"
+     inkscape:showpageshadow="0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1" />
   <metadata
      id="metadata7">
     <rdf:RDF>
@@ -47,7 +100,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -69,23 +122,10 @@
            width="270"
            x="-352.14285"
            y="260.93362"
-           id="rect4" />
-        <rect
-           style="fill:#ffffff"
-           height="100"
-           rx="30"
-           width="200"
-           x="-317.14285"
-           y="320.93362"
-           id="rect6" />
-        <rect
-           style="fill:#ffffff"
-           height="40"
-           rx="10"
-           width="80"
-           x="-257.14285"
-           y="270.93362"
-           id="rect8" />
+           id="rect4"
+           clip-path="url(#clipPath185)"
+           inkscape:path-effect="#path-effect197"
+           d="m -287.14285,260.93362 h 140 c 36.01,0 64.999997,28.99 64.999997,65 v 200 c 0,36.01 -28.989997,65 -64.999997,65 h -140 c -36.01,0 -65,-28.99 -65,-65 v -200 c 0,-36.01 28.99,-65 65,-65 z" />
         <circle
            style="fill:#000000"
            cx="-237.14285"
@@ -98,18 +138,6 @@
            cy="240.93364"
            r="15"
            id="circle12" />
-        <circle
-           style="fill:#ffffff"
-           cx="-287.14285"
-           cy="535.93365"
-           r="25"
-           id="circle14" />
-        <circle
-           style="fill:#ffffff"
-           cx="-147.14285"
-           cy="535.93365"
-           r="25"
-           id="circle16" />
         <polygon
            transform="translate(-372.14286,220.93363)"
            style="fill:#000000"
