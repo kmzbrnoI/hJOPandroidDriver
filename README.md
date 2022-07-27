@@ -1,7 +1,5 @@
 # Android Driver for hJOP
 
-<a href='https://play.google.com/store/apps/details?id=cz.mendelu.xmarik.train_manager&pcampaignid=MKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png' height="80px"/></a>
-
 hJOPandroidDriver is a simple application, which allows user to become an
 engine driver and control one or more engines on the model railroad. It fully
 cooperates with [hJOP](http://hjop.kmz-brno.cz) (in Czech). Importantly,
@@ -9,6 +7,13 @@ hJOP is required for this application to work.
 
 Application connects directly to the main hJOPserver via WiFi and requests
 engines from railroad dispatchers.
+
+[<img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png"
+     alt="Get it on F-Droid"
+     height="80">](https://f-droid.org/packages/cz.mendelu.xmarik.train_manager/)
+[<img src="https://play.google.com/intl/en_us/badges/images/generic/en-play-badge.png"
+     alt="Get it on Google Play"
+     height="80">](https://play.google.com/store/apps/details?id=cz.mendelu.xmarik.train_manager)
 
 ## Main Features
 
