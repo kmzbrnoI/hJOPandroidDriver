@@ -2,11 +2,12 @@ apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 
 android {
-    compileSdkVersion 31
+    namespace 'cz.kudlav.scomview'
+    compileSdk 34
 
     defaultConfig {
         minSdkVersion 19
-        targetSdkVersion 31
+        targetSdkVersion 34
     }
 }
 
