@@ -100,18 +100,8 @@ public class TCPClient {
 
         public void run() {
             try {
-                InetAddress[] addresses = InetAddress.getAllByName(serverIp);
-                InetAddress serverAddr = null;
-                for (InetAddress addr: addresses) {
-                    if (addr instanceof Inet4Address) {
-                        serverAddr = addr;
-                        break;
-                    }
-                }
-                socket = new Socket(serverAddr, serverPort);
-
-                // disable Nagle's algorithm to make connection low-latency
-                socket.setTcpNoDelay(true);
+                m_socket = new Socket(serverIp, serverPort);
+                m_socket.setTcpNoDelay(true); // disable Nagle's algorithm to make connection low-latency
             } catch (Exception e) {
                 Log.e("TCP", "Cannot connect to socket", e);
                 EventBus.getDefault().post(new TCPDisconnectEvent("Cannot connect to socket"));
