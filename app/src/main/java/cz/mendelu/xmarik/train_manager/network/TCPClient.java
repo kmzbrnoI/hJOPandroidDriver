@@ -104,7 +104,7 @@ public class TCPClient {
                 m_socket.setTcpNoDelay(true); // disable Nagle's algorithm to make connection low-latency
             } catch (Exception e) {
                 Log.e("TCP", "Cannot connect to socket", e);
-                EventBus.getDefault().post(new TCPDisconnectEvent("Cannot connect to socket"));
+                EventBus.getDefault().post(new TCPDisconnectEvent(e.getMessage()));
                 return;
             }
 
