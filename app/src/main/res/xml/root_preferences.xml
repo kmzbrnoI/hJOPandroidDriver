@@ -17,6 +17,14 @@
 
 <androidx.preference.PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <ListPreference
+        app:key="theme"
+        app:title="@string/theme"
+        app:defaultValue="MODE_NIGHT_FOLLOW_SYSTEM"
+        app:entries="@array/theme_entries"
+        app:entryValues="@array/theme_values"
+        app:useSimpleSummaryProvider="true" />
+
     <SwitchPreference
         app:key="SpeedVolume"
         app:title="@string/set_speed_volume"
@@ -26,14 +34,6 @@
         app:key="OnlyAvailableFunctions"
         app:title="@string/only_available_functions"
         app:defaultValue="true"
-        app:useSimpleSummaryProvider="true" />
-
-    <ListPreference
-        app:key="theme"
-        app:title="@string/theme"
-        app:defaultValue="MODE_NIGHT_FOLLOW_SYSTEM"
-        app:entries="@array/theme_entries"
-        app:entryValues="@array/theme_values"
         app:useSimpleSummaryProvider="true" />
 
 </androidx.preference.PreferenceScreen>
