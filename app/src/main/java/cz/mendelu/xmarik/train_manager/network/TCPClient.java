@@ -26,10 +26,10 @@ public class TCPClient {
     public String serverIp;
     public int serverPort;
 
-    private Socket socket = null;
+    private Socket m_socket = null;
 
-    WriteThread wt = null;
-    ReadThread rt = null;
+    private WriteThread m_wt = null;
+    private ReadThread m_rt = null;
 
     public TCPClient(String ip, int port) {
         this.serverIp = ip;
@@ -37,10 +37,10 @@ public class TCPClient {
     }
 
     public void send(String message) throws ConnectException {
-        if (socket != null && !socket.isConnected() || wt == null || !wt.isAlive())
+        if (m_socket != null && !m_socket.isConnected() || m_wt == null || !m_wt.isAlive())
             throw new ConnectException("Not connected!");
 
-        wt.send((message+'\n').getBytes(StandardCharsets.UTF_8));
+        m_wt.send((message+'\n').getBytes(StandardCharsets.UTF_8));
     }
 
     public void disconnect() {
@@ -48,23 +48,23 @@ public class TCPClient {
     }
 
     public void disconnect(boolean wait_read, boolean wait_write) {
-        if (socket != null) {
+        if (m_socket != null) {
             try {
-                socket.close();
+                m_socket.close();
 
                 if (wait_write) {
-                    wt.interrupt();
+                    m_wt.interrupt();
                     try {
-                        wt.join();
+                        m_wt.join();
                     } catch(InterruptedException e) {
                         e.printStackTrace();
                     }
                 }
 
                 if (wait_read) {
-                    rt.interrupt();
+                    m_rt.interrupt();
                     try {
-                        rt.join();
+                        m_rt.join();
                     } catch(InterruptedException e) {
                         e.printStackTrace();
                     }
@@ -73,16 +73,16 @@ public class TCPClient {
             } catch (IOException e) {
                 e.printStackTrace();
             } finally {
-                socket = null;
+                m_socket = null;
             }
         }
         EventBus.getDefault().post(new TCPDisconnectEvent("Disconnect"));
     }
 
-    public boolean connected() { return socket != null; }
+    public boolean connected() { return m_socket != null; }
 
     public void listen(OnMessageReceivedListener listener) {
-        if (socket != null) return;
+        if (m_socket != null) return;
         SocketThread st = new SocketThread(serverIp, serverPort, listener);
         st.start();
     }
@@ -118,16 +118,16 @@ public class TCPClient {
                 return;
             }
 
-            if (socket == null) {
+            if (m_socket == null) {
                 Log.e("TCP", "Socket not initialized");
                 EventBus.getDefault().post(new TCPDisconnectEvent("Socket not initialized!"));
                 return;
             }
 
-            wt = new WriteThread(socket);
-            wt.start();
-            rt = new ReadThread(socket, m_listener);
-            rt.start();
+            m_wt = new WriteThread(m_socket);
+            m_wt.start();
+            m_rt = new ReadThread(m_socket, m_listener);
+            m_rt.start();
 
             EventBus.getDefault().post(new ConnectionEstablishedEvent());
         }
