@@ -34,13 +34,10 @@
             android:id="@+id/textView11"/>
 
         <EditText
-            android:inputType="textMultiLine"
+            android:inputType="text"
             android:layout_height="139dp"
             android:ems="10"
-            android:lines="5"
-            android:minLines="3"
             android:gravity="top|left"
-            android:maxLines="6"
             android:id="@+id/authMessage"
             android:layout_width="fill_parent"
             android:scrollbars="vertical" />
