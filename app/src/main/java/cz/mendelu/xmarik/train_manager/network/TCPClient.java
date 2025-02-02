@@ -108,12 +108,6 @@ public class TCPClient {
                 return;
             }
 
-            if (m_socket == null) {
-                Log.e("TCP", "Socket not initialized");
-                EventBus.getDefault().post(new TCPDisconnectEvent("Socket not initialized!"));
-                return;
-            }
-
             m_wt = new WriteThread(m_socket);
             m_wt.start();
             m_rt = new ReadThread(m_socket, m_listener);
