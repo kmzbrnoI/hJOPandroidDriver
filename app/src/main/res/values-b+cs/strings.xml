@@ -106,6 +106,7 @@
 
     <string name="set_speed_volume">Použít tlačítka nastavení hlasitosti k nastavování rychlosti</string>
     <string name="only_available_functions">Zobrazovat jen dostupné funkce</string>
+    <string name="remember_login_default">Ve výchozím stavu ukládat loginy</string>
     <string name="theme">Motiv</string>
 
     <string name="about">hJOP Driver umožňuje řízení jízdy hnacích vozidel ve spolupráci se softwarovým balíkem hJOP.\nhttps://hjop.kmz-brno.cz/</string>

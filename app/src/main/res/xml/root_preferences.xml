@@ -36,4 +36,10 @@
         app:defaultValue="true"
         app:useSimpleSummaryProvider="true" />
 
+    <SwitchPreference
+        app:key="RememberPasswordDefault"
+        app:title="@string/remember_login_default"
+        app:defaultValue="true"
+        app:useSimpleSummaryProvider="true" />
+
 </androidx.preference.PreferenceScreen>

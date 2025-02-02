@@ -1,6 +1,7 @@
 package cz.mendelu.xmarik.train_manager.activities;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -12,6 +13,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.preference.PreferenceManager;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -79,7 +81,10 @@ public class ServerConnector extends AppCompatActivity {
         final EditText mPasswd = dialogView.findViewById(R.id.dialogPasswd);
         final CheckBox savebox = dialogView.findViewById(R.id.dialogSaveData);
 
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+
         mName.setText(TCPClientApplication.getInstance().server.username);
+        savebox.setChecked(preferences.getBoolean("RememberPasswordDefault", true));
 
         new AlertDialog.Builder(this)
                 .setView(dialogView)
