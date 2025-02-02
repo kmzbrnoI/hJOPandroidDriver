@@ -54,7 +54,6 @@ public class TrainHandler extends NavigationBase {
     private boolean error;
     private boolean confSpeedVolume;
     private boolean confAvailableFunctions;
-    private boolean rememberPasswordDefault;
     private Toolbar toolbar;
     private FunctionCheckBoxAdapter functionAdapter;
 
@@ -171,7 +170,6 @@ public class TrainHandler extends NavigationBase {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
         confSpeedVolume = preferences.getBoolean("SpeedVolume", false);
         confAvailableFunctions = preferences.getBoolean("OnlyAvailableFunctions", true);
-        rememberPasswordDefault = preferences.getBoolean("RememberPasswordDefault", true);
     }
 
     @Override
