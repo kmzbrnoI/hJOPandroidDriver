@@ -2,13 +2,13 @@ apply plugin: 'com.android.application'
 
 android {
     namespace 'cz.mendelu.xmarik.train_manager'
-    compileSdk 34
+    compileSdk 35
     defaultConfig {
         applicationId "cz.mendelu.xmarik.train_manager"
-        minSdkVersion 19
-        versionCode 28
-        versionName "1.18"
-        targetSdkVersion 34
+        minSdkVersion 21
+        versionCode 29
+        versionName "1.19"
+        targetSdkVersion 35
     }
     buildTypes {
         release {
@@ -17,15 +17,18 @@ android {
         }
     }
     compileOptions {
-        targetCompatibility JavaVersion.VERSION_17
-        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_21
+        sourceCompatibility JavaVersion.VERSION_21
+    }
+    buildFeatures {
+        buildConfig true
     }
 }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation 'androidx.appcompat:appcompat:1.6.1'
-    implementation 'com.google.android.material:material:1.10.0'
+    implementation 'androidx.appcompat:appcompat:1.7.0'
+    implementation 'com.google.android.material:material:1.12.0'
     implementation 'androidx.preference:preference:1.2.1'
     implementation 'org.greenrobot:eventbus:3.3.1'
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
