@@ -86,8 +86,6 @@
 
     <string name="save">Save</string>
     <string name="cancel">Cancel</string>
-    <string name="disconnected">Disconnected from server!</string>
-    <string name="connect_error">Error while connecting to the server</string>
     <string name="general_error">General error!</string>
     <string name="yes">yes</string>
     <string name="no">no</string>
@@ -104,6 +102,8 @@
     <string name="sc_auth_err">Authorization problem!</string>
     <string name="sc_version_warning">Server uses other protocol version, application may misbehave!</string>
     <string name="sc_auth_wait">Waiting for login...</string>
+    <string name="sc_disconnected">Disconnected from server!</string>
+    <string name="sc_connect_error">Error while connecting to the server</string>
 
     <string name="set_speed_volume">Use volume buttons to control speed</string>
     <string name="only_available_functions">Show only available functions</string>

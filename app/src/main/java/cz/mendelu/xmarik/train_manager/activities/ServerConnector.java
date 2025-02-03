@@ -24,7 +24,6 @@ import java.util.Arrays;
 
 import cz.mendelu.xmarik.train_manager.events.AreasParsedEvent;
 import cz.mendelu.xmarik.train_manager.events.TCPConnectingErrorEvent;
-import cz.mendelu.xmarik.train_manager.events.TCPDisconnectedEvent;
 import cz.mendelu.xmarik.train_manager.helpers.HashHelper;
 import cz.mendelu.xmarik.train_manager.adapters.TextViewAdapter;
 import cz.mendelu.xmarik.train_manager.R;
@@ -37,7 +36,7 @@ import cz.mendelu.xmarik.train_manager.events.HandShakeEvent;
 
 public class ServerConnector extends AppCompatActivity {
     private ArrayList<String> messages;
-    private TextViewAdapter mAdapter;
+    private TextViewAdapter messagesAdapter;
     private ProgressBar progressBar;
 
     public static final String[] serverSupportedVersions = {"1.0", "1.1"};
@@ -50,8 +49,8 @@ public class ServerConnector extends AppCompatActivity {
         messages = new ArrayList<>();
         progressBar = findViewById(R.id.serverLoadBar);
         ListView mList = findViewById(R.id.list);
-        mAdapter = new TextViewAdapter(this, messages);
-        mList.setAdapter(mAdapter);
+        messagesAdapter = new TextViewAdapter(this, messages);
+        mList.setAdapter(messagesAdapter);
     }
 
     @Override
@@ -106,7 +105,7 @@ public class ServerConnector extends AppCompatActivity {
                             TCPClientApplication.getInstance().server.password);
 
                     messages.add(getString(R.string.sc_authorizing));
-                    mAdapter.notifyDataSetChanged();
+                    messagesAdapter.notifyDataSetChanged();
                     progressBar.setVisibility(View.VISIBLE);
                 })
                 .show();
@@ -115,7 +114,7 @@ public class ServerConnector extends AppCompatActivity {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventMainThread(AreasParsedEvent event) {
         messages.add(getString(R.string.sc_done));
-        mAdapter.notifyDataSetChanged();
+        messagesAdapter.notifyDataSetChanged();
 
         Toast.makeText(getApplicationContext(),
                 R.string.conn_connected, Toast.LENGTH_LONG)
@@ -134,7 +133,7 @@ public class ServerConnector extends AppCompatActivity {
         else
             messages.add(getString(R.string.sc_connection_ok));
 
-        mAdapter.notifyDataSetChanged();
+        messagesAdapter.notifyDataSetChanged();
 
         if (TCPClientApplication.getInstance().server.username.isEmpty() ||
                 TCPClientApplication.getInstance().server.password.isEmpty()) {
@@ -146,7 +145,7 @@ public class ServerConnector extends AppCompatActivity {
             TCPClientApplication.getInstance().send("-;LOK;G;AUTH;{" +
                     TCPClientApplication.getInstance().server.username + "};" +
                     TCPClientApplication.getInstance().server.password);
-            mAdapter.notifyDataSetChanged();
+            messagesAdapter.notifyDataSetChanged();
         }
     }
 
@@ -166,35 +165,34 @@ public class ServerConnector extends AppCompatActivity {
             else
                 editLogin(getString(R.string.sc_auth_err));
         }
-        mAdapter.notifyDataSetChanged();
+        messagesAdapter.notifyDataSetChanged();
     }
 
     private void start() {
         final Bundle extras = getIntent().getExtras();
 
-        if (extras != null) {
-            if (TCPClientApplication.getInstance().connected())
-                TCPClientApplication.getInstance().disconnect("Disconnect before new connect");
-
-            String type = extras.getString("serverType");
-            int id = extras.getInt("serverId");
-            Server server = (type.equals("stored")) ? ServerDb.instance.stored.get(id) : ServerDb.instance.found.get(id);
-
-            messages.clear();
-            messages.add(getString(R.string.sc_connecting));
-            progressBar.setVisibility(View.VISIBLE);
-            mAdapter.notifyDataSetChanged();
-
-            try {
-                TCPClientApplication.getInstance().connect(server);
-            } catch (Exception e) {
-                Log.e("TCP", "Connecting", e);
-                messages.add(e.getMessage());
-                progressBar.setVisibility(View.GONE);
-                mAdapter.notifyDataSetChanged();
-            }
-        } else {
+        if (extras == null) {
             finish();
+            return;
+        }
+
+        if (TCPClientApplication.getInstance().connected())
+            TCPClientApplication.getInstance().disconnect("Disconnect before new connect");
+
+        String type = extras.getString("serverType");
+        int id = extras.getInt("serverId");
+        Server server = (type.equals("stored")) ? ServerDb.instance.stored.get(id) : ServerDb.instance.found.get(id);
+
+        messages.clear();
+        messages.add(getString(R.string.sc_connecting));
+        progressBar.setVisibility(View.VISIBLE);
+        messagesAdapter.notifyDataSetChanged();
+
+        try {
+            TCPClientApplication.getInstance().connect(server);
+        } catch (Exception e) {
+            Log.e("TCP", "Connecting", e);
+            addConnectError(e.getMessage());
         }
     }
 
@@ -206,8 +204,12 @@ public class ServerConnector extends AppCompatActivity {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventMainThread(TCPConnectingErrorEvent event) {
-        messages.add(getString(R.string.connect_error) + ":\n" + event.getError());
+        this.addConnectError(event.getError());
+    }
+
+    public void addConnectError(String error) {
         progressBar.setVisibility(View.GONE);
-        mAdapter.notifyDataSetChanged();
+        messages.add(getString(R.string.sc_connect_error) + ":\n" + error);
+        messagesAdapter.notifyDataSetChanged();
     }
 }

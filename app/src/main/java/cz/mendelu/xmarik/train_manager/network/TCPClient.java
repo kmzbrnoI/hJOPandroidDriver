@@ -38,14 +38,14 @@ public class TCPClient {
     }
 
     public void connect(String host, int port) {
+        if (this.connecting())
+            throw new RuntimeException("Connecting is in progress, wait for it to finish!");
         if (this.connected())
-            this.disconnect("Disconnect before new reconnect");
+            throw new RuntimeException("Already connected to server!");
 
         this.serverHost = host;
         this.serverPort = port;
 
-        if (m_ct != null && m_ct.isAlive())
-            throw new AssertionError("TCPClient.connect: m_ct is alive!");
         m_ct = new ConnectThread(); // thread must be recreated once it has finished
         m_ct.start();
     }
@@ -79,8 +79,6 @@ public class TCPClient {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-
-        // TODO: wait for m_ct?
     }
 
     public boolean connected() {
@@ -88,7 +86,7 @@ public class TCPClient {
     }
 
     public boolean connecting() {
-        return m_ct.isAlive();
+        return (m_ct != null) && (m_ct.isAlive());
     }
 
     // ConnectThread manages connecting to the server.

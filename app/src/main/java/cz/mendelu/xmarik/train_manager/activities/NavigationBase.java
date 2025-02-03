@@ -137,7 +137,7 @@ public class NavigationBase extends AppCompatActivity
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventMainThread(TCPDisconnectedEvent event) {
         new AlertDialog.Builder(this)
-                .setMessage(getString(R.string.disconnected) + "\n" + event.getError())
+                .setMessage(getString(R.string.sc_disconnected) + "\n" + event.getError())
                 .setCancelable(false)
                 .setPositiveButton(R.string.dialog_ok, (dialog, which) -> {} )
                 .show();
