@@ -104,8 +104,7 @@ public class ServerConnector extends AppCompatActivity {
                             TCPClientApplication.getInstance().server.username + "};" +
                             TCPClientApplication.getInstance().server.password);
 
-                    messages.add(getString(R.string.sc_authorizing));
-                    messagesAdapter.notifyDataSetChanged();
+                    this.addMessage(getString(R.string.sc_authorizing));
                     progressBar.setVisibility(View.VISIBLE);
                 })
                 .show();
@@ -113,8 +112,7 @@ public class ServerConnector extends AppCompatActivity {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventMainThread(AreasParsedEvent event) {
-        messages.add(getString(R.string.sc_done));
-        messagesAdapter.notifyDataSetChanged();
+        this.addMessage(getString(R.string.sc_done));
 
         Toast.makeText(getApplicationContext(),
                 R.string.conn_connected, Toast.LENGTH_LONG)
@@ -184,9 +182,8 @@ public class ServerConnector extends AppCompatActivity {
         Server server = (type.equals("stored")) ? ServerDb.instance.stored.get(id) : ServerDb.instance.found.get(id);
 
         messages.clear();
-        messages.add(getString(R.string.sc_connecting));
+        this.addMessage(getString(R.string.sc_connecting));
         progressBar.setVisibility(View.VISIBLE);
-        messagesAdapter.notifyDataSetChanged();
 
         try {
             TCPClientApplication.getInstance().connect(server);
@@ -207,9 +204,13 @@ public class ServerConnector extends AppCompatActivity {
         this.addConnectError(event.getError());
     }
 
-    public void addConnectError(String error) {
+    private void addConnectError(String error) {
         progressBar.setVisibility(View.GONE);
-        messages.add(getString(R.string.sc_connect_error) + ":\n" + error);
+        this.addMessage(getString(R.string.sc_connect_error) + ":\n" + error);
+    }
+
+    private void addMessage(String message) {
+        messages.add(message);
         messagesAdapter.notifyDataSetChanged();
     }
 }
