@@ -162,13 +162,13 @@ public class TCPClient {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onConnectingError(TCPConnectingErrorEvent event) {
+    private void onConnectingError(TCPConnectingErrorEvent event) {
         this.server = null;
         this.dccState.postValue(null);
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void disconnect(TCPDisconnectReqEvent event) {
+    private void onDisconnectRequest(TCPDisconnectReqEvent event) {
         this.disconnect(event.reason);
     }
 

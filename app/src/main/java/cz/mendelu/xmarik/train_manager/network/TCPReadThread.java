@@ -13,6 +13,7 @@ import cz.mendelu.xmarik.train_manager.events.TCPDisconnectReqEvent;
 import cz.mendelu.xmarik.train_manager.events.TCPRawMsgEvent;
 
 public class TCPReadThread extends Thread {
+    static final int READ_BUF_SIZE = 8192;
     private final Socket m_socket;
 
     TCPReadThread(Socket s) {
@@ -25,9 +26,6 @@ public class TCPReadThread extends Thread {
     }
 
     public void run() {
-        byte[] buffer = new byte[8192];
-        int total_len = 0, new_len;
-
         InputStream str;
         try {
             str = m_socket.getInputStream();
@@ -37,42 +35,39 @@ public class TCPReadThread extends Thread {
             return;
         }
 
-        while(!isInterrupted() && !m_socket.isClosed()) {
+        byte[] buffer = new byte[READ_BUF_SIZE];
+        int pending_len = 0;
+
+        while ((!isInterrupted()) && (!m_socket.isClosed())) {
             try {
-                new_len = str.read(buffer, total_len, 8192-total_len);
-                if (new_len == 0)
+                int read_len = str.read(buffer, pending_len, READ_BUF_SIZE- pending_len);
+                if (read_len == 0) {
                     continue;
-                else if (new_len == -1) {
+                } else if (read_len == -1) {
                     sendDisconnectRequest("Reached end of input stream!");
                     return;
                 }
 
-                total_len += new_len;
+                pending_len += read_len;
 
-                int last = 0;
-                for (int i = 0; i < total_len; i++) {
+                int message_begin = 0;
+                for (int i = 0; i < pending_len; i++) {
                     if (buffer[i] == '\n') {
-                        byte[] range = Arrays.copyOfRange(buffer, last, i);
-
-                        int end;
-                        if (i > 0 && buffer[i-1] == '\r')
-                            end = i-1 - last;
-                        else
-                            end = i - last;
+                        byte[] message = Arrays.copyOfRange(buffer, message_begin, i);
+                        int end = ((i > 0) && (buffer[i-1] == '\r')) ? (i-message_begin-1) : (i-message_begin);
 
                         // This event must be subscribed with threadMode = ThreadMode.MAIN
                         // EventBus does thread synchronization
-                        EventBus.getDefault().post(new TCPRawMsgEvent(new String(range, 0, end)));
-                        last = i+1;
+                        EventBus.getDefault().post(new TCPRawMsgEvent(new String(message, 0, end)));
+                        message_begin = i+1;
                     }
                 }
 
-                if (total_len - last >= 0)
-                    System.arraycopy(buffer, last, buffer, 0, total_len - last);
-                total_len = total_len - last;
-            } catch(IOException e) {
+                if ((pending_len-message_begin) >= 0)
+                    System.arraycopy(buffer, message_begin, buffer, 0, pending_len - message_begin);
+                pending_len = pending_len - message_begin;
+            } catch (IOException e) {
                 sendDisconnectRequest(e.getMessage());
-                return;
             }
         }
     }
