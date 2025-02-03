@@ -2,7 +2,7 @@ package cz.mendelu.xmarik.train_manager.models;
 
 import java.util.ArrayList;
 
-import cz.mendelu.xmarik.train_manager.network.TCPClientApplication;
+import cz.mendelu.xmarik.train_manager.network.TCPClient;
 import cz.mendelu.xmarik.train_manager.helpers.ParseHelper;
 
 /**
@@ -69,41 +69,41 @@ public class Train {
         if (this.direction == direction) return;
         this.direction = direction;
         String strDir = direction ? "1" : "0";
-        TCPClientApplication.getInstance().send("-;LOK;" + this.addr + ";D;" + strDir);
+        TCPClient.getInstance().send("-;LOK;" + this.addr + ";D;" + strDir);
     }
 
     public void setSpeedSteps(int steps) {
         if (this.stepsSpeed == steps) return;
         this.stepsSpeed = steps;
-        TCPClientApplication.getInstance().send("-;LOK;" + this.addr + ";SP-S;" + steps);
+        TCPClient.getInstance().send("-;LOK;" + this.addr + ";SP-S;" + steps);
     }
 
     public void setFunc(int id, boolean state) {
         if (function[id].checked == state) return;
         function[id].checked = state;
         String strState = state ? "1" : "0";
-        TCPClientApplication.getInstance().send("-;LOK;" + this.addr + ";F;" + id + ";" + strState);
+        TCPClient.getInstance().send("-;LOK;" + this.addr + ";F;" + id + ";" + strState);
     }
 
     public void setTotal(boolean total) {
         if (this.total == total) return;
         this.total = total;
         String strTotal = total ? "1" : "0";
-        TCPClientApplication.getInstance().send("-;LOK;" + this.addr + ";TOTAL;" + strTotal);
+        TCPClient.getInstance().send("-;LOK;" + this.addr + ";TOTAL;" + strTotal);
     }
 
     public void release() {
-        TCPClientApplication.getInstance().send("-;LOK;" + this.addr + ";RELEASE");
+        TCPClient.getInstance().send("-;LOK;" + this.addr + ";RELEASE");
     }
 
     public void please() {
-        TCPClientApplication.getInstance().send("-;LOK;" + this.addr + ";PLEASE");
+        TCPClient.getInstance().send("-;LOK;" + this.addr + ";PLEASE");
     }
 
     public void emergencyStop() {
         kmphSpeed = 0;
         stepsSpeed = 0;
-        TCPClientApplication.getInstance().send("-;LOK;" + this.addr + ";STOP");
+        TCPClient.getInstance().send("-;LOK;" + this.addr + ";STOP");
     }
 
     public String getTitle() {

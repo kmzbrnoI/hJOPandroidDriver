@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import cz.mendelu.xmarik.train_manager.events.AreasClearedEvent;
 import cz.mendelu.xmarik.train_manager.storage.ControlAreaDb;
 import cz.mendelu.xmarik.train_manager.R;
-import cz.mendelu.xmarik.train_manager.network.TCPClientApplication;
+import cz.mendelu.xmarik.train_manager.network.TCPClient;
 import cz.mendelu.xmarik.train_manager.events.AreasParsedEvent;
 import cz.mendelu.xmarik.train_manager.events.LokAddEvent;
 import cz.mendelu.xmarik.train_manager.events.TCPDisconnectedEvent;
@@ -65,7 +65,7 @@ public class TrainRequest extends NavigationBase {
 
         areas_lv.setOnItemClickListener((parent, view, position, id) -> {
             ControlArea area = ControlAreaDb.instance.areas.get(position);
-            TCPClientApplication.getInstance().send("-;LOK;G;PLEASE;" + area.id + ";" +
+            TCPClient.getInstance().send("-;LOK;G;PLEASE;" + area.id + ";" +
                     messageForServer.getText().toString());
 
             dialog.setTitle(area.name);
@@ -131,7 +131,7 @@ public class TrainRequest extends NavigationBase {
     }
 
     private void cancelRequest() {
-        TCPClientApplication.getInstance().send("-;LOK;G;CANCEL");
+        TCPClient.getInstance().send("-;LOK;G;CANCEL");
     }
 
     @Override

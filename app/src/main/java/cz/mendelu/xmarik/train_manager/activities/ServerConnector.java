@@ -31,7 +31,7 @@ import cz.mendelu.xmarik.train_manager.events.ConnectionEstablishedEvent;
 import cz.mendelu.xmarik.train_manager.events.GlobalAuthEvent;
 import cz.mendelu.xmarik.train_manager.models.Server;
 import cz.mendelu.xmarik.train_manager.storage.ServerDb;
-import cz.mendelu.xmarik.train_manager.network.TCPClientApplication;
+import cz.mendelu.xmarik.train_manager.network.TCPClient;
 import cz.mendelu.xmarik.train_manager.events.HandShakeEvent;
 
 public class ServerConnector extends AppCompatActivity {
@@ -62,8 +62,8 @@ public class ServerConnector extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        if (TCPClientApplication.getInstance().connected())
-            TCPClientApplication.getInstance().disconnect("Intentional disconnect");
+        if (TCPClient.getInstance().connected())
+            TCPClient.getInstance().disconnect("Intentional disconnect");
     }
 
     @Override
@@ -82,27 +82,27 @@ public class ServerConnector extends AppCompatActivity {
 
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
 
-        mName.setText(TCPClientApplication.getInstance().server.username);
+        mName.setText(TCPClient.getInstance().server.username);
         savebox.setChecked(preferences.getBoolean("RememberPasswordDefault", true));
 
         new AlertDialog.Builder(this)
                 .setView(dialogView)
                 .setTitle(message)
                 .setPositiveButton(R.string.dialog_ok, (dialog, which) -> {
-                    TCPClientApplication.getInstance().server.username = mName.getText().toString().trim();
-                    TCPClientApplication.getInstance().server.password = HashHelper.hashPasswd(mPasswd.getText().toString());
+                    TCPClient.getInstance().server.username = mName.getText().toString().trim();
+                    TCPClient.getInstance().server.password = HashHelper.hashPasswd(mPasswd.getText().toString());
 
                     if (savebox.isChecked()) {
-                        if (ServerDb.instance.isStoredServer(TCPClientApplication.getInstance().server.host,
-                                TCPClientApplication.getInstance().server.port))
-                            ServerDb.instance.transferLoginToSaved(TCPClientApplication.getInstance().server);
+                        if (ServerDb.instance.isStoredServer(TCPClient.getInstance().server.host,
+                                TCPClient.getInstance().server.port))
+                            ServerDb.instance.transferLoginToSaved(TCPClient.getInstance().server);
                         else
-                            ServerDb.instance.addStoredServer(TCPClientApplication.getInstance().server);
+                            ServerDb.instance.addStoredServer(TCPClient.getInstance().server);
                     }
 
-                    TCPClientApplication.getInstance().send("-;LOK;G;AUTH;{" +
-                            TCPClientApplication.getInstance().server.username + "};" +
-                            TCPClientApplication.getInstance().server.password);
+                    TCPClient.getInstance().send("-;LOK;G;AUTH;{" +
+                            TCPClient.getInstance().server.username + "};" +
+                            TCPClient.getInstance().server.password);
 
                     this.addMessage(getString(R.string.sc_authorizing));
                     progressBar.setVisibility(View.VISIBLE);
@@ -133,16 +133,16 @@ public class ServerConnector extends AppCompatActivity {
 
         messagesAdapter.notifyDataSetChanged();
 
-        if (TCPClientApplication.getInstance().server.username.isEmpty() ||
-                TCPClientApplication.getInstance().server.password.isEmpty()) {
+        if (TCPClient.getInstance().server.username.isEmpty() ||
+                TCPClient.getInstance().server.password.isEmpty()) {
             messages.add(getString(R.string.sc_auth_wait));
             progressBar.setVisibility(View.GONE);
             editLogin(getString(R.string.login_enter));
         } else {
             messages.add(getString(R.string.sc_authorizing));
-            TCPClientApplication.getInstance().send("-;LOK;G;AUTH;{" +
-                    TCPClientApplication.getInstance().server.username + "};" +
-                    TCPClientApplication.getInstance().server.password);
+            TCPClient.getInstance().send("-;LOK;G;AUTH;{" +
+                    TCPClient.getInstance().server.username + "};" +
+                    TCPClient.getInstance().server.password);
             messagesAdapter.notifyDataSetChanged();
         }
     }
@@ -152,7 +152,7 @@ public class ServerConnector extends AppCompatActivity {
         if (event.getParsed().get(4).equalsIgnoreCase("OK")) {
             messages.add(getString(R.string.sc_auth_ok));
             messages.add(getString(R.string.sc_getting_ors));
-            TCPClientApplication.getInstance().send("-;OR-LIST");
+            TCPClient.getInstance().send("-;OR-LIST");
         } else {
             messages.add(getString(R.string.sc_auth_err));
             if (event.getParsed().size() >= 6)
@@ -174,8 +174,8 @@ public class ServerConnector extends AppCompatActivity {
             return;
         }
 
-        if (TCPClientApplication.getInstance().connected())
-            TCPClientApplication.getInstance().disconnect("Disconnect before new connect");
+        if (TCPClient.getInstance().connected())
+            TCPClient.getInstance().disconnect("Disconnect before new connect");
 
         String type = extras.getString("serverType");
         int id = extras.getInt("serverId");
@@ -186,7 +186,7 @@ public class ServerConnector extends AppCompatActivity {
         progressBar.setVisibility(View.VISIBLE);
 
         try {
-            TCPClientApplication.getInstance().connect(server);
+            TCPClient.getInstance().connect(server);
         } catch (Exception e) {
             Log.e("TCP", "Connecting", e);
             addConnectError(e.getMessage());
@@ -196,7 +196,7 @@ public class ServerConnector extends AppCompatActivity {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventMainThread(ConnectionEstablishedEvent event) {
         // connection established -> begin handshake
-        TCPClientApplication.getInstance().send("-;HELLO;1.1");
+        TCPClient.getInstance().send("-;HELLO;1.1");
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

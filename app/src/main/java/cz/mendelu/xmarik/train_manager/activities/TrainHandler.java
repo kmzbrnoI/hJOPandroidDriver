@@ -43,7 +43,7 @@ import cz.mendelu.xmarik.train_manager.events.LokRespEvent;
 import cz.mendelu.xmarik.train_manager.events.TCPDisconnectedEvent;
 import cz.mendelu.xmarik.train_manager.models.Train;
 import cz.mendelu.xmarik.train_manager.models.TrainFunction;
-import cz.mendelu.xmarik.train_manager.network.TCPClientApplication;
+import cz.mendelu.xmarik.train_manager.network.TCPClient;
 import cz.mendelu.xmarik.train_manager.storage.TimeHolder;
 import cz.mendelu.xmarik.train_manager.storage.TrainDb;
 
@@ -311,7 +311,7 @@ public class TrainHandler extends NavigationBase {
      * Show DCC stop when DCC status is known and different from GO
      */
     private void observeDccState() {
-        TCPClientApplication.getInstance().dccState.observe(this, enabled -> {
+        TCPClient.getInstance().dccState.observe(this, enabled -> {
             if (enabled != null && !enabled) {
                 Animation blink = new AlphaAnimation(0.0f, 1.0f);
                 blink.setDuration(250);

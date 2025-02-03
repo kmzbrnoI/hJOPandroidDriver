@@ -34,7 +34,7 @@ import cz.mendelu.xmarik.train_manager.events.LokTotalChangeErrorEvent;
 import cz.mendelu.xmarik.train_manager.events.TCPDisconnectedEvent;
 import cz.mendelu.xmarik.train_manager.models.Server;
 import cz.mendelu.xmarik.train_manager.models.Train;
-import cz.mendelu.xmarik.train_manager.network.TCPClientApplication;
+import cz.mendelu.xmarik.train_manager.network.TCPClient;
 import cz.mendelu.xmarik.train_manager.storage.TrainDb;
 
 
@@ -152,7 +152,7 @@ public class NavigationBase extends AppCompatActivity
                     .setMessage(event.getParsed().get(5))
                     .setCancelable(false)
                     .setPositiveButton(R.string.dialog_ok, (dialog, which) ->
-                            TCPClientApplication.getInstance().disconnect("User cancelled")
+                            TCPClient.getInstance().disconnect("User cancelled")
                     ).show();
         }
         updateServer();
@@ -223,10 +223,10 @@ public class NavigationBase extends AppCompatActivity
     }
 
     private void updateServer() {
-        boolean connected = TCPClientApplication.getInstance().connected();
+        boolean connected = TCPClient.getInstance().connected();
         miTrainRequest.setVisible(connected);
         if (connected) {
-            Server server = TCPClientApplication.getInstance().server;
+            Server server = TCPClient.getInstance().server;
             tvUser.setText(server.username);
             if (!server.name.isEmpty())
                 tvServer.setText(server.name);
