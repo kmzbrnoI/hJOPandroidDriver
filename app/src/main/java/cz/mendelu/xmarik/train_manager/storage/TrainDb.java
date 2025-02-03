@@ -14,7 +14,7 @@ import cz.mendelu.xmarik.train_manager.events.LokEvent;
 import cz.mendelu.xmarik.train_manager.events.LokRemoveEvent;
 import cz.mendelu.xmarik.train_manager.events.LokRespEvent;
 import cz.mendelu.xmarik.train_manager.events.LokTotalChangeErrorEvent;
-import cz.mendelu.xmarik.train_manager.events.TCPDisconnectEvent;
+import cz.mendelu.xmarik.train_manager.events.TCPDisconnectedEvent;
 import cz.mendelu.xmarik.train_manager.models.Train;
 
 /**
@@ -156,7 +156,7 @@ public class TrainDb {
     }
 
     @Subscribe
-    public void onEvent(TCPDisconnectEvent event) {
+    public void onEvent(TCPDisconnectedEvent event) {
         this.trains.clear();
     }
 }

@@ -6,6 +6,8 @@ import android.util.Log;
 import androidx.lifecycle.MutableLiveData;
 
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.net.ConnectException;
 import java.util.ArrayList;
@@ -15,6 +17,8 @@ import cz.mendelu.xmarik.train_manager.events.GlobalAuthEvent;
 import cz.mendelu.xmarik.train_manager.events.HandShakeEvent;
 import cz.mendelu.xmarik.train_manager.events.LokEvent;
 import cz.mendelu.xmarik.train_manager.events.RequestEvent;
+import cz.mendelu.xmarik.train_manager.events.TCPDisconnectReqEvent;
+import cz.mendelu.xmarik.train_manager.events.TCPRawMsgEvent;
 import cz.mendelu.xmarik.train_manager.events.TimeEvent;
 import cz.mendelu.xmarik.train_manager.helpers.ParseHelper;
 import cz.mendelu.xmarik.train_manager.models.Server;
@@ -24,13 +28,23 @@ import cz.mendelu.xmarik.train_manager.models.Server;
  * TCPClient.
  */
 
-public class TCPClientApplication extends Application implements TCPClient.OnMessageReceivedListener {
+public class TCPClientApplication extends Application {
     static TCPClientApplication instance;
 
     public Server server = null;
     public MutableLiveData<Boolean> dccState = new MutableLiveData<>(null);
 
-    TCPClient mTcpClient = null;
+    TCPClient mTcpClient = new TCPClient();
+
+    TCPClientApplication() {
+        if (!EventBus.getDefault().isRegistered(this))
+            EventBus.getDefault().register(this);
+    }
+
+    protected void finalize() {
+        if (EventBus.getDefault().isRegistered(this))
+            EventBus.getDefault().unregister(this);
+    }
 
     public static TCPClientApplication getInstance() {
         if (instance == null) instance = new TCPClientApplication();
@@ -38,37 +52,42 @@ public class TCPClientApplication extends Application implements TCPClient.OnMes
     }
 
     public void connect(Server server) {
-        if (mTcpClient != null && mTcpClient.connected())
-            mTcpClient.disconnect();
-
         this.server = server;
-        mTcpClient = new TCPClient(server.host, server.port);
-        mTcpClient.listen(this);
+        try {
+            mTcpClient.connect(server.host, server.port);
+        } catch (Exception e) {
+            this.server = null;
+            throw e;
+        }
     }
 
-    public void disconnect() {
+    public void disconnect(String reason) {
         this.server = null;
         this.dccState.postValue(null);
+        this.mTcpClient.disconnect(reason);
+    }
 
-        if (mTcpClient != null)
-            this.mTcpClient.disconnect();
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void disconnect(TCPDisconnectReqEvent event) {
+        this.disconnect(event.reason);
     }
 
     public void send(String message) {
-        if (mTcpClient == null) return;
-
         try {
             mTcpClient.send(message);
         } catch (ConnectException e) {
             Log.e("TCP", "Cannot send data, disconnecting", e);
-            this.disconnect();
+            this.disconnect(e.getMessage());
         }
     }
 
-    public boolean connected() { return (mTcpClient != null && mTcpClient.connected()); }
+    public boolean connected() {
+        return mTcpClient.connected();
+    }
 
-    public void onMessageReceived(String message) {
-        ArrayList<String> parsed = ParseHelper.parse(message, ";", "");
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageReceived(TCPRawMsgEvent event) {
+        ArrayList<String> parsed = ParseHelper.parse(event.message, ";", "");
 
         if (parsed.size() < 2 || !parsed.get(0).equals("-")) return;
         parsed.set(1, parsed.get(1).toUpperCase());

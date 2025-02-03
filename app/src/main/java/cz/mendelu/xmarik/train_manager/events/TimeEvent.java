@@ -9,7 +9,7 @@ import java.util.ArrayList;
  * https://github.com/kmzbrnoI/hJOPserver/wiki/panelServer-mc
  */
 
-public class TimeEvent extends GenericEvent {
+public class TimeEvent extends ParsedMsgEvent {
 
     public boolean running;
     public float multiplier;

@@ -40,7 +40,7 @@ import cz.mendelu.xmarik.train_manager.events.LokAddEvent;
 import cz.mendelu.xmarik.train_manager.events.LokChangeEvent;
 import cz.mendelu.xmarik.train_manager.events.LokRemoveEvent;
 import cz.mendelu.xmarik.train_manager.events.LokRespEvent;
-import cz.mendelu.xmarik.train_manager.events.TCPDisconnectEvent;
+import cz.mendelu.xmarik.train_manager.events.TCPDisconnectedEvent;
 import cz.mendelu.xmarik.train_manager.models.Train;
 import cz.mendelu.xmarik.train_manager.models.TrainFunction;
 import cz.mendelu.xmarik.train_manager.network.TCPClientApplication;
@@ -486,7 +486,7 @@ public class TrainHandler extends NavigationBase {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onEventMainThread(TCPDisconnectEvent event) {
+    public void onEventMainThread(TCPDisconnectedEvent event) {
         updating = true;
 
         train = null;

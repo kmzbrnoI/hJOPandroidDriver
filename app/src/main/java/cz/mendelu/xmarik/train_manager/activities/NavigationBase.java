@@ -31,7 +31,7 @@ import cz.mendelu.xmarik.train_manager.events.LokAddEvent;
 import cz.mendelu.xmarik.train_manager.events.LokChangeEvent;
 import cz.mendelu.xmarik.train_manager.events.LokRemoveEvent;
 import cz.mendelu.xmarik.train_manager.events.LokTotalChangeErrorEvent;
-import cz.mendelu.xmarik.train_manager.events.TCPDisconnectEvent;
+import cz.mendelu.xmarik.train_manager.events.TCPDisconnectedEvent;
 import cz.mendelu.xmarik.train_manager.models.Server;
 import cz.mendelu.xmarik.train_manager.models.Train;
 import cz.mendelu.xmarik.train_manager.network.TCPClientApplication;
@@ -135,9 +135,9 @@ public class NavigationBase extends AppCompatActivity
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onEventMainThread(TCPDisconnectEvent event) {
+    public void onEventMainThread(TCPDisconnectedEvent event) {
         new AlertDialog.Builder(this)
-                .setMessage(getString(R.string.disconnected))
+                .setMessage(getString(R.string.disconnected) + "\n" + event.getError())
                 .setCancelable(false)
                 .setPositiveButton(R.string.dialog_ok, (dialog, which) -> {} )
                 .show();
@@ -152,7 +152,7 @@ public class NavigationBase extends AppCompatActivity
                     .setMessage(event.getParsed().get(5))
                     .setCancelable(false)
                     .setPositiveButton(R.string.dialog_ok, (dialog, which) ->
-                            TCPClientApplication.getInstance().disconnect()
+                            TCPClientApplication.getInstance().disconnect("User cancelled")
                     ).show();
         }
         updateServer();

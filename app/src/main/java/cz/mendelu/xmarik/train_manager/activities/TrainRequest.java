@@ -3,14 +3,13 @@ package cz.mendelu.xmarik.train_manager.activities;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.core.graphics.ColorUtils;
+
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.Toolbar;
 import android.view.View;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -27,7 +26,7 @@ import cz.mendelu.xmarik.train_manager.R;
 import cz.mendelu.xmarik.train_manager.network.TCPClientApplication;
 import cz.mendelu.xmarik.train_manager.events.AreasParsedEvent;
 import cz.mendelu.xmarik.train_manager.events.LokAddEvent;
-import cz.mendelu.xmarik.train_manager.events.TCPDisconnectEvent;
+import cz.mendelu.xmarik.train_manager.events.TCPDisconnectedEvent;
 import cz.mendelu.xmarik.train_manager.models.ControlArea;
 import cz.mendelu.xmarik.train_manager.events.RequestEvent;
 
@@ -126,7 +125,7 @@ public class TrainRequest extends NavigationBase {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onEventMainThread(TCPDisconnectEvent event) {
+    public void onEventMainThread(TCPDisconnectedEvent event) {
         dialog.dismiss();
         super.onEventMainThread(event);
     }

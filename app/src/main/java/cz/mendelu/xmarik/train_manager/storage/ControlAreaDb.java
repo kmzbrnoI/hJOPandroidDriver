@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import cz.mendelu.xmarik.train_manager.events.AreasClearedEvent;
 import cz.mendelu.xmarik.train_manager.events.AreasEvent;
 import cz.mendelu.xmarik.train_manager.events.AreasParsedEvent;
-import cz.mendelu.xmarik.train_manager.events.TCPDisconnectEvent;
+import cz.mendelu.xmarik.train_manager.events.TCPDisconnectedEvent;
 import cz.mendelu.xmarik.train_manager.helpers.ParseHelper;
 import cz.mendelu.xmarik.train_manager.models.ControlArea;
 
@@ -45,7 +45,7 @@ public class ControlAreaDb {
     }
 
     @Subscribe
-    public void onEvent(TCPDisconnectEvent event) {
+    public void onEvent(TCPDisconnectedEvent event) {
         this.areas.clear();
         EventBus.getDefault().post(new AreasClearedEvent());
     }
