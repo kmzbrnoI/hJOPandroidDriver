@@ -5,18 +5,13 @@ import android.util.Log;
 import org.greenrobot.eventbus.EventBus;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.ConnectException;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Arrays;
 
 import cz.mendelu.xmarik.train_manager.events.ConnectionEstablishedEvent;
-import cz.mendelu.xmarik.train_manager.events.TCPDisconnectReqEvent;
+import cz.mendelu.xmarik.train_manager.events.TCPConnectingErrorEvent;
 import cz.mendelu.xmarik.train_manager.events.TCPDisconnectedEvent;
-import cz.mendelu.xmarik.train_manager.events.TCPRawMsgEvent;
 
 /**
  * TCPClient is a basic TCP client that connects to the server and synchronously waits for
@@ -106,7 +101,7 @@ public class TCPClient {
             } catch (Exception e) {
                 m_socket = null;
                 Log.e("TCP", "ConnectThread::run", e);
-                EventBus.getDefault().post(new TCPDisconnectedEvent(e.getMessage()));
+                EventBus.getDefault().post(new TCPConnectingErrorEvent(e.getMessage()));
                 return;
             }
 

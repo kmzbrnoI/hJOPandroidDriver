@@ -87,6 +87,7 @@
     <string name="save">Save</string>
     <string name="cancel">Cancel</string>
     <string name="disconnected">Disconnected from server!</string>
+    <string name="connect_error">Error while connecting to the server</string>
     <string name="general_error">General error!</string>
     <string name="yes">yes</string>
     <string name="no">no</string>

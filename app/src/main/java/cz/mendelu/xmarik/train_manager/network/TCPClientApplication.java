@@ -17,6 +17,7 @@ import cz.mendelu.xmarik.train_manager.events.GlobalAuthEvent;
 import cz.mendelu.xmarik.train_manager.events.HandShakeEvent;
 import cz.mendelu.xmarik.train_manager.events.LokEvent;
 import cz.mendelu.xmarik.train_manager.events.RequestEvent;
+import cz.mendelu.xmarik.train_manager.events.TCPConnectingErrorEvent;
 import cz.mendelu.xmarik.train_manager.events.TCPDisconnectReqEvent;
 import cz.mendelu.xmarik.train_manager.events.TCPRawMsgEvent;
 import cz.mendelu.xmarik.train_manager.events.TimeEvent;
@@ -65,6 +66,12 @@ public class TCPClientApplication extends Application {
         this.server = null;
         this.dccState.postValue(null);
         this.mTcpClient.disconnect(reason);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onConnectingError(TCPConnectingErrorEvent event) {
+        this.server = null;
+        this.dccState.postValue(null);
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

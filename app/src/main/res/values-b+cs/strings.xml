@@ -87,6 +87,7 @@
     <string name="save">Uložit</string>
     <string name="cancel">Zrušit</string>
     <string name="disconnected">Odpojeno od serveru!</string>
+    <string name="connect_error">Chyba při připjování k serveru</string>
     <string name="general_error">Všeobecná chyba!</string>
     <string name="yes">ano</string>
     <string name="no">ne</string>

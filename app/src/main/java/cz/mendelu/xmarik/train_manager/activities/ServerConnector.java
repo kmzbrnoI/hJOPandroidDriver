@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import cz.mendelu.xmarik.train_manager.events.AreasParsedEvent;
+import cz.mendelu.xmarik.train_manager.events.TCPConnectingErrorEvent;
 import cz.mendelu.xmarik.train_manager.events.TCPDisconnectedEvent;
 import cz.mendelu.xmarik.train_manager.helpers.HashHelper;
 import cz.mendelu.xmarik.train_manager.adapters.TextViewAdapter;
@@ -204,8 +205,8 @@ public class ServerConnector extends AppCompatActivity {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onEventMainThread(TCPDisconnectedEvent event) {
-        messages.add(getString(R.string.disconnected) + "\n" + event.getError());
+    public void onEventMainThread(TCPConnectingErrorEvent event) {
+        messages.add(getString(R.string.connect_error) + ":\n" + event.getError());
         progressBar.setVisibility(View.GONE);
         mAdapter.notifyDataSetChanged();
     }
