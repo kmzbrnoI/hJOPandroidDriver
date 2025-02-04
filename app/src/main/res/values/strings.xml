@@ -63,10 +63,10 @@
     <string name="gl_all_deleted">All servers deleted.</string>
     <string name="gl_repeat">Repeat</string>
 
-    <string name="ns_server_name">Server name</string>
-    <string name="ns_server_ip_dns">Server address</string>
-    <string name="ns_server_port">Port</string>
-    <string name="ns_server_type">Server type</string>
+    <string name="ns_server_name">Server name:</string>
+    <string name="ns_server_ip_dns">Server address:</string>
+    <string name="ns_server_port">Port:</string>
+    <string name="ns_server_type">Server type:</string>
     <string name="ns_warning_compulsory">Address and port are compulsory fields.</string>
     <string name="ns_warning_server_exists">This server already exists :</string>
     <string name="ns_warning_invalid_characters">Name cannot contain sequence "--"</string>
