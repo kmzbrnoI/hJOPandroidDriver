@@ -57,18 +57,12 @@ public class Server {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        Server server = (Server) o;
-
-        if (port != server.port) return false;
-        if (!name.equals(server.name)) return false;
-        return Objects.equals(host, server.host);
+        Server other = (Server)o;
+        return (this.name.equals(other.name)) && (this.port == other.port) && (this.host.equals(other.host));
     }
 
     @Override
     public int hashCode() {
-        int result = name.hashCode();
-        result = 31 * result + (host != null ? host.hashCode() : 0);
-        result = 31 * result + port;
-        return result;
+        return name.hashCode() ^ (host != null ? host.hashCode() : 0) ^ port;
     }
 }

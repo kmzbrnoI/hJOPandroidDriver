@@ -95,7 +95,7 @@ public class ServerConnector extends AppCompatActivity {
                     if (savebox.isChecked()) {
                         if (ServerDb.instance.isStoredServer(TCPClient.getInstance().server.host,
                                 TCPClient.getInstance().server.port))
-                            ServerDb.instance.transferLoginToSaved(TCPClient.getInstance().server);
+                            ServerDb.instance.transferLoginToStored(TCPClient.getInstance().server);
                         else
                             ServerDb.instance.addStoredServer(TCPClient.getInstance().server);
                     }
@@ -158,10 +158,7 @@ public class ServerConnector extends AppCompatActivity {
             if (event.getParsed().size() >= 6)
                 messages.add(event.getParsed().get(5));
             progressBar.setVisibility(View.GONE);
-            if (event.getParsed().size() >= 6)
-                editLogin(event.getParsed().get(5));
-            else
-                editLogin(getString(R.string.sc_auth_err));
+            editLogin((event.getParsed().size() >= 6) ? event.getParsed().get(5) : getString(R.string.sc_auth_err));
         }
         messagesAdapter.notifyDataSetChanged();
     }

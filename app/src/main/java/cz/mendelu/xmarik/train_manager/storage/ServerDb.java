@@ -89,7 +89,7 @@ public class ServerDb {
         // transfer password from stored servers
         if (server.username.isEmpty() && server.password.isEmpty()) {
             for (Server s : stored) {
-                if (server.host.equals(s.host) && server.port == s.port) {
+                if (server.equals(s)) {
                     server.username = s.username;
                     server.password = s.password;
                     break;
@@ -101,7 +101,7 @@ public class ServerDb {
     public void removeStoredServer(int position) {
         if (position <= stored.size()) {
             for (Server s : found) {
-                if (s.host.equals(stored.get(position).host) && s.port == stored.get(position).port) {
+                if (s.equals(stored.get(position))) {
                     s.username = "";
                     s.password = "";
                 }
@@ -127,9 +127,9 @@ public class ServerDb {
         return false;
     }
 
-    public void transferLoginToSaved(Server found) {
+    public void transferLoginToStored(Server found) {
         for(Server s : stored) {
-            if (s != found && s.host.equals(found.host) && s.port == found.port) {
+            if ((s != found) && (s.equals(found))) {
                 s.username = found.username;
                 s.password = found.password;
             }
@@ -137,4 +137,12 @@ public class ServerDb {
         this.saveServers();
     }
 
+    public void transferLoginToFound(Server stored) {
+        for(Server s : found) {
+            if ((s != stored) && (s.equals(stored))) {
+                s.username = stored.username;
+                s.password = stored.password;
+            }
+        }
+    }
 }

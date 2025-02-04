@@ -187,6 +187,7 @@ public class ServerSelectStored extends Fragment {
                 .setPositiveButton(R.string.dialog_ok, (dialog1, which) -> {
                     server.username = mName.getText().toString().trim();
                     server.password = HashHelper.hashPasswd(mPasswd.getText().toString());
+                    ServerDb.instance.transferLoginToFound(server);
                 })
                 .show();
     }
