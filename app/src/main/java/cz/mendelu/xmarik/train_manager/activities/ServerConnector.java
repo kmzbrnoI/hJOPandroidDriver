@@ -83,6 +83,7 @@ public class ServerConnector extends AppCompatActivity {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
 
         mName.setText(TCPClient.getInstance().server.username);
+        savebox.setVisibility(View.VISIBLE);
         savebox.setChecked(preferences.getBoolean("RememberPasswordDefault", true));
 
         new AlertDialog.Builder(this)

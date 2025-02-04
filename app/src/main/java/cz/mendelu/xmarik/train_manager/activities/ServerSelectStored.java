@@ -178,8 +178,7 @@ public class ServerSelectStored extends Fragment {
         final CheckBox savebox = dialogView.findViewById(R.id.dialogSaveData);
 
         mName.setText(server.username);
-        savebox.setChecked(true);
-        savebox.setEnabled(false);
+        savebox.setVisibility(View.GONE);
 
         new AlertDialog.Builder(view.getContext())
                 .setView(dialogView)
