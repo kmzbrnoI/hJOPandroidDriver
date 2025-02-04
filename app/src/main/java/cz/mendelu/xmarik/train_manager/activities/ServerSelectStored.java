@@ -189,6 +189,9 @@ public class ServerSelectStored extends Fragment {
                     server.password = HashHelper.hashPasswd(mPasswd.getText().toString());
                     ServerDb.instance.transferLoginToFound(server);
                 })
+                .setNegativeButton(R.string.cancel, (dialog1, which) -> {
+                    dialog1.cancel();
+                })
                 .show();
     }
 
