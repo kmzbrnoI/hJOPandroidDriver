@@ -113,6 +113,5 @@
 
     <string name="about">hJOP Driver umožňuje řízení jízdy hnacích vozidel ve spolupráci se softwarovým balíkem hJOP.\nhttps://hjop.kmz-brno.cz/</string>
     <string name="contributors">Tato aplikace byla vytvořena v rámci diplomové práce Miroslava
-        Maříka na Mendelově univerzitě v Brně. Současným správcem aplikace je Jan Horáček.
-        Dalším přispěvatelem je Vladan Kudláč.</string>
+        Maříka na Mendelově univerzitě v Brně. Vývojáři: Jan Horáček (správce), Vladan Kudláč, Miroslav Mařík.</string>
 </resources>
