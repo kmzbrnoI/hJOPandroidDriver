@@ -2,8 +2,9 @@ package cz.mendelu.xmarik.train_manager.network;
 
 import android.net.DhcpInfo;
 import android.net.wifi.WifiManager;
-import android.os.AsyncTask;
 import android.util.Log;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
@@ -16,19 +17,20 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import cz.mendelu.xmarik.train_manager.events.UDPDiscoveryFinishedEvent;
+import cz.mendelu.xmarik.train_manager.events.UDPNewServerEvent;
 import cz.mendelu.xmarik.train_manager.helpers.ParseHelper;
 import cz.mendelu.xmarik.train_manager.models.Server;
-import cz.mendelu.xmarik.train_manager.storage.ServerDb;
 
 
 /**
  * UDPDiscover discovers hJOPservers in local network.
  */
-public class UDPDiscover extends AsyncTask<String, Server, String> {
+public class UDPDiscover extends Thread {
     public static final int DEFAULT_PORT = 5880;
     private static final int TIMEOUT_MS = 800;
 
-    WifiManager mWifi;
+    final WifiManager mWifi;
 
     public UDPDiscover(WifiManager mWifi) {
         this.mWifi = mWifi;
@@ -72,12 +74,11 @@ public class UDPDiscover extends AsyncTask<String, Server, String> {
                 String s = new String(packet.getData(), 0, packet.getLength());
 
                 Server server = parseServerMessage(s);
-                if (server != null) {
-                    this.publishProgress(server);
-                }
+                if (server != null)
+                    EventBus.getDefault().post(new UDPNewServerEvent(server));
             }
         } catch (SocketTimeoutException e) {
-            Log.i("listening exception", "S: time out '" + e + "'"); // timeout OK
+            // OK
         }
     }
 
@@ -126,8 +127,7 @@ public class UDPDiscover extends AsyncTask<String, Server, String> {
         return "";
     }
 
-    @Override
-    protected String doInBackground(String... urls) {
+    public void run() {
         try {
             DatagramSocket sock = new DatagramSocket(null);
             sock.setReuseAddress(true);
@@ -147,14 +147,6 @@ public class UDPDiscover extends AsyncTask<String, Server, String> {
             Log.e("exception", "S: Received Message: '" + e + "'");
         }
 
-        return null;
+        EventBus.getDefault().post(new UDPDiscoveryFinishedEvent());
     }
-
-    @Override
-    protected void onProgressUpdate(Server... progress) {
-        if (!ServerDb.instance.isFoundServer(progress[0].host, progress[0].port)) {
-            ServerDb.instance.addFoundServer(progress[0]);
-        }
-    }
-
 }

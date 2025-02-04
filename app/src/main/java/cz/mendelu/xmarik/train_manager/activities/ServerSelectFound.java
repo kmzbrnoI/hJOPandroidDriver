@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.net.wifi.SupplicantState;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,19 +26,35 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.util.ArrayList;
 
 import cz.mendelu.xmarik.train_manager.R;
-import cz.mendelu.xmarik.train_manager.events.FoundServersReloadEvent;
+import cz.mendelu.xmarik.train_manager.events.UDPDiscoveryFinishedEvent;
+import cz.mendelu.xmarik.train_manager.events.UDPNewServerEvent;
 import cz.mendelu.xmarik.train_manager.models.Server;
 import cz.mendelu.xmarik.train_manager.network.UDPDiscover;
 import cz.mendelu.xmarik.train_manager.storage.ServerDb;
 
 public class ServerSelectFound extends Fragment {
 
-    ArrayAdapter<String[]> adapter;
+    ArrayAdapter<String[]> adapterLvServers;
     final ArrayList<String[]> servers = new ArrayList<>();
     ListView lvServers;
     View view;
+    UDPDiscover udpDiscover = null;
 
     SwipeRefreshLayout refreshLayout;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        if (!EventBus.getDefault().isRegistered(this))
+            EventBus.getDefault().register(this);
+    }
+
+    public void onDestroy() {
+        super.onDestroy();
+        if (EventBus.getDefault().isRegistered(this))
+            EventBus.getDefault().unregister(this);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater,
@@ -51,7 +66,7 @@ public class ServerSelectFound extends Fragment {
         refreshLayout = view.findViewById(R.id.swipeRefreshLayout);
         lvServers = view.findViewById(R.id.servers);
 
-        adapter = new ArrayAdapter<String[]>(view.getContext(),
+        adapterLvServers = new ArrayAdapter<String[]>(view.getContext(),
                 android.R.layout.simple_list_item_2, android.R.id.text1, servers) {
             @NonNull
             @Override
@@ -65,7 +80,7 @@ public class ServerSelectFound extends Fragment {
                 return view;
             }
         };
-        lvServers.setAdapter(adapter);
+        lvServers.setAdapter(adapterLvServers);
 
         lvServers.setOnItemClickListener((parent, view, position, id) -> {
             if (ServerDb.instance.found.get(position).active) {
@@ -91,28 +106,32 @@ public class ServerSelectFound extends Fragment {
         servers.clear();
         for (Server s : ServerDb.instance.found) {
             servers.add(new String[]{
-                    s.getTitle(),
-                    s.type + "\t" + (s.active ? "online" : "offline")
+                s.getTitle(),
+                s.type + "\t" + (s.active ? "online" : "offline")
             });
         }
-        refreshLayout.setRefreshing(false);
-        adapter.notifyDataSetChanged();
+        adapterLvServers.notifyDataSetChanged();
     }
 
     public void discoverServers() {
         Context context = view.getContext().getApplicationContext();
-        WifiManager wifiMgr = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+        WifiManager wifiMgr = (WifiManager)context.getSystemService(Context.WIFI_SERVICE);
+
+        if (!isWifiOnAndConnected()) {
+            Toast.makeText(context, R.string.conn_wifi_unavailable, Toast.LENGTH_LONG).show();
+            return;
+        }
+        if ((udpDiscover != null) && (udpDiscover.isAlive())) {
+            Toast.makeText(context, R.string.conn_refresh_in_progress, Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        ServerDb.instance.clearFoundServers();
+        updateServers();
 
         refreshLayout.setRefreshing(true);
-        ServerDb.instance.clearFoundServers();
-        adapter.notifyDataSetChanged();
-
-        if (isWifiOnAndConnected()) {
-            (new UDPDiscover(wifiMgr)).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-        } else {
-            refreshLayout.setRefreshing(false);
-            Toast.makeText(context, R.string.conn_wifi_unavailable, Toast.LENGTH_LONG).show();
-        }
+        udpDiscover = new UDPDiscover(wifiMgr);
+        udpDiscover.start();
     }
 
     private boolean isWifiOnAndConnected() {
@@ -136,21 +155,21 @@ public class ServerSelectFound extends Fragment {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onEventMainThread(FoundServersReloadEvent event) {
-        updateServers();
+    public void onUdpNewServerEvent(UDPNewServerEvent event) {
+        if (!ServerDb.instance.isFoundServer(event.server)) {
+            ServerDb.instance.addFoundServer(event.server);
+            updateServers();
+        }
     }
 
-    @Override
-    public void onPause() {
-        if(EventBus.getDefault().isRegistered(this))EventBus.getDefault().unregister(this);
-        super.onPause();
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onUdpDiscoveryFinished(UDPDiscoveryFinishedEvent event) {
+        refreshLayout.setRefreshing(false);
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        if (!EventBus.getDefault().isRegistered(this)) EventBus.getDefault().register(this);
         updateServers();
     }
-
 }

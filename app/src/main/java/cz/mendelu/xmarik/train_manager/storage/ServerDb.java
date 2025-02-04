@@ -7,7 +7,6 @@ import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 
-import cz.mendelu.xmarik.train_manager.events.FoundServersReloadEvent;
 import cz.mendelu.xmarik.train_manager.events.StoredServersReloadEvent;
 import cz.mendelu.xmarik.train_manager.models.Server;
 
@@ -73,7 +72,6 @@ public class ServerDb {
 
     public void clearFoundServers() {
         this.found.clear();
-        EventBus.getDefault().post(new FoundServersReloadEvent());
     }
 
     public void addStoredServer(Server server) {
@@ -84,7 +82,6 @@ public class ServerDb {
 
     public void addFoundServer(Server server) {
         this.found.add(server);
-        EventBus.getDefault().post(new FoundServersReloadEvent());
 
         // transfer password from stored servers
         if (server.username.isEmpty() && server.password.isEmpty()) {
@@ -113,18 +110,26 @@ public class ServerDb {
         }
     }
 
-    public boolean isFoundServer(String host, int port) {
+    public Server findFoundServer(Server server) {
         for (Server s : found)
-            if (s.host.equals(host) && s.port == port)
-                return true;
-        return false;
+            if (s.equals(server))
+                return s;
+        return null;
     }
 
-    public boolean isStoredServer(String host, int port) {
+    public boolean isFoundServer(Server server) {
+        return (this.findFoundServer(server) != null);
+    }
+
+    public Server findStoredServer(Server server) {
         for (Server s : stored)
-            if (s.host.equals(host) && s.port == port)
-                return true;
-        return false;
+            if (s.equals(server))
+                return s;
+        return null;
+    }
+
+    public boolean isStoredServer(Server server) {
+        return (this.findStoredServer(server) != null);
     }
 
     public void transferLoginToStored(Server found) {

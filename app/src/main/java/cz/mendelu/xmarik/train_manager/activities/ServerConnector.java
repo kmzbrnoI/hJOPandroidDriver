@@ -94,8 +94,7 @@ public class ServerConnector extends AppCompatActivity {
                     TCPClient.getInstance().server.password = HashHelper.hashPasswd(mPasswd.getText().toString());
 
                     if (savebox.isChecked()) {
-                        if (ServerDb.instance.isStoredServer(TCPClient.getInstance().server.host,
-                                TCPClient.getInstance().server.port))
+                        if (ServerDb.instance.isStoredServer(TCPClient.getInstance().server))
                             ServerDb.instance.transferLoginToStored(TCPClient.getInstance().server);
                         else
                             ServerDb.instance.addStoredServer(TCPClient.getInstance().server);

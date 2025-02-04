@@ -49,6 +49,7 @@
     <string name="conn_servers_found">Discovered servers</string>
     <string name="conn_servers_stored">Saved servers</string>
     <string name="conn_wifi_unavailable">WiFi connection is not available.</string>
+    <string name="conn_refresh_in_progress">Refresh is in progress, wait for it to finish!</string>
     <string name="conn_connected">Connected and authorized.</string>
     <string name="conn_connection_error">Failed to connect to the server.</string>
     <string name="conn_no_server_authorized">No server authorized.</string>
