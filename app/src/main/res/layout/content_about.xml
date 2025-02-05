@@ -22,28 +22,41 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/editText1"
-            android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
-            android:autoLink="web"
-            android:text="@string/about" />
+            android:id="@+id/tv_app_name"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:text="@string/app_name" />
 
         <TextView
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:lines="2" />
+            android:id="@+id/tv_app_version"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:text="v?.?" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/tv_app_build"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:layout_marginBottom="22dp"
+            android:text="Build 20??-??-?? ??:??:??" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/editText1"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:autoLink="web"
+            android:layout_marginBottom="22dp"
+            android:text="@string/about" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/editText2"
-            android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
-            android:autoLink="web"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:layout_marginBottom="22dp"
             android:text="@string/contributors" />
-
-        <TextView
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:lines="3" />
 
         <ImageButton
             android:layout_width="wrap_content"
