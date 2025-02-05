@@ -85,11 +85,11 @@ public class ServerSelectFound extends Fragment {
 
         this.lvServers.setOnItemClickListener((parent, view, position, id) -> {
             if (ServerDb.instance.found.get(position).active) {
-                connect(position);
+                this.connect(position);
             } else {
                 new AlertDialog.Builder(this.view.getContext())
                     .setMessage(R.string.conn_server_offline)
-                    .setPositiveButton(getString(R.string.yes), (dialog, __) -> connect(position))
+                    .setPositiveButton(getString(R.string.yes), (dialog, __) -> this.connect(position))
                     .setNegativeButton(getString(R.string.no), (dialog, __) -> {}).show();
             }
         });
@@ -97,23 +97,23 @@ public class ServerSelectFound extends Fragment {
         this.t_no_servers_found = Toast.makeText(this.view.getContext().getApplicationContext(), R.string.conn_no_servers_found, Toast.LENGTH_LONG);
 
         // bind SwipeRerfreshLayout
-        refreshLayout.setOnRefreshListener(this::discoverServers);
+        this.refreshLayout.setOnRefreshListener(this::discoverServers);
 
         // run UDP discover after UI init:
-        refreshLayout.post(this::discoverServers);
+        this.refreshLayout.post(this::discoverServers);
 
         return view;
     }
 
     public void updateServers() {
-        servers.clear();
+        this.servers.clear();
         for (Server s : ServerDb.instance.found) {
-            servers.add(new String[]{
+            this.servers.add(new String[]{
                 s.getTitle(),
                 s.type + "\t" + (s.active ? "online" : "offline")
             });
         }
-        adapterLvServers.notifyDataSetChanged();
+        this.adapterLvServers.notifyDataSetChanged();
     }
 
     public void discoverServers() {
@@ -126,7 +126,7 @@ public class ServerSelectFound extends Fragment {
             Toast.makeText(context, R.string.conn_wifi_unavailable, Toast.LENGTH_LONG).show();
             return;
         }
-        if ((udpDiscover != null) && (udpDiscover.isAlive())) {
+        if ((this.udpDiscover != null) && (this.udpDiscover.isAlive())) {
             Toast.makeText(context, R.string.conn_refresh_in_progress, Toast.LENGTH_LONG).show();
             return;
         }
@@ -134,9 +134,9 @@ public class ServerSelectFound extends Fragment {
         ServerDb.instance.clearFoundServers();
         updateServers();
 
-        refreshLayout.setRefreshing(true);
-        udpDiscover = new UDPDiscover(wifiMgr);
-        udpDiscover.start();
+        this.refreshLayout.setRefreshing(true);
+        this.udpDiscover = new UDPDiscover(wifiMgr);
+        this.udpDiscover.start();
     }
 
     private boolean isWifiOnAndConnected() {
@@ -145,7 +145,7 @@ public class ServerSelectFound extends Fragment {
 
         if (wifiMgr.isWifiEnabled()) { // Wi-Fi adapter is ON
             WifiInfo wifiInfo = wifiMgr.getConnectionInfo();
-            return ( wifiInfo.getSupplicantState() == SupplicantState.COMPLETED );
+            return (wifiInfo.getSupplicantState() == SupplicantState.COMPLETED);
         }
         else {
             return false; // Wi-Fi adapter is OFF
@@ -156,20 +156,20 @@ public class ServerSelectFound extends Fragment {
         Intent intent = new Intent(view.getContext(), ServerConnector.class);
         intent.putExtra("serverType", "found");
         intent.putExtra("serverId", index);
-        startActivity(intent);
+        this.startActivity(intent);
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onUdpNewServerEvent(UDPNewServerEvent event) {
         if (!ServerDb.instance.isFoundServer(event.server)) {
             ServerDb.instance.addFoundServer(event.server);
-            updateServers();
+            this.updateServers();
         }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onUdpDiscoveryFinished(UDPDiscoveryFinishedEvent event) {
-        refreshLayout.setRefreshing(false);
+        this.refreshLayout.setRefreshing(false);
         if (ServerDb.instance.found.isEmpty())
             this.t_no_servers_found.show();
     }
@@ -177,6 +177,6 @@ public class ServerSelectFound extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        updateServers();
+        this.updateServers();
     }
 }
