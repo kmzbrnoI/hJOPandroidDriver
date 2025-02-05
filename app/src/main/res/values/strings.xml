@@ -18,6 +18,7 @@
     <string name="hamburger_state_unauthenticated">Not logged in</string>
     <string name="hamburger_state_server">Server:</string>
     <string name="hamburger_state_disconnected">disconnected</string>
+    <string name="hamburger_built">Built</string>
 
     <string name="ta_new_loko">New locomotive received.</string>
     <string name="ta_multitraction">Multitraction</string>

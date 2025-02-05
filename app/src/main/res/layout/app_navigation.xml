@@ -18,7 +18,7 @@
         android:layout_gravity="bottom"
         android:layout_marginStart="?attr/dialogPreferredPadding"
         android:layout_marginBottom="-22dp"
-        android:orientation="horizontal">
+        android:orientation="vertical">
 
         <TextView
             android:layout_width="wrap_content"
@@ -30,7 +30,13 @@
             android:id="@+id/tv_version"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="v0.12" />
+            android:text="v?.?" />
+
+        <TextView
+            android:id="@+id/tv_build"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Build 20??-??-??" />
     </LinearLayout>
 
 </com.google.android.material.navigation.NavigationView>

@@ -9,6 +9,8 @@ android {
         versionCode 29
         versionName "1.19"
         targetSdkVersion 35
+        def buildTime = new Date()
+        buildConfigField "String", "BUILD_DATETIME", "\"${buildTime.format('yyyy-MM-dd HH:mm:ss')}\""
     }
     buildTypes {
         release {

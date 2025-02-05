@@ -82,9 +82,15 @@ public class NavigationBase extends AppCompatActivity
         tvUser = nv.getHeaderView(0).findViewById(R.id.tv_hamburger_user);
         tvServer = nv.getHeaderView(0).findViewById(R.id.tv_hamburger_server);
 
-        // add version number to hamburger_header
-        TextView tw = findViewById(R.id.tv_version);
-        tw.setText(String.format("v%s", BuildConfig.VERSION_NAME));
+        {
+            final TextView twVersion = findViewById(R.id.tv_version);
+            twVersion.setText("v" + BuildConfig.VERSION_NAME);
+        }
+
+        {
+            final TextView twBuild = findViewById(R.id.tv_build);
+            twBuild.setText(getString(R.string.hamburger_built) + " " + BuildConfig.BUILD_DATETIME);
+        }
     }
 
     /**
@@ -228,10 +234,7 @@ public class NavigationBase extends AppCompatActivity
         if (connected) {
             Server server = TCPClient.getInstance().server;
             tvUser.setText(server.username);
-            if (!server.name.isEmpty())
-                tvServer.setText(server.name);
-            else
-                tvServer.setText(server.host);
+            tvServer.setText(!server.name.isEmpty() ? server.name : server.host);
         } else {
             tvUser.setText(R.string.hamburger_state_unauthenticated);
             tvServer.setText(R.string.hamburger_state_disconnected);

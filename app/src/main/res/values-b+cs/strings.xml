@@ -18,6 +18,7 @@
     <string name="hamburger_state_unauthenticated">Nepřihlášen</string>
     <string name="hamburger_state_server">Server:</string>
     <string name="hamburger_state_disconnected">nepřipojen</string>
+    <string name="hamburger_built">Sestaveno</string>
 
     <string name="ta_new_loko">Přijata nová lokomotiva.</string>
     <string name="ta_multitraction">Multitrakce</string>
