@@ -94,7 +94,7 @@ public class ServerSelectFound extends Fragment {
             }
         });
 
-        this.t_no_servers_found = Toast.makeText(this.view.getContext().getApplicationContext(), R.string.conn_no_servers_found, Toast.LENGTH_LONG);
+        this.t_no_servers_found = Toast.makeText(this.view.getContext().getApplicationContext(), R.string.conn_no_servers_found, Toast.LENGTH_SHORT);
 
         // bind SwipeRerfreshLayout
         this.refreshLayout.setOnRefreshListener(this::discoverServers);
