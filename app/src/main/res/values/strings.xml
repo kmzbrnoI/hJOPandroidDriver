@@ -60,6 +60,7 @@
     <string name="conn_delete_all">Really delete all servers?</string>
     <string name="conn_refresh">Refresh</string>
     <string name="conn_add">Add</string>
+    <string name="conn_no_servers_found">No servers found.</string>
 
     <string name="gl_new_loko">New train</string>
     <string name="gl_all_deleted">All servers deleted.</string>

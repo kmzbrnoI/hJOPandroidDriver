@@ -60,6 +60,7 @@
     <string name="conn_delete_all">Opravdu smazat všechny servery?</string>
     <string name="conn_refresh">Obnovit</string>
     <string name="conn_add">Přidat</string>
+    <string name="conn_no_servers_found">Nebyly nalezeny žádné servery.</string>
 
     <string name="gl_new_loko">Nová lokomotiva</string>
     <string name="gl_all_deleted">Všechny servery byly smazány.</string>

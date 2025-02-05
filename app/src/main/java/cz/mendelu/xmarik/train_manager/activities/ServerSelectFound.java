@@ -39,6 +39,7 @@ public class ServerSelectFound extends Fragment {
     ListView lvServers;
     View view;
     UDPDiscover udpDiscover = null;
+    Toast t_no_servers_found = null;
 
     SwipeRefreshLayout refreshLayout;
 
@@ -61,10 +62,10 @@ public class ServerSelectFound extends Fragment {
                              ViewGroup container,
                              Bundle savedInstanceState
     ) {
-        view = inflater.inflate(R.layout.content_server_select_found, container);
+        this.view = inflater.inflate(R.layout.content_server_select_found, container);
 
-        refreshLayout = view.findViewById(R.id.swipeRefreshLayout);
-        lvServers = view.findViewById(R.id.servers);
+        this.refreshLayout = view.findViewById(R.id.swipeRefreshLayout);
+        this.lvServers = view.findViewById(R.id.servers);
 
         adapterLvServers = new ArrayAdapter<String[]>(view.getContext(),
                 android.R.layout.simple_list_item_2, android.R.id.text1, servers) {
@@ -80,9 +81,9 @@ public class ServerSelectFound extends Fragment {
                 return view;
             }
         };
-        lvServers.setAdapter(adapterLvServers);
+        this.lvServers.setAdapter(adapterLvServers);
 
-        lvServers.setOnItemClickListener((parent, view, position, id) -> {
+        this.lvServers.setOnItemClickListener((parent, view, position, id) -> {
             if (ServerDb.instance.found.get(position).active) {
                 connect(position);
             } else {
@@ -92,6 +93,8 @@ public class ServerSelectFound extends Fragment {
                     .setNegativeButton(getString(R.string.no), (dialog, __) -> {}).show();
             }
         });
+
+        this.t_no_servers_found = Toast.makeText(this.view.getContext().getApplicationContext(), R.string.conn_no_servers_found, Toast.LENGTH_LONG);
 
         // bind SwipeRerfreshLayout
         refreshLayout.setOnRefreshListener(this::discoverServers);
@@ -116,6 +119,8 @@ public class ServerSelectFound extends Fragment {
     public void discoverServers() {
         Context context = view.getContext().getApplicationContext();
         WifiManager wifiMgr = (WifiManager)context.getSystemService(Context.WIFI_SERVICE);
+
+        this.t_no_servers_found.cancel(); // hide potentially visible toast
 
         if (!isWifiOnAndConnected()) {
             Toast.makeText(context, R.string.conn_wifi_unavailable, Toast.LENGTH_LONG).show();
@@ -165,6 +170,8 @@ public class ServerSelectFound extends Fragment {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onUdpDiscoveryFinished(UDPDiscoveryFinishedEvent event) {
         refreshLayout.setRefreshing(false);
+        if (ServerDb.instance.found.isEmpty())
+            this.t_no_servers_found.show();
     }
 
     @Override
