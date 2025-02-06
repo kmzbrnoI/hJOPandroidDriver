@@ -345,6 +345,11 @@ public class EngineController extends NavigationBase {
     }
 
     public void b_stopClick(View view) {
+        this.emergencyStop();
+    }
+
+    public void emergencyStop() {
+        // Intentionally omit 'total' check - allow emergency stop even if not in total control
         this.sb_speed.setProgress(0);
         if (this.engine.multitrack) {
             for (Engine t : EngineDb.instance.engines.values())
