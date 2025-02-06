@@ -46,10 +46,10 @@ public class TrainRequest extends NavigationBase {
         setContentView(R.layout.activity_train_request);
         super.onCreate(savedInstanceState);
 
-        Toolbar toolbar = findViewById(R.id.toolbar);
+        final Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        View dialogView = this.getLayoutInflater().inflate(R.layout.dialog_train_request, null);
+        final View dialogView = this.getLayoutInflater().inflate(R.layout.dialog_train_request, null);
         this.dialogMessage = dialogView.findViewById(R.id.dialogMessage);
         this.dialog = new AlertDialog.Builder(this)
                 .setView(dialogView)
@@ -64,7 +64,7 @@ public class TrainRequest extends NavigationBase {
         this.lAdapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_list_item_1, android.R.id.text1, areas_data);
 
-        this.areas_lv.setOnItemClickListener(mOnLvAreasClickListener);
+        this.areas_lv.setOnItemClickListener((parent, v, position, id) -> onLvAreasItemClick(parent, v, position, id));
         this.areas_lv.setAdapter(lAdapter);
 
         this.messageForServer.setOnFocusChangeListener((view, b) -> {
@@ -73,18 +73,18 @@ public class TrainRequest extends NavigationBase {
         });
     }
 
-    private AdapterView.OnItemClickListener mOnLvAreasClickListener = new AdapterView.OnItemClickListener(){
-        @Override
-        public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-            ControlArea area = ControlAreaDb.instance.areas.get(position);
-            TCPClient.getInstance().send("-;LOK;G;PLEASE;" + area.id + ";" +
-                    messageForServer.getText().toString());
+    public void onLvAreasItemClick(AdapterView<?> parent, View v, int position, long id) {
+        final ControlArea area = ControlAreaDb.instance.areas.get(position);
+        TCPClient.getInstance().send("-;LOK;G;PLEASE;" + area.id + ";" +
+                messageForServer.getText().toString());
 
+        // If disconnect happens as a reaction to send, do not show dialog
+        if (TCPClient.getInstance().connected()) {
             dialog.setTitle(area.name);
             dialogMessage.setText(R.string.tr_info_request_sent);
             dialog.show();
         }
-    };
+    }
 
     void FillAreas() {
         this.areas_data.clear();
@@ -102,7 +102,8 @@ public class TrainRequest extends NavigationBase {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventMainThread(LokAddEvent event) {
         super.onEventMainThread(event);
-        Intent intent = (new Intent(this, TrainHandler.class));
+
+        final Intent intent = (new Intent(this, TrainHandler.class));
         intent.putExtra("train_addr", event.getAddr());
         this.startActivity(intent);
     }
@@ -142,7 +143,7 @@ public class TrainRequest extends NavigationBase {
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        final DrawerLayout drawer = findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {

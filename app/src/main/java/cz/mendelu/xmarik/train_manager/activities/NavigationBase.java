@@ -60,27 +60,27 @@ public class NavigationBase extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        isDrawerFixed = getResources().getBoolean(R.bool.isDrawerFixed);
+        this.isDrawerFixed = getResources().getBoolean(R.bool.isDrawerFixed);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
 
         // Navigation Drawer open / close event
-        drawer = findViewById(R.id.drawer_layout);
-        if (!isDrawerFixed) {
+        this.drawer = findViewById(R.id.drawer_layout);
+        if (!this.isDrawerFixed) {
             ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar,
                     R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-            drawer.addDrawerListener(toggle);
+            this.drawer.addDrawerListener(toggle);
             toggle.syncState();
         }
 
-        NavigationView nv = findViewById(R.id.nav_view);
+        final NavigationView nv = findViewById(R.id.nav_view);
         nv.setNavigationItemSelectedListener(this);
 
-        menu = nv.getMenu();
+        this.menu = nv.getMenu();
 
-        miTrainRequest = menu.findItem(R.id.nav_train_request);
-        tvUser = nv.getHeaderView(0).findViewById(R.id.tv_hamburger_user);
-        tvServer = nv.getHeaderView(0).findViewById(R.id.tv_hamburger_server);
+        this.miTrainRequest = menu.findItem(R.id.nav_train_request);
+        this.tvUser = nv.getHeaderView(0).findViewById(R.id.tv_hamburger_user);
+        this.tvServer = nv.getHeaderView(0).findViewById(R.id.tv_hamburger_server);
 
         {
             final TextView twVersion = findViewById(R.id.tv_version);
@@ -110,23 +110,21 @@ public class NavigationBase extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_server) {
-            startActivity(new Intent(this, ServerSelect.class));
+            this.startActivity(new Intent(this, ServerSelect.class));
 
         } else if (id == R.id.nav_about) {
-            startActivity(new Intent(this, About.class));
+            this.startActivity(new Intent(this, About.class));
 
         } else if (id == R.id.nav_train_request) {
-            startActivity(new Intent(this, TrainRequest.class));
+            this.startActivity(new Intent(this, TrainRequest.class));
 
         } else if (id == R.id.nav_settings) {
-            startActivity(new Intent(this, Settings.class));
+            this.startActivity(new Intent(this, Settings.class));
 
         }
 
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        if (!isDrawerFixed) {
-            drawer.closeDrawer(GravityCompat.START);
-        }
+        if (!this.isDrawerFixed)
+            this.drawer.closeDrawer(GravityCompat.START);
         return true;
     }
 
@@ -137,10 +135,10 @@ public class NavigationBase extends AppCompatActivity
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
-            if (drawer.isDrawerOpen(GravityCompat.START)) {
-                drawer.closeDrawer(GravityCompat.START);
+            if (this.drawer.isDrawerOpen(GravityCompat.START)) {
+                this.drawer.closeDrawer(GravityCompat.START);
             } else {
-                drawer.openDrawer(GravityCompat.START);
+                this.drawer.openDrawer(GravityCompat.START);
             }
             return true;
         }
@@ -154,7 +152,7 @@ public class NavigationBase extends AppCompatActivity
                 .setCancelable(false)
                 .setPositiveButton(R.string.dialog_ok, (dialog, which) -> {} )
                 .show();
-        updateServer();
+        this.updateServer();
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -168,7 +166,7 @@ public class NavigationBase extends AppCompatActivity
                             TCPClient.getInstance().disconnect("User cancelled")
                     ).show();
         }
-        updateServer();
+        this.updateServer();
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -210,21 +208,17 @@ public class NavigationBase extends AppCompatActivity
     }
 
     private void updateTrainGroup() {
-        menu.removeGroup(R.id.group_train);
+        this.menu.removeGroup(R.id.group_train);
         ArrayList<Train> trains = new ArrayList<>(TrainDb.instance.trains.values());
         Collections.sort(trains, (train1, train2) -> train1.addr - train2.addr);
 
-        for(Train t : trains) {
-            MenuItem item = menu.add(R.id.group_train, Menu.NONE, 1, t.getTitle());
+        for (Train t : trains) {
+            final MenuItem item = menu.add(R.id.group_train, Menu.NONE, 1, t.getTitle());
             // Set icon
             if (t.total) {
-                if (t.multitrack)
-                    item.setIcon(R.drawable.ic_train_multi_24dp);
-                else item.setIcon(R.drawable.ic_train_control_24dp);
+                item.setIcon((t.multitrack) ? R.drawable.ic_train_multi_24dp : R.drawable.ic_train_control_24dp);
             } else {
-                if (t.stepsSpeed == 0)
-                    item.setIcon(R.drawable.ic_train_stop_24dp);
-                else item.setIcon(R.drawable.ic_train_speed_24dp);
+                item.setIcon((t.stepsSpeed == 0) ? R.drawable.ic_train_stop_24dp : R.drawable.ic_train_speed_24dp);
             }
             item.setOnMenuItemClickListener(item1 -> {
                 if (this instanceof TrainHandler) {
@@ -255,14 +249,14 @@ public class NavigationBase extends AppCompatActivity
 
     private void updateServer() {
         boolean connected = TCPClient.getInstance().connected();
-        miTrainRequest.setVisible(connected);
+        this.miTrainRequest.setVisible(connected);
         if (connected) {
             Server server = TCPClient.getInstance().server;
-            tvUser.setText(server.username);
-            tvServer.setText(!server.name.isEmpty() ? server.name : server.host);
+            this.tvUser.setText(server.username);
+            this.tvServer.setText(!server.name.isEmpty() ? server.name : server.host);
         } else {
-            tvUser.setText(R.string.hamburger_state_unauthenticated);
-            tvServer.setText(R.string.hamburger_state_disconnected);
+            this.tvUser.setText(R.string.hamburger_state_unauthenticated);
+            this.tvServer.setText(R.string.hamburger_state_disconnected);
         }
     }
 

@@ -25,7 +25,6 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.preference.PreferenceManager;
 
-import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
@@ -36,7 +35,6 @@ import java.util.Collections;
 import cz.kudlav.scomview.ScomView;
 import cz.mendelu.xmarik.train_manager.R;
 import cz.mendelu.xmarik.train_manager.adapters.FunctionCheckBoxAdapter;
-import cz.mendelu.xmarik.train_manager.events.LokAddEvent;
 import cz.mendelu.xmarik.train_manager.events.LokChangeEvent;
 import cz.mendelu.xmarik.train_manager.events.LokRemoveEvent;
 import cz.mendelu.xmarik.train_manager.events.LokRespEvent;
@@ -98,7 +96,7 @@ public class TrainHandler extends NavigationBase {
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        updating = false;
+        this.updating = false;
 
         sb_speed = findViewById(R.id.speedkBar1);
         s_direction = findViewById(R.id.handlerDirection1);
@@ -141,7 +139,7 @@ public class TrainHandler extends NavigationBase {
         );
 
         chb_group.setOnCheckedChangeListener((compoundButton, checked) -> {
-            if (!updating) {
+            if (!this.updating) {
                 train.multitrack = checked;
                 if (checked) {
                     displayGroupDialog();
@@ -157,7 +155,7 @@ public class TrainHandler extends NavigationBase {
         });
 
         chb_total.setOnCheckedChangeListener((compoundButton, checked) -> {
-            if (!updating) {
+            if (!this.updating) {
                 train.setTotal(checked);
                 if (!checked) train.multitrack = false;
             }
@@ -192,7 +190,8 @@ public class TrainHandler extends NavigationBase {
     }
 
     private void onDirectionChange(boolean newDir) {
-        if (updating) return;
+        if (this.updating)
+            return;
 
         if (!newDir)
             s_direction.setText(R.string.ta_direction_forward);
