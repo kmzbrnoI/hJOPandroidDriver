@@ -81,18 +81,9 @@ public class ServerSelectFound extends Fragment {
                 return view;
             }
         };
-        this.lvServers.setAdapter(adapterLvServers);
 
-        this.lvServers.setOnItemClickListener((parent, view, position, id) -> {
-            if (ServerDb.instance.found.get(position).active) {
-                this.connect(position);
-            } else {
-                new AlertDialog.Builder(this.view.getContext())
-                    .setMessage(R.string.conn_server_offline)
-                    .setPositiveButton(getString(R.string.yes), (dialog, __) -> this.connect(position))
-                    .setNegativeButton(getString(R.string.no), (dialog, __) -> {}).show();
-            }
-        });
+        this.lvServers.setAdapter(adapterLvServers);
+        this.lvServers.setOnItemClickListener((parent, view, position, id) -> lvServersOnItemClick(parent, view, position, id));
 
         this.t_no_servers_found = Toast.makeText(this.view.getContext().getApplicationContext(), R.string.conn_no_servers_found, Toast.LENGTH_SHORT);
 
@@ -103,6 +94,17 @@ public class ServerSelectFound extends Fragment {
         this.refreshLayout.post(this::discoverServers);
 
         return view;
+    }
+
+    private void lvServersOnItemClick(AdapterView<?> parent, View view, int position, long id) {
+        if (ServerDb.instance.found.get(position).active) {
+            this.connect(position);
+        } else {
+            new AlertDialog.Builder(this.view.getContext())
+                    .setMessage(R.string.conn_server_offline)
+                    .setPositiveButton(getString(R.string.yes), (dialog, __) -> this.connect(position))
+                    .setNegativeButton(getString(R.string.no), (dialog, __) -> {}).show();
+        }
     }
 
     public void updateServers() {
