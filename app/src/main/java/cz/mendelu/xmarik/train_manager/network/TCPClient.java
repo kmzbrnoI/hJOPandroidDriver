@@ -17,7 +17,7 @@ import cz.mendelu.xmarik.train_manager.events.AreasEvent;
 import cz.mendelu.xmarik.train_manager.events.ConnectionEstablishedEvent;
 import cz.mendelu.xmarik.train_manager.events.GlobalAuthEvent;
 import cz.mendelu.xmarik.train_manager.events.HandShakeEvent;
-import cz.mendelu.xmarik.train_manager.events.LokEvent;
+import cz.mendelu.xmarik.train_manager.events.EngineEvent;
 import cz.mendelu.xmarik.train_manager.events.RequestEvent;
 import cz.mendelu.xmarik.train_manager.events.TCPConnectingErrorEvent;
 import cz.mendelu.xmarik.train_manager.events.TCPDisconnectReqEvent;
@@ -206,7 +206,7 @@ public class TCPClient {
                 else if (parsed.get(3).equalsIgnoreCase("PLEASE-RESP"))
                     EventBus.getDefault().post(new RequestEvent(parsed));
             } else
-                EventBus.getDefault().post(new LokEvent(parsed));
+                EventBus.getDefault().post(new EngineEvent(parsed));
         }
     }
 }

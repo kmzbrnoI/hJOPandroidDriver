@@ -27,10 +27,10 @@ import java.util.Collections;
 import cz.mendelu.xmarik.train_manager.BuildConfig;
 import cz.mendelu.xmarik.train_manager.R;
 import cz.mendelu.xmarik.train_manager.events.GlobalAuthEvent;
-import cz.mendelu.xmarik.train_manager.events.LokAddEvent;
-import cz.mendelu.xmarik.train_manager.events.LokChangeEvent;
-import cz.mendelu.xmarik.train_manager.events.LokRemoveEvent;
-import cz.mendelu.xmarik.train_manager.events.LokTotalChangeErrorEvent;
+import cz.mendelu.xmarik.train_manager.events.EngineAddEvent;
+import cz.mendelu.xmarik.train_manager.events.EngineChangeEvent;
+import cz.mendelu.xmarik.train_manager.events.EngineRemoveEvent;
+import cz.mendelu.xmarik.train_manager.events.EngineTotalChangeErrorEvent;
 import cz.mendelu.xmarik.train_manager.events.TCPDisconnectedEvent;
 import cz.mendelu.xmarik.train_manager.models.Server;
 import cz.mendelu.xmarik.train_manager.models.Engine;
@@ -185,23 +185,23 @@ public class NavigationBase extends AppCompatActivity
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onEventMainThread(LokChangeEvent event) {
+    public void onEventMainThread(EngineChangeEvent event) {
         this.updateTrainGroup();
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onEventMainThread(LokTotalChangeErrorEvent event) {
+    public void onEventMainThread(EngineTotalChangeErrorEvent event) {
         int msgId = (event.getTotal()) ? R.string.total_off_error : R.string.total_on_error;
         Toast.makeText(this, getString(msgId, event.getAddr()), Toast.LENGTH_LONG).show();
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onEventMainThread(LokAddEvent event) {
+    public void onEventMainThread(EngineAddEvent event) {
         this.updateTrainGroup();
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onEventMainThread(LokRemoveEvent event) {
+    public void onEventMainThread(EngineRemoveEvent event) {
         this.updateTrainGroup();
     }
 

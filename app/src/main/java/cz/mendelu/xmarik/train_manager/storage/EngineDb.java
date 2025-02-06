@@ -8,12 +8,12 @@ import org.greenrobot.eventbus.Subscribe;
 import java.util.HashMap;
 import java.util.Map;
 
-import cz.mendelu.xmarik.train_manager.events.LokAddEvent;
-import cz.mendelu.xmarik.train_manager.events.LokChangeEvent;
-import cz.mendelu.xmarik.train_manager.events.LokEvent;
-import cz.mendelu.xmarik.train_manager.events.LokRemoveEvent;
-import cz.mendelu.xmarik.train_manager.events.LokRespEvent;
-import cz.mendelu.xmarik.train_manager.events.LokTotalChangeErrorEvent;
+import cz.mendelu.xmarik.train_manager.events.EngineAddEvent;
+import cz.mendelu.xmarik.train_manager.events.EngineChangeEvent;
+import cz.mendelu.xmarik.train_manager.events.EngineEvent;
+import cz.mendelu.xmarik.train_manager.events.EngineRemoveEvent;
+import cz.mendelu.xmarik.train_manager.events.EngineRespEvent;
+import cz.mendelu.xmarik.train_manager.events.EngineTotalChangeErrorEvent;
 import cz.mendelu.xmarik.train_manager.events.TCPDisconnectedEvent;
 import cz.mendelu.xmarik.train_manager.models.Engine;
 
@@ -32,7 +32,7 @@ public class EngineDb {
     }
 
     @Subscribe
-    public void onEvent(LokEvent event) {
+    public void onEvent(EngineEvent event) {
         try {
             if (event.getParsed().get(3).equalsIgnoreCase("AUTH"))
                 authEvent(event);
@@ -53,7 +53,7 @@ public class EngineDb {
         }
     }
 
-    public void authEvent(LokEvent event) {
+    public void authEvent(EngineEvent event) {
         int addr = Integer.parseInt(event.getParsed().get(2));
 
         if (event.getParsed().get(4).equalsIgnoreCase("OK") ||
@@ -64,31 +64,31 @@ public class EngineDb {
                 t.stolen = false;
                 if (event.getParsed().size() >= 7)
                     engines.get(addr).updateFromServerString(event.getParsed().get(5));
-                EventBus.getDefault().post(new LokChangeEvent(addr));
+                EventBus.getDefault().post(new EngineChangeEvent(addr));
             } else {
                 t = new Engine(event.getParsed().get(5));
                 t.total = event.getParsed().get(4).equalsIgnoreCase("TOTAL");
                 engines.put(addr, t);
-                EventBus.getDefault().post(new LokAddEvent(addr));
+                EventBus.getDefault().post(new EngineAddEvent(addr));
             }
 
         } else if (event.getParsed().get(4).equalsIgnoreCase("RELEASE") ||
                    event.getParsed().get(4).equalsIgnoreCase("NOT")) {
             if (!engines.containsKey(addr)) return;
             engines.remove(addr);
-            EventBus.getDefault().post(new LokRemoveEvent(addr));
+            EventBus.getDefault().post(new EngineRemoveEvent(addr));
 
         } else if (event.getParsed().get(4).equalsIgnoreCase("STOLEN")) {
             Engine t = engines.get(addr);
             if (t != null) {
                 t.stolen = true;
                 t.total = false;
-                EventBus.getDefault().post(new LokChangeEvent(addr));
+                EventBus.getDefault().post(new EngineChangeEvent(addr));
             }
         }
     }
 
-    public void fEvent(LokEvent event) {
+    public void fEvent(EngineEvent event) {
         Engine t = engines.get(Integer.valueOf(event.getParsed().get(2)));
         String[] f = event.getParsed().get(4).split("-");
         if (f.length == 1) {
@@ -101,40 +101,40 @@ public class EngineDb {
                 t.function[i].checked = (event.getParsed().get(5).charAt(i-from) == '1');
         }
 
-        EventBus.getDefault().post(new LokChangeEvent(t.addr));
+        EventBus.getDefault().post(new EngineChangeEvent(t.addr));
     }
 
-    public void spdEvent(LokEvent event) {
+    public void spdEvent(EngineEvent event) {
         Engine t = engines.get(Integer.valueOf(event.getParsed().get(2)));
         t.kmphSpeed = Integer.parseInt(event.getParsed().get(4));
         t.stepsSpeed = Integer.parseInt(event.getParsed().get(5));
         t.direction = (event.getParsed().get(6).equals("1") ? Engine.Direction.BACKWARD : Engine.Direction.FORWARD);
 
-        EventBus.getDefault().post(new LokChangeEvent(t.addr));
+        EventBus.getDefault().post(new EngineChangeEvent(t.addr));
     }
 
-    public void respEvent(LokEvent event) {
+    public void respEvent(EngineEvent event) {
         Engine t = engines.get(Integer.valueOf(event.getParsed().get(2)));
         if (event.getParsed().get(4).equalsIgnoreCase("OK"))
             t.kmphSpeed = Integer.parseInt(event.getParsed().get(6));
 
-        EventBus.getDefault().post(new LokRespEvent(event.getParsed()));
+        EventBus.getDefault().post(new EngineRespEvent(event.getParsed()));
     }
 
-    public void totalEvent(LokEvent event) {
+    public void totalEvent(EngineEvent event) {
         int addr = Integer.parseInt(event.getParsed().get(2));
         if (!engines.containsKey(addr)) return;
         Engine t = engines.get(addr);
         boolean total = event.getParsed().get(4).equals("1");
         if (t.total == total) {
-            EventBus.getDefault().post(new LokChangeEvent(addr));
+            EventBus.getDefault().post(new EngineChangeEvent(addr));
         } else {
             t.total = total;
-            EventBus.getDefault().post(new LokTotalChangeErrorEvent(addr, total));
+            EventBus.getDefault().post(new EngineTotalChangeErrorEvent(addr, total));
         }
     }
 
-    public void expSignEvent(LokEvent event) {
+    public void expSignEvent(EngineEvent event) {
         int addr = Integer.parseInt(event.getParsed().get(2));
         if (!engines.containsKey(addr)) return;
         Engine t = engines.get(addr);
@@ -144,16 +144,16 @@ public class EngineDb {
         } catch (NumberFormatException e) {
             t.expSignalCode = -1;
         }
-        EventBus.getDefault().post(new LokChangeEvent(addr));
+        EventBus.getDefault().post(new EngineChangeEvent(addr));
     }
 
-    public void expSpdEvent(LokEvent event) {
+    public void expSpdEvent(EngineEvent event) {
         int addr = Integer.parseInt(event.getParsed().get(2));
         if (!engines.containsKey(addr)) return;
         Engine t = engines.get(addr);
         String expSpeed = event.getParsed().get(4);
         t.expSpeed = (!expSpeed.equals("-")) ? Integer.parseInt(expSpeed) : -1;
-        EventBus.getDefault().post(new LokChangeEvent(addr));
+        EventBus.getDefault().post(new EngineChangeEvent(addr));
     }
 
     @Subscribe

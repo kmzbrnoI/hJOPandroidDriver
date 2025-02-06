@@ -1,9 +1,9 @@
 package cz.mendelu.xmarik.train_manager.events;
 
-public class LokTotalChangeErrorEvent {
+public class EngineTotalChangeErrorEvent {
     private final int addr;
     private final boolean total;
-    public LokTotalChangeErrorEvent(int addr, boolean total) {
+    public EngineTotalChangeErrorEvent(int addr, boolean total) {
         this.addr = addr;
         this.total = total;
     }

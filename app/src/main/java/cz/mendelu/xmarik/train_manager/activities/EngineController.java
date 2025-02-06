@@ -39,9 +39,9 @@ import java.util.Collections;
 import cz.kudlav.scomview.ScomView;
 import cz.mendelu.xmarik.train_manager.R;
 import cz.mendelu.xmarik.train_manager.adapters.FunctionCheckBoxAdapter;
-import cz.mendelu.xmarik.train_manager.events.LokChangeEvent;
-import cz.mendelu.xmarik.train_manager.events.LokRemoveEvent;
-import cz.mendelu.xmarik.train_manager.events.LokRespEvent;
+import cz.mendelu.xmarik.train_manager.events.EngineChangeEvent;
+import cz.mendelu.xmarik.train_manager.events.EngineRemoveEvent;
+import cz.mendelu.xmarik.train_manager.events.EngineRespEvent;
 import cz.mendelu.xmarik.train_manager.events.TCPDisconnectedEvent;
 import cz.mendelu.xmarik.train_manager.models.Engine;
 import cz.mendelu.xmarik.train_manager.models.EngineFunction;
@@ -445,14 +445,14 @@ public class EngineController extends NavigationBase {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onEventMainThread(LokChangeEvent event) {
+    public void onEventMainThread(EngineChangeEvent event) {
         super.onEventMainThread(event);
         if (engine != null && event.getAddr() == this.engine.addr)
             this.updateGUIFromTrain();
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onEventMainThread(LokRemoveEvent event) {
+    public void onEventMainThread(EngineRemoveEvent event) {
         super.onEventMainThread(event);
 
         Toast.makeText(getApplicationContext(),
@@ -472,7 +472,7 @@ public class EngineController extends NavigationBase {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onEventMainThread(LokRespEvent event) {
+    public void onEventMainThread(EngineRespEvent event) {
         if (engine == null)
             return;
         if (Integer.parseInt(event.getParsed().get(2)) != this.engine.addr)

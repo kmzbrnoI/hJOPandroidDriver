@@ -26,7 +26,7 @@ import cz.mendelu.xmarik.train_manager.storage.ControlAreaDb;
 import cz.mendelu.xmarik.train_manager.R;
 import cz.mendelu.xmarik.train_manager.network.TCPClient;
 import cz.mendelu.xmarik.train_manager.events.AreasParsedEvent;
-import cz.mendelu.xmarik.train_manager.events.LokAddEvent;
+import cz.mendelu.xmarik.train_manager.events.EngineAddEvent;
 import cz.mendelu.xmarik.train_manager.events.TCPDisconnectedEvent;
 import cz.mendelu.xmarik.train_manager.models.ControlArea;
 import cz.mendelu.xmarik.train_manager.events.RequestEvent;
@@ -100,7 +100,7 @@ public class EngineRequest extends NavigationBase {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onEventMainThread(LokAddEvent event) {
+    public void onEventMainThread(EngineAddEvent event) {
         super.onEventMainThread(event);
 
         final Intent intent = (new Intent(this, EngineController.class));

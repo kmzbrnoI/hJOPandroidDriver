@@ -1,8 +1,8 @@
 package cz.mendelu.xmarik.train_manager.events;
 
-public class LokAddEvent {
+public class EngineRemoveEvent {
     private final int addr;
-    public LokAddEvent(int addr) {
+    public EngineRemoveEvent(int addr) {
         this.addr = addr;
     }
     public int getAddr() { return addr; }
