@@ -12,6 +12,8 @@ import java.io.IOException;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import cz.mendelu.xmarik.train_manager.events.AreasEvent;
 import cz.mendelu.xmarik.train_manager.events.ConnectionEstablishedEvent;
@@ -32,6 +34,8 @@ import cz.mendelu.xmarik.train_manager.models.Server;
  * incoming data. It is intended to be in separate thread.
  */
 public class TCPClient {
+    static final int TIMER_PING_PERIOD = 1000;
+
     private String serverHost = "localhost";
     private int serverPort = 0;
 
@@ -41,6 +45,8 @@ public class TCPClient {
     private TCPWriteThread m_wt = null;
     private TCPReadThread m_rt = null;
 
+    Timer t_ping = new Timer();
+
     private static TCPClient instance = null;
 
     public Server server = null;
@@ -49,6 +55,9 @@ public class TCPClient {
     public TCPClient() {
         if (!EventBus.getDefault().isRegistered(this))
             EventBus.getDefault().register(this);
+
+        TimerTask pingTask = new PingTask();
+        this.t_ping.schedule(pingTask, 0, TIMER_PING_PERIOD);
     }
 
     protected void finalize() {
@@ -207,6 +216,13 @@ public class TCPClient {
                     EventBus.getDefault().post(new RequestEvent(parsed));
             } else
                 EventBus.getDefault().post(new EngineEvent(parsed));
+        }
+    }
+
+    class PingTask extends TimerTask {
+        public void run() {
+            if (TCPClient.this.connected())
+                TCPClient.this.send("-;PING;");
         }
     }
 }
