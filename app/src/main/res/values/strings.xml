@@ -42,8 +42,8 @@
 
     <string name="tr_disp_message">Optional message for the dispatcher:</string>
     <string name="tr_send_request">Send request</string>
-    <string name="tr_info_request_sent">Request sent, waiting for server response.</string>
-    <string name="tr_info_waiting_disp">Request sent, waiting for dispatcher response.</string>
+    <string name="tr_info_request_sent">Request sent, waiting for server response...</string>
+    <string name="tr_info_waiting_disp">Request sent, waiting for dispatcher response...</string>
     <string name="tr_no_areas">No areas.</string>
     <string name="tr_no_area_selected">You must select an area!</string>
 
