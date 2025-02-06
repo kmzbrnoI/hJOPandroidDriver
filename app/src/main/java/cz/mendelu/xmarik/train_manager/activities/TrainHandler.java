@@ -535,15 +535,6 @@ public class TrainHandler extends NavigationBase {
         super.onResume();
         this.fillHVs();
         timerHandler.postDelayed(timerRunnable, 100);
-        if (!EventBus.getDefault().isRegistered(this))
-            EventBus.getDefault().register(this);
-    }
-
-    @Override
-    public void onDestroy() {
-        if (EventBus.getDefault().isRegistered(this))
-            EventBus.getDefault().unregister(this);
-        super.onDestroy();
     }
 
 }
