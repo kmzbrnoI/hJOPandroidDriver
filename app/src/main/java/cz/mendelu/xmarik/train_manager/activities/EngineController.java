@@ -390,7 +390,7 @@ public class EngineController extends NavigationBase {
             return;
 
         new AlertDialog.Builder(this)
-                .setMessage(getString(R.string.ta_release_really) + " " + this.engine.name + "?")
+                .setMessage(getString(R.string.ta_release_really) + " " + this.engine.getTitle() + "?")
                 .setPositiveButton(getString(R.string.yes), (dialog, which) -> this.engine.release())
                 .setNegativeButton(getString(R.string.no), (dialog, which) -> {}).show();
     }

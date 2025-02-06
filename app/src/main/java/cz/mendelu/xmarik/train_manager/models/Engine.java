@@ -114,7 +114,8 @@ public class Engine {
 
     public String getTitle() {
         String title = this.addr + " : " + this.name;
-        if (!this.label.isEmpty()) title += " (" + this.label + ")";
+        if (!this.label.isEmpty())
+            title += " (" + this.label + ")";
         return title;
     }
 
