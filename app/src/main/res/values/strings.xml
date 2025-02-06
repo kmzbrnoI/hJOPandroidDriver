@@ -27,18 +27,18 @@
     <string name="ta_direction_backwards">backward</string>
     <string name="ta_idle">Idle</string>
     <string name="ta_emergency_stop">Emergency STOP</string>
-    <string name="ta_no_loks">No trains.</string>
+    <string name="ta_no_loks">No engines.</string>
     <string name="ta_toggle">Toggle</string>
     <string name="ta_release">Release</string>
     <string name="ta_release_ok">Train %d released.</string>
-    <string name="ta_release_really">Really release a train</string>
+    <string name="ta_release_really">Really release a engine</string>
     <string name="ta_dialog_group_title">Add to multitraction</string>
-    <string name="ta_dialog_ungroup_msg">Turn off multitraction of other trains?</string>
+    <string name="ta_dialog_ungroup_msg">Turn off multitraction of other engines?</string>
     <string name="ta_dialog_ungroup_ok">OK</string>
     <string name="ta_dialog_ungroup_cancel">Keep</string>
     <string name="ta_state_ok">Train control is OK</string>
     <string name="ta_state_err">Last command failed</string>
-    <string name="ta_state_stolen">Regaining train control</string>
+    <string name="ta_state_stolen">Regaining engine control</string>
 
     <string name="tr_disp_message">Optional message for the dispatcher:</string>
     <string name="tr_send_request">Send request</string>
@@ -62,7 +62,7 @@
     <string name="conn_add">Add</string>
     <string name="conn_no_servers_found">No servers found.</string>
 
-    <string name="gl_new_loko">New train</string>
+    <string name="gl_new_loko">New engine</string>
     <string name="gl_all_deleted">All servers deleted.</string>
     <string name="gl_repeat">Repeat</string>
 

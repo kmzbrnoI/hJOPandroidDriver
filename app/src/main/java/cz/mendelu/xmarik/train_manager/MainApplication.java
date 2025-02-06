@@ -8,7 +8,7 @@ import androidx.preference.PreferenceManager;
 import cz.mendelu.xmarik.train_manager.storage.ControlAreaDb;
 import cz.mendelu.xmarik.train_manager.storage.TimeHolder;
 import cz.mendelu.xmarik.train_manager.storage.ServerDb;
-import cz.mendelu.xmarik.train_manager.storage.TrainDb;
+import cz.mendelu.xmarik.train_manager.storage.EngineDb;
 
 public class MainApplication extends Application {
     @Override
@@ -26,7 +26,7 @@ public class MainApplication extends Application {
         ControlAreaDb.instance = new ControlAreaDb();
 
         // create database of trains
-        TrainDb.instance = new TrainDb();
+        EngineDb.instance = new EngineDb();
 
         // create model time holder
         TimeHolder.instance = new TimeHolder();

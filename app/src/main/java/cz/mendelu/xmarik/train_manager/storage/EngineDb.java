@@ -15,18 +15,18 @@ import cz.mendelu.xmarik.train_manager.events.LokRemoveEvent;
 import cz.mendelu.xmarik.train_manager.events.LokRespEvent;
 import cz.mendelu.xmarik.train_manager.events.LokTotalChangeErrorEvent;
 import cz.mendelu.xmarik.train_manager.events.TCPDisconnectedEvent;
-import cz.mendelu.xmarik.train_manager.models.Train;
+import cz.mendelu.xmarik.train_manager.models.Engine;
 
 /**
- * TrainDb is a database of all local trains.
+ * EngineDb is a database of all local engines.
  */
 
-public class TrainDb {
-    public static TrainDb instance;
+public class EngineDb {
+    public static EngineDb instance;
 
-    public Map<Integer, Train> trains = new HashMap<>();
+    public Map<Integer, Engine> engines = new HashMap<>();
 
-    public TrainDb() {
+    public EngineDb() {
         if (!EventBus.getDefault().isRegistered(this))
             EventBus.getDefault().register(this);
     }
@@ -58,28 +58,28 @@ public class TrainDb {
 
         if (event.getParsed().get(4).equalsIgnoreCase("OK") ||
                 event.getParsed().get(4).equalsIgnoreCase("TOTAL")) {
-            Train t = trains.get(addr);
+            Engine t = engines.get(addr);
             if (t != null) {
                 t.total = event.getParsed().get(4).equalsIgnoreCase("TOTAL");
                 t.stolen = false;
                 if (event.getParsed().size() >= 7)
-                    trains.get(addr).updateFromServerString(event.getParsed().get(5));
+                    engines.get(addr).updateFromServerString(event.getParsed().get(5));
                 EventBus.getDefault().post(new LokChangeEvent(addr));
             } else {
-                t = new Train(event.getParsed().get(5));
+                t = new Engine(event.getParsed().get(5));
                 t.total = event.getParsed().get(4).equalsIgnoreCase("TOTAL");
-                trains.put(addr, t);
+                engines.put(addr, t);
                 EventBus.getDefault().post(new LokAddEvent(addr));
             }
 
         } else if (event.getParsed().get(4).equalsIgnoreCase("RELEASE") ||
                    event.getParsed().get(4).equalsIgnoreCase("NOT")) {
-            if (!trains.containsKey(addr)) return;
-            trains.remove(addr);
+            if (!engines.containsKey(addr)) return;
+            engines.remove(addr);
             EventBus.getDefault().post(new LokRemoveEvent(addr));
 
         } else if (event.getParsed().get(4).equalsIgnoreCase("STOLEN")) {
-            Train t = trains.get(addr);
+            Engine t = engines.get(addr);
             if (t != null) {
                 t.stolen = true;
                 t.total = false;
@@ -89,7 +89,7 @@ public class TrainDb {
     }
 
     public void fEvent(LokEvent event) {
-        Train t = trains.get(Integer.valueOf(event.getParsed().get(2)));
+        Engine t = engines.get(Integer.valueOf(event.getParsed().get(2)));
         String[] f = event.getParsed().get(4).split("-");
         if (f.length == 1) {
             t.function[Integer.parseInt(f[0])].checked = (event.getParsed().get(5).equals("1"));
@@ -105,7 +105,7 @@ public class TrainDb {
     }
 
     public void spdEvent(LokEvent event) {
-        Train t = trains.get(Integer.valueOf(event.getParsed().get(2)));
+        Engine t = engines.get(Integer.valueOf(event.getParsed().get(2)));
         t.kmphSpeed = Integer.parseInt(event.getParsed().get(4));
         t.stepsSpeed = Integer.parseInt(event.getParsed().get(5));
         t.direction = (event.getParsed().get(6).equals("1"));
@@ -114,7 +114,7 @@ public class TrainDb {
     }
 
     public void respEvent(LokEvent event) {
-        Train t = trains.get(Integer.valueOf(event.getParsed().get(2)));
+        Engine t = engines.get(Integer.valueOf(event.getParsed().get(2)));
         if (event.getParsed().get(4).equalsIgnoreCase("OK"))
             t.kmphSpeed = Integer.parseInt(event.getParsed().get(6));
 
@@ -123,8 +123,8 @@ public class TrainDb {
 
     public void totalEvent(LokEvent event) {
         int addr = Integer.parseInt(event.getParsed().get(2));
-        if (!trains.containsKey(addr)) return;
-        Train t = trains.get(addr);
+        if (!engines.containsKey(addr)) return;
+        Engine t = engines.get(addr);
         boolean total = event.getParsed().get(4).equals("1");
         if (t.total == total) {
             EventBus.getDefault().post(new LokChangeEvent(addr));
@@ -136,8 +136,8 @@ public class TrainDb {
 
     public void expSignEvent(LokEvent event) {
         int addr = Integer.parseInt(event.getParsed().get(2));
-        if (!trains.containsKey(addr)) return;
-        Train t = trains.get(addr);
+        if (!engines.containsKey(addr)) return;
+        Engine t = engines.get(addr);
         t.expSignalBlock = event.getParsed().get(4);
         try {
             t.expSignalCode = Integer.parseInt(event.getParsed().get(5));
@@ -149,8 +149,8 @@ public class TrainDb {
 
     public void expSpdEvent(LokEvent event) {
         int addr = Integer.parseInt(event.getParsed().get(2));
-        if (!trains.containsKey(addr)) return;
-        Train t = trains.get(addr);
+        if (!engines.containsKey(addr)) return;
+        Engine t = engines.get(addr);
         String expSpeed = event.getParsed().get(4);
         t.expSpeed = (!expSpeed.equals("-")) ? Integer.parseInt(expSpeed) : -1;
         EventBus.getDefault().post(new LokChangeEvent(addr));
@@ -158,6 +158,6 @@ public class TrainDb {
 
     @Subscribe
     public void onEvent(TCPDisconnectedEvent event) {
-        this.trains.clear();
+        this.engines.clear();
     }
 }

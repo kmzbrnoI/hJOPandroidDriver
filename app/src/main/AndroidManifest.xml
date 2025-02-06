@@ -24,12 +24,12 @@
         </activity>
 
         <activity
-            android:name=".activities.TrainHandler"
+            android:name=".activities.EngineController"
             android:launchMode="singleInstance"
             android:label="@string/activity_train_handler_title"
             android:theme="@style/AppTheme.NoActionBar" />
 
-        <activity android:name=".activities.TrainRequest"
+        <activity android:name=".activities.EngineRequest"
             android:launchMode="singleInstance"
             android:label="@string/activity_train_request_title"
             android:theme="@style/AppTheme.NoActionBar" />

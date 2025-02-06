@@ -122,7 +122,7 @@ public class ServerConnector extends AppCompatActivity {
 
         progressBar.setVisibility(View.GONE);
 
-        Intent intent = new Intent(this, TrainRequest.class);
+        Intent intent = new Intent(this, EngineRequest.class);
         startActivity(intent);
     }
 

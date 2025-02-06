@@ -43,15 +43,15 @@ import cz.mendelu.xmarik.train_manager.events.LokChangeEvent;
 import cz.mendelu.xmarik.train_manager.events.LokRemoveEvent;
 import cz.mendelu.xmarik.train_manager.events.LokRespEvent;
 import cz.mendelu.xmarik.train_manager.events.TCPDisconnectedEvent;
-import cz.mendelu.xmarik.train_manager.models.Train;
-import cz.mendelu.xmarik.train_manager.models.TrainFunction;
+import cz.mendelu.xmarik.train_manager.models.Engine;
+import cz.mendelu.xmarik.train_manager.models.EngineFunction;
 import cz.mendelu.xmarik.train_manager.network.TCPClient;
 import cz.mendelu.xmarik.train_manager.storage.TimeHolder;
-import cz.mendelu.xmarik.train_manager.storage.TrainDb;
+import cz.mendelu.xmarik.train_manager.storage.EngineDb;
 
 
-public class TrainHandler extends NavigationBase {
-    private Train train;
+public class EngineController extends NavigationBase {
+    private Engine engine;
     private boolean updating;
     private boolean error;
     private Toolbar toolbar;
@@ -77,13 +77,13 @@ public class TrainHandler extends NavigationBase {
     Runnable timerRunnable = new Runnable() {
         @Override
         public void run() {
-            if (!updating && train != null && train.total && !train.stolen && train.stepsSpeed != sb_speed.getProgress()) {
-                if (train.multitrack) {
-                    for (Train t : TrainDb.instance.trains.values())
+            if (!updating && engine != null && engine.total && !engine.stolen && engine.stepsSpeed != sb_speed.getProgress()) {
+                if (engine.multitrack) {
+                    for (Engine t : EngineDb.instance.engines.values())
                         if (t.multitrack && !t.stolen)
                             t.setSpeedSteps(sb_speed.getProgress());
                 } else
-                    train.setSpeedSteps(sb_speed.getProgress());
+                    engine.setSpeedSteps(sb_speed.getProgress());
             }
             timerHandler.postDelayed(this, 100);
         }
@@ -125,9 +125,9 @@ public class TrainHandler extends NavigationBase {
         else
             train_addr = getIntent().getIntExtra("train_addr", -1); // from intent
         if (train_addr != -1)
-            train = TrainDb.instance.trains.get(train_addr);
+            engine = EngineDb.instance.engines.get(train_addr);
         else
-            train = null;
+            engine = null;
 
         this.updateGUIFromTrain(); // will close activity in case train = null
 
@@ -157,7 +157,7 @@ public class TrainHandler extends NavigationBase {
         // select train
         int train_addr = intent.getIntExtra("train_addr", -1);
         if (train_addr != -1) {
-            train = TrainDb.instance.trains.get(train_addr);
+            engine = EngineDb.instance.engines.get(train_addr);
             this.updateGUIFromTrain();
         }
     }
@@ -165,27 +165,27 @@ public class TrainHandler extends NavigationBase {
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putInt("train_addr", train.addr);
+        outState.putInt("train_addr", engine.addr);
     }
 
     private void onChbTotalCheckedChange(CompoundButton buttonView, boolean checked) {
         if (this.updating)
             return;
 
-        train.setTotal(checked);
+        engine.setTotal(checked);
         if (!checked)
-            train.multitrack = false;
+            engine.multitrack = false;
     }
 
     private void onChbGroupCheckedChange(CompoundButton buttonView, boolean checked) {
         if (this.updating)
             return;
 
-        train.multitrack = checked;
+        engine.multitrack = checked;
         if (checked) {
             displayGroupDialog();
         } else {
-            for (Train t : TrainDb.instance.trains.values()) {
+            for (Engine t : EngineDb.instance.engines.values()) {
                 if (t.multitrack) {
                     displayUngroupDialog();
                     break;
@@ -203,24 +203,24 @@ public class TrainHandler extends NavigationBase {
         else
             s_direction.setText(R.string.ta_direction_backwards);
 
-        train.setDirection(newDir);
+        engine.setDirection(newDir);
 
-        if (train.multitrack) {
-            for (Train t : TrainDb.instance.trains.values()) {
+        if (engine.multitrack) {
+            for (Engine t : EngineDb.instance.engines.values()) {
                 if (t.multitrack) {
-                    if (t == train)
+                    if (t == engine)
                         t.setDirection(newDir);
                     else if (!t.stolen)
                         t.setDirection(!t.direction);
                 }
             }
         } else {
-            train.setDirection(newDir);
+            engine.setDirection(newDir);
         }
     }
 
     private void updateGUIFromTrain() {
-        if ((train == null) || (!TrainDb.instance.trains.containsValue(train))) {
+        if ((engine == null) || (!EngineDb.instance.engines.containsValue(engine))) {
             startRequestActivity();
             return;
         }
@@ -228,48 +228,48 @@ public class TrainHandler extends NavigationBase {
         this.updating = true;
         final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
 
-        toolbar.setTitle(train.getTitle());
+        toolbar.setTitle(engine.getTitle());
 
-        chb_total.setEnabled(!train.stolen);
-        lv_functions.setEnabled(train != null && !train.stolen);
+        chb_total.setEnabled(!engine.stolen);
+        lv_functions.setEnabled(engine != null && !engine.stolen);
 
-        sb_speed.setProgress(train.stepsSpeed);
-        s_direction.setChecked(!train.direction);
-        if (!train.direction)
+        sb_speed.setProgress(engine.stepsSpeed);
+        s_direction.setChecked(!engine.direction);
+        if (!engine.direction)
             s_direction.setText(R.string.ta_direction_forward);
         else
             s_direction.setText(R.string.ta_direction_backwards);
 
-        if (TrainDb.instance.trains.size() < 2) {
-            train.multitrack = false;
+        if (EngineDb.instance.engines.size() < 2) {
+            engine.multitrack = false;
             chb_group.setEnabled(false);
         } else {
-            chb_group.setEnabled(train.total && !train.stolen);
+            chb_group.setEnabled(engine.total && !engine.stolen);
         }
-        chb_group.setChecked(train.multitrack);
+        chb_group.setChecked(engine.multitrack);
 
-        tv_kmhSpeed.setText(String.format("%s km/h", train.kmphSpeed));
-        chb_total.setChecked(train.total);
+        tv_kmhSpeed.setText(String.format("%s km/h", engine.kmphSpeed));
+        chb_total.setChecked(engine.total);
 
-        if (train.expSpeed != -1)
-            tv_expSpeed.setText(String.format("%s km/h", train.expSpeed));
+        if (engine.expSpeed != -1)
+            tv_expSpeed.setText(String.format("%s km/h", engine.expSpeed));
         else tv_expSpeed.setText("- km/h");
 
-        scom_expSignal.setCode(train.expSignalCode);
-        tv_expSignalBlock.setText( (train.expSignalCode != -1) ? train.expSignalBlock : "" );
+        scom_expSignal.setCode(engine.expSignalCode);
+        tv_expSignalBlock.setText( (engine.expSignalCode != -1) ? engine.expSignalBlock : "" );
 
-        this.setEnabled(train.total);
+        this.setEnabled(engine.total);
 
         //set custom adapter with check boxes to list view
-        ArrayList<TrainFunction> functions;
+        ArrayList<EngineFunction> functions;
         if (preferences.getBoolean("OnlyAvailableFunctions", true)) {
             // just own filter
             functions = new ArrayList<>();
-            for (int i = 0; i < train.function.length; i++)
-                if (!train.function[i].name.equals(""))
-                    functions.add(train.function[i]);
+            for (int i = 0; i < engine.function.length; i++)
+                if (!engine.function[i].name.equals(""))
+                    functions.add(engine.function[i]);
         } else {
-            functions = new ArrayList<>(Arrays.asList(train.function));
+            functions = new ArrayList<>(Arrays.asList(engine.function));
         }
         functionAdapter.clear();
         functionAdapter.addAll(functions);
@@ -319,7 +319,7 @@ public class TrainHandler extends NavigationBase {
 
     private void updateStatus(boolean error) {
         this.error = error;
-        if (train.stolen) {
+        if (engine.stolen) {
             ib_status.setImageResource(R.drawable.ic_circle_yellow);
         } else if (error) {
             ib_status.setImageResource(R.drawable.ic_circle_red);
@@ -355,35 +355,35 @@ public class TrainHandler extends NavigationBase {
     }
 
     public void onFuncChanged(int index, Boolean newState) {
-        if (train != null && !train.stolen)
-            train.setFunc(index, newState);
+        if (engine != null && !engine.stolen)
+            engine.setFunc(index, newState);
     }
 
     public void b_stopClick(View view) {
         sb_speed.setProgress(0);
-        if (train.multitrack) {
-            for (Train t : TrainDb.instance.trains.values())
+        if (engine.multitrack) {
+            for (Engine t : EngineDb.instance.engines.values())
                 if (t.multitrack) t.emergencyStop();
         } else {
-            train.emergencyStop();
+            engine.emergencyStop();
         }
     }
 
     public void b_idleClick(View view) {
         sb_speed.setProgress(0);
 
-        if (train == null) return;
-        if (train.multitrack) {
-            for (Train t : TrainDb.instance.trains.values())
+        if (engine == null) return;
+        if (engine.multitrack) {
+            for (Engine t : EngineDb.instance.engines.values())
                 if (t.multitrack && !t.stolen) t.setSpeedSteps(0);
         } else {
-            if (train.total && !train.stolen) train.setSpeedSteps(0);
+            if (engine.total && !engine.stolen) engine.setSpeedSteps(0);
         }
     }
 
     public void ib_StatusClick(View v) {
-        if (train.stolen) {
-            train.please();
+        if (engine.stolen) {
+            engine.please();
             Toast.makeText(this, R.string.ta_state_stolen, Toast.LENGTH_SHORT).show();
         } else if (this.error) {
             Toast.makeText(this, R.string.ta_state_err, Toast.LENGTH_SHORT).show();
@@ -393,29 +393,29 @@ public class TrainHandler extends NavigationBase {
     }
 
     public void ib_ReleaseClick(View v) {
-        if (train == null) return;
+        if (engine == null) return;
 
         new AlertDialog.Builder(this)
-                .setMessage(getString(R.string.ta_release_really) + " " + train.name + "?")
-                .setPositiveButton(getString(R.string.yes), (dialog, which) -> train.release())
+                .setMessage(getString(R.string.ta_release_really) + " " + engine.name + "?")
+                .setPositiveButton(getString(R.string.yes), (dialog, which) -> engine.release())
                 .setNegativeButton(getString(R.string.no), (dialog, which) -> {}).show();
     }
 
-    public void setTrain(Train t) {
-        train = t;
+    public void setTrain(Engine t) {
+        engine = t;
         this.updateGUIFromTrain();
     }
 
     private void displayGroupDialog() {
-        final ArrayList<Train> trains = new ArrayList<>(TrainDb.instance.trains.values());
-        trains.remove(this.train);
-        Collections.sort(trains, (train1, train2) -> train1.addr - train2.addr);
-        final CharSequence[] trainsTitle = new CharSequence[trains.size()];
-        final boolean[] trainsChecked = new boolean[trains.size()];
+        final ArrayList<Engine> engines = new ArrayList<>(EngineDb.instance.engines.values());
+        engines.remove(this.engine);
+        Collections.sort(engines, (engine1, engine2) -> engine1.addr - engine2.addr);
+        final CharSequence[] trainsTitle = new CharSequence[engines.size()];
+        final boolean[] trainsChecked = new boolean[engines.size()];
         int i = 0;
-        for (Train train: trains) {
-            trainsTitle[i] = train.getTitle();
-            trainsChecked[i] = train.multitrack;
+        for (Engine engine : engines) {
+            trainsTitle[i] = engine.getTitle();
+            trainsChecked[i] = engine.multitrack;
             i++;
         }
         new AlertDialog.Builder(this)
@@ -425,10 +425,10 @@ public class TrainHandler extends NavigationBase {
                 )
                 .setPositiveButton(R.string.dialog_ok, (dialog, which) -> {
                     for (int j = 0; j < trainsChecked.length; j++) {
-                        Train train = trains.get(j);
-                        if (train.multitrack != trainsChecked[j]) {
-                            if (!train.total) train.setTotal(true);
-                            train.multitrack = !train.multitrack;
+                        Engine engine = engines.get(j);
+                        if (engine.multitrack != trainsChecked[j]) {
+                            if (!engine.total) engine.setTotal(true);
+                            engine.multitrack = !engine.multitrack;
                         }
                     }
                 })
@@ -439,7 +439,7 @@ public class TrainHandler extends NavigationBase {
         new AlertDialog.Builder(this)
                 .setMessage(R.string.ta_dialog_ungroup_msg)
                 .setPositiveButton(R.string.ta_dialog_ungroup_ok, (dialog, which) -> {
-                    for (Train t : TrainDb.instance.trains.values())
+                    for (Engine t : EngineDb.instance.engines.values())
                         t.multitrack = false;
                 })
                 .setNegativeButton(R.string.ta_dialog_ungroup_cancel, null)
@@ -447,14 +447,14 @@ public class TrainHandler extends NavigationBase {
     }
 
     private void startRequestActivity() {
-        startActivity(new Intent(this, TrainRequest.class));
+        startActivity(new Intent(this, EngineRequest.class));
         this.finish();
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventMainThread(LokChangeEvent event) {
         super.onEventMainThread(event);
-        if (train != null && event.getAddr() == train.addr)
+        if (engine != null && event.getAddr() == engine.addr)
             this.updateGUIFromTrain();
     }
 
@@ -466,7 +466,7 @@ public class TrainHandler extends NavigationBase {
                 String.format(getString(R.string.ta_release_ok), event.getAddr()), Toast.LENGTH_LONG)
                 .show();
 
-        if (event.getAddr() == this.train.addr) {
+        if (event.getAddr() == this.engine.addr) {
             this.finish();
             this.currentEngineClosed();
         }
@@ -480,10 +480,10 @@ public class TrainHandler extends NavigationBase {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventMainThread(LokRespEvent event) {
-        if (train == null) return;
-        if (Integer.parseInt(event.getParsed().get(2)) != train.addr) return;
+        if (engine == null) return;
+        if (Integer.parseInt(event.getParsed().get(2)) != engine.addr) return;
 
-        tv_kmhSpeed.setText(String.format("%s km/h", train.kmphSpeed));
+        tv_kmhSpeed.setText(String.format("%s km/h", engine.kmphSpeed));
 
         this.updateStatus(!event.getParsed().get(4).equalsIgnoreCase("OK"));
     }

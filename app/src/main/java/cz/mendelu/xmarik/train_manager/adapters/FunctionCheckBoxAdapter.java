@@ -13,14 +13,14 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 
 import cz.mendelu.xmarik.train_manager.R;
-import cz.mendelu.xmarik.train_manager.activities.TrainHandler;
-import cz.mendelu.xmarik.train_manager.models.TrainFunction;
+import cz.mendelu.xmarik.train_manager.activities.EngineController;
+import cz.mendelu.xmarik.train_manager.models.EngineFunction;
 
 /**
  * FunctionCheckBoxAdapter is a ListView checkbox items with behavior connected to function
  * setting.
  */
-public class FunctionCheckBoxAdapter extends ArrayAdapter<TrainFunction> {
+public class FunctionCheckBoxAdapter extends ArrayAdapter<EngineFunction> {
     private final LayoutInflater vi;
 
     public FunctionCheckBoxAdapter(Context context, int textViewResourceId) {
@@ -51,7 +51,7 @@ public class FunctionCheckBoxAdapter extends ArrayAdapter<TrainFunction> {
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
-        TrainFunction function = getItem(position);
+        EngineFunction function = getItem(position);
 
         holder.code.setText(function.name.equals("") ?
              "F" + function.num : "F" + function.num + ": " + function.name);
@@ -64,11 +64,11 @@ public class FunctionCheckBoxAdapter extends ArrayAdapter<TrainFunction> {
 
     private void chb_onClick(CheckBox chb) {
         final CheckBox c = chb;
-        final TrainFunction trainFunc = (TrainFunction)chb.getTag();
+        final EngineFunction trainFunc = (EngineFunction)chb.getTag();
 
         onFuncChanged(chb, trainFunc.num);
 
-        if (trainFunc.type == TrainFunction.TrainFunctionType.MOMENTARY && trainFunc.checked) {
+        if (trainFunc.type == EngineFunction.EngineFunctionType.MOMENTARY && trainFunc.checked) {
             chb.setEnabled(false);
             Handler handler = new Handler();
             handler.postDelayed(() -> {
@@ -82,8 +82,8 @@ public class FunctionCheckBoxAdapter extends ArrayAdapter<TrainFunction> {
     private void onFuncChanged(CheckBox chb, int function) {
         Context context = getContext();
         while (context instanceof ContextWrapper) {
-            if (context instanceof TrainHandler) {
-                ((TrainHandler) context).onFuncChanged(function, chb.isChecked());
+            if (context instanceof EngineController) {
+                ((EngineController) context).onFuncChanged(function, chb.isChecked());
                 break;
             }
             context = ((ContextWrapper)context).getBaseContext();

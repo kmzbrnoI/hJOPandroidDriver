@@ -31,7 +31,7 @@ import cz.mendelu.xmarik.train_manager.events.TCPDisconnectedEvent;
 import cz.mendelu.xmarik.train_manager.models.ControlArea;
 import cz.mendelu.xmarik.train_manager.events.RequestEvent;
 
-public class TrainRequest extends NavigationBase {
+public class EngineRequest extends NavigationBase {
 
     ArrayAdapter<String> lAdapter;
     EditText messageForServer;
@@ -103,7 +103,7 @@ public class TrainRequest extends NavigationBase {
     public void onEventMainThread(LokAddEvent event) {
         super.onEventMainThread(event);
 
-        final Intent intent = (new Intent(this, TrainHandler.class));
+        final Intent intent = (new Intent(this, EngineController.class));
         intent.putExtra("train_addr", event.getAddr());
         this.startActivity(intent);
     }

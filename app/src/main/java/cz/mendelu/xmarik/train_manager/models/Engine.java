@@ -6,9 +6,9 @@ import cz.mendelu.xmarik.train_manager.network.TCPClient;
 import cz.mendelu.xmarik.train_manager.helpers.ParseHelper;
 
 /**
- * Class Train represents a train.
+ * Class Engine represents an engine.
  */
-public class Train {
+public class Engine {
     // data:
     public String name;
     public String owner;
@@ -16,7 +16,7 @@ public class Train {
     public String note;
     public int addr;
     public String kind;
-    public TrainFunction[] function;
+    public EngineFunction[] function;
 
     // state:
     public int stepsSpeed = 0;
@@ -36,7 +36,7 @@ public class Train {
             orientace stanovište A|funkce|rychlost ve stupních|rychlost km/h|směr|
             id oblasti řízení|cv_take|cv_release|func_vyznamy|func_type
      */
-    public Train(String data) {
+    public Engine(String data) {
         updateFromServerString(data);
     }
 
@@ -56,12 +56,12 @@ public class Train {
         kmphSpeed = Integer.parseInt(parsed.get(10));
         direction = parsed.get(11).equals("1");
 
-        function = new TrainFunction[parsed.get(8).length()];
+        function = new EngineFunction[parsed.get(8).length()];
         for (int i = 0; i < function.length; i++) {
             String desc = (i < functionStrs.size()) ? functionStrs.get(i) : "";
             char status = (i < parsed.get(8).length()) ? parsed.get(8).charAt(i) : '0';
             char type = (i < functionTypes.length()) ? functionTypes.charAt(i) : 'P';
-            this.function[i] = new TrainFunction(i, desc, status == '1', type);
+            this.function[i] = new EngineFunction(i, desc, status == '1', type);
         }
     }
 

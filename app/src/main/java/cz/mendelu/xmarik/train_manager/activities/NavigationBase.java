@@ -33,9 +33,9 @@ import cz.mendelu.xmarik.train_manager.events.LokRemoveEvent;
 import cz.mendelu.xmarik.train_manager.events.LokTotalChangeErrorEvent;
 import cz.mendelu.xmarik.train_manager.events.TCPDisconnectedEvent;
 import cz.mendelu.xmarik.train_manager.models.Server;
-import cz.mendelu.xmarik.train_manager.models.Train;
+import cz.mendelu.xmarik.train_manager.models.Engine;
 import cz.mendelu.xmarik.train_manager.network.TCPClient;
-import cz.mendelu.xmarik.train_manager.storage.TrainDb;
+import cz.mendelu.xmarik.train_manager.storage.EngineDb;
 
 
 /**
@@ -117,7 +117,7 @@ public class NavigationBase extends AppCompatActivity
             this.startActivity(new Intent(this, About.class));
 
         } else if (id == R.id.nav_train_request) {
-            this.startActivity(new Intent(this, TrainRequest.class));
+            this.startActivity(new Intent(this, EngineRequest.class));
 
         } else if (id == R.id.nav_settings) {
             this.startActivity(new Intent(this, Settings.class));
@@ -162,7 +162,7 @@ public class NavigationBase extends AppCompatActivity
          * Based on the event, the activity may close (TrainHandler, TrainRequest), but
          * dialog cannot be shown on the closed activity -> postpone showing to ServerSelect activity.
          */
-        if ((this instanceof TrainHandler) || (this instanceof TrainRequest)) {
+        if ((this instanceof EngineController) || (this instanceof EngineRequest)) {
             NavigationBase.pendingDisconnect = event;
         } else {
             this.showDisconnectDialog(event);
@@ -229,10 +229,10 @@ public class NavigationBase extends AppCompatActivity
 
     private void updateTrainGroup() {
         this.menu.removeGroup(R.id.group_train);
-        ArrayList<Train> trains = new ArrayList<>(TrainDb.instance.trains.values());
-        Collections.sort(trains, (train1, train2) -> train1.addr - train2.addr);
+        ArrayList<Engine> engines = new ArrayList<>(EngineDb.instance.engines.values());
+        Collections.sort(engines, (engine1, engine2) -> engine1.addr - engine2.addr);
 
-        for (Train t : trains) {
+        for (Engine t : engines) {
             final MenuItem item = menu.add(R.id.group_train, Menu.NONE, 1, t.getTitle());
             // Set icon
             if (t.total) {
@@ -241,10 +241,10 @@ public class NavigationBase extends AppCompatActivity
                 item.setIcon((t.stepsSpeed == 0) ? R.drawable.ic_train_stop_24dp : R.drawable.ic_train_speed_24dp);
             }
             item.setOnMenuItemClickListener(item1 -> {
-                if (this instanceof TrainHandler) {
-                    ((TrainHandler)this).setTrain(t);
+                if (this instanceof EngineController) {
+                    ((EngineController)this).setTrain(t);
                 } else {
-                    Intent intent = new Intent(this, TrainHandler.class);
+                    Intent intent = new Intent(this, EngineController.class);
                     intent.putExtra("train_addr", t.addr);
                     startActivity(intent);
                 }
@@ -255,14 +255,14 @@ public class NavigationBase extends AppCompatActivity
 
     protected void currentEngineClosed() {
         // Current Engine closed -> open next engine if available
-        if (!(this instanceof TrainHandler))
+        if (!(this instanceof EngineController))
             return;
-        ArrayList<Train> trains = new ArrayList<>(TrainDb.instance.trains.values());
-        Collections.sort(trains, (train1, train2) -> train1.addr - train2.addr);
+        ArrayList<Engine> engines = new ArrayList<>(EngineDb.instance.engines.values());
+        Collections.sort(engines, (engine1, engine2) -> engine1.addr - engine2.addr);
 
-        if (!trains.isEmpty()) {
-            Intent intent = new Intent(this, TrainHandler.class);
-            intent.putExtra("train_addr", trains.get(0).addr);
+        if (!engines.isEmpty()) {
+            Intent intent = new Intent(this, EngineController.class);
+            intent.putExtra("train_addr", engines.get(0).addr);
             startActivity(intent);
         }
     }
