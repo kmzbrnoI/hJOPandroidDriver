@@ -9,6 +9,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.Toolbar;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -49,21 +50,32 @@ public class TrainRequest extends NavigationBase {
         setSupportActionBar(toolbar);
 
         View dialogView = this.getLayoutInflater().inflate(R.layout.dialog_train_request, null);
-        dialogMessage = dialogView.findViewById(R.id.dialogMessage);
-        dialog = new AlertDialog.Builder(this)
+        this.dialogMessage = dialogView.findViewById(R.id.dialogMessage);
+        this.dialog = new AlertDialog.Builder(this)
                 .setView(dialogView)
                 .setNegativeButton(R.string.cancel, null)
                 .setOnDismissListener(dialogInterface -> cancelRequest())
                 .create();
 
-        areas_lv = findViewById(R.id.nav_areas);
-        messageForServer = findViewById(R.id.authMessage);
+        this.areas_lv = findViewById(R.id.nav_areas);
+        this.messageForServer = findViewById(R.id.authMessage);
 
-        areas_data = new ArrayList<>();
-        lAdapter = new ArrayAdapter<>(this,
+        this.areas_data = new ArrayList<>();
+        this.lAdapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_list_item_1, android.R.id.text1, areas_data);
 
-        areas_lv.setOnItemClickListener((parent, view, position, id) -> {
+        this.areas_lv.setOnItemClickListener(mOnLvAreasClickListener);
+        this.areas_lv.setAdapter(lAdapter);
+
+        this.messageForServer.setOnFocusChangeListener((view, b) -> {
+            if (messageForServer.isFocused())
+                messageForServer.setText("");
+        });
+    }
+
+    private AdapterView.OnItemClickListener mOnLvAreasClickListener = new AdapterView.OnItemClickListener(){
+        @Override
+        public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
             ControlArea area = ControlAreaDb.instance.areas.get(position);
             TCPClient.getInstance().send("-;LOK;G;PLEASE;" + area.id + ";" +
                     messageForServer.getText().toString());
@@ -71,26 +83,20 @@ public class TrainRequest extends NavigationBase {
             dialog.setTitle(area.name);
             dialogMessage.setText(R.string.tr_info_request_sent);
             dialog.show();
-        });
-
-        messageForServer.setOnFocusChangeListener((view, b) -> {
-            if (messageForServer.isFocused()) messageForServer.setText("");
-        });
-
-        areas_lv.setAdapter(lAdapter);
-    }
+        }
+    };
 
     void FillAreas() {
-        areas_data.clear();
+        this.areas_data.clear();
 
-        areas_lv.setEnabled(ControlAreaDb.instance.areas.size() > 0);
+        this.areas_lv.setEnabled(ControlAreaDb.instance.areas.size() > 0);
         if (ControlAreaDb.instance.areas.size() == 0)
-            areas_data.add(getString(R.string.tr_no_areas));
+            this.areas_data.add(getString(R.string.tr_no_areas));
 
         for(ControlArea c : ControlAreaDb.instance.areas)
-            areas_data.add(c.name);
+            this.areas_data.add(c.name);
 
-        lAdapter.notifyDataSetChanged();
+        this.lAdapter.notifyDataSetChanged();
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -98,19 +104,19 @@ public class TrainRequest extends NavigationBase {
         super.onEventMainThread(event);
         Intent intent = (new Intent(this, TrainHandler.class));
         intent.putExtra("train_addr", event.getAddr());
-        startActivity(intent);
+        this.startActivity(intent);
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventMainThread(RequestEvent event) {
         if (event.getParsed().get(4).equalsIgnoreCase("OK")) {
-            dialogMessage.setText(R.string.tr_info_waiting_disp);
+            this.dialogMessage.setText(R.string.tr_info_waiting_disp);
         } else if (event.getParsed().get(4).equalsIgnoreCase("ERR")) {
             new AlertDialog.Builder(this)
                     .setMessage(event.getParsed().size() >= 6 ? event.getParsed().get(5) : getString(R.string.general_error))
                     .setCancelable(false)
                     .setPositiveButton(R.string.dialog_ok, (dialog, which) -> {} ).show();
-            dialog.dismiss();
+            this.dialog.dismiss();
         }
     }
 
@@ -141,28 +147,33 @@ public class TrainRequest extends NavigationBase {
             drawer.closeDrawer(GravityCompat.START);
         } else {
             EventBus.getDefault().unregister(this);
-            dialog.dismiss();
+            this.dialog.dismiss();
             super.onBackPressed();
         }
     }
 
     @Override
     public void onPause() {
+        // Called when other activity comes to foreground
+        // Not called when dialog comes to foreground
         super.onPause();
-        dialog.dismiss();
-        if (EventBus.getDefault().isRegistered(this)) EventBus.getDefault().unregister(this);
+        this.dialog.dismiss();
+        if (EventBus.getDefault().isRegistered(this))
+            EventBus.getDefault().unregister(this);
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        if (!EventBus.getDefault().isRegistered(this)) EventBus.getDefault().register(this);
-        FillAreas();
+        if (!EventBus.getDefault().isRegistered(this))
+            EventBus.getDefault().register(this);
+        this.FillAreas();
     }
 
     @Override
     public void onDestroy() {
-        if (EventBus.getDefault().isRegistered(this)) EventBus.getDefault().unregister(this);
+        if (EventBus.getDefault().isRegistered(this))
+            EventBus.getDefault().unregister(this);
         super.onDestroy();
     }
 
