@@ -325,13 +325,13 @@ public class EngineController extends NavigationBase {
         final int keyCode = event.getKeyCode();
         switch (keyCode) {
             case KeyEvent.KEYCODE_VOLUME_UP:
-                if (this.sb_speed.isEnabled() && action == KeyEvent.ACTION_DOWN && this.sb_speed.getProgress() < this.sb_speed.getMax()) {
-                    this.sb_speed.setProgress(this.sb_speed.getProgress()+1);
+                if ((this.sb_speed.isEnabled()) && (action == KeyEvent.ACTION_DOWN) && (this.sb_speed.getProgress() < this.sb_speed.getMax())) {
+                    this.sb_speed.incrementProgressBy(1);
                 }
                 return true;
             case KeyEvent.KEYCODE_VOLUME_DOWN:
-                if (this.sb_speed.isEnabled() && action == KeyEvent.ACTION_DOWN && this.sb_speed.getProgress() > 0) {
-                    this.sb_speed.setProgress(this.sb_speed.getProgress()-1);
+                if ((this.sb_speed.isEnabled()) && (action == KeyEvent.ACTION_DOWN) && (this.sb_speed.getProgress() > 0)) {
+                    this.sb_speed.incrementProgressBy(-1);
                 }
                 return true;
             default:
