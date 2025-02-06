@@ -108,7 +108,7 @@ public class EngineDb {
         Engine t = engines.get(Integer.valueOf(event.getParsed().get(2)));
         t.kmphSpeed = Integer.parseInt(event.getParsed().get(4));
         t.stepsSpeed = Integer.parseInt(event.getParsed().get(5));
-        t.direction = (event.getParsed().get(6).equals("1"));
+        t.direction = (event.getParsed().get(6).equals("1") ? Engine.Direction.BACKWARD : Engine.Direction.FORWARD);
 
         EventBus.getDefault().post(new LokChangeEvent(t.addr));
     }

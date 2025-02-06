@@ -9,6 +9,11 @@ import cz.mendelu.xmarik.train_manager.helpers.ParseHelper;
  * Class Engine represents an engine.
  */
 public class Engine {
+    public enum Direction {
+        FORWARD,
+        BACKWARD,
+    }
+
     // data:
     public String name;
     public String owner;
@@ -21,7 +26,7 @@ public class Engine {
     // state:
     public int stepsSpeed = 0;
     public int kmphSpeed = 0;
-    public boolean direction = false;
+    public Direction direction = Direction.FORWARD;
     public boolean total = false;
     public boolean stolen = false;
     public int expSignalCode = -1;
@@ -54,7 +59,7 @@ public class Engine {
 
         stepsSpeed = Integer.parseInt(parsed.get(9));
         kmphSpeed = Integer.parseInt(parsed.get(10));
-        direction = parsed.get(11).equals("1");
+        direction = parsed.get(11).equals("1") ? Direction.BACKWARD : Direction.FORWARD;
 
         function = new EngineFunction[parsed.get(8).length()];
         for (int i = 0; i < function.length; i++) {
@@ -65,10 +70,11 @@ public class Engine {
         }
     }
 
-    public void setDirection(boolean direction) {
-        if (this.direction == direction) return;
+    public void setDirection(Engine.Direction direction) {
+        if (this.direction == direction)
+            return;
         this.direction = direction;
-        String strDir = direction ? "1" : "0";
+        String strDir = (direction == Direction.BACKWARD) ? "1" : "0";
         TCPClient.getInstance().send("-;LOK;" + this.addr + ";D;" + strDir);
     }
 

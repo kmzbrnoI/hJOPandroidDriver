@@ -136,7 +136,7 @@ public class EngineController extends NavigationBase {
         observeDccState();
 
         // GUI events:
-        s_direction.setOnCheckedChangeListener((buttonView, checked) ->  onDirectionChange(!checked));
+        s_direction.setOnCheckedChangeListener((buttonView, checked) -> onDirectionChange(checked ? Engine.Direction.FORWARD : Engine.Direction.BACKWARD));
         chb_group.setOnCheckedChangeListener((compoundButton, checked) -> this.onChbGroupCheckedChange(compoundButton, checked));
         chb_total.setOnCheckedChangeListener((compoundButton, checked) -> this.onChbTotalCheckedChange(compoundButton, checked));
 
@@ -198,12 +198,8 @@ public class EngineController extends NavigationBase {
         if (this.updating)
             return;
 
-        if (!newDir)
-            s_direction.setText(R.string.ta_direction_forward);
-        else
-            s_direction.setText(R.string.ta_direction_backwards);
-
-        engine.setDirection(newDir);
+        s_direction.setText((newDir == Engine.Direction.FORWARD) ? R.string.ta_direction_forward : R.string.ta_direction_backwards);
+        this.engine.setDirection(newDir);
 
         if (engine.multitrack) {
             for (Engine t : EngineDb.instance.engines.values()) {
@@ -233,12 +229,9 @@ public class EngineController extends NavigationBase {
         chb_total.setEnabled(!engine.stolen);
         lv_functions.setEnabled(engine != null && !engine.stolen);
 
-        sb_speed.setProgress(engine.stepsSpeed);
-        s_direction.setChecked(!engine.direction);
-        if (!engine.direction)
-            s_direction.setText(R.string.ta_direction_forward);
-        else
-            s_direction.setText(R.string.ta_direction_backwards);
+        this.sb_speed.setProgress(this.engine.stepsSpeed);
+        this.s_direction.setChecked(this.engine.direction == Engine.Direction.FORWARD);
+        this.s_direction.setText(this.engine.direction == Engine.Direction.FORWARD ? R.string.ta_direction_forward : R.string.ta_direction_backwards);
 
         if (EngineDb.instance.engines.size() < 2) {
             engine.multitrack = false;
