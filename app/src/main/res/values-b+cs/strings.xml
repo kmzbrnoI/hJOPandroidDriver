@@ -5,14 +5,14 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="activity_server_select_title">Vyberte server</string>
-    <string name="activity_train_handler_title">Řízení vlaku</string>
+    <string name="activity_train_handler_title">Řízení vozidla</string>
     <string name="activity_train_request_title">Vyberte cílovou oblast řízení</string>
     <string name="activity_about_title">O aplikaci</string>
     <string name="activity_new_server_title">Vlastnosti serveru</string>
     <string name="activity_settings_title">Nastavení</string>
 
     <string name="hamburger_server_select_title">Výběr serveru</string>
-    <string name="hamburger_train_request_title">Žádost o vlak</string>
+    <string name="hamburger_train_request_title">Žádost o vozidlo</string>
     <string name="hamburger_about_title">O aplikaci</string>
     <string name="hamburger_settings_title">Nastavení</string>
     <string name="hamburger_state_unauthenticated">Nepřihlášen</string>
