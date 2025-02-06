@@ -239,6 +239,20 @@ public class NavigationBase extends AppCompatActivity
         }
     }
 
+    protected void currentEngineClosed() {
+        // Current Engine closed -> open next engine if available
+        if (!(this instanceof TrainHandler))
+            return;
+        ArrayList<Train> trains = new ArrayList<>(TrainDb.instance.trains.values());
+        Collections.sort(trains, (train1, train2) -> train1.addr - train2.addr);
+
+        if (!trains.isEmpty()) {
+            Intent intent = new Intent(this, TrainHandler.class);
+            intent.putExtra("train_addr", trains.get(0).addr);
+            startActivity(intent);
+        }
+    }
+
     private void updateServer() {
         boolean connected = TCPClient.getInstance().connected();
         miTrainRequest.setVisible(connected);

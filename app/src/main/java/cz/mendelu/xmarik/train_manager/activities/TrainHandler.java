@@ -460,8 +460,10 @@ public class TrainHandler extends NavigationBase {
                 String.format(getString(R.string.ta_release_ok), event.getAddr()), Toast.LENGTH_LONG)
                 .show();
 
-        if (event.getAddr() == this.train.addr)
+        if (event.getAddr() == this.train.addr) {
             this.finish();
+            this.currentEngineClosed();
+        }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
