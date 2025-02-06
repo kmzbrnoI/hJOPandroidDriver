@@ -467,7 +467,6 @@ public class TrainHandler extends NavigationBase {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventMainThread(TCPDisconnectedEvent event) {
-        train = null;
         this.startRequestActivity();
         super.onEventMainThread(event);
     }

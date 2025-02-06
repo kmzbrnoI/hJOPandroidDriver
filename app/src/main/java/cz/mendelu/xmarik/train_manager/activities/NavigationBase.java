@@ -55,6 +55,7 @@ public class NavigationBase extends AppCompatActivity
     TextView tvUser;
     TextView tvServer;
     boolean isDrawerFixed;
+    static protected TCPDisconnectedEvent pendingDisconnect = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -145,13 +146,27 @@ public class NavigationBase extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onEventMainThread(TCPDisconnectedEvent event) {
+    protected void showDisconnectDialog(TCPDisconnectedEvent event) {
         new AlertDialog.Builder(this)
                 .setMessage(getString(R.string.sc_disconnected) + "\n" + event.getError())
                 .setCancelable(false)
-                .setPositiveButton(R.string.dialog_ok, (dialog, which) -> {} )
+                .setPositiveButton(R.string.dialog_ok, (dialog, which) -> {
+                })
                 .show();
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEventMainThread(TCPDisconnectedEvent event) {
+        /* Show disconnect dialog in ServerSelect activity.
+         * When disconnect happens, this event is processed in current foreground activity.
+         * Based on the event, the activity may close (TrainHandler, TrainRequest), but
+         * dialog cannot be shown on the closed activity -> postpone showing to ServerSelect activity.
+         */
+        if ((this instanceof TrainHandler) || (this instanceof TrainRequest)) {
+            NavigationBase.pendingDisconnect = event;
+        } else {
+            this.showDisconnectDialog(event);
+        }
         this.updateServer();
     }
 
@@ -200,8 +215,13 @@ public class NavigationBase extends AppCompatActivity
     @Override
     public void onResume() {
         super.onResume();
+
         if (!EventBus.getDefault().isRegistered(this))
             EventBus.getDefault().register(this);
+        if ((this instanceof ServerSelect) && (NavigationBase.pendingDisconnect != null)) {
+            this.showDisconnectDialog(NavigationBase.pendingDisconnect);
+            NavigationBase.pendingDisconnect = null;
+        }
 
         this.updateTrainGroup();
         this.updateServer();

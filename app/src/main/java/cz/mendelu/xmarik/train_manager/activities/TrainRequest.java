@@ -133,8 +133,9 @@ public class TrainRequest extends NavigationBase {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventMainThread(TCPDisconnectedEvent event) {
-        dialog.dismiss();
         super.onEventMainThread(event);
+        this.dialog.dismiss();
+        this.finish();
     }
 
     private void cancelRequest() {
@@ -165,6 +166,8 @@ public class TrainRequest extends NavigationBase {
     public void onResume() {
         super.onResume();
         this.FillAreas();
+        if (!TCPClient.getInstance().connected())
+            this.finish();
     }
 
 }
