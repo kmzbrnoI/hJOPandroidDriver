@@ -11,6 +11,7 @@ import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.SeekBar;
@@ -127,39 +128,16 @@ public class TrainHandler extends NavigationBase {
         else
             train = null;
 
-        this.updateGUIFromTrain();
+        this.updateGUIFromTrain(); // will close activity in case train = null
 
         // Setup Time and DCC state observers
         observeTime();
         observeDccState();
 
         // GUI events:
-        s_direction.setOnCheckedChangeListener((buttonView, checked) ->
-                onDirectionChange(!checked)
-        );
-
-        chb_group.setOnCheckedChangeListener((compoundButton, checked) -> {
-            if (!this.updating) {
-                train.multitrack = checked;
-                if (checked) {
-                    displayGroupDialog();
-                } else {
-                    for (Train t : TrainDb.instance.trains.values()) {
-                        if (t.multitrack) {
-                            displayUngroupDialog();
-                            break;
-                        }
-                    }
-                }
-            }
-        });
-
-        chb_total.setOnCheckedChangeListener((compoundButton, checked) -> {
-            if (!this.updating) {
-                train.setTotal(checked);
-                if (!checked) train.multitrack = false;
-            }
-        });
+        s_direction.setOnCheckedChangeListener((buttonView, checked) ->  onDirectionChange(!checked));
+        chb_group.setOnCheckedChangeListener((compoundButton, checked) -> this.onChbGroupCheckedChange(compoundButton, checked));
+        chb_total.setOnCheckedChangeListener((compoundButton, checked) -> this.onChbTotalCheckedChange(compoundButton, checked));
 
         ib_release.setOnClickListener(this::ib_ReleaseClick);
     }
@@ -187,6 +165,32 @@ public class TrainHandler extends NavigationBase {
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt("train_addr", train.addr);
+    }
+
+    private void onChbTotalCheckedChange(CompoundButton buttonView, boolean checked) {
+        if (this.updating)
+            return;
+
+        train.setTotal(checked);
+        if (!checked)
+            train.multitrack = false;
+    }
+
+    private void onChbGroupCheckedChange(CompoundButton buttonView, boolean checked) {
+        if (this.updating)
+            return;
+
+        train.multitrack = checked;
+        if (checked) {
+            displayGroupDialog();
+        } else {
+            for (Train t : TrainDb.instance.trains.values()) {
+                if (t.multitrack) {
+                    displayUngroupDialog();
+                    break;
+                }
+            }
+        }
     }
 
     private void onDirectionChange(boolean newDir) {
