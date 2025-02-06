@@ -30,7 +30,7 @@
     <string name="ta_no_loks">No trains.</string>
     <string name="ta_toggle">Toggle</string>
     <string name="ta_release">Release</string>
-    <string name="ta_release_ok">Train released.</string>
+    <string name="ta_release_ok">Train %d released.</string>
     <string name="ta_release_really">Really release a train</string>
     <string name="ta_dialog_group_title">Add to multitraction</string>
     <string name="ta_dialog_ungroup_msg">Turn off multitraction of other trains?</string>

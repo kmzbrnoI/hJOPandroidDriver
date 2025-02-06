@@ -478,7 +478,7 @@ public class TrainHandler extends NavigationBase {
         this.fillHVs();
 
         Toast.makeText(getApplicationContext(),
-                R.string.ta_release_ok, Toast.LENGTH_LONG)
+                String.format(getString(R.string.ta_release_ok), event.getAddr()), Toast.LENGTH_LONG)
                 .show();
 
         if (TrainDb.instance.trains.size() == 0)
