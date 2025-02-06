@@ -285,16 +285,11 @@ public class EngineController extends NavigationBase {
                 TimeHolder.instance.time.observe(this, time -> tv_time.setText(time));
             } else {
                 TimeHolder.instance.time.removeObservers(this);
-                tv_time.setText("");
+                tv_time.setText("--:--:--");
             }
         });
         TimeHolder.instance.running.observe(this, running -> {
-            if (running) {
-                // color normal
-                tv_time.setTextColor(getResources().getColor(R.color.colorText));
-            } else {
-                tv_time.setTextColor(getResources().getColor(R.color.colorAccent));
-            }
+            tv_time.setTextColor((running) ? getResources().getColor(R.color.colorText) : getResources().getColor(R.color.colorDisabled));
         });
     }
 
