@@ -1,5 +1,8 @@
 package cz.mendelu.xmarik.train_manager.activities;
 
+import static android.content.pm.ActivityInfo.SCREEN_ORIENTATION_LOCKED;
+import static android.content.pm.ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED;
+
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -51,8 +54,6 @@ public class TrainHandler extends NavigationBase {
     private Train train;
     private boolean updating;
     private boolean error;
-    private boolean confSpeedVolume;
-    private boolean confAvailableFunctions;
     private Toolbar toolbar;
     private FunctionCheckBoxAdapter functionAdapter;
 
@@ -145,9 +146,9 @@ public class TrainHandler extends NavigationBase {
     @Override
     public void onStart() {
         super.onStart();
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        confSpeedVolume = preferences.getBoolean("SpeedVolume", false);
-        confAvailableFunctions = preferences.getBoolean("OnlyAvailableFunctions", true);
+
+        final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        this.setRequestedOrientation((preferences.getBoolean("FreezeScreenEngine", false)) ? SCREEN_ORIENTATION_LOCKED : SCREEN_ORIENTATION_UNSPECIFIED);
     }
 
     @Override
@@ -225,6 +226,7 @@ public class TrainHandler extends NavigationBase {
         }
 
         this.updating = true;
+        final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
 
         toolbar.setTitle(train.getTitle());
 
@@ -260,7 +262,7 @@ public class TrainHandler extends NavigationBase {
 
         //set custom adapter with check boxes to list view
         ArrayList<TrainFunction> functions;
-        if (confAvailableFunctions) {
+        if (preferences.getBoolean("OnlyAvailableFunctions", true)) {
             // just own filter
             functions = new ArrayList<>();
             for (int i = 0; i < train.function.length; i++)
@@ -329,7 +331,8 @@ public class TrainHandler extends NavigationBase {
 
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
-        if (!confSpeedVolume) {
+        final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        if (!preferences.getBoolean("SpeedVolume", false)) {
             return super.dispatchKeyEvent(event);
         }
 

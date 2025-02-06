@@ -42,4 +42,10 @@
         app:defaultValue="true"
         app:useSimpleSummaryProvider="true" />
 
+    <SwitchPreference
+        app:key="FreezeScreenEngine"
+        app:title="@string/freeze_engine_screen_orientation"
+        app:defaultValue="false"
+        app:useSimpleSummaryProvider="false" />
+
 </androidx.preference.PreferenceScreen>
