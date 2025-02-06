@@ -95,28 +95,28 @@ public class EngineController extends NavigationBase {
         super.onCreate(savedInstanceState);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
-        toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        this.toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(this.toolbar);
 
         this.updating = false;
 
-        sb_speed = findViewById(R.id.speedkBar1);
-        s_direction = findViewById(R.id.handlerDirection1);
-        b_idle = findViewById(R.id.startButton1);
-        chb_group = findViewById(R.id.goupManaged1);
-        ib_status = findViewById(R.id.ib_status);
-        ib_dcc = findViewById(R.id.ib_dcc);
-        ib_release = findViewById(R.id.ib_release);
-        lv_functions = findViewById(R.id.checkBoxView1);
-        tv_kmhSpeed = findViewById(R.id.kmh1);
-        tv_expSpeed = findViewById(R.id.expSpeed);
-        tv_expSignalBlock = findViewById(R.id.expSignalBlock);
-        tv_time = findViewById(R.id.tvTime);
-        scom_expSignal = findViewById(R.id.scom_view);
-        chb_total = findViewById(R.id.totalManaged);
+        this.sb_speed = findViewById(R.id.speedkBar1);
+        this.s_direction = findViewById(R.id.handlerDirection1);
+        this.b_idle = findViewById(R.id.startButton1);
+        this.chb_group = findViewById(R.id.goupManaged1);
+        this.ib_status = findViewById(R.id.ib_status);
+        this.ib_dcc = findViewById(R.id.ib_dcc);
+        this.ib_release = findViewById(R.id.ib_release);
+        this.lv_functions = findViewById(R.id.checkBoxView1);
+        this.tv_kmhSpeed = findViewById(R.id.kmh1);
+        this.tv_expSpeed = findViewById(R.id.expSpeed);
+        this.tv_expSignalBlock = findViewById(R.id.expSignalBlock);
+        this.tv_time = findViewById(R.id.tvTime);
+        this.scom_expSignal = findViewById(R.id.scom_view);
+        this.chb_total = findViewById(R.id.totalManaged);
 
-        functionAdapter = new FunctionCheckBoxAdapter(this, R.layout.lok_function);
-        lv_functions.setAdapter(functionAdapter);
+        this.functionAdapter = new FunctionCheckBoxAdapter(this, R.layout.lok_function);
+        lv_functions.setAdapter(this.functionAdapter);
 
         // select train
         int train_addr;
@@ -125,22 +125,22 @@ public class EngineController extends NavigationBase {
         else
             train_addr = getIntent().getIntExtra("train_addr", -1); // from intent
         if (train_addr != -1)
-            engine = EngineDb.instance.engines.get(train_addr);
+            this.engine = EngineDb.instance.engines.get(train_addr);
         else
-            engine = null;
+            this.engine = null;
 
         this.updateGUIFromTrain(); // will close activity in case train = null
 
         // Setup Time and DCC state observers
-        observeTime();
-        observeDccState();
+        this.observeTime();
+        this.observeDccState();
 
         // GUI events:
-        s_direction.setOnCheckedChangeListener((buttonView, checked) -> onDirectionChange(checked ? Engine.Direction.FORWARD : Engine.Direction.BACKWARD));
-        chb_group.setOnCheckedChangeListener((compoundButton, checked) -> this.onChbGroupCheckedChange(compoundButton, checked));
-        chb_total.setOnCheckedChangeListener((compoundButton, checked) -> this.onChbTotalCheckedChange(compoundButton, checked));
+        this.s_direction.setOnCheckedChangeListener((buttonView, checked) -> onDirectionChange(checked ? Engine.Direction.FORWARD : Engine.Direction.BACKWARD));
+        this.chb_group.setOnCheckedChangeListener((compoundButton, checked) -> this.onChbGroupCheckedChange(compoundButton, checked));
+        this.chb_total.setOnCheckedChangeListener((compoundButton, checked) -> this.onChbTotalCheckedChange(compoundButton, checked));
 
-        ib_release.setOnClickListener(this::ib_ReleaseClick);
+        this.ib_release.setOnClickListener(this::ib_ReleaseClick);
     }
 
     @Override
@@ -155,9 +155,9 @@ public class EngineController extends NavigationBase {
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         // select train
-        int train_addr = intent.getIntExtra("train_addr", -1);
+        final int train_addr = intent.getIntExtra("train_addr", -1);
         if (train_addr != -1) {
-            engine = EngineDb.instance.engines.get(train_addr);
+            this.engine = EngineDb.instance.engines.get(train_addr);
             this.updateGUIFromTrain();
         }
     }
@@ -165,23 +165,23 @@ public class EngineController extends NavigationBase {
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putInt("train_addr", engine.addr);
+        outState.putInt("train_addr", this.engine.addr);
     }
 
     private void onChbTotalCheckedChange(CompoundButton buttonView, boolean checked) {
         if (this.updating)
             return;
 
-        engine.setTotal(checked);
+        this.engine.setTotal(checked);
         if (!checked)
-            engine.multitrack = false;
+            this.engine.multitrack = false;
     }
 
     private void onChbGroupCheckedChange(CompoundButton buttonView, boolean checked) {
         if (this.updating)
             return;
 
-        engine.multitrack = checked;
+        this.engine.multitrack = checked;
         if (checked) {
             displayGroupDialog();
         } else {
@@ -194,78 +194,79 @@ public class EngineController extends NavigationBase {
         }
     }
 
-    private void onDirectionChange(boolean newDir) {
+    private void onDirectionChange(Engine.Direction newDir) {
         if (this.updating)
             return;
 
-        s_direction.setText((newDir == Engine.Direction.FORWARD) ? R.string.ta_direction_forward : R.string.ta_direction_backwards);
+        this.s_direction.setText((newDir == Engine.Direction.FORWARD) ? R.string.ta_direction_forward : R.string.ta_direction_backwards);
         this.engine.setDirection(newDir);
 
-        if (engine.multitrack) {
+        if (this.engine.multitrack) {
             for (Engine t : EngineDb.instance.engines.values()) {
                 if (t.multitrack) {
                     if (t == engine)
                         t.setDirection(newDir);
                     else if (!t.stolen)
-                        t.setDirection(!t.direction);
+                        t.setDirection(t.direction);
                 }
             }
         } else {
-            engine.setDirection(newDir);
+            this.engine.setDirection(newDir);
         }
     }
 
     private void updateGUIFromTrain() {
         if ((engine == null) || (!EngineDb.instance.engines.containsValue(engine))) {
-            startRequestActivity();
+            this.startRequestActivity();
             return;
         }
 
         this.updating = true;
         final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
 
-        toolbar.setTitle(engine.getTitle());
+        this.toolbar.setTitle(this.engine.getTitle());
 
-        chb_total.setEnabled(!engine.stolen);
-        lv_functions.setEnabled(engine != null && !engine.stolen);
+        this.chb_total.setEnabled(!this.engine.stolen);
+        this.lv_functions.setEnabled(engine != null && !this.engine.stolen);
 
         this.sb_speed.setProgress(this.engine.stepsSpeed);
         this.s_direction.setChecked(this.engine.direction == Engine.Direction.FORWARD);
         this.s_direction.setText(this.engine.direction == Engine.Direction.FORWARD ? R.string.ta_direction_forward : R.string.ta_direction_backwards);
 
         if (EngineDb.instance.engines.size() < 2) {
-            engine.multitrack = false;
-            chb_group.setEnabled(false);
+            this.engine.multitrack = false;
+            this.chb_group.setEnabled(false);
         } else {
-            chb_group.setEnabled(engine.total && !engine.stolen);
+            this.chb_group.setEnabled(this.engine.total && !this.engine.stolen);
         }
-        chb_group.setChecked(engine.multitrack);
+        this.chb_group.setChecked(this.engine.multitrack);
 
-        tv_kmhSpeed.setText(String.format("%s km/h", engine.kmphSpeed));
-        chb_total.setChecked(engine.total);
+        this.tv_kmhSpeed.setText(String.format("%s km/h", this.engine.kmphSpeed));
+        this.chb_total.setChecked(this.engine.total);
 
-        if (engine.expSpeed != -1)
-            tv_expSpeed.setText(String.format("%s km/h", engine.expSpeed));
-        else tv_expSpeed.setText("- km/h");
+        if (this.engine.expSpeed != -1)
+            this.tv_expSpeed.setText(String.format("%s km/h", this.engine.expSpeed));
+        else
+            tv_expSpeed.setText("- km/h");
 
-        scom_expSignal.setCode(engine.expSignalCode);
-        tv_expSignalBlock.setText( (engine.expSignalCode != -1) ? engine.expSignalBlock : "" );
+        this.scom_expSignal.setCode(this.engine.expSignalCode);
+        this.tv_expSignalBlock.setText( (this.engine.expSignalCode != -1) ? this.engine.expSignalBlock : "" );
 
-        this.setEnabled(engine.total);
+        this.setEnabled(this.engine.total);
 
         //set custom adapter with check boxes to list view
         ArrayList<EngineFunction> functions;
         if (preferences.getBoolean("OnlyAvailableFunctions", true)) {
             // just own filter
             functions = new ArrayList<>();
-            for (int i = 0; i < engine.function.length; i++)
-                if (!engine.function[i].name.equals(""))
-                    functions.add(engine.function[i]);
+            for (int i = 0; i < this.engine.function.length; i++)
+                if (!this.engine.function[i].name.equals(""))
+                    functions.add(this.engine.function[i]);
         } else {
-            functions = new ArrayList<>(Arrays.asList(engine.function));
+            functions = new ArrayList<>(Arrays.asList(this.engine.function));
         }
-        functionAdapter.clear();
-        functionAdapter.addAll(functions);
+        this.functionAdapter.clear();
+        this.functionAdapter.addAll(functions);
 
         this.updateStatus(false);
 
@@ -278,11 +279,11 @@ public class EngineController extends NavigationBase {
                 TimeHolder.instance.time.observe(this, time -> tv_time.setText(time));
             } else {
                 TimeHolder.instance.time.removeObservers(this);
-                tv_time.setText("--:--:--");
+                this.tv_time.setText("--:--:--");
             }
         });
         TimeHolder.instance.running.observe(this, running -> {
-            tv_time.setTextColor((running) ? getResources().getColor(R.color.colorText) : getResources().getColor(R.color.colorDisabled));
+            this.tv_time.setTextColor((running) ? getResources().getColor(R.color.colorText) : getResources().getColor(R.color.colorDisabled));
         });
     }
 
@@ -296,24 +297,24 @@ public class EngineController extends NavigationBase {
                 blink.setDuration(250);
                 blink.setRepeatMode(Animation.REVERSE);
                 blink.setRepeatCount(Animation.INFINITE);
-                ib_dcc.setAlpha(1.0f);
-                ib_dcc.startAnimation(blink);
+                this.ib_dcc.setAlpha(1.0f);
+                this.ib_dcc.startAnimation(blink);
             } else {
-                ib_dcc.clearAnimation();
-                ib_dcc.setAlpha(0.0f);
+                this.ib_dcc.clearAnimation();
+                this.ib_dcc.setAlpha(0.0f);
             }
         });
     }
 
     private void updateStatus(boolean error) {
         this.error = error;
-        if (engine.stolen) {
-            ib_status.setImageResource(R.drawable.ic_circle_yellow);
+        if (this.engine.stolen) {
+            this.ib_status.setImageResource(R.drawable.ic_circle_yellow);
         } else if (error) {
-            ib_status.setImageResource(R.drawable.ic_circle_red);
+            this.ib_status.setImageResource(R.drawable.ic_circle_red);
             Toast.makeText(this, R.string.ta_state_err, Toast.LENGTH_SHORT).show();
         } else {
-            ib_status.setImageResource(R.drawable.ic_circle_green);
+            this.ib_status.setImageResource(R.drawable.ic_circle_green);
         }
     }
 
@@ -324,17 +325,17 @@ public class EngineController extends NavigationBase {
             return super.dispatchKeyEvent(event);
         }
 
-        int action = event.getAction();
-        int keyCode = event.getKeyCode();
+        final int action = event.getAction();
+        final int keyCode = event.getKeyCode();
         switch (keyCode) {
             case KeyEvent.KEYCODE_VOLUME_UP:
-                if (sb_speed.isEnabled() && action == KeyEvent.ACTION_DOWN && sb_speed.getProgress() < sb_speed.getMax()) {
-                    sb_speed.setProgress(sb_speed.getProgress()+1);
+                if (this.sb_speed.isEnabled() && action == KeyEvent.ACTION_DOWN && this.sb_speed.getProgress() < this.sb_speed.getMax()) {
+                    this.sb_speed.setProgress(this.sb_speed.getProgress()+1);
                 }
                 return true;
             case KeyEvent.KEYCODE_VOLUME_DOWN:
-                if (sb_speed.isEnabled() && action == KeyEvent.ACTION_DOWN && sb_speed.getProgress() > 0) {
-                    sb_speed.setProgress(sb_speed.getProgress()-1);
+                if (this.sb_speed.isEnabled() && action == KeyEvent.ACTION_DOWN && this.sb_speed.getProgress() > 0) {
+                    this.sb_speed.setProgress(this.sb_speed.getProgress()-1);
                 }
                 return true;
             default:
@@ -343,35 +344,38 @@ public class EngineController extends NavigationBase {
     }
 
     public void onFuncChanged(int index, Boolean newState) {
-        if (engine != null && !engine.stolen)
-            engine.setFunc(index, newState);
+        if (this.engine != null && !this.engine.stolen)
+            this.engine.setFunc(index, newState);
     }
 
     public void b_stopClick(View view) {
-        sb_speed.setProgress(0);
-        if (engine.multitrack) {
+        this.sb_speed.setProgress(0);
+        if (this.engine.multitrack) {
             for (Engine t : EngineDb.instance.engines.values())
-                if (t.multitrack) t.emergencyStop();
+                if (t.multitrack)
+                    t.emergencyStop();
         } else {
-            engine.emergencyStop();
+            this.engine.emergencyStop();
         }
     }
 
     public void b_idleClick(View view) {
-        sb_speed.setProgress(0);
+        this.sb_speed.setProgress(0);
 
-        if (engine == null) return;
-        if (engine.multitrack) {
+        if (engine == null)
+            return;
+        if (this.engine.multitrack) {
             for (Engine t : EngineDb.instance.engines.values())
                 if (t.multitrack && !t.stolen) t.setSpeedSteps(0);
         } else {
-            if (engine.total && !engine.stolen) engine.setSpeedSteps(0);
+            if (this.engine.total && !this.engine.stolen)
+                this.engine.setSpeedSteps(0);
         }
     }
 
     public void ib_StatusClick(View v) {
-        if (engine.stolen) {
-            engine.please();
+        if (this.engine.stolen) {
+            this.engine.please();
             Toast.makeText(this, R.string.ta_state_stolen, Toast.LENGTH_SHORT).show();
         } else if (this.error) {
             Toast.makeText(this, R.string.ta_state_err, Toast.LENGTH_SHORT).show();
@@ -381,16 +385,17 @@ public class EngineController extends NavigationBase {
     }
 
     public void ib_ReleaseClick(View v) {
-        if (engine == null) return;
+        if (engine == null)
+            return;
 
         new AlertDialog.Builder(this)
-                .setMessage(getString(R.string.ta_release_really) + " " + engine.name + "?")
-                .setPositiveButton(getString(R.string.yes), (dialog, which) -> engine.release())
+                .setMessage(getString(R.string.ta_release_really) + " " + this.engine.name + "?")
+                .setPositiveButton(getString(R.string.yes), (dialog, which) -> this.engine.release())
                 .setNegativeButton(getString(R.string.no), (dialog, which) -> {}).show();
     }
 
     public void setTrain(Engine t) {
-        engine = t;
+        this.engine = t;
         this.updateGUIFromTrain();
     }
 
@@ -402,8 +407,8 @@ public class EngineController extends NavigationBase {
         final boolean[] trainsChecked = new boolean[engines.size()];
         int i = 0;
         for (Engine engine : engines) {
-            trainsTitle[i] = engine.getTitle();
-            trainsChecked[i] = engine.multitrack;
+            trainsTitle[i] = this.engine.getTitle();
+            trainsChecked[i] = this.engine.multitrack;
             i++;
         }
         new AlertDialog.Builder(this)
@@ -414,9 +419,9 @@ public class EngineController extends NavigationBase {
                 .setPositiveButton(R.string.dialog_ok, (dialog, which) -> {
                     for (int j = 0; j < trainsChecked.length; j++) {
                         Engine engine = engines.get(j);
-                        if (engine.multitrack != trainsChecked[j]) {
-                            if (!engine.total) engine.setTotal(true);
-                            engine.multitrack = !engine.multitrack;
+                        if (this.engine.multitrack != trainsChecked[j]) {
+                            if (!this.engine.total) this.engine.setTotal(true);
+                            this.engine.multitrack = !this.engine.multitrack;
                         }
                     }
                 })
@@ -435,14 +440,14 @@ public class EngineController extends NavigationBase {
     }
 
     private void startRequestActivity() {
-        startActivity(new Intent(this, EngineRequest.class));
+        this.startActivity(new Intent(this, EngineRequest.class));
         this.finish();
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventMainThread(LokChangeEvent event) {
         super.onEventMainThread(event);
-        if (engine != null && event.getAddr() == engine.addr)
+        if (engine != null && event.getAddr() == this.engine.addr)
             this.updateGUIFromTrain();
     }
 
@@ -468,30 +473,31 @@ public class EngineController extends NavigationBase {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventMainThread(LokRespEvent event) {
-        if (engine == null) return;
-        if (Integer.parseInt(event.getParsed().get(2)) != engine.addr) return;
+        if (engine == null)
+            return;
+        if (Integer.parseInt(event.getParsed().get(2)) != this.engine.addr)
+            return;
 
-        tv_kmhSpeed.setText(String.format("%s km/h", engine.kmphSpeed));
-
+        this.tv_kmhSpeed.setText(String.format("%s km/h", this.engine.kmphSpeed));
         this.updateStatus(!event.getParsed().get(4).equalsIgnoreCase("OK"));
     }
 
     private void setEnabled(boolean enabled) {
-        s_direction.setEnabled(enabled);
-        sb_speed.setEnabled(enabled);
-        b_idle.setEnabled(enabled);
+        this.s_direction.setEnabled(enabled);
+        this.sb_speed.setEnabled(enabled);
+        this.b_idle.setEnabled(enabled);
     }
 
     @Override
     public void onPause() {
-        b_idleClick(findViewById(R.id.startButton1));
-        timerHandler.removeCallbacks(timerRunnable);
+        this.b_idleClick(findViewById(R.id.startButton1));
+        this.timerHandler.removeCallbacks(timerRunnable);
         super.onPause();
     }
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        final DrawerLayout drawer = findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
@@ -504,7 +510,7 @@ public class EngineController extends NavigationBase {
     public void onResume() {
         super.onResume();
         this.updateGUIFromTrain();
-        timerHandler.postDelayed(timerRunnable, 100);
+        this.timerHandler.postDelayed(timerRunnable, 100);
     }
 
 }
