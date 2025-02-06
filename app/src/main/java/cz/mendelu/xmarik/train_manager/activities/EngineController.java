@@ -51,12 +51,13 @@ import cz.mendelu.xmarik.train_manager.storage.EngineDb;
 
 
 public class EngineController extends NavigationBase {
+    private static final int TIMER_SET_SPEED_INTERVAL_MS = 100;
+
     private Engine engine;
     private boolean updating;
     private boolean error;
     private Toolbar toolbar;
     private FunctionCheckBoxAdapter functionAdapter;
-
 
     private SeekBar sb_speed;
     private SwitchCompat s_direction;
@@ -89,7 +90,7 @@ public class EngineController extends NavigationBase {
                 this.engine.setSpeedSteps(sb_speed.getProgress());
             }
         }
-        t_setSpeedHandler.postDelayed(t_setSpeedRunnable, 100);
+        t_setSpeedHandler.postDelayed(t_setSpeedRunnable, TIMER_SET_SPEED_INTERVAL_MS);
     }
 
     @Override
@@ -513,7 +514,7 @@ public class EngineController extends NavigationBase {
     public void onResume() {
         super.onResume();
         this.updateGUIFromTrain();
-        this.t_setSpeedHandler.postDelayed(t_setSpeedRunnable, 100);
+        this.t_setSpeedHandler.postDelayed(t_setSpeedRunnable, TIMER_SET_SPEED_INTERVAL_MS);
     }
 
 }
