@@ -158,23 +158,12 @@ public class TrainRequest extends NavigationBase {
         // Not called when dialog comes to foreground
         super.onPause();
         this.dialog.dismiss();
-        if (EventBus.getDefault().isRegistered(this))
-            EventBus.getDefault().unregister(this);
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        if (!EventBus.getDefault().isRegistered(this))
-            EventBus.getDefault().register(this);
         this.FillAreas();
-    }
-
-    @Override
-    public void onDestroy() {
-        if (EventBus.getDefault().isRegistered(this))
-            EventBus.getDefault().unregister(this);
-        super.onDestroy();
     }
 
 }

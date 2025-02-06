@@ -93,6 +93,13 @@ public class NavigationBase extends AppCompatActivity
         }
     }
 
+    @Override
+    public void onDestroy() {
+        if (EventBus.getDefault().isRegistered(this))
+            EventBus.getDefault().unregister(this);
+        super.onDestroy();
+    }
+
     /**
      * Hamburger menu click event
      * @param item is menuitem
