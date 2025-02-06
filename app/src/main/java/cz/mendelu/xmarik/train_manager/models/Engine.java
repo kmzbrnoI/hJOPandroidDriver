@@ -117,4 +117,8 @@ public class Engine {
         if (!this.label.isEmpty()) title += " (" + this.label + ")";
         return title;
     }
+
+    public static Direction invertDirection(Direction d) {
+        return (d == Direction.FORWARD) ? Direction.BACKWARD : Direction.FORWARD;
+    }
 }

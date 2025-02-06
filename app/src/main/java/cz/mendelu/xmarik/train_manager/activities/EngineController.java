@@ -208,10 +208,10 @@ public class EngineController extends NavigationBase {
         if (this.engine.multitrack) {
             for (Engine t : EngineDb.instance.engines.values()) {
                 if (t.multitrack) {
-                    if (t == engine)
+                    if (t == this.engine)
                         t.setDirection(newDir);
                     else if (!t.stolen)
-                        t.setDirection(t.direction);
+                        t.setDirection(Engine.invertDirection(t.direction));
                 }
             }
         } else {
