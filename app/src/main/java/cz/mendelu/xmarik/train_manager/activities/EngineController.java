@@ -205,18 +205,10 @@ public class EngineController extends NavigationBase {
         this.s_direction.setText((newDir == Engine.Direction.FORWARD) ? R.string.ta_direction_forward : R.string.ta_direction_backwards);
         this.engine.setDirection(newDir);
 
-        if (this.engine.multitrack) {
-            for (Engine t : EngineDb.instance.engines.values()) {
-                if (t.multitrack) {
-                    if (t == this.engine)
-                        t.setDirection(newDir);
-                    else if (!t.stolen)
-                        t.setDirection(Engine.invertDirection(t.direction));
-                }
-            }
-        } else {
-            this.engine.setDirection(newDir);
-        }
+        if (this.engine.multitrack)
+            for (Engine t : EngineDb.instance.engines.values())
+                if ((t != this.engine) && (t.multitrack) && (!t.stolen))
+                    t.setDirection(Engine.invertDirection(t.direction));
     }
 
     private void updateGUIFromTrain() {
