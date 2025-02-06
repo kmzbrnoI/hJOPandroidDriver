@@ -73,21 +73,24 @@ public class EngineController extends NavigationBase {
     private ScomView scom_expSignal;
     private ImageButton ib_release;
 
-    Handler timerHandler = new Handler();
-    Runnable timerRunnable = new Runnable() {
+    Handler t_setSpeedHandler = new Handler();
+    Runnable t_setSpeedRunnable = new Runnable() {
         @Override
-        public void run() {
-            if (!updating && engine != null && engine.total && !engine.stolen && engine.stepsSpeed != sb_speed.getProgress()) {
-                if (engine.multitrack) {
-                    for (Engine t : EngineDb.instance.engines.values())
-                        if (t.multitrack && !t.stolen)
-                            t.setSpeedSteps(sb_speed.getProgress());
-                } else
-                    engine.setSpeedSteps(sb_speed.getProgress());
-            }
-            timerHandler.postDelayed(this, 100);
-        }
+        public void run() { timerSetSpeedRun(); }
     };
+
+    void timerSetSpeedRun() {
+        if ((!this.updating) && (this.engine != null) && (this.engine.total) && (!this.engine.stolen) && (this.engine.stepsSpeed != this.sb_speed.getProgress())) {
+            if (this.engine.multitrack) {
+                for (Engine t : EngineDb.instance.engines.values())
+                    if (t.multitrack && !t.stolen)
+                        t.setSpeedSteps(sb_speed.getProgress());
+            } else {
+                this.engine.setSpeedSteps(sb_speed.getProgress());
+            }
+        }
+        t_setSpeedHandler.postDelayed(t_setSpeedRunnable, 100);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -491,7 +494,7 @@ public class EngineController extends NavigationBase {
     @Override
     public void onPause() {
         this.b_idleClick(findViewById(R.id.startButton1));
-        this.timerHandler.removeCallbacks(timerRunnable);
+        this.t_setSpeedHandler.removeCallbacks(t_setSpeedRunnable);
         super.onPause();
     }
 
@@ -510,7 +513,7 @@ public class EngineController extends NavigationBase {
     public void onResume() {
         super.onResume();
         this.updateGUIFromTrain();
-        this.timerHandler.postDelayed(timerRunnable, 100);
+        this.t_setSpeedHandler.postDelayed(t_setSpeedRunnable, 100);
     }
 
 }
