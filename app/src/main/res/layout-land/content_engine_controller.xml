@@ -7,32 +7,36 @@
     xmlns:tools="http://schemas.android.com/tools"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="cz.mendelu.xmarik.train_manager.activities.EngineController"
-    tools:showIn="@layout/app_bar_train_handler"
+    tools:showIn="@layout/app_bar_engine_controller"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
-    android:orientation="vertical"
+    android:orientation="horizontal"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:baselineAligned="false">
 
     <ScrollView
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
+        android:layout_weight=".50"
         android:layout_height="wrap_content"
-        android:id="@+id/scrollView2" >
+        android:id="@+id/scrollView3" >
 
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:weightSum="1" >
 
             <LinearLayout
+                android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:weightSum="1">
 
                 <LinearLayout
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:orientation="vertical">
 
@@ -48,42 +52,35 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center_vertical"
-                        android:orientation="horizontal"
-                        android:weightSum="1">
+                        android:orientation="horizontal">
 
                         <CheckBox
                             android:id="@+id/totalManaged"
-                            android:layout_width="wrap_content"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
+                            android:layout_weight="1"
                             android:text="@string/ta_total" />
-
-                        <Space
-                            android:layout_width="20dp"
-                            android:layout_height="match_parent" />
 
                         <CheckBox
                             android:id="@+id/goupManaged1"
-                            android:layout_width="wrap_content"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
+                            android:layout_weight="1"
                             android:checked="false"
-                            android:text="@string/ta_multitraction"
-                            android:textAlignment="center" />
-
+                            android:text="@string/ta_multitraction" />
                     </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:gravity="center"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
                         android:orientation="horizontal">
 
                         <androidx.appcompat.widget.SwitchCompat
                             android:id="@+id/handlerDirection1"
                             android:layout_width="136dp"
                             android:layout_height="46dp"
-                            android:layout_gravity="top|center_horizontal"
                             android:checked="false"
-                            android:nestedScrollingEnabled="true"
                             android:textOff="@string/ta_direction_backwards"
                             android:textOn="@string/ta_direction_forward" />
 
@@ -96,6 +93,7 @@
                             android:id="@+id/ib_status"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_weight="1"
                             android:background="@null"
                             android:onClick="ib_StatusClick"
                             android:scaleType="fitCenter"
@@ -110,6 +108,7 @@
                             android:id="@+id/ib_dcc"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_weight="1"
                             android:alpha="0"
                             android:background="@null"
                             android:scaleType="fitCenter"
@@ -124,37 +123,35 @@
 
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_height="wrap_content"
                         android:gravity="center_vertical"
                         android:orientation="horizontal">
 
                         <Button
                             android:id="@+id/stopButton1"
-                            android:layout_width="wrap_content"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1"
+                            android:layout_weight="0.6"
                             android:onClick="b_stopClick"
-                            android:text="@string/ta_emergency_stop"
-                            tools:ignore="ButtonStyle" />
+                            android:text="@string/ta_emergency_stop" />
 
                         <Button
                             android:id="@+id/startButton1"
-                            android:layout_width="wrap_content"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1"
+                            android:layout_weight="0.4"
                             android:onClick="b_idleClick"
-                            android:text="@string/ta_idle"
-                            tools:ignore="ButtonStyle" />
+                            android:text="@string/ta_idle" />
 
                     </LinearLayout>
 
                 </LinearLayout>
 
                 <LinearLayout
-                    android:layout_width="80dp"
-                    android:layout_height="match_parent"
-                    android:gravity="center_horizontal"
+                    android:layout_width="75dp"
+                    android:layout_height="200dp"
                     android:paddingTop="@dimen/activity_vertical_margin"
+                    android:gravity="center_horizontal"
                     android:orientation="vertical">
 
                     <TextView
@@ -169,8 +166,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:layout_weight="1"
-                        android:paddingStart="22dp"
-                        android:paddingEnd="22dp" />
+                        android:paddingStart="12dp"
+                        android:paddingEnd="12dp" />
 
                     <TextView
                         android:id="@+id/expSpeed"
@@ -201,15 +198,24 @@
                 android:max="28"
                 android:indeterminate="false"
                 android:layout_gravity="center_vertical"
-                android:paddingVertical="18dp" />
+                android:paddingVertical="18dp"/>
 
         </LinearLayout>
     </ScrollView>
 
-    <ListView
-        android:layout_width="match_parent"
+    <LinearLayout
+        android:orientation="vertical"
         android:layout_height="match_parent"
-        android:id="@+id/checkBoxView1"
-        android:choiceMode="multipleChoice" />
+        android:layout_width="0dp"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        android:layout_weight=".50">
 
+        <ListView
+            android:id="@+id/checkBoxView1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:choiceMode="multipleChoice"
+            />
+
+    </LinearLayout>
 </LinearLayout>

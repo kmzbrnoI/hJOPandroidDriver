@@ -91,7 +91,7 @@ public class EngineController extends NavigationBase {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        setContentView(R.layout.activity_train_handler);
+        setContentView(R.layout.activity_engine_controller);
         super.onCreate(savedInstanceState);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 

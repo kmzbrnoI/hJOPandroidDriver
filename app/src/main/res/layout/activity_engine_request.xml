@@ -12,7 +12,7 @@
         android:layout_height="match_parent">
 
         <include layout="@layout/app_bar" />
-        <include layout="@layout/content_train_request" />
+        <include layout="@layout/content_engine_request" />
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 

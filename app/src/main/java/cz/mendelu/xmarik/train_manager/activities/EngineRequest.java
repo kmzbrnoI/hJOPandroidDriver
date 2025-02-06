@@ -43,13 +43,13 @@ public class EngineRequest extends NavigationBase {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        setContentView(R.layout.activity_train_request);
+        setContentView(R.layout.activity_engine_request);
         super.onCreate(savedInstanceState);
 
         final Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        final View dialogView = this.getLayoutInflater().inflate(R.layout.dialog_train_request, null);
+        final View dialogView = this.getLayoutInflater().inflate(R.layout.dialog_engine_request, null);
         this.dialogMessage = dialogView.findViewById(R.id.dialogMessage);
         this.dialog = new AlertDialog.Builder(this)
                 .setView(dialogView)

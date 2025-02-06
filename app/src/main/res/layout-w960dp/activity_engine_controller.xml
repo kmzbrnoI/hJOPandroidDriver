@@ -18,8 +18,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <include layout="@layout/app_bar" />
-            <include layout="@layout/content_train_request" />
+            <include layout="@layout/app_bar_engine_controller" />
+            <include layout="@layout/content_engine_controller" />
 
         </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
