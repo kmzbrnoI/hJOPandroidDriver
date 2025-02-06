@@ -65,7 +65,6 @@
             android:id="@+id/ib_about"
             android:layout_gravity="center"
             android:src="@drawable/ic_hjop_icon"
-            android:onClick="linkhJOP"
             android:background="@null"
             android:scaleType="fitCenter" />
 

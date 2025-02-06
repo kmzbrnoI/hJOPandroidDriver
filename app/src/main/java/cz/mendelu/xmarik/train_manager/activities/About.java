@@ -1,13 +1,10 @@
 package cz.mendelu.xmarik.train_manager.activities;
 
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.widget.Toolbar;
-import android.view.View;
 import android.widget.TextView;
 
 import cz.mendelu.xmarik.train_manager.BuildConfig;
@@ -41,11 +38,5 @@ public class About extends NavigationBase {
         } else {
             super.onBackPressed();
         }
-    }
-
-    public void linkhJOP(View v) {
-        Uri uriUrl = Uri.parse("https://hjop.kmz-brno.cz/");
-        Intent launchBrowser = new Intent(Intent.ACTION_VIEW, uriUrl);
-        startActivity(launchBrowser);
     }
 }
