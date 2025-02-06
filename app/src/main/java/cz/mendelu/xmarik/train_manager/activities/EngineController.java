@@ -213,7 +213,7 @@ public class EngineController extends NavigationBase {
 
     private void updateGUIFromTrain() {
         if ((engine == null) || (!EngineDb.instance.engines.containsValue(engine))) {
-            this.startRequestActivity();
+            this.gotoEngineRequestActivity();
             return;
         }
 
@@ -367,9 +367,10 @@ public class EngineController extends NavigationBase {
             return;
         if (this.engine.multitrack) {
             for (Engine t : EngineDb.instance.engines.values())
-                if (t.multitrack && !t.stolen) t.setSpeedSteps(0);
+                if (t.multitrack && !t.stolen)
+                    t.setSpeedSteps(0);
         } else {
-            if (this.engine.total && !this.engine.stolen)
+            if ((this.engine.total) && (!this.engine.stolen))
                 this.engine.setSpeedSteps(0);
         }
     }
@@ -390,9 +391,9 @@ public class EngineController extends NavigationBase {
             return;
 
         new AlertDialog.Builder(this)
-                .setMessage(getString(R.string.ta_release_really) + " " + this.engine.getTitle() + "?")
-                .setPositiveButton(getString(R.string.yes), (dialog, which) -> this.engine.release())
-                .setNegativeButton(getString(R.string.no), (dialog, which) -> {}).show();
+            .setMessage(getString(R.string.ta_release_really) + " " + this.engine.getTitle() + "?")
+            .setPositiveButton(getString(R.string.yes), (dialog, which) -> this.engine.release())
+            .setNegativeButton(getString(R.string.no), (dialog, which) -> {}).show();
     }
 
     public void setTrain(Engine t) {
@@ -442,7 +443,7 @@ public class EngineController extends NavigationBase {
                 .show();
     }
 
-    private void startRequestActivity() {
+    private void gotoEngineRequestActivity() {
         this.startActivity(new Intent(this, EngineRequest.class));
         this.finish();
     }
@@ -450,7 +451,7 @@ public class EngineController extends NavigationBase {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventMainThread(EngineChangeEvent event) {
         super.onEventMainThread(event);
-        if (engine != null && event.getAddr() == this.engine.addr)
+        if ((engine != null) && (event.getAddr() == this.engine.addr))
             this.updateGUIFromTrain();
     }
 
@@ -459,8 +460,8 @@ public class EngineController extends NavigationBase {
         super.onEventMainThread(event);
 
         Toast.makeText(getApplicationContext(),
-                String.format(getString(R.string.ta_release_ok), event.getAddr()), Toast.LENGTH_LONG)
-                .show();
+            String.format(getString(R.string.ta_release_ok), event.getAddr()), Toast.LENGTH_LONG)
+            .show();
 
         if (event.getAddr() == this.engine.addr) {
             this.finish();
@@ -470,7 +471,7 @@ public class EngineController extends NavigationBase {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventMainThread(TCPDisconnectedEvent event) {
-        this.startRequestActivity();
+        this.gotoEngineRequestActivity();
         super.onEventMainThread(event);
     }
 
