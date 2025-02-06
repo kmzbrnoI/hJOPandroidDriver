@@ -399,29 +399,31 @@ public class EngineController extends NavigationBase {
         final ArrayList<Engine> engines = new ArrayList<>(EngineDb.instance.engines.values());
         engines.remove(this.engine);
         Collections.sort(engines, (engine1, engine2) -> engine1.addr - engine2.addr);
-        final CharSequence[] trainsTitle = new CharSequence[engines.size()];
-        final boolean[] trainsChecked = new boolean[engines.size()];
+        final CharSequence[] enginesTitle = new CharSequence[engines.size()];
+        final boolean[] enginesChecked = new boolean[engines.size()];
         int i = 0;
-        for (Engine engine : engines) {
-            trainsTitle[i] = this.engine.getTitle();
-            trainsChecked[i] = this.engine.multitrack;
+        for (Engine _engine : engines) {
+            enginesTitle[i] = _engine.getTitle();
+            enginesChecked[i] = _engine.multitrack;
             i++;
         }
+
         new AlertDialog.Builder(this)
-                .setTitle(R.string.ta_dialog_group_title)
-                .setMultiChoiceItems(trainsTitle, trainsChecked, (dialog, index, check) ->
-                        trainsChecked[index] = check
-                )
-                .setPositiveButton(R.string.dialog_ok, (dialog, which) -> {
-                    for (int j = 0; j < trainsChecked.length; j++) {
-                        Engine engine = engines.get(j);
-                        if (this.engine.multitrack != trainsChecked[j]) {
-                            if (!this.engine.total) this.engine.setTotal(true);
-                            this.engine.multitrack = !this.engine.multitrack;
-                        }
+            .setTitle(R.string.ta_dialog_group_title)
+            .setMultiChoiceItems(enginesTitle, enginesChecked, (dialog, index, check) ->
+                enginesChecked[index] = check
+            )
+            .setPositiveButton(R.string.dialog_ok, (dialog, which) -> {
+                for (int j = 0; j < enginesChecked.length; j++) {
+                    Engine _engine = engines.get(j);
+                    if (_engine.multitrack != enginesChecked[j]) {
+                        if (!_engine.total)
+                            _engine.setTotal(true);
+                        _engine.multitrack = enginesChecked[j];
                     }
-                })
-                .show();
+                }
+            })
+            .show();
     }
 
     private void displayUngroupDialog() {
