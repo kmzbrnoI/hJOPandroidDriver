@@ -187,14 +187,16 @@ public class NavigationBase extends AppCompatActivity
 
     @Override
     public void onPause() {
-        if (EventBus.getDefault().isRegistered(this)) EventBus.getDefault().unregister(this);
+        if (EventBus.getDefault().isRegistered(this))
+            EventBus.getDefault().unregister(this);
         super.onPause();
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        if (!EventBus.getDefault().isRegistered(this)) EventBus.getDefault().register(this);
+        if (!EventBus.getDefault().isRegistered(this))
+            EventBus.getDefault().register(this);
 
         this.updateTrainGroup();
         this.updateServer();
@@ -209,15 +211,17 @@ public class NavigationBase extends AppCompatActivity
             MenuItem item = menu.add(R.id.group_train, Menu.NONE, 1, t.getTitle());
             // Set icon
             if (t.total) {
-                if (t.multitrack) item.setIcon(R.drawable.ic_train_multi_24dp);
+                if (t.multitrack)
+                    item.setIcon(R.drawable.ic_train_multi_24dp);
                 else item.setIcon(R.drawable.ic_train_control_24dp);
             } else {
-                if (t.stepsSpeed == 0) item.setIcon(R.drawable.ic_train_stop_24dp);
+                if (t.stepsSpeed == 0)
+                    item.setIcon(R.drawable.ic_train_stop_24dp);
                 else item.setIcon(R.drawable.ic_train_speed_24dp);
             }
             item.setOnMenuItemClickListener(item1 -> {
                 if (this instanceof TrainHandler) {
-                    ((TrainHandler) this).setTrain(t);
+                    ((TrainHandler)this).setTrain(t);
                 } else {
                     Intent intent = new Intent(this, TrainHandler.class);
                     intent.putExtra("train_addr", t.addr);

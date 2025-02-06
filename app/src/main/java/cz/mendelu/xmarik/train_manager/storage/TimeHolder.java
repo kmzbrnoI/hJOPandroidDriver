@@ -38,7 +38,8 @@ public class TimeHolder {
     private final SimpleDateFormat timeFormat = new SimpleDateFormat("H:mm:ss");
 
     public TimeHolder() {
-        if (!EventBus.getDefault().isRegistered(this)) EventBus.getDefault().register(this);
+        if (!EventBus.getDefault().isRegistered(this))
+            EventBus.getDefault().register(this);
         timeFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
     }
 

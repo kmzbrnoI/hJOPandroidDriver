@@ -56,7 +56,8 @@ public class ServerConnector extends AppCompatActivity {
     @Override
     public void onPause() {
         super.onPause();
-        if(EventBus.getDefault().isRegistered(this)) EventBus.getDefault().unregister(this);
+        if (EventBus.getDefault().isRegistered(this))
+            EventBus.getDefault().unregister(this);
     }
 
     @Override
@@ -70,7 +71,8 @@ public class ServerConnector extends AppCompatActivity {
     public void onResume() {
         super.onResume();
 
-        if (!EventBus.getDefault().isRegistered(this)) EventBus.getDefault().register(this);
+        if (!EventBus.getDefault().isRegistered(this))
+            EventBus.getDefault().register(this);
         start();
     }
 

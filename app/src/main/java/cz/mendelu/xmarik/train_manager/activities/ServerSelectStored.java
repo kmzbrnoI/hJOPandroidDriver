@@ -201,14 +201,16 @@ public class ServerSelectStored extends Fragment {
 
     @Override
     public void onPause() {
-        if(EventBus.getDefault().isRegistered(this))EventBus.getDefault().unregister(this);
+        if (EventBus.getDefault().isRegistered(this))
+            EventBus.getDefault().unregister(this);
         super.onPause();
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        if (!EventBus.getDefault().isRegistered(this)) EventBus.getDefault().register(this);
+        if (!EventBus.getDefault().isRegistered(this))
+            EventBus.getDefault().register(this);
         updateServers();
     }
 }

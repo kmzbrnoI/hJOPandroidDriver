@@ -27,7 +27,8 @@ public class TrainDb {
     public Map<Integer, Train> trains = new HashMap<>();
 
     public TrainDb() {
-        if (!EventBus.getDefault().isRegistered(this)) EventBus.getDefault().register(this);
+        if (!EventBus.getDefault().isRegistered(this))
+            EventBus.getDefault().register(this);
     }
 
     @Subscribe

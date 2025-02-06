@@ -24,7 +24,8 @@ public class ControlAreaDb {
     public ArrayList<ControlArea> areas = new ArrayList<>();
 
     public ControlAreaDb() {
-        if (!EventBus.getDefault().isRegistered(this)) EventBus.getDefault().register(this);
+        if (!EventBus.getDefault().isRegistered(this))
+            EventBus.getDefault().register(this);
     }
 
     @Subscribe
