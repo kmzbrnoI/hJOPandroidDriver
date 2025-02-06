@@ -126,8 +126,10 @@ public class TrainHandler extends NavigationBase {
             train_addr = getIntent().getIntExtra("train_addr", -1); // from intent
         if (train_addr != -1)
             train = TrainDb.instance.trains.get(train_addr);
+        else
+            train = null;
 
-        this.fillHVs();
+        this.updateGUIFromTrain();
 
         // Setup Time and DCC state observers
         observeTime();
@@ -179,7 +181,7 @@ public class TrainHandler extends NavigationBase {
         int train_addr = intent.getIntExtra("train_addr", -1);
         if (train_addr != -1) {
             train = TrainDb.instance.trains.get(train_addr);
-            this.fillHVs();
+            this.updateGUIFromTrain();
         }
     }
 
@@ -187,24 +189,6 @@ public class TrainHandler extends NavigationBase {
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt("train_addr", train.addr);
-    }
-
-    private void fillHVs() {
-        if (TrainDb.instance.trains.isEmpty()) {
-            startRequestActivity();
-            return;
-        }
-
-        if (train == null || !TrainDb.instance.trains.containsValue(train)) {
-            int min_addr = Integer.MAX_VALUE;
-            for (Train t: TrainDb.instance.trains.values())
-                if (min_addr > t.addr) min_addr = t.addr;
-            train = TrainDb.instance.trains.get(min_addr);
-        }
-
-        toolbar.setTitle(train.getTitle());
-
-        this.updateGUTtoHV();
     }
 
     private void onDirectionChange(boolean newDir) {
@@ -231,13 +215,15 @@ public class TrainHandler extends NavigationBase {
         }
     }
 
-    private void updateGUTtoHV() {
-        if (train == null) {
+    private void updateGUIFromTrain() {
+        if ((train == null) || (!TrainDb.instance.trains.containsValue(train))) {
             startRequestActivity();
             return;
         }
 
         this.updating = true;
+
+        toolbar.setTitle(train.getTitle());
 
         chb_total.setEnabled(!train.stolen);
         lv_functions.setEnabled(train != null && !train.stolen);
@@ -411,7 +397,7 @@ public class TrainHandler extends NavigationBase {
 
     public void setTrain(Train t) {
         train = t;
-        this.fillHVs();
+        this.updateGUIFromTrain();
     }
 
     private void displayGroupDialog() {
@@ -463,36 +449,25 @@ public class TrainHandler extends NavigationBase {
     public void onEventMainThread(LokChangeEvent event) {
         super.onEventMainThread(event);
         if (train != null && event.getAddr() == train.addr)
-            this.updateGUTtoHV();
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onEventMainThread(LokAddEvent event) {
-        super.onEventMainThread(event);
-        this.fillHVs();
+            this.updateGUIFromTrain();
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventMainThread(LokRemoveEvent event) {
         super.onEventMainThread(event);
-        this.fillHVs();
 
         Toast.makeText(getApplicationContext(),
                 String.format(getString(R.string.ta_release_ok), event.getAddr()), Toast.LENGTH_LONG)
                 .show();
 
-        if (TrainDb.instance.trains.size() == 0)
-            startActivity(new Intent(this, TrainRequest.class));
+        if (event.getAddr() == this.train.addr)
+            this.finish();
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventMainThread(TCPDisconnectedEvent event) {
-        updating = true;
-
         train = null;
-        this.updateGUTtoHV();
-
-        updating = false;
+        this.startRequestActivity();
         super.onEventMainThread(event);
     }
 
@@ -533,7 +508,7 @@ public class TrainHandler extends NavigationBase {
     @Override
     public void onResume() {
         super.onResume();
-        this.fillHVs();
+        this.updateGUIFromTrain();
         timerHandler.postDelayed(timerRunnable, 100);
     }
 
