@@ -87,6 +87,10 @@ public class EngineController extends NavigationBase {
     private ImageButton ib_release;
     private RadioGroup rg_atp_mode;
 
+    private int lastExpSpeed = EXP_SPEED_UNKNOWN;
+    private int lastExpSignalCode = SIGNAL_UNKNOWN;
+
+    private MediaPlayer infoPlayer = null;
     Handler t_setSpeedHandler = new Handler();
     Runnable t_setSpeedRunnable = new Runnable() {
         @Override
@@ -137,16 +141,18 @@ public class EngineController extends NavigationBase {
         this.lv_functions.setAdapter(this.functionAdapter);
 
         // select train
-        int train_addr;
-        Engine e = null;
-        if (savedInstanceState != null)
-            train_addr = savedInstanceState.getInt("train_addr", -1); // from saved state
-        else
-            train_addr = getIntent().getIntExtra("train_addr", -1); // from intent
-        if (train_addr != -1)
-            e = EngineDb.instance.engines.get(train_addr);
+        {
+            int train_addr;
+            Engine e = null;
+            if (savedInstanceState != null)
+                train_addr = savedInstanceState.getInt("train_addr", -1); // from saved state
+            else
+                train_addr = getIntent().getIntExtra("train_addr", -1); // from intent
+            if (train_addr != -1)
+                e = EngineDb.instance.engines.get(train_addr);
 
-        this.setEngine(e); // will close activity in case train = null
+            this.setEngine(e); // will close activity in case train = null
+        }
 
         // Setup Time and DCC state observers
         this.observeTime();
@@ -160,6 +166,18 @@ public class EngineController extends NavigationBase {
         this.rg_atp_mode.setOnCheckedChangeListener((group, checkedId) -> this.onRgATPModeCheckedChange(group, checkedId));
 
         this.ib_release.setOnClickListener(this::ib_ReleaseClick);
+
+        try {
+            this.infoPlayer = new MediaPlayer();
+            final Context appContent = EngineController.this.getApplicationContext();
+            final AssetFileDescriptor afd = appContent.getResources().openRawResourceFd(R.raw.s_info);
+            this.infoPlayer.setDataSource(afd.getFileDescriptor(), afd.getStartOffset(), afd.getLength());
+            this.infoPlayer.prepareAsync();
+            infoPlayer.setOnCompletionListener((mp) -> infoPlayerOnCompletion(mp));
+        } catch (IOException e) {
+            this.infoPlayer = null;
+            Log.e("EngineController::onCreate", "s_info sound load", e);
+        }
     }
 
     @Override
@@ -268,6 +286,8 @@ public class EngineController extends NavigationBase {
 
         this.engine = e;
         this.atp.mode = ATP.Mode.TRAIN;
+        this.lastExpSpeed = this.engine.expSpeed;
+        this.lastExpSignalCode = this.engine.expSignalCode;
         this.updateGUIFromTrain();
     }
 
@@ -301,6 +321,10 @@ public class EngineController extends NavigationBase {
         this.chb_total.setChecked(this.engine.total);
 
         if (this.atp.mode == ATP.Mode.TRAIN) {
+            if ((this.engine.isMyControl()) && (!this.atp.isSoundPlaying()) &&
+                    ((this.engine.expSpeed != this.lastExpSpeed) || (this.engine.expSignalCode != this.lastExpSignalCode)))
+                this.playInfoSound();
+
             this.tv_expSpeed.setText((this.engine.expSpeed != EXP_SPEED_UNKNOWN) ? String.format("%s km/h", this.engine.expSpeed) : "- km/h");
             this.scom_expSignal.setCode(this.engine.expSignalCode);
             this.tv_expSignalBlock.setText((this.engine.expSignalCode != SIGNAL_UNKNOWN) ? this.engine.expSignalBlock : "---");
@@ -309,6 +333,9 @@ public class EngineController extends NavigationBase {
             this.scom_expSignal.setCode(SIGNAL_UNKNOWN);
             this.tv_expSignalBlock.setText("---");
         }
+
+        this.lastExpSpeed = this.engine.expSpeed;
+        this.lastExpSignalCode = this.engine.expSignalCode;
 
         this.rg_atp_mode.check((this.atp.mode == ATP.Mode.TRAIN) ? R.id.rATPtrain: R.id.rATPshunt);
         for (int i = 0; i < this.rg_atp_mode.getChildCount(); i++)
@@ -554,6 +581,15 @@ public class EngineController extends NavigationBase {
         this.b_idle.setEnabled(enabled);
     }
 
+    private void playInfoSound() {
+        if ((this.infoPlayer != null) && (!this.infoPlayer.isPlaying()))
+            this.infoPlayer.start();
+    }
+
+    private void infoPlayerOnCompletion(MediaPlayer mp) {
+        // this.infoPlayer.prepareAsync();
+    }
+
     @Override
     public void onPause() {
         this.b_idleClick(findViewById(R.id.startButton1));
@@ -593,7 +629,7 @@ public class EngineController extends NavigationBase {
 
         public Mode mode = Mode.TRAIN;
         private boolean overspeed;
-        private MediaPlayer soundPlayer = new MediaPlayer();
+        private MediaPlayer soundPlayer = null;
 
         Handler t_overSpeedEB = new Handler(); // EB = emergency braking
         Runnable t_verSpeedEBRunnable = new Runnable() {
@@ -603,13 +639,15 @@ public class EngineController extends NavigationBase {
 
         public ATP() {
             try {
+                this.soundPlayer = new MediaPlayer();
                 final Context appContent = EngineController.this.getApplicationContext();
                 final AssetFileDescriptor afd = appContent.getResources().openRawResourceFd(R.raw.s2_warning);
-                soundPlayer.setDataSource(afd.getFileDescriptor(), afd.getStartOffset(), afd.getLength());
-                soundPlayer.setLooping(true);
-                soundPlayer.prepareAsync();
+                this.soundPlayer.setDataSource(afd.getFileDescriptor(), afd.getStartOffset(), afd.getLength());
+                this.soundPlayer.setLooping(true);
+                this.soundPlayer.prepareAsync();
             } catch (IOException e) {
-                Log.e("ATP ctor", "Sound load", e);
+                this.soundPlayer = null;
+                Log.e("ATP ctor", "s2_warning sound load", e);
             }
         }
 
@@ -655,8 +693,13 @@ public class EngineController extends NavigationBase {
             }
 
             { // Sound
-                if (!this.soundPlayer.isPlaying())
+                if ((this.soundPlayer != null) && (!this.soundPlayer.isPlaying())) {
+                    if (EngineController.this.infoPlayer.isPlaying()) {
+                        EngineController.this.infoPlayer.stop();
+                        EngineController.this.infoPlayer.prepareAsync();
+                    }
                     this.soundPlayer.start();
+                }
             }
         }
 
@@ -666,7 +709,7 @@ public class EngineController extends NavigationBase {
             EngineController.this.tv_kmhSpeed.clearAnimation();
             EngineController.this.tv_expSpeed.clearAnimation();
 
-            if (this.soundPlayer.isPlaying()) {
+            if ((this.soundPlayer != null) && (this.soundPlayer.isPlaying())) {
                 this.soundPlayer.stop();
                 this.soundPlayer.prepareAsync();
             }
@@ -691,6 +734,10 @@ public class EngineController extends NavigationBase {
             if (this.mode == Mode.SHUNT)
                 return true;
             return ((thisEngine.expSpeed == EXP_SPEED_UNKNOWN) || (thisEngine.expSpeed > 0));
+        }
+
+        public boolean isSoundPlaying() {
+            return this.soundPlayer.isPlaying();
         }
     }
 }
