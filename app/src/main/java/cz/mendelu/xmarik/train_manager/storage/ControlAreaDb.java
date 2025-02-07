@@ -28,6 +28,12 @@ public class ControlAreaDb {
             EventBus.getDefault().register(this);
     }
 
+    @Override
+    public void finalize() {
+        if (EventBus.getDefault().isRegistered(this))
+            EventBus.getDefault().unregister(this);
+    }
+
     @Subscribe
     public void onEvent(AreasEvent event) {
         try {
