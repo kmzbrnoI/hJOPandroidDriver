@@ -41,7 +41,8 @@
                         android:textColor="@color/colorText"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textAlignment="center" />
+                        android:textAlignment="center"
+                        android:text="--:--:--" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -84,7 +85,8 @@
                             android:checked="false"
                             android:nestedScrollingEnabled="true"
                             android:textOff="@string/ta_direction_backwards"
-                            android:textOn="@string/ta_direction_forward" />
+                            android:textOn="@string/ta_direction_forward"
+                            android:text="backward" />
 
                         <Space
                             android:layout_width="wrap_content"
@@ -109,7 +111,6 @@
                             android:id="@+id/ib_dcc"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:alpha="0"
                             android:background="@null"
                             android:scaleType="fitCenter"
                             android:src="@drawable/ic_circle_stop" />
@@ -161,7 +162,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:ellipsize="end"
-                        android:maxLines="1" />
+                        android:maxLines="1"
+                        android:text="Signal" />
 
                     <cz.kudlav.scomview.ScomView
                         android:id="@+id/scom_view"
@@ -178,7 +180,8 @@
                         android:ellipsize="end"
                         android:maxLines="1"
                         android:minWidth="64sp"
-                        android:textAlignment="center" />
+                        android:textAlignment="center"
+                        android:text="120 km/h" />
 
                 </LinearLayout>
 
@@ -190,7 +193,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 android:gravity="center"
-                android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                android:text="-- km/h" />
 
             <SeekBar
                 android:layout_width="match_parent"
