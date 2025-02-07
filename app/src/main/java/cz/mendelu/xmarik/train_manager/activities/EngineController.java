@@ -6,10 +6,14 @@ import static android.content.pm.ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED;
 import static cz.mendelu.xmarik.train_manager.models.Engine.EXP_SPEED_UNKNOWN;
 import static cz.mendelu.xmarik.train_manager.models.Engine.SIGNAL_UNKNOWN;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.AssetFileDescriptor;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
@@ -36,6 +40,7 @@ import androidx.preference.PreferenceManager;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -63,7 +68,7 @@ public class EngineController extends NavigationBase {
     private Toolbar toolbar;
     private FunctionCheckBoxAdapter functionAdapter;
 
-    ATP atp = new ATP();
+    ATP atp;
 
     private SeekBar sb_speed;
     private SwitchCompat s_direction;
@@ -104,6 +109,7 @@ public class EngineController extends NavigationBase {
         setContentView(R.layout.activity_engine_controller);
         super.onCreate(savedInstanceState);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        this.atp = new ATP();
 
         this.toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(this.toolbar);
@@ -553,6 +559,7 @@ public class EngineController extends NavigationBase {
 
         public Mode mode = Mode.TRAIN;
         private boolean overspeed;
+        private MediaPlayer soundPlayer = new MediaPlayer();
 
         Handler t_overSpeedEB = new Handler(); // EB = emergency braking
         Runnable t_verSpeedEBRunnable = new Runnable() {
@@ -560,6 +567,17 @@ public class EngineController extends NavigationBase {
             public void run() { overSpeedEB(); }
         };
 
+        public ATP() {
+            try {
+                final Context appContent = EngineController.this.getApplicationContext();
+                final AssetFileDescriptor afd = appContent.getResources().openRawResourceFd(R.raw.s2_warning);
+                soundPlayer.setDataSource(afd.getFileDescriptor(), afd.getStartOffset(), afd.getLength());
+                soundPlayer.setLooping(true);
+                soundPlayer.prepareAsync();
+            } catch (IOException e) {
+                Log.e("ATP ctor", "Sound load", e);
+            }
+        }
 
         public void update() {
             this.overSpeedUpdate();
@@ -593,12 +611,19 @@ public class EngineController extends NavigationBase {
         private void overSpeedBegin() {
             this.t_overSpeedEB.postDelayed(t_verSpeedEBRunnable, OVERSPEED_DELAY_EB_MS);
 
-            Animation blink = new AlphaAnimation(0.0f, 1.0f);
-            blink.setDuration(100);
-            blink.setRepeatMode(Animation.REVERSE);
-            blink.setRepeatCount(Animation.INFINITE);
-            EngineController.this.tv_kmhSpeed.startAnimation(blink);
-            EngineController.this.tv_expSpeed.startAnimation(blink);
+            { // Animation
+                Animation blink = new AlphaAnimation(0.0f, 1.0f);
+                blink.setDuration(100);
+                blink.setRepeatMode(Animation.REVERSE);
+                blink.setRepeatCount(Animation.INFINITE);
+                EngineController.this.tv_kmhSpeed.startAnimation(blink);
+                EngineController.this.tv_expSpeed.startAnimation(blink);
+            }
+
+            { // Sound
+                if (!this.soundPlayer.isPlaying())
+                    this.soundPlayer.start();
+            }
         }
 
         private void overSpeedEnd() {
@@ -606,6 +631,11 @@ public class EngineController extends NavigationBase {
 
             EngineController.this.tv_kmhSpeed.clearAnimation();
             EngineController.this.tv_expSpeed.clearAnimation();
+
+            if (this.soundPlayer.isPlaying()) {
+                this.soundPlayer.stop();
+                this.soundPlayer.prepareAsync();
+            }
         }
 
         private void overSpeedEB() {
