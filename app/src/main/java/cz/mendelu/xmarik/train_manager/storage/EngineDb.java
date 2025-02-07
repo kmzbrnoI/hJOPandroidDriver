@@ -76,7 +76,8 @@ public class EngineDb {
 
         } else if (event.getParsed().get(4).equalsIgnoreCase("RELEASE") ||
                    event.getParsed().get(4).equalsIgnoreCase("NOT")) {
-            if (!engines.containsKey(addr)) return;
+            if (!engines.containsKey(addr))
+                return;
             engines.remove(addr);
             EventBus.getDefault().post(new EngineRemoveEvent(addr));
 
@@ -125,7 +126,8 @@ public class EngineDb {
 
     public void totalEvent(EngineEvent event) {
         int addr = Integer.parseInt(event.getParsed().get(2));
-        if (!engines.containsKey(addr)) return;
+        if (!engines.containsKey(addr))
+            return;
         Engine t = engines.get(addr);
         boolean total = event.getParsed().get(4).equals("1");
         if (t.total == total) {
@@ -138,7 +140,8 @@ public class EngineDb {
 
     public void expSignEvent(EngineEvent event) {
         int addr = Integer.parseInt(event.getParsed().get(2));
-        if (!engines.containsKey(addr)) return;
+        if (!engines.containsKey(addr))
+            return;
         Engine t = engines.get(addr);
         t.expSignalBlock = event.getParsed().get(4);
         try {

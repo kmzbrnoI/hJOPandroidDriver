@@ -52,18 +52,18 @@ public class Engine {
         ArrayList<String> functionStrs = ParseHelper.parse(parsed.get(15), ";", "");
         String functionTypes = (parsed.size() > 16) ? parsed.get(16) : "";
 
-        name = parsed.get(0);
-        owner = parsed.get(1);
-        label = parsed.get(2);
-        note = parsed.get(3);
-        addr = Integer.parseInt(parsed.get(4));
-        kind = parsed.get(5);
+        this.name = parsed.get(0);
+        this.owner = parsed.get(1);
+        this.label = parsed.get(2);
+        this.note = parsed.get(3);
+        this.addr = Integer.parseInt(parsed.get(4));
+        this.kind = parsed.get(5);
 
-        stepsSpeed = Integer.parseInt(parsed.get(9));
-        kmphSpeed = Integer.parseInt(parsed.get(10));
-        direction = parsed.get(11).equals("1") ? Direction.BACKWARD : Direction.FORWARD;
+        this.stepsSpeed = Integer.parseInt(parsed.get(9));
+        this.kmphSpeed = Integer.parseInt(parsed.get(10));
+        this.direction = parsed.get(11).equals("1") ? Direction.BACKWARD : Direction.FORWARD;
 
-        function = new EngineFunction[parsed.get(8).length()];
+        this.function = new EngineFunction[parsed.get(8).length()];
         for (int i = 0; i < function.length; i++) {
             String desc = (i < functionStrs.size()) ? functionStrs.get(i) : "";
             char status = (i < parsed.get(8).length()) ? parsed.get(8).charAt(i) : '0';
@@ -81,20 +81,23 @@ public class Engine {
     }
 
     public void setSpeedSteps(int steps) {
-        if (this.stepsSpeed == steps) return;
+        if (this.stepsSpeed == steps)
+            return;
         this.stepsSpeed = steps;
         TCPClient.getInstance().send("-;LOK;" + this.addr + ";SP-S;" + steps);
     }
 
     public void setFunc(int id, boolean state) {
-        if (function[id].checked == state) return;
+        if (function[id].checked == state)
+            return;
         function[id].checked = state;
         String strState = state ? "1" : "0";
         TCPClient.getInstance().send("-;LOK;" + this.addr + ";F;" + id + ";" + strState);
     }
 
     public void setTotal(boolean total) {
-        if (this.total == total) return;
+        if (this.total == total)
+            return;
         this.total = total;
         String strTotal = total ? "1" : "0";
         TCPClient.getInstance().send("-;LOK;" + this.addr + ";TOTAL;" + strTotal);
@@ -109,8 +112,8 @@ public class Engine {
     }
 
     public void emergencyStop() {
-        kmphSpeed = 0;
-        stepsSpeed = 0;
+        this.kmphSpeed = 0;
+        this.stepsSpeed = 0;
         TCPClient.getInstance().send("-;LOK;" + this.addr + ";STOP");
     }
 
