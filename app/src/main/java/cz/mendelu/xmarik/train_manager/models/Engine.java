@@ -9,6 +9,8 @@ import cz.mendelu.xmarik.train_manager.helpers.ParseHelper;
  * Class Engine represents an engine.
  */
 public class Engine {
+    public static final int EXP_SPEED_UNKNOWN = -1;
+
     public enum Direction {
         FORWARD,
         BACKWARD,
@@ -31,7 +33,7 @@ public class Engine {
     public boolean stolen = false;
     public int expSignalCode = -1;
     public String expSignalBlock;
-    public int expSpeed = -1;
+    public int expSpeed = EXP_SPEED_UNKNOWN;
 
     // client-side props
     public boolean multitrack = false;

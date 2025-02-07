@@ -3,6 +3,8 @@ package cz.mendelu.xmarik.train_manager.activities;
 import static android.content.pm.ActivityInfo.SCREEN_ORIENTATION_LOCKED;
 import static android.content.pm.ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED;
 
+import static cz.mendelu.xmarik.train_manager.models.Engine.EXP_SPEED_UNKNOWN;
+
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -239,12 +241,7 @@ public class EngineController extends NavigationBase {
 
         this.tv_kmhSpeed.setText(String.format("%s km/h", this.engine.kmphSpeed));
         this.chb_total.setChecked(this.engine.total);
-
-        if (this.engine.expSpeed != -1)
-            this.tv_expSpeed.setText(String.format("%s km/h", this.engine.expSpeed));
-        else
-            tv_expSpeed.setText("- km/h");
-
+        this.tv_expSpeed.setText((this.engine.expSpeed != EXP_SPEED_UNKNOWN) ? String.format("%s km/h", this.engine.expSpeed) : "- km/h");
         this.scom_expSignal.setCode(this.engine.expSignalCode);
         this.tv_expSignalBlock.setText( (this.engine.expSignalCode != -1) ? this.engine.expSignalBlock : "" );
 

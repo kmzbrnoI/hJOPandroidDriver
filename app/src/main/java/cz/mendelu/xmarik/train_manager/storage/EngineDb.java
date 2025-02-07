@@ -1,5 +1,7 @@
 package cz.mendelu.xmarik.train_manager.storage;
 
+import static cz.mendelu.xmarik.train_manager.models.Engine.EXP_SPEED_UNKNOWN;
+
 import android.util.Log;
 
 import org.greenrobot.eventbus.EventBus;
@@ -149,10 +151,12 @@ public class EngineDb {
 
     public void expSpdEvent(EngineEvent event) {
         int addr = Integer.parseInt(event.getParsed().get(2));
-        if (!engines.containsKey(addr)) return;
+        if (!engines.containsKey(addr))
+            return;
         Engine t = engines.get(addr);
         String expSpeed = event.getParsed().get(4);
-        t.expSpeed = (!expSpeed.equals("-")) ? Integer.parseInt(expSpeed) : -1;
+        t.expSpeed = (!expSpeed.equals("-")) ? Integer.parseInt(expSpeed) : EXP_SPEED_UNKNOWN;
+
         EventBus.getDefault().post(new EngineChangeEvent(addr));
     }
 
