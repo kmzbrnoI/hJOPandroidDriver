@@ -242,7 +242,7 @@ public class NavigationBase extends AppCompatActivity
             }
             item.setOnMenuItemClickListener(item1 -> {
                 if (this instanceof EngineController) {
-                    ((EngineController)this).setTrain(t);
+                    ((EngineController)this).setEngine(t);
                 } else {
                     Intent intent = new Intent(this, EngineController.class);
                     intent.putExtra("train_addr", t.addr);

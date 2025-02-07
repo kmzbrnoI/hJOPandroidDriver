@@ -10,6 +10,7 @@ import cz.mendelu.xmarik.train_manager.helpers.ParseHelper;
  */
 public class Engine {
     public static final int EXP_SPEED_UNKNOWN = -1;
+    public static final int SIGNAL_UNKNOWN = -1;
 
     public enum Direction {
         FORWARD,
@@ -31,7 +32,7 @@ public class Engine {
     public Direction direction = Direction.FORWARD;
     public boolean total = false;
     public boolean stolen = false;
-    public int expSignalCode = -1;
+    public int expSignalCode = SIGNAL_UNKNOWN;
     public String expSignalBlock;
     public int expSpeed = EXP_SPEED_UNKNOWN;
 

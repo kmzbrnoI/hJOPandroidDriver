@@ -4,6 +4,7 @@ import static android.content.pm.ActivityInfo.SCREEN_ORIENTATION_LOCKED;
 import static android.content.pm.ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED;
 
 import static cz.mendelu.xmarik.train_manager.models.Engine.EXP_SPEED_UNKNOWN;
+import static cz.mendelu.xmarik.train_manager.models.Engine.SIGNAL_UNKNOWN;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -19,6 +20,7 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.RadioGroup;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -61,6 +63,8 @@ public class EngineController extends NavigationBase {
     private Toolbar toolbar;
     private FunctionCheckBoxAdapter functionAdapter;
 
+    ATP atp = new ATP();
+
     private SeekBar sb_speed;
     private SwitchCompat s_direction;
     private CheckBox chb_total;
@@ -75,6 +79,7 @@ public class EngineController extends NavigationBase {
     private TextView tv_time;
     private ScomView scom_expSignal;
     private ImageButton ib_release;
+    private RadioGroup rg_atp_mode;
 
     Handler t_setSpeedHandler = new Handler();
     Runnable t_setSpeedRunnable = new Runnable() {
@@ -84,13 +89,12 @@ public class EngineController extends NavigationBase {
 
     void timerSetSpeedRun() {
         if ((!this.updating) && (this.engine != null) && (this.engine.isMyControl()) && (this.engine.stepsSpeed != this.sb_speed.getProgress())) {
-            if (this.engine.multitrack) {
+            this.engine.setSpeedSteps(sb_speed.getProgress());
+
+            if (this.engine.multitrack)
                 for (Engine t : EngineDb.instance.engines.values())
-                    if (t.multitrack && t.isMyControl())
+                    if ((t != this.engine) && (t.multitrack && t.isMyControl()))
                         t.setSpeedSteps(sb_speed.getProgress());
-            } else {
-                this.engine.setSpeedSteps(sb_speed.getProgress());
-            }
         }
         t_setSpeedHandler.postDelayed(t_setSpeedRunnable, TIMER_SET_SPEED_INTERVAL_MS);
     }
@@ -120,22 +124,22 @@ public class EngineController extends NavigationBase {
         this.tv_time = findViewById(R.id.tvTime);
         this.scom_expSignal = findViewById(R.id.scom_view);
         this.chb_total = findViewById(R.id.totalManaged);
+        this.rg_atp_mode = findViewById(R.id.rgATPMode);
 
         this.functionAdapter = new FunctionCheckBoxAdapter(this, R.layout.lok_function);
-        lv_functions.setAdapter(this.functionAdapter);
+        this.lv_functions.setAdapter(this.functionAdapter);
 
         // select train
         int train_addr;
+        Engine e = null;
         if (savedInstanceState != null)
             train_addr = savedInstanceState.getInt("train_addr", -1); // from saved state
         else
             train_addr = getIntent().getIntExtra("train_addr", -1); // from intent
         if (train_addr != -1)
-            this.engine = EngineDb.instance.engines.get(train_addr);
-        else
-            this.engine = null;
+            e = EngineDb.instance.engines.get(train_addr);
 
-        this.updateGUIFromTrain(); // will close activity in case train = null
+        this.setEngine(e); // will close activity in case train = null
 
         // Setup Time and DCC state observers
         this.observeTime();
@@ -145,6 +149,7 @@ public class EngineController extends NavigationBase {
         this.s_direction.setOnCheckedChangeListener((buttonView, checked) -> onDirectionChange(checked ? Engine.Direction.FORWARD : Engine.Direction.BACKWARD));
         this.chb_group.setOnCheckedChangeListener((compoundButton, checked) -> this.onChbGroupCheckedChange(compoundButton, checked));
         this.chb_total.setOnCheckedChangeListener((compoundButton, checked) -> this.onChbTotalCheckedChange(compoundButton, checked));
+        this.rg_atp_mode.setOnCheckedChangeListener((group, checkedId) -> this.onRgATPModeCheckedChange(group, checkedId));
 
         this.ib_release.setOnClickListener(this::ib_ReleaseClick);
     }
@@ -162,10 +167,8 @@ public class EngineController extends NavigationBase {
         super.onNewIntent(intent);
         // select train
         final int train_addr = intent.getIntExtra("train_addr", -1);
-        if (train_addr != -1) {
-            this.engine = EngineDb.instance.engines.get(train_addr);
-            this.updateGUIFromTrain();
-        }
+        if (train_addr != -1)
+            this.setEngine(EngineDb.instance.engines.get(train_addr));
     }
 
     @Override
@@ -179,8 +182,17 @@ public class EngineController extends NavigationBase {
             return;
 
         this.engine.setTotal(checked);
-        if (!checked)
+        if (!checked) {
             this.engine.multitrack = false;
+            this.atp.mode = ATP.Mode.TRAIN;
+        }
+    }
+
+    private void onRgATPModeCheckedChange(RadioGroup group, int checkedId) {
+        if (this.updating)
+            return;
+        this.atp.mode = (checkedId == R.id.rATPtrain) ? ATP.Mode.TRAIN : ATP.Mode.SHUNT;
+        this.updateGUIFromTrain();
     }
 
     private void onChbGroupCheckedChange(CompoundButton buttonView, boolean checked) {
@@ -209,8 +221,17 @@ public class EngineController extends NavigationBase {
 
         if (this.engine.multitrack)
             for (Engine t : EngineDb.instance.engines.values())
-                if ((t != this.engine) && (t.multitrack) && (!t.stolen))
+                if ((t != this.engine) && (t.multitrack) && (t.isMyControl()))
                     t.setDirection(Engine.invertDirection(t.direction));
+    }
+
+    public void setEngine(Engine e) {
+        if (this.engine == e)
+            return;
+
+        this.engine = e;
+        this.atp.mode = ATP.Mode.TRAIN;
+        this.updateGUIFromTrain();
     }
 
     private void updateGUIFromTrain() {
@@ -235,15 +256,26 @@ public class EngineController extends NavigationBase {
             this.engine.multitrack = false;
             this.chb_group.setEnabled(false);
         } else {
-            this.chb_group.setEnabled(this.engine.total && !this.engine.stolen);
+            this.chb_group.setEnabled(this.engine.isMyControl());
         }
         this.chb_group.setChecked(this.engine.multitrack);
 
         this.tv_kmhSpeed.setText(String.format("%s km/h", this.engine.kmphSpeed));
         this.chb_total.setChecked(this.engine.total);
-        this.tv_expSpeed.setText((this.engine.expSpeed != EXP_SPEED_UNKNOWN) ? String.format("%s km/h", this.engine.expSpeed) : "- km/h");
-        this.scom_expSignal.setCode(this.engine.expSignalCode);
-        this.tv_expSignalBlock.setText( (this.engine.expSignalCode != -1) ? this.engine.expSignalBlock : "" );
+
+        if (this.atp.mode == ATP.Mode.TRAIN) {
+            this.tv_expSpeed.setText((this.engine.expSpeed != EXP_SPEED_UNKNOWN) ? String.format("%s km/h", this.engine.expSpeed) : "- km/h");
+            this.scom_expSignal.setCode(this.engine.expSignalCode);
+            this.tv_expSignalBlock.setText((this.engine.expSignalCode != SIGNAL_UNKNOWN) ? this.engine.expSignalBlock : "---");
+        } else { // SHUNT
+            this.tv_expSpeed.setText(Integer.toString(ATP.SHUNT_MAX_SPEED_KMPH) + " km/h");
+            this.scom_expSignal.setCode(SIGNAL_UNKNOWN);
+            this.tv_expSignalBlock.setText("---");
+        }
+
+        this.rg_atp_mode.check((this.atp.mode == ATP.Mode.TRAIN) ? R.id.rATPtrain: R.id.rATPshunt);
+        for (int i = 0; i < this.rg_atp_mode.getChildCount(); i++)
+            this.rg_atp_mode.getChildAt(i).setEnabled(this.engine.isMyControl());
 
         this.setEnabled(this.engine.total);
 
@@ -262,6 +294,7 @@ public class EngineController extends NavigationBase {
         this.functionAdapter.addAll(functions);
 
         this.updateStatus(false);
+        this.atp.update();
 
         this.updating = false;
     }
@@ -348,13 +381,12 @@ public class EngineController extends NavigationBase {
     public void emergencyStop() {
         // Intentionally omit 'total' check - allow emergency stop even if not in total control
         this.sb_speed.setProgress(0);
-        if (this.engine.multitrack) {
+        this.engine.emergencyStop();
+
+        if (this.engine.multitrack)
             for (Engine t : EngineDb.instance.engines.values())
-                if (t.multitrack)
+                if ((t != this.engine) && (t.multitrack))
                     t.emergencyStop();
-        } else {
-            this.engine.emergencyStop();
-        }
     }
 
     public void b_idleClick(View view) {
@@ -391,11 +423,6 @@ public class EngineController extends NavigationBase {
             .setMessage(getString(R.string.ta_release_really) + " " + this.engine.getTitle() + "?")
             .setPositiveButton(getString(R.string.yes), (dialog, which) -> this.engine.release())
             .setNegativeButton(getString(R.string.no), (dialog, which) -> {}).show();
-    }
-
-    public void setTrain(Engine t) {
-        this.engine = t;
-        this.updateGUIFromTrain();
     }
 
     private void displayGroupDialog() {
@@ -481,6 +508,7 @@ public class EngineController extends NavigationBase {
 
         this.tv_kmhSpeed.setText(String.format("%s km/h", this.engine.kmphSpeed));
         this.updateStatus(!event.getParsed().get(4).equalsIgnoreCase("OK"));
+        this.atp.update();
     }
 
     private void setEnabled(boolean enabled) {
@@ -514,4 +542,58 @@ public class EngineController extends NavigationBase {
         this.t_setSpeedHandler.postDelayed(t_setSpeedRunnable, TIMER_SET_SPEED_INTERVAL_MS);
     }
 
+    // Automatic Train Protection / Vlakovy zabezpecovac
+    class ATP {
+        static final int SHUNT_MAX_SPEED_KMPH = 40;
+        public enum Mode {
+            TRAIN,
+            SHUNT,
+        }
+
+        public Mode mode = Mode.TRAIN;
+        private boolean overspeed;
+
+        public void update() {
+            this.overSpeedUpdate();
+        }
+
+        private void overSpeedUpdate() {
+            final Engine thisEngine = EngineController.this.engine;
+
+            boolean overSpeed = false;
+            if (thisEngine.isMyControl()) {
+                if (this.mode == Mode.SHUNT) {
+                    overSpeed = (thisEngine.kmphSpeed > SHUNT_MAX_SPEED_KMPH);
+                } else { // mode == Mode.TRAIN
+                    overSpeed = (thisEngine.expSpeed != EXP_SPEED_UNKNOWN) ? (thisEngine.kmphSpeed > thisEngine.expSpeed) : false;
+                }
+            }
+            this.overSpeedSet(overSpeed);
+        }
+
+        private void overSpeedSet(boolean value) {
+            if (value == this.overspeed)
+                return;
+            this.overspeed = value;
+
+            if (value)
+                this.overSpeedBegin();
+            else
+                this.overSpeedEnd();
+        }
+
+        private void overSpeedBegin() {
+            Animation blink = new AlphaAnimation(0.0f, 1.0f);
+            blink.setDuration(100);
+            blink.setRepeatMode(Animation.REVERSE);
+            blink.setRepeatCount(Animation.INFINITE);
+            EngineController.this.tv_kmhSpeed.startAnimation(blink);
+            EngineController.this.tv_expSpeed.startAnimation(blink);
+        }
+
+        private void overSpeedEnd() {
+            EngineController.this.tv_kmhSpeed.clearAnimation();
+            EngineController.this.tv_expSpeed.clearAnimation();
+        }
+    }
 }
