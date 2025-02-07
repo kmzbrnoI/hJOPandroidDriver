@@ -24,6 +24,7 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.RadioGroup;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -152,6 +153,7 @@ public class EngineController extends NavigationBase {
         this.observeDccState();
 
         // GUI events:
+        this.sb_speed.setOnSeekBarChangeListener(new SbSpeedChangeListener());
         this.s_direction.setOnCheckedChangeListener((buttonView, checked) -> onDirectionChange(checked ? Engine.Direction.FORWARD : Engine.Direction.BACKWARD));
         this.chb_group.setOnCheckedChangeListener((compoundButton, checked) -> this.onChbGroupCheckedChange(compoundButton, checked));
         this.chb_total.setOnCheckedChangeListener((compoundButton, checked) -> this.onChbTotalCheckedChange(compoundButton, checked));
@@ -216,6 +218,35 @@ public class EngineController extends NavigationBase {
                 }
             }
         }
+    }
+
+    class SbSpeedChangeListener implements SeekBar.OnSeekBarChangeListener {
+        @Override
+        public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+            if (EngineController.this.updating)
+                return;
+
+            if ((EngineController.this.engine.stepsSpeed == 0) && (progress > 0) && (!EngineController.this.atp.isMovementStartAllowed())) {
+                EngineController.this.updating = true;
+                EngineController.this.sb_speed.setProgress(0);
+                EngineController.this.updating = false;
+
+                new AlertDialog.Builder(EngineController.this)
+                        .setMessage(getString(R.string.ta_atp_movement_not_allowed))
+                        .setCancelable(false)
+                        .setPositiveButton(getString(R.string.dialog_ok), (dialog, which) -> {})
+                        .show();
+            }
+        }
+
+        @Override
+        public void onStartTrackingTouch(SeekBar seekBar) {}
+
+        @Override
+        public void onStopTrackingTouch(SeekBar seekBar) {}
+    }
+    private void onSbSpeedProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+
     }
 
     private void onDirectionChange(Engine.Direction newDir) {
@@ -551,6 +582,9 @@ public class EngineController extends NavigationBase {
     // Automatic Train Protection / Vlakovy zabezpecovac
     class ATP {
         static final int SHUNT_MAX_SPEED_KMPH = 40;
+
+        // It takes 3.9 s for train in H0 at 40 km/h to pass 50 cm (sensor-signal distance)
+        // -> 3 s should be safe for stopping before the signal
         static final int OVERSPEED_DELAY_EB_MS = 3000;
         public enum Mode {
             TRAIN,
@@ -643,11 +677,18 @@ public class EngineController extends NavigationBase {
                 EngineController.this.emergencyStop();
 
                 new AlertDialog.Builder(EngineController.this)
-                    .setMessage(getString(R.string.ta_overspeed_eb_msg))
+                    .setMessage(getString(R.string.ta_atp_overspeed_eb_msg))
                     .setCancelable(false)
                     .setPositiveButton(getString(R.string.dialog_ok), (dialog, which) -> {})
                     .show();
             }
+        }
+
+        public boolean isMovementStartAllowed() {
+            final Engine thisEngine = EngineController.this.engine;
+            if (this.mode == Mode.SHUNT)
+                return true;
+            return ((thisEngine.expSpeed == EXP_SPEED_UNKNOWN) || (thisEngine.expSpeed > 0));
         }
     }
 }
