@@ -83,10 +83,10 @@ public class EngineController extends NavigationBase {
     };
 
     void timerSetSpeedRun() {
-        if ((!this.updating) && (this.engine != null) && (this.engine.total) && (!this.engine.stolen) && (this.engine.stepsSpeed != this.sb_speed.getProgress())) {
+        if ((!this.updating) && (this.engine != null) && (this.engine.isMyControl()) && (this.engine.stepsSpeed != this.sb_speed.getProgress())) {
             if (this.engine.multitrack) {
                 for (Engine t : EngineDb.instance.engines.values())
-                    if (t.multitrack && !t.stolen)
+                    if (t.multitrack && t.isMyControl())
                         t.setSpeedSteps(sb_speed.getProgress());
             } else {
                 this.engine.setSpeedSteps(sb_speed.getProgress());
@@ -364,10 +364,10 @@ public class EngineController extends NavigationBase {
             return;
         if (this.engine.multitrack) {
             for (Engine t : EngineDb.instance.engines.values())
-                if (t.multitrack && !t.stolen)
+                if (t.multitrack && t.isMyControl())
                     t.setSpeedSteps(0);
         } else {
-            if ((this.engine.total) && (!this.engine.stolen))
+            if (this.engine.isMyControl())
                 this.engine.setSpeedSteps(0);
         }
     }

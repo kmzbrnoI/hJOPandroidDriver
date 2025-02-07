@@ -124,6 +124,10 @@ public class Engine {
         return title;
     }
 
+    public boolean isMyControl() {
+        return (this.total) && (!this.stolen);
+    }
+
     public static Direction invertDirection(Direction d) {
         return (d == Direction.FORWARD) ? Direction.BACKWARD : Direction.FORWARD;
     }
