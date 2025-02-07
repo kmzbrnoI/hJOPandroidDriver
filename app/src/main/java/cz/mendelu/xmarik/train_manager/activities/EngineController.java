@@ -545,6 +545,7 @@ public class EngineController extends NavigationBase {
     // Automatic Train Protection / Vlakovy zabezpecovac
     class ATP {
         static final int SHUNT_MAX_SPEED_KMPH = 40;
+        static final int OVERSPEED_DELAY_EB_MS = 3000;
         public enum Mode {
             TRAIN,
             SHUNT,
@@ -552,6 +553,13 @@ public class EngineController extends NavigationBase {
 
         public Mode mode = Mode.TRAIN;
         private boolean overspeed;
+
+        Handler t_overSpeedEB = new Handler(); // EB = emergency braking
+        Runnable t_verSpeedEBRunnable = new Runnable() {
+            @Override
+            public void run() { overSpeedEB(); }
+        };
+
 
         public void update() {
             this.overSpeedUpdate();
@@ -583,6 +591,8 @@ public class EngineController extends NavigationBase {
         }
 
         private void overSpeedBegin() {
+            this.t_overSpeedEB.postDelayed(t_verSpeedEBRunnable, OVERSPEED_DELAY_EB_MS);
+
             Animation blink = new AlphaAnimation(0.0f, 1.0f);
             blink.setDuration(100);
             blink.setRepeatMode(Animation.REVERSE);
@@ -592,8 +602,22 @@ public class EngineController extends NavigationBase {
         }
 
         private void overSpeedEnd() {
+            this.t_overSpeedEB.removeCallbacks(t_verSpeedEBRunnable);
+
             EngineController.this.tv_kmhSpeed.clearAnimation();
             EngineController.this.tv_expSpeed.clearAnimation();
+        }
+
+        private void overSpeedEB() {
+            if (EngineController.this.engine.isMyControl()) {
+                EngineController.this.emergencyStop();
+
+                new AlertDialog.Builder(EngineController.this)
+                    .setMessage(getString(R.string.ta_overspeed_eb_msg))
+                    .setCancelable(false)
+                    .setPositiveButton(getString(R.string.dialog_ok), (dialog, which) -> {})
+                    .show();
+            }
         }
     }
 }

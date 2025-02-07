@@ -43,6 +43,7 @@
     <string name="ta_atp_mode">Režim VZ:</string>
     <string name="ta_atp_train">Vlak</string>
     <string name="ta_atp_shunt">Posun</string>
+    <string name="ta_overspeed_eb_msg">Vlakový zabezpečovač: zavedeno nouzové brzdění z důvodu překročení povolené rychlosti!</string>
 
     <string name="tr_disp_message">Volitelná zpráva pro dispečera:</string>
     <string name="tr_send_request">Odeslat žádost</string>

@@ -43,6 +43,7 @@
     <string name="ta_atp_mode">ATP mode:</string>
     <string name="ta_atp_train">Train</string>
     <string name="ta_atp_shunt">Shunting</string>
+    <string name="ta_overspeed_eb_msg">Automatic Train Protection: inhibited emergency braking due to overspeed!</string>
 
     <string name="tr_disp_message">Optional message for the dispatcher:</string>
     <string name="tr_send_request">Send request</string>
