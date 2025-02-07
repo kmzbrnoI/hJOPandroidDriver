@@ -118,6 +118,7 @@
     <string name="only_available_functions">Zobrazovat jen dostupné funkce</string>
     <string name="remember_login_default">Ve výchozím stavu ukládat loginy</string>
     <string name="freeze_engine_screen_orientation">Zakázat přetočení obrazovky při řízení jízdy</string>
+    <string name="temporary_disable_atp_eb">Dočasně potlačit spuštění nouzového brzdění vlakového zabezpečovače (bude odstraněno v budoucí verzi aplikace)</string>
     <string name="theme">Motiv</string>
 
     <string name="about">hJOP Driver umožňuje řízení jízdy hnacích vozidel ve spolupráci se softwarovým balíkem hJOP.\nhttps://hjop.kmz-brno.cz/</string>

@@ -118,6 +118,7 @@
     <string name="only_available_functions">Show only available functions</string>
     <string name="remember_login_default">Remember login by default</string>
     <string name="freeze_engine_screen_orientation">Freeze screen orientation in Engine activity</string>
+    <string name="temporary_disable_atp_eb">Temporary disable Automatic Tratin Protection emergency brake inhibition (will be removed in future release)</string>
     <string name="theme">Theme</string>
 
     <string name="about">hJOP Driver lets you become an engine driver and control engines on your hJOP-controlled model railroad. https://hjop.kmz-brno.cz/</string>

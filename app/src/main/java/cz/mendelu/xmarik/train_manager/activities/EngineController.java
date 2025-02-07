@@ -673,7 +673,9 @@ public class EngineController extends NavigationBase {
         }
 
         private void overSpeedEB() {
-            if (EngineController.this.engine.isMyControl()) {
+            final SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(EngineController.this);
+
+            if ((EngineController.this.engine.isMyControl()) && (!sharedPreferences.getBoolean("ATPEBDisable", false))) {
                 EngineController.this.emergencyStop();
 
                 new AlertDialog.Builder(EngineController.this)
