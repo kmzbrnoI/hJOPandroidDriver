@@ -40,6 +40,10 @@
     <string name="ta_state_err">Chyba posledního povelu</string>
     <string name="ta_state_stolen">Získávám zpět řízení lokomotivy</string>
 
+    <string name="ta_atp_mode">Režim VZ:</string>
+    <string name="ta_atp_train">Vlak</string>
+    <string name="ta_atp_shunt">Posun</string>
+
     <string name="tr_disp_message">Volitelná zpráva pro dispečera:</string>
     <string name="tr_send_request">Odeslat žádost</string>
     <string name="tr_info_request_sent">Žádost odeslána, čekám na odpověď serveru...</string>

@@ -40,6 +40,10 @@
     <string name="ta_state_err">Last command failed</string>
     <string name="ta_state_stolen">Regaining engine control</string>
 
+    <string name="ta_atp_mode">ATP mode:</string>
+    <string name="ta_atp_train">Train</string>
+    <string name="ta_atp_shunt">Shunting</string>
+
     <string name="tr_disp_message">Optional message for the dispatcher:</string>
     <string name="tr_send_request">Send request</string>
     <string name="tr_info_request_sent">Request sent, waiting for server response...</string>

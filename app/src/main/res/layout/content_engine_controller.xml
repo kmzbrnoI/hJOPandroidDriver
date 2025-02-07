@@ -206,6 +206,40 @@
                 android:layout_gravity="center_vertical"
                 android:paddingVertical="18dp" />
 
+            <LinearLayout
+                android:id="@+id/llATP"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                    android:text="@string/ta_atp_mode" />
+
+                <RadioGroup
+                    android:id="@+id/rgATPMode"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <RadioButton android:id="@+id/rATPtrain"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/ta_atp_train"
+                        android:layout_marginHorizontal="10dp" />
+
+                    <RadioButton android:id="@+id/rATPshunt"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/ta_atp_shunt"
+                        android:layout_marginHorizontal="10dp" />
+
+                </RadioGroup>
+            </LinearLayout>
+
         </LinearLayout>
     </ScrollView>
 
