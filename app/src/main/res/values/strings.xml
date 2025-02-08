@@ -5,7 +5,7 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="activity_server_select_title">Select a server</string>
-    <string name="activity_train_handler_title">Engie control</string>
+    <string name="activity_train_handler_title">Engine control</string>
     <string name="activity_train_request_title">Select an area</string>
     <string name="activity_about_title">About</string>
     <string name="activity_new_server_title">Server properties</string>
