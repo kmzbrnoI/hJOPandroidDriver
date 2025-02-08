@@ -20,15 +20,12 @@
     <string name="hamburger_state_disconnected">disconnected</string>
     <string name="hamburger_built">Built</string>
 
-    <string name="ta_new_loko">New locomotive received.</string>
     <string name="ta_multitraction">Multitraction</string>
     <string name="ta_total">Total control</string>
     <string name="ta_direction_forward">forward</string>
     <string name="ta_direction_backwards">backward</string>
     <string name="ta_idle">Idle</string>
     <string name="ta_emergency_stop">Emergency STOP</string>
-    <string name="ta_no_loks">No engines.</string>
-    <string name="ta_toggle">Toggle</string>
     <string name="ta_release">Release</string>
     <string name="ta_release_ok">Engine %d released.</string>
     <string name="ta_release_really">Really release engine</string>
@@ -51,16 +48,12 @@
     <string name="tr_info_request_sent">Request sent, waiting for server response...</string>
     <string name="tr_info_waiting_disp">Request sent, waiting for dispatcher response...</string>
     <string name="tr_no_areas">No areas.</string>
-    <string name="tr_no_area_selected">You must select an area!</string>
 
     <string name="conn_servers_found">Discovered servers</string>
     <string name="conn_servers_stored">Saved servers</string>
     <string name="conn_wifi_unavailable">WiFi connection is not available.</string>
     <string name="conn_refresh_in_progress">Refresh is in progress, wait for it to finish!</string>
     <string name="conn_connected">Connected and authorized.</string>
-    <string name="conn_connection_error">Failed to connect to the server.</string>
-    <string name="conn_no_server_authorized">No server authorized.</string>
-    <string name="conn_search_finished">Server discovery finished.</string>
     <string name="conn_server_offline">Server is offline, really connect to server?</string>
     <string name="conn_delete_server">Really delete server?</string>
     <string name="conn_delete_all">Really delete all servers?</string>
@@ -68,18 +61,12 @@
     <string name="conn_add">Add</string>
     <string name="conn_no_servers_found">No servers found.</string>
 
-    <string name="gl_new_loko">New engine</string>
-    <string name="gl_all_deleted">All servers deleted.</string>
-    <string name="gl_repeat">Repeat</string>
-
     <string name="ns_server_name">Server name:</string>
     <string name="ns_server_ip_dns">Server address:</string>
     <string name="ns_server_port">Port:</string>
     <string name="ns_server_type">Server type:</string>
     <string name="ns_warning_compulsory">Address and port are compulsory fields.</string>
-    <string name="ns_warning_server_exists">This server already exists :</string>
     <string name="ns_warning_invalid_characters">Name cannot contain sequence "--"</string>
-    <string name="ns_warning_invalid_address">Address is not a valid ipv4 address nor domain name.</string>
 
     <string name="login_enter">Enter a login</string>
     <string name="login_username">Username</string>
@@ -89,7 +76,6 @@
     <string name="mm_connect">Connect</string>
     <string name="mm_change_login">Change login</string>
     <string name="mm_change_settings">Edit</string>
-    <string name="mm_info">Info</string>
     <string name="mm_delete">Delete</string>
     <string name="mm_delete_all">Delete all servers</string>
 

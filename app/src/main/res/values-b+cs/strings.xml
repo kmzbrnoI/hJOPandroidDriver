@@ -20,15 +20,12 @@
     <string name="hamburger_state_disconnected">nepřipojen</string>
     <string name="hamburger_built">Sestaveno</string>
 
-    <string name="ta_new_loko">Přijata nová lokomotiva.</string>
     <string name="ta_multitraction">Multitrakce</string>
     <string name="ta_total">Ruční řízení</string>
     <string name="ta_direction_forward">vpřed</string>
     <string name="ta_direction_backwards">vzad</string>
     <string name="ta_idle">Idle</string>
     <string name="ta_emergency_stop">Nouzové STOP</string>
-    <string name="ta_no_loks">Žádné vlaky.</string>
-    <string name="ta_toggle">Krátce</string>
     <string name="ta_release">Uvolnit</string>
     <string name="ta_release_ok">Lokomotiva %d uvolněna.</string>
     <string name="ta_release_really">Opravdu uvolnit lokomotivu</string>
@@ -51,16 +48,12 @@
     <string name="tr_info_request_sent">Žádost odeslána, čekám na odpověď serveru...</string>
     <string name="tr_info_waiting_disp">Žádost odeslána, čekám na dispečera...</string>
     <string name="tr_no_areas">Žádné oblasti řízení.</string>
-    <string name="tr_no_area_selected">Musíte vybrat oblast řízení!</string>
 
     <string name="conn_servers_found">Nalezené servery</string>
     <string name="conn_servers_stored">Uložené servery</string>
     <string name="conn_wifi_unavailable">Wifi připojení není dostupné.</string>
     <string name="conn_refresh_in_progress">Vyhledávání serverů již probíhá, počkejte na dokončení!</string>
     <string name="conn_connected">Připojeno a autorizováno.</string>
-    <string name="conn_connection_error">Připojení k serveru se nezdařilo.</string>
-    <string name="conn_no_server_authorized">Nebyl autorizován žádný server.</string>
-    <string name="conn_search_finished">Vyhledávání serverů dokončeno.</string>
     <string name="conn_server_offline">Server je offline, skutečně se připojit?</string>
     <string name="conn_delete_server">Opravdu smazat server?</string>
     <string name="conn_delete_all">Opravdu smazat všechny servery?</string>
@@ -68,18 +61,12 @@
     <string name="conn_add">Přidat</string>
     <string name="conn_no_servers_found">Nebyly nalezeny žádné servery.</string>
 
-    <string name="gl_new_loko">Nová lokomotiva</string>
-    <string name="gl_all_deleted">Všechny servery byly smazány.</string>
-    <string name="gl_repeat">Opakovat</string>
-
     <string name="ns_server_name">Název serveru:</string>
     <string name="ns_server_ip_dns">Adresa serveru:</string>
     <string name="ns_server_port">Port:</string>
     <string name="ns_server_type">Typ serveru:</string>
     <string name="ns_warning_compulsory">Adresa serveru a port serveru jsou povinná pole.</string>
-    <string name="ns_warning_server_exists">Server s tímto názvem již přidán :</string>
     <string name="ns_warning_invalid_characters">Název nesmí obsahovat sekvenci "--"</string>
-    <string name="ns_warning_invalid_address">Adresa není v platném ipV4 formátu a ani se nejedná o doménové jméno.</string>
 
     <string name="login_enter">Zadejte login</string>
     <string name="login_username">Uživatelské jméno</string>
@@ -89,7 +76,6 @@
     <string name="mm_connect">Připojit</string>
     <string name="mm_change_login">Změnit přihlašovací údaje</string>
     <string name="mm_change_settings">Upravit</string>
-    <string name="mm_info">Informace</string>
     <string name="mm_delete">Smazat</string>
     <string name="mm_delete_all">Smazat všechny servery</string>
 
