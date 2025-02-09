@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/side_nav_bar"
@@ -16,7 +17,8 @@
         android:id="@+id/imageView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@mipmap/ic_launcher" />
+        android:src="@mipmap/ic_launcher"
+        tools:ignore="ContentDescription" />
 
     <TextView
         android:id="@+id/tv_hamburger_user"
@@ -36,7 +38,8 @@
             android:layout_height="wrap_content"
             android:text="@string/hamburger_state_server"
             android:paddingEnd="@dimen/text_space"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            tools:ignore="RtlSymmetry" />
 
         <TextView
             android:id="@+id/tv_hamburger_server"

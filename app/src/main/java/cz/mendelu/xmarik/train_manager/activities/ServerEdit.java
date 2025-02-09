@@ -66,7 +66,7 @@ public class ServerEdit extends AppCompatActivity {
         ipAdr = ipAdrText.getText().toString();
         about = aboutText.getText().toString();
 
-        if (port.equals("") || ipAdr.equals("")) {
+        if (port.isEmpty() || ipAdr.isEmpty()) {
             new AlertDialog.Builder(this)
                     .setMessage(R.string.ns_warning_compulsory)
                     .setCancelable(false)

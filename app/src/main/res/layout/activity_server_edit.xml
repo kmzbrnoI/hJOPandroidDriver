@@ -19,7 +19,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/ns_server_name"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:labelFor="@+id/nameText" />
 
         <EditText
             android:id="@+id/nameText"
@@ -33,7 +34,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/ns_server_ip_dns"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:labelFor="@+id/ipText" />
 
         <EditText
             android:id="@+id/ipText"
@@ -46,28 +48,32 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/ns_server_port"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:labelFor="@+id/portText" />
 
         <EditText
             android:id="@+id/portText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="number"
-            android:text="5896" />
+            android:text="5896"
+            tools:ignore="HardcodedText" />
 
         <TextView
             android:id="@+id/textView7"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/ns_server_type"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:labelFor="@+id/aboutText" />
 
         <EditText
             android:id="@+id/aboutText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="hJOPserver"
-            android:inputType="text"/>
+            android:inputType="text"
+            tools:ignore="HardcodedText" />
 
     </LinearLayout>
 

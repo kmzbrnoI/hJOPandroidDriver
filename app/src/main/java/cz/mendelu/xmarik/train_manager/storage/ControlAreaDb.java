@@ -29,7 +29,7 @@ public class ControlAreaDb {
     }
 
     @Override
-    public void finalize() {
+    protected void finalize() {
         if (EventBus.getDefault().isRegistered(this))
             EventBus.getDefault().unregister(this);
     }

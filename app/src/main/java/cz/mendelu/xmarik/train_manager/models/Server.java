@@ -1,7 +1,6 @@
 package cz.mendelu.xmarik.train_manager.models;
 
 import java.util.ArrayList;
-import java.util.Objects;
 
 import cz.mendelu.xmarik.train_manager.helpers.ParseHelper;
 

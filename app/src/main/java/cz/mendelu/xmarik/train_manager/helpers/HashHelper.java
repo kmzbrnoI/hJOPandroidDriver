@@ -1,5 +1,7 @@
 package cz.mendelu.xmarik.train_manager.helpers;
 
+import android.util.Log;
+
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
@@ -8,14 +10,15 @@ import java.security.NoSuchAlgorithmException;
  */
 public class HashHelper {
     public static String hashPasswd(String passwd) {
-        MessageDigest md = null;
+        MessageDigest md;
+        byte[] byteData = {};
         try {
             md = MessageDigest.getInstance("SHA-256");
+            md.update(passwd.getBytes());
+            byteData = md.digest();
         } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
+            Log.e("HashHelper", "NoSuchAlgorithmException", e);
         }
-        md.update(passwd.getBytes());
-        byte[] byteData = md.digest();
         //convert the byte to hex format method 1
         StringBuilder sb = new StringBuilder();
         for (byte aByteData : byteData) {

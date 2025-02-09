@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">hJOP Driver</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
@@ -27,7 +27,7 @@
     <string name="ta_idle">Idle</string>
     <string name="ta_emergency_stop">Emergency STOP</string>
     <string name="ta_release">Release</string>
-    <string name="ta_release_ok">Engine %d released.</string>
+    <string name="ta_release_ok" tools:ignore="PluralsCandidate">Engine %d released.</string>
     <string name="ta_release_really">Really release engine</string>
     <string name="ta_dialog_group_title">Add to multitraction</string>
     <string name="ta_dialog_ungroup_msg">Turn off multitraction of other engines?</string>
@@ -44,9 +44,8 @@
     <string name="ta_atp_movement_not_allowed">Automatic Train Protection: movement is not allowed!</string>
 
     <string name="tr_disp_message">Optional message for the dispatcher:</string>
-    <string name="tr_send_request">Send request</string>
-    <string name="tr_info_request_sent">Request sent, waiting for server response...</string>
-    <string name="tr_info_waiting_disp">Request sent, waiting for dispatcher response...</string>
+    <string name="tr_info_request_sent">Request sent, waiting for server response…</string>
+    <string name="tr_info_waiting_disp">Request sent, waiting for dispatcher response…</string>
     <string name="tr_no_areas">No areas.</string>
 
     <string name="conn_servers_found">Discovered servers</string>
@@ -88,15 +87,15 @@
     <string name="total_on_error">Unable to enable Total control of %1$s!</string>
     <string name="total_off_error">Unable to turn off Total control of %1$s!</string>
 
-    <string name="sc_connecting">Connecting...</string>
-    <string name="sc_authorizing">Authorizing...</string>
-    <string name="sc_getting_ors">Getting area...</string>
+    <string name="sc_connecting">Connecting…</string>
+    <string name="sc_authorizing">Authorizing…</string>
+    <string name="sc_getting_ors">Getting area…</string>
     <string name="sc_done">Successfully connected</string>
     <string name="sc_connection_ok">Communication established</string>
     <string name="sc_auth_ok">Successfully authorized</string>
     <string name="sc_auth_err">Authorization problem!</string>
     <string name="sc_version_warning">Server uses other protocol version, application may misbehave!</string>
-    <string name="sc_auth_wait">Waiting for login...</string>
+    <string name="sc_auth_wait">Waiting for login…</string>
     <string name="sc_disconnected">Disconnected from server!</string>
     <string name="sc_connect_error">Error while connecting to the server</string>
 

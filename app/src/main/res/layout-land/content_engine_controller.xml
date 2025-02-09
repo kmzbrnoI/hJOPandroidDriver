@@ -46,7 +46,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textAlignment="center"
-                        android:text="--:--:--" />
+                        android:text="--:--:--"
+                        tools:ignore="HardcodedText" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -83,7 +84,7 @@
                             android:checked="false"
                             android:textOff="@string/ta_direction_backwards"
                             android:textOn="@string/ta_direction_forward"
-                            android:text="backward" />
+                            android:text="@string/ta_direction_backwards" />
 
                         <Space
                             android:layout_width="wrap_content"
@@ -98,7 +99,8 @@
                             android:background="@null"
                             android:onClick="ib_StatusClick"
                             android:scaleType="fitCenter"
-                            android:src="@drawable/ic_circle_green" />
+                            android:src="@drawable/ic_circle_green"
+                            tools:ignore="ContentDescription,UsingOnClickInXml" />
 
                         <Space
                             android:layout_width="wrap_content"
@@ -112,7 +114,8 @@
                             android:layout_weight="1"
                             android:background="@null"
                             android:scaleType="fitCenter"
-                            android:src="@drawable/ic_circle_stop" />
+                            android:src="@drawable/ic_circle_stop"
+                            tools:ignore="ContentDescription" />
 
                         <Space
                             android:layout_width="wrap_content"
@@ -133,7 +136,8 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="0.6"
                             android:onClick="b_stopClick"
-                            android:text="@string/ta_emergency_stop" />
+                            android:text="@string/ta_emergency_stop"
+                            tools:ignore="UsingOnClickInXml" />
 
                         <Button
                             android:id="@+id/startButton1"
@@ -141,7 +145,8 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="0.4"
                             android:onClick="b_idleClick"
-                            android:text="@string/ta_idle" />
+                            android:text="@string/ta_idle"
+                            tools:ignore="UsingOnClickInXml" />
 
                     </LinearLayout>
 
@@ -160,7 +165,8 @@
                         android:layout_height="wrap_content"
                         android:ellipsize="end"
                         android:maxLines="1"
-                        android:text="Signal" />
+                        android:text="Signal"
+                        tools:ignore="HardcodedText" />
 
                     <cz.kudlav.scomview.ScomView
                         android:id="@+id/scom_view"
@@ -178,7 +184,8 @@
                         android:maxLines="1"
                         android:minWidth="64sp"
                         android:textAlignment="center"
-                        android:text="120 km/h" />
+                        android:text="120 km/h"
+                        tools:ignore="HardcodedText" />
 
                 </LinearLayout>
 
@@ -191,7 +198,8 @@
                 android:layout_marginTop="5dp"
                 android:gravity="center"
                 android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                android:text="-- km/h" />
+                android:text="-- km/h"
+                tools:ignore="HardcodedText" />
 
             <SeekBar
                 android:layout_width="match_parent"

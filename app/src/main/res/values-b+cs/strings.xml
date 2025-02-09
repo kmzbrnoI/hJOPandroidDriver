@@ -44,9 +44,8 @@
     <string name="ta_atp_movement_not_allowed">Vlakový zabezpečovač: neoprávněný rozjezd!</string>
 
     <string name="tr_disp_message">Volitelná zpráva pro dispečera:</string>
-    <string name="tr_send_request">Odeslat žádost</string>
-    <string name="tr_info_request_sent">Žádost odeslána, čekám na odpověď serveru...</string>
-    <string name="tr_info_waiting_disp">Žádost odeslána, čekám na dispečera...</string>
+    <string name="tr_info_request_sent">Žádost odeslána, čekám na odpověď serveru…</string>
+    <string name="tr_info_waiting_disp">Žádost odeslána, čekám na dispečera…</string>
     <string name="tr_no_areas">Žádné oblasti řízení.</string>
 
     <string name="conn_servers_found">Nalezené servery</string>
@@ -88,15 +87,15 @@
     <string name="total_on_error">Lokomotivu %1$s se nepodařilo převzít do Ručního řízení!</string>
     <string name="total_off_error">Nepodařilo se zrušit Ruční řízení lokomotivy %1$s!</string>
 
-    <string name="sc_connecting">Navazuji komunikaci...</string>
-    <string name="sc_authorizing">Autorizuji...</string>
-    <string name="sc_getting_ors">Získávám oblasti řízení...</string>
+    <string name="sc_connecting">Navazuji komunikaci…</string>
+    <string name="sc_authorizing">Autorizuji…</string>
+    <string name="sc_getting_ors">Získávám oblasti řízení…</string>
     <string name="sc_done">Připojování úspěšně dokončeno</string>
     <string name="sc_connection_ok">Komunikace navázána</string>
     <string name="sc_auth_ok">Úspěšně autorizováno</string>
     <string name="sc_auth_err">Autorizace se nezdařila!</string>
     <string name="sc_version_warning">Server využívá jiný komunikační protokol než 1.0, v komunikaci může docházet k chybám!</string>
-    <string name="sc_auth_wait">Čekám na zadání loginu...</string>
+    <string name="sc_auth_wait">Čekám na zadání loginu…</string>
     <string name="sc_disconnected">Odpojeno od serveru!</string>
     <string name="sc_connect_error">Chyba při připjování k serveru</string>
 

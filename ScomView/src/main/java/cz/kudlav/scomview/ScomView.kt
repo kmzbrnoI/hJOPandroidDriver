@@ -16,6 +16,7 @@ class ScomView(context: Context?, attrs: AttributeSet?) : LinearLayout(context, 
     private val yellowBottom: Light
     private val slowBlink: Animation = AlphaAnimation(0.2f, 1.0f)
 
+    @Suppress("MemberVisibilityCanBePrivate")
     var title = ""
         private set
 

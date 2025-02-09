@@ -10,7 +10,8 @@ public class ParseHelper {
         ArrayList<String> result = new ArrayList<>();
         StringBuilder s = new StringBuilder();
         int plain_cnt = 0;
-        if (text.equals("")) return new ArrayList<>();
+        if (text.isEmpty())
+            return new ArrayList<>();
 
         for (int i = 0; i < text.length(); i++) {
             if (text.charAt(i) == '{') {
@@ -27,7 +28,8 @@ public class ParseHelper {
             }
         }
 
-        if (!s.toString().equals("")) result.add(s.toString());
+        if (!s.toString().isEmpty())
+            result.add(s.toString());
         return result;
     }
 }

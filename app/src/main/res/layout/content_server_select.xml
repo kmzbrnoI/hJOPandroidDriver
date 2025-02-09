@@ -38,7 +38,8 @@
         android:src="@drawable/ic_add_white_24dp"
         android:contentDescription="@string/conn_add"
         android:layout_margin="16dp"
-        android:visibility="gone" />
+        android:visibility="gone"
+        tools:ignore="UsingOnClickInXml" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/flbRefresh"
@@ -48,6 +49,7 @@
         android:layout_gravity="end|bottom"
         android:src="@drawable/ic_refresh_white_24dp"
         android:contentDescription="@string/conn_refresh"
-        android:layout_margin="16dp" />
+        android:layout_margin="16dp"
+        tools:ignore="UsingOnClickInXml" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

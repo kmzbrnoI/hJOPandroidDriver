@@ -31,7 +31,8 @@
             android:layout_height="wrap_content"
             android:id="@+id/tv_app_version"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-            android:text="v?.?" />
+            android:text="v?.?"
+            tools:ignore="HardcodedText" />
 
         <TextView
             android:layout_width="match_parent"
@@ -39,7 +40,8 @@
             android:id="@+id/tv_app_build"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
             android:layout_marginBottom="22dp"
-            android:text="Build 20??-??-?? ??:??:??" />
+            android:text="Build 20??-??-?? ??:??:??"
+            tools:ignore="HardcodedText" />
 
         <TextView
             android:layout_width="match_parent"
@@ -66,7 +68,8 @@
             android:layout_gravity="center"
             android:src="@drawable/ic_hjop_icon"
             android:background="@null"
-            android:scaleType="fitCenter" />
+            android:scaleType="fitCenter"
+            tools:ignore="ContentDescription" />
 
         <TextView
             android:layout_width="match_parent"
@@ -75,7 +78,8 @@
             android:textAppearance="@style/TextAppearance.AppCompat.Title"
             android:autoLink="web"
             android:gravity="center"
-            android:text="hJOP" />
+            android:text="hJOP"
+            tools:ignore="HardcodedText" />
 
     </LinearLayout>
 

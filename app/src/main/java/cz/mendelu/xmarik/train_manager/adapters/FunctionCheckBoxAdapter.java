@@ -53,7 +53,7 @@ public class FunctionCheckBoxAdapter extends ArrayAdapter<EngineFunction> {
         }
         EngineFunction function = getItem(position);
 
-        holder.code.setText(function.name.equals("") ?
+        holder.code.setText(function.name.isEmpty() ?
              "F" + function.num : "F" + function.num + ": " + function.name);
 
         holder.chb_func.setChecked(function.checked);

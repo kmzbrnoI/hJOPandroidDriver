@@ -12,7 +12,6 @@ import org.greenrobot.eventbus.Subscribe;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Locale;
 import java.util.TimeZone;
 
 import cz.mendelu.xmarik.train_manager.events.TimeEvent;
@@ -44,7 +43,7 @@ public class TimeHolder {
     }
 
     @Override
-    public void finalize() {
+    protected void finalize() {
         if (EventBus.getDefault().isRegistered(this))
             EventBus.getDefault().unregister(this);
     }

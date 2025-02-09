@@ -2,6 +2,7 @@
 <com.google.android.material.navigation.NavigationView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_view"
     android:layout_width="wrap_content"
     android:layout_height="match_parent"
@@ -23,20 +24,21 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingEnd="@dimen/text_space"
             android:text="@string/app_name" />
 
         <TextView
             android:id="@+id/tv_version"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="v?.?" />
+            android:text="v?.?"
+            tools:ignore="HardcodedText" />
 
         <TextView
             android:id="@+id/tv_build"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Build 20??-??-??" />
+            android:text="Build 20??-??-??"
+            tools:ignore="HardcodedText" />
     </LinearLayout>
 
 </com.google.android.material.navigation.NavigationView>

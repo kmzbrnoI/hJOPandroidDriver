@@ -6,6 +6,7 @@ import static android.content.pm.ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED;
 import static cz.mendelu.xmarik.train_manager.models.Engine.EXP_SPEED_UNKNOWN;
 import static cz.mendelu.xmarik.train_manager.models.Engine.SIGNAL_UNKNOWN;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -24,7 +25,6 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.RadioGroup;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -84,6 +84,7 @@ public class EngineController extends NavigationBase {
     private TextView tv_expSignalBlock;
     private TextView tv_time;
     private ScomView scom_expSignal;
+    /** @noinspection FieldCanBeLocal*/
     private ImageButton ib_release;
     private RadioGroup rg_atp_mode;
 
@@ -173,10 +174,9 @@ public class EngineController extends NavigationBase {
             final AssetFileDescriptor afd = appContent.getResources().openRawResourceFd(R.raw.s_info);
             this.infoPlayer.setDataSource(afd.getFileDescriptor(), afd.getStartOffset(), afd.getLength());
             this.infoPlayer.prepareAsync();
-            infoPlayer.setOnCompletionListener((mp) -> infoPlayerOnCompletion(mp));
         } catch (IOException e) {
             this.infoPlayer = null;
-            Log.e("EngineController::onCreate", "s_info sound load", e);
+            Log.e("EC::onCreate", "s_info sound load", e);
         }
     }
 
@@ -263,9 +263,6 @@ public class EngineController extends NavigationBase {
         @Override
         public void onStopTrackingTouch(SeekBar seekBar) {}
     }
-    private void onSbSpeedProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-
-    }
 
     private void onDirectionChange(Engine.Direction newDir) {
         if (this.updating)
@@ -291,6 +288,7 @@ public class EngineController extends NavigationBase {
         this.updateGUIFromTrain();
     }
 
+    @SuppressLint("SetTextI18n")
     private void updateGUIFromTrain() {
         if ((engine == null) || (!EngineDb.instance.engines.containsValue(engine))) {
             this.gotoEngineRequestActivity();
@@ -349,7 +347,7 @@ public class EngineController extends NavigationBase {
             // just own filter
             functions = new ArrayList<>();
             for (int i = 0; i < this.engine.function.length; i++)
-                if (!this.engine.function[i].name.equals(""))
+                if (!this.engine.function[i].name.isEmpty())
                     functions.add(this.engine.function[i]);
         } else {
             functions = new ArrayList<>(Arrays.asList(this.engine.function));
@@ -586,10 +584,6 @@ public class EngineController extends NavigationBase {
             this.infoPlayer.start();
     }
 
-    private void infoPlayerOnCompletion(MediaPlayer mp) {
-        // this.infoPlayer.prepareAsync();
-    }
-
     @Override
     public void onPause() {
         this.b_idleClick(findViewById(R.id.startButton1));
@@ -629,7 +623,7 @@ public class EngineController extends NavigationBase {
 
         public Mode mode = Mode.TRAIN;
         private boolean overspeed;
-        private MediaPlayer soundPlayer = null;
+        private MediaPlayer soundPlayer;
 
         Handler t_overSpeedEB = new Handler(); // EB = emergency braking
         Runnable t_verSpeedEBRunnable = new Runnable() {

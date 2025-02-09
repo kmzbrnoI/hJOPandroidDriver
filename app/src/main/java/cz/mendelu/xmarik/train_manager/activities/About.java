@@ -1,5 +1,6 @@
 package cz.mendelu.xmarik.train_manager.activities;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 
 import androidx.core.view.GravityCompat;
@@ -12,6 +13,7 @@ import cz.mendelu.xmarik.train_manager.R;
 
 public class About extends NavigationBase {
 
+    @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setContentView(R.layout.activity_about);

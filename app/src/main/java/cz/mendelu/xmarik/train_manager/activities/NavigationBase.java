@@ -1,5 +1,6 @@
 package cz.mendelu.xmarik.train_manager.activities;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -57,6 +58,7 @@ public class NavigationBase extends AppCompatActivity
     boolean isDrawerFixed;
     static protected TCPDisconnectedEvent pendingDisconnect = null;
 
+    @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

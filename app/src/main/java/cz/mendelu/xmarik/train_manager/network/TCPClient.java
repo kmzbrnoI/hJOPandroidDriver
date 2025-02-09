@@ -105,7 +105,7 @@ public class TCPClient {
             m_socket.close();
             this.joinSockets();
         } catch (IOException e) {
-            e.printStackTrace();
+            Log.e("TCPClient", "disconnect", e);
         }
 
         m_socket = null;
@@ -117,14 +117,14 @@ public class TCPClient {
             m_wt.interrupt();
             m_wt.join();
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            Log.e("TCPClient", "joinSockets", e);
         }
 
         try {
             m_rt.interrupt();
             m_rt.join();
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            Log.e("TCPClient", "joinSockets2", e);
         }
     }
 

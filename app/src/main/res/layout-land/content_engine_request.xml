@@ -31,13 +31,13 @@
             android:text="@string/tr_disp_message"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/textView11"/>
+            android:id="@+id/textView11"
+            android:labelFor="@+id/authMessage" />
 
         <EditText
             android:inputType="text"
             android:layout_height="139dp"
             android:ems="10"
-            android:gravity="top|left"
             android:id="@+id/authMessage"
             android:layout_width="fill_parent"
             android:scrollbars="vertical" />
