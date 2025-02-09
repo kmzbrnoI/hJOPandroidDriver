@@ -1,0 +1,6 @@
+* Umožnit nastavit, jestli má být checkbox "zapamatovat heslo" ve výchozím stavu zaškrtnutý nebo ne
+* Při zahájení připojování k serveru ukončit předchozí spojení se servery
+* Pouze jeden řádek zprávy pro výpravčího.
+* Změna přihlašovacích údajů je okamžitá.
+* Doplnit možnost zablokovat překlápění v aplikaci.
+* Větší množství refaktoringů zdrojového kódu spojených zejména s TCP komunikací s hJOPserverem.

@@ -1,0 +1,6 @@
+* Allow to set whether the "remember password" checkbox should be checked by default.
+* Disconnect from previous server when new connection attempt is started.
+* Only one line of optional message for the dispatcher.
+* Change of login is immediate (bugfix).
+* Add option to freeze screen orientation in train control activity.
+* More refactorings related mainly to TCP communication with hJOPserver.
