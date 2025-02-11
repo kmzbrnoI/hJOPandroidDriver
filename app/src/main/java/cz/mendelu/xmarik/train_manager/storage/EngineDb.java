@@ -182,4 +182,11 @@ public class EngineDb {
     public void onEvent(TCPDisconnectedEvent event) {
         this.engines.clear();
     }
+
+    public boolean isAnyEngineMultitrack() {
+        for (Engine e : this.engines.values())
+            if (e.multitrack)
+                return true;
+        return false;
+    }
 }

@@ -229,8 +229,12 @@ public class EngineController extends NavigationBase {
 
         this.engine.setTotal(checked);
         if (!checked) {
+            final boolean wasMultitrack = this.engine.multitrack;
             this.engine.multitrack = false;
             this.atp.mode = ATP.Mode.TRAIN;
+
+            if ((wasMultitrack) && (EngineDb.instance.isAnyEngineMultitrack())) // actually isAnyOtherEngineMultitrack
+                displayUntotalDialog();
         }
     }
 
@@ -249,12 +253,8 @@ public class EngineController extends NavigationBase {
         if (checked) {
             displayGroupDialog();
         } else {
-            for (Engine t : EngineDb.instance.engines.values()) {
-                if (t.multitrack) {
-                    displayUngroupDialog();
-                    break;
-                }
-            }
+            if (EngineDb.instance.isAnyEngineMultitrack()) // actually isAnyOtherEngineMultitrack
+                displayUngroupDialog();
         }
     }
 
@@ -548,6 +548,35 @@ public class EngineController extends NavigationBase {
                 })
                 .setNegativeButton(R.string.ta_dialog_ungroup_cancel, null)
                 .show();
+    }
+
+    private void displayUntotalDialog() {
+        final ArrayList<Engine> engines = new ArrayList<>(EngineDb.instance.engines.values());
+        engines.remove(this.engine);
+        Collections.sort(engines, (engine1, engine2) -> engine1.addr - engine2.addr);
+        final CharSequence[] enginesTitle = new CharSequence[engines.size()];
+        final boolean[] enginesChecked = new boolean[engines.size()];
+        for (int i = 0; i < engines.size(); i++) {
+            enginesTitle[i] = engines.get(i).getTitle();
+            enginesChecked[i] = engines.get(i).multitrack;
+        }
+
+        new AlertDialog.Builder(this)
+            .setTitle(R.string.ta_dialog_untotal_title)
+            .setMultiChoiceItems(enginesTitle, enginesChecked, (dialog, index, check) ->
+                enginesChecked[index] = check
+            )
+            .setPositiveButton(R.string.dialog_ok, (dialog, which) -> {
+                for (int j = 0; j < enginesChecked.length; j++) {
+                    Engine _engine = engines.get(j);
+                    if ((enginesChecked[j]) && (_engine.total)) {
+                        _engine.setTotal(false);
+                        _engine.multitrack = false;
+                    }
+                }
+            })
+            .setNegativeButton(R.string.cancel, (dialog, which) -> {})
+            .show();
     }
 
     private void gotoEngineRequestActivity() {
