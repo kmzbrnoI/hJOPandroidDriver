@@ -70,7 +70,7 @@ public class EngineDb {
             if (e != null) {
                 e.total = event.getParsed().get(4).equalsIgnoreCase("TOTAL");
                 e.stolen = false;
-                if (event.getParsed().size() >= 7)
+                if (event.getParsed().size() > 5)
                     e.updateFromServerString(event.getParsed().get(5));
                 EventBus.getDefault().post(new EngineChangeEvent(addr));
             } else {
