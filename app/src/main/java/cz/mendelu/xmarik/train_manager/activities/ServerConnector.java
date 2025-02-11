@@ -24,6 +24,7 @@ import java.util.Arrays;
 
 import cz.mendelu.xmarik.train_manager.events.AreasParsedEvent;
 import cz.mendelu.xmarik.train_manager.events.TCPConnectingErrorEvent;
+import cz.mendelu.xmarik.train_manager.events.TCPDisconnectedEvent;
 import cz.mendelu.xmarik.train_manager.helpers.HashHelper;
 import cz.mendelu.xmarik.train_manager.adapters.TextViewAdapter;
 import cz.mendelu.xmarik.train_manager.R;
@@ -64,7 +65,7 @@ public class ServerConnector extends AppCompatActivity {
     public void onBackPressed() {
         super.onBackPressed();
         if (TCPClient.getInstance().connected())
-            TCPClient.getInstance().disconnect("Intentional disconnect");
+            TCPClient.getInstance().disconnect("User cancelled");
     }
 
     @Override
@@ -108,6 +109,14 @@ public class ServerConnector extends AppCompatActivity {
 
                     this.addMessage(getString(R.string.sc_authorizing));
                     progressBar.setVisibility(View.VISIBLE);
+                })
+                .setNegativeButton(R.string.cancel, (dialog, which) -> {
+                    TCPClient.getInstance().disconnect("User cancelled");
+                    this.finish();
+                })
+                .setOnCancelListener((dialog) -> {
+                    TCPClient.getInstance().disconnect("User cancelled");
+                    this.finish();
                 })
                 .show();
     }
@@ -200,6 +209,11 @@ public class ServerConnector extends AppCompatActivity {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventMainThread(TCPConnectingErrorEvent event) {
+        this.addConnectError(event.getError());
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEventMainThread(TCPDisconnectedEvent event) {
         this.addConnectError(event.getError());
     }
 
