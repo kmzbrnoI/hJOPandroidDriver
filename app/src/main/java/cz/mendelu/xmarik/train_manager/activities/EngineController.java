@@ -515,6 +515,7 @@ public class EngineController extends NavigationBase {
                     }
                 }
             })
+            .setNegativeButton(R.string.cancel, (dialog, which) -> {})
             .show();
     }
 
