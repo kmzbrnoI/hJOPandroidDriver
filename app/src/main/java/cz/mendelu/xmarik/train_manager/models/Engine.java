@@ -1,7 +1,10 @@
 package cz.mendelu.xmarik.train_manager.models;
 
+import android.content.Context;
+
 import java.util.ArrayList;
 
+import cz.mendelu.xmarik.train_manager.R;
 import cz.mendelu.xmarik.train_manager.network.TCPClient;
 import cz.mendelu.xmarik.train_manager.helpers.ParseHelper;
 
@@ -20,11 +23,12 @@ public class Engine {
     // data:
     public String name;
     public String owner;
-    public String label;
+    public String designation;
     public String note;
     public int addr;
-    public String kind;
+    public int kind;
     public EngineFunction[] function;
+    public int vmax;
 
     // state:
     public int stepsSpeed = 0;
@@ -55,10 +59,10 @@ public class Engine {
 
         this.name = parsed.get(0);
         this.owner = parsed.get(1);
-        this.label = parsed.get(2);
+        this.designation = parsed.get(2);
         this.note = parsed.get(3);
         this.addr = Integer.parseInt(parsed.get(4));
-        this.kind = parsed.get(5);
+        this.kind = Integer.parseInt(parsed.get(5));
 
         this.stepsSpeed = Integer.parseInt(parsed.get(9));
         this.kmphSpeed = Integer.parseInt(parsed.get(10));
@@ -71,6 +75,8 @@ public class Engine {
             char type = (i < functionTypes.length()) ? functionTypes.charAt(i) : 'P';
             this.function[i] = new EngineFunction(i, desc, status == '1', type);
         }
+
+        this.vmax = (parsed.size() > 17) ? Integer.parseInt(parsed.get(17)) : 120;
     }
 
     public void setDirection(Engine.Direction direction) {
@@ -120,13 +126,24 @@ public class Engine {
 
     public String getTitle() {
         String title = this.addr + " : " + this.name;
-        if (!this.label.isEmpty())
-            title += " (" + this.label + ")";
+        if (!this.designation.isEmpty())
+            title += " (" + this.designation + ")";
         return title;
     }
 
     public boolean isMyControl() {
         return (this.total) && (!this.stolen);
+    }
+
+    public String kindStr(Context context) {
+        switch (this.kind) {
+            case 0: return context.getString(R.string.engine_kind_steam);
+            case 1: return context.getString(R.string.engine_kind_diesel);
+            case 2: return context.getString(R.string.engine_kind_motor);
+            case 3: return context.getString(R.string.engine_kind_electric);
+            case 4: return context.getString(R.string.engine_kind_car);
+            default: return context.getString(R.string.engine_kind_unknown);
+        }
     }
 
     public static Direction invertDirection(Direction d) {

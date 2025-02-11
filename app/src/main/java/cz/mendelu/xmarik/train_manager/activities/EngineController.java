@@ -119,6 +119,7 @@ public class EngineController extends NavigationBase {
 
         this.toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(this.toolbar);
+        this.toolbar.setOnClickListener((v) -> toolbarOnClick(v));
 
         this.updating = false;
 
@@ -201,6 +202,25 @@ public class EngineController extends NavigationBase {
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt("train_addr", this.engine.addr);
+    }
+
+    private void toolbarOnClick(View v) {
+        if (this.engine == null)
+            return;
+
+        final String message = "" +
+            getString(R.string.engine_name) + ": " + this.engine.name + "\n" +
+            getString(R.string.engine_owner) + ": " + this.engine.owner + "\n" +
+            getString(R.string.engine_designation) + ": " + this.engine.designation + "\n" +
+            getString(R.string.engine_address) + ": " + Integer.toString(this.engine.addr) + "\n" +
+            getString(R.string.engine_type) + ": " + this.engine.kindStr(this) + "\n" +
+            getString(R.string.engine_Vmax) + ": " + Integer.toString(this.engine.vmax) + " km/h\n" +
+            getString(R.string.engine_note) + ": " + (!this.engine.note.isEmpty() ? this.engine.note : "none");
+
+        new AlertDialog.Builder(this)
+                .setMessage(message)
+                .setPositiveButton(getString(R.string.dialog_ok), (dialog, which) -> {})
+                .show();
     }
 
     private void onChbTotalCheckedChange(CompoundButton buttonView, boolean checked) {

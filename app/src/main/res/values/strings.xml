@@ -100,6 +100,21 @@
     <string name="sc_connect_error">Error while connecting to the server</string>
     <string name="sc_disconnected_user_cancelled">User cancelled</string>
 
+    <string name="engine_name">Name</string>
+    <string name="engine_owner">Owner</string>
+    <string name="engine_designation">Designation</string>
+    <string name="engine_address">DCC address</string>
+    <string name="engine_type">Type</string>
+    <string name="engine_Vmax">Maximum speed</string>
+    <string name="engine_note">Note</string>
+
+    <string name="engine_kind_unknown">unknown</string>
+    <string name="engine_kind_steam">steam</string>
+    <string name="engine_kind_diesel">diesel</string>
+    <string name="engine_kind_motor">motor</string>
+    <string name="engine_kind_electric">electric</string>
+    <string name="engine_kind_car">car</string>
+
     <string name="set_speed_volume">Use volume buttons to control speed</string>
     <string name="only_available_functions">Show only available functions</string>
     <string name="remember_login_default">Remember login by default</string>
