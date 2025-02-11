@@ -103,7 +103,7 @@
     <string name="engine_name">Název</string>
     <string name="engine_owner">Majitel</string>
     <string name="engine_designation">Označení</string>
-    <string name="engine_address">DCC addresa</string>
+    <string name="engine_address">DCC adresa</string>
     <string name="engine_type">Typ</string>
     <string name="engine_Vmax">Maximální rychlost</string>
     <string name="engine_note">Poznámka</string>
@@ -112,7 +112,7 @@
     <string name="engine_kind_steam">parní</string>
     <string name="engine_kind_diesel">diesel</string>
     <string name="engine_kind_motor">motor</string>
-    <string name="engine_kind_electric">elktrická</string>
+    <string name="engine_kind_electric">elektrická</string>
     <string name="engine_kind_car">vůz</string>
 
     <string name="set_speed_volume">Použít tlačítka nastavení hlasitosti k nastavování rychlosti</string>
