@@ -228,13 +228,15 @@ public class EngineController extends NavigationBase {
             return;
 
         this.engine.setTotal(checked);
-        if (!checked) {
+        if (checked) {
+            this.tryDisplayTotalDialog();
+        } else {
             final boolean wasMultitrack = this.engine.multitrack;
             this.engine.multitrack = false;
             this.atp.mode = ATP.Mode.TRAIN;
 
             if ((wasMultitrack) && (EngineDb.instance.isAnyEngineMultitrack())) // actually isAnyOtherEngineMultitrack
-                displayUntotalDialog();
+                this.displayUntotalDialog();
         }
     }
 
@@ -251,10 +253,10 @@ public class EngineController extends NavigationBase {
 
         this.engine.multitrack = checked;
         if (checked) {
-            displayGroupDialog();
+            this.displayGroupDialog();
         } else {
             if (EngineDb.instance.isAnyEngineMultitrack()) // actually isAnyOtherEngineMultitrack
-                displayUngroupDialog();
+                this.displayUngroupDialog();
         }
     }
 
@@ -556,6 +558,47 @@ public class EngineController extends NavigationBase {
                 })
                 .setNegativeButton(R.string.ta_dialog_ungroup_cancel, null)
                 .show();
+    }
+
+    private void tryDisplayTotalDialog() {
+        final ArrayList<Engine> engines = new ArrayList<>();
+        for (Engine e : EngineDb.instance.engines.values())
+            if ((e != this.engine) && ((!e.total) || (!e.multitrack)))
+                engines.add(e);
+
+        if (engines.isEmpty())
+            return;
+
+        Collections.sort(engines, (engine1, engine2) -> engine1.addr - engine2.addr);
+        final CharSequence[] enginesTitle = new CharSequence[engines.size()];
+        final boolean[] enginesChecked = new boolean[engines.size()];
+        for (int i = 0; i < engines.size(); i++) {
+            enginesTitle[i] = engines.get(i).getTitle();
+            enginesChecked[i] = true;
+        }
+
+        new AlertDialog.Builder(this)
+            .setTitle(R.string.ta_dialog_total_title)
+            .setMultiChoiceItems(enginesTitle, enginesChecked, (dialog, index, check) ->
+                enginesChecked[index] = check
+            )
+            .setPositiveButton(R.string.dialog_ok, (dialog, which) -> {
+                boolean anyChecked = false;
+                for (int j = 0; j < enginesChecked.length; j++) {
+                    Engine _engine = engines.get(j);
+                    if (enginesChecked[j]) {
+                        anyChecked = true;
+                        _engine.setTotal(true);
+                        _engine.multitrack = true;
+                    }
+                }
+                if (anyChecked) {
+                    this.engine.multitrack = true;
+                    this.updateGUIFromTrain();
+                }
+            })
+            .setNegativeButton(R.string.cancel, (dialog, which) -> {})
+            .show();
     }
 
     private void displayUntotalDialog() {

@@ -33,8 +33,8 @@
     <string name="ta_dialog_ungroup_msg">Turn off multitraction of other engines?</string>
     <string name="ta_dialog_ungroup_ok">OK</string>
     <string name="ta_dialog_ungroup_cancel">Keep</string>
-    <string name="ta_dialog_total_title">Turn on total control of other engines?</string>
-    <string name="ta_dialog_untotal_title">Turn off total control of other engines?</string>
+    <string name="ta_dialog_total_title">Turn on multitraction and total control of other engines?</string>
+    <string name="ta_dialog_untotal_title">Turn off multitraction and total control of other engines?</string>
     <string name="ta_state_ok">Engine control is OK</string>
     <string name="ta_state_err">Last command failed</string>
     <string name="ta_state_stolen">Regaining engine control</string>
