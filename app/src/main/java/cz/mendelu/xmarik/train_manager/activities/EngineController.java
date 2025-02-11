@@ -259,6 +259,17 @@ public class EngineController extends NavigationBase {
     }
 
     class SbSpeedChangeListener implements SeekBar.OnSeekBarChangeListener {
+        // onProgressChanged is called several times when user holds the finger on the seekbar
+        // -> show dialog only once
+        AlertDialog dialog;
+        public SbSpeedChangeListener() {
+            this.dialog = new AlertDialog.Builder(EngineController.this)
+                    .setMessage(getString(R.string.ta_atp_movement_not_allowed))
+                    .setCancelable(false)
+                    .setPositiveButton(getString(R.string.dialog_ok), (dialog, which) -> {})
+                    .create();
+        }
+
         @Override
         public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
             if (EngineController.this.updating)
@@ -269,11 +280,8 @@ public class EngineController extends NavigationBase {
                 EngineController.this.sb_speed.setProgress(0);
                 EngineController.this.updating = false;
 
-                new AlertDialog.Builder(EngineController.this)
-                        .setMessage(getString(R.string.ta_atp_movement_not_allowed))
-                        .setCancelable(false)
-                        .setPositiveButton(getString(R.string.dialog_ok), (dialog, which) -> {})
-                        .show();
+                if (!this.dialog.isShowing())
+                    this.dialog.show();
             }
         }
 
