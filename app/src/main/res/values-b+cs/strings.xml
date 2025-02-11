@@ -98,6 +98,7 @@
     <string name="sc_auth_wait">Čekám na zadání loginu…</string>
     <string name="sc_disconnected">Odpojeno od serveru!</string>
     <string name="sc_connect_error">Chyba při připjování k serveru</string>
+    <string name="sc_disconnected_user_cancelled">Uživatel zrušil připojování</string>
 
     <string name="set_speed_volume">Použít tlačítka nastavení hlasitosti k nastavování rychlosti</string>
     <string name="only_available_functions">Zobrazovat jen dostupné funkce</string>

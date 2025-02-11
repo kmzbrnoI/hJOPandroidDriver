@@ -65,7 +65,7 @@ public class ServerConnector extends AppCompatActivity {
     public void onBackPressed() {
         super.onBackPressed();
         if (TCPClient.getInstance().connected())
-            TCPClient.getInstance().disconnect("User cancelled");
+            TCPClient.getInstance().disconnect(getString(R.string.sc_disconnected_user_cancelled));
     }
 
     @Override
@@ -111,11 +111,11 @@ public class ServerConnector extends AppCompatActivity {
                     progressBar.setVisibility(View.VISIBLE);
                 })
                 .setNegativeButton(R.string.cancel, (dialog, which) -> {
-                    TCPClient.getInstance().disconnect("User cancelled");
+                    TCPClient.getInstance().disconnect(getString(R.string.sc_disconnected_user_cancelled));
                     this.finish();
                 })
                 .setOnCancelListener((dialog) -> {
-                    TCPClient.getInstance().disconnect("User cancelled");
+                    TCPClient.getInstance().disconnect(getString(R.string.sc_disconnected_user_cancelled));
                     this.finish();
                 })
                 .show();

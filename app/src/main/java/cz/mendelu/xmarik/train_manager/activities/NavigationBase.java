@@ -180,7 +180,7 @@ public class NavigationBase extends AppCompatActivity
                     .setMessage(event.getParsed().get(5))
                     .setCancelable(false)
                     .setPositiveButton(R.string.dialog_ok, (dialog, which) ->
-                            TCPClient.getInstance().disconnect("User cancelled")
+                            TCPClient.getInstance().disconnect(getString(R.string.sc_disconnected_user_cancelled))
                     ).show();
         }
         this.updateServer();
