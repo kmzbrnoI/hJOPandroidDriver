@@ -29,11 +29,11 @@
     <string name="ta_release">Uvolnit</string>
     <string name="ta_release_ok">Lokomotiva %d uvolněna.</string>
     <string name="ta_release_really">Opravdu uvolnit lokomotivu</string>
-    <string name="ta_dialog_group_title">Přidat do multitrakce</string>
+    <string name="ta_dialog_group_title">Vyberte vozidla do multitrakce</string>
+    <string name="ta_dialog_new_engine_group_title">Přijato nové vozidlo, přidat do multitrakce?</string>
     <string name="ta_dialog_ungroup_msg">Vypnout multitrakci u ostatních lokomotiv?</string>
     <string name="ta_dialog_ungroup_ok">OK</string>
     <string name="ta_dialog_ungroup_cancel">Ponechat</string>
-    <string name="ta_dialog_total_title">Zapnout multitrakci a ruční řízení dalších vozidel?</string>
     <string name="ta_dialog_untotal_title">Zrušit multitrakci a ruční řízení dalších vozidel?</string>
     <string name="ta_state_ok">Řízení lokomotivy v pořádku</string>
     <string name="ta_state_err">Chyba posledního povelu</string>

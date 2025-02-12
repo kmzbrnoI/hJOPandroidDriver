@@ -49,6 +49,7 @@ import java.util.Collections;
 import cz.kudlav.scomview.ScomView;
 import cz.mendelu.xmarik.train_manager.R;
 import cz.mendelu.xmarik.train_manager.adapters.FunctionCheckBoxAdapter;
+import cz.mendelu.xmarik.train_manager.events.EngineAddEvent;
 import cz.mendelu.xmarik.train_manager.events.EngineChangeEvent;
 import cz.mendelu.xmarik.train_manager.events.EngineRemoveEvent;
 import cz.mendelu.xmarik.train_manager.events.EngineRespEvent;
@@ -229,7 +230,7 @@ public class EngineController extends NavigationBase {
 
         this.engine.setTotal(checked);
         if (checked) {
-            this.tryDisplayTotalDialog();
+            this.displayGroupDialog(getString(R.string.ta_dialog_group_title));
         } else {
             final boolean wasMultitrack = this.engine.multitrack;
             this.engine.multitrack = false;
@@ -253,7 +254,7 @@ public class EngineController extends NavigationBase {
 
         this.engine.multitrack = checked;
         if (checked) {
-            this.displayGroupDialog();
+            this.displayGroupDialog(getString(R.string.ta_dialog_group_title));
         } else {
             if (EngineDb.instance.isAnyEngineMultitrack()) // actually isAnyOtherEngineMultitrack
                 this.displayUngroupDialog();
@@ -517,33 +518,29 @@ public class EngineController extends NavigationBase {
             .setNegativeButton(getString(R.string.no), (dialog, which) -> {}).show();
     }
 
-    private void displayGroupDialog() {
+    private void displayGroupDialog(String title) {
         final ArrayList<Engine> engines = new ArrayList<>(EngineDb.instance.engines.values());
-        engines.remove(this.engine);
         Collections.sort(engines, (engine1, engine2) -> engine1.addr - engine2.addr);
         final CharSequence[] enginesTitle = new CharSequence[engines.size()];
         final boolean[] enginesChecked = new boolean[engines.size()];
-        int i = 0;
-        for (Engine _engine : engines) {
-            enginesTitle[i] = _engine.getTitle();
-            enginesChecked[i] = _engine.multitrack;
-            i++;
+        for (int i = 0; i < engines.size(); i++) {
+            enginesTitle[i] = engines.get(i).getTitle();
+            enginesChecked[i] = true;
         }
 
         new AlertDialog.Builder(this)
-            .setTitle(R.string.ta_dialog_group_title)
+            .setTitle(title)
             .setMultiChoiceItems(enginesTitle, enginesChecked, (dialog, index, check) ->
                 enginesChecked[index] = check
             )
             .setPositiveButton(R.string.dialog_ok, (dialog, which) -> {
                 for (int j = 0; j < enginesChecked.length; j++) {
                     Engine _engine = engines.get(j);
-                    if (_engine.multitrack != enginesChecked[j]) {
-                        if (!_engine.total)
-                            _engine.setTotal(true);
-                        _engine.multitrack = enginesChecked[j];
-                    }
+                    _engine.multitrack = enginesChecked[j];
+                    if ((!_engine.total) && (_engine.multitrack))
+                        _engine.setTotal(true);
                 }
+                this.updateGUIFromTrain();
             })
             .setNegativeButton(R.string.cancel, (dialog, which) -> {})
             .show();
@@ -558,47 +555,6 @@ public class EngineController extends NavigationBase {
                 })
                 .setNegativeButton(R.string.ta_dialog_ungroup_cancel, null)
                 .show();
-    }
-
-    private void tryDisplayTotalDialog() {
-        final ArrayList<Engine> engines = new ArrayList<>();
-        for (Engine e : EngineDb.instance.engines.values())
-            if ((e != this.engine) && ((!e.total) || (!e.multitrack)))
-                engines.add(e);
-
-        if (engines.isEmpty())
-            return;
-
-        Collections.sort(engines, (engine1, engine2) -> engine1.addr - engine2.addr);
-        final CharSequence[] enginesTitle = new CharSequence[engines.size()];
-        final boolean[] enginesChecked = new boolean[engines.size()];
-        for (int i = 0; i < engines.size(); i++) {
-            enginesTitle[i] = engines.get(i).getTitle();
-            enginesChecked[i] = true;
-        }
-
-        new AlertDialog.Builder(this)
-            .setTitle(R.string.ta_dialog_total_title)
-            .setMultiChoiceItems(enginesTitle, enginesChecked, (dialog, index, check) ->
-                enginesChecked[index] = check
-            )
-            .setPositiveButton(R.string.dialog_ok, (dialog, which) -> {
-                boolean anyChecked = false;
-                for (int j = 0; j < enginesChecked.length; j++) {
-                    Engine _engine = engines.get(j);
-                    if (enginesChecked[j]) {
-                        anyChecked = true;
-                        _engine.setTotal(true);
-                        _engine.multitrack = true;
-                    }
-                }
-                if (anyChecked) {
-                    this.engine.multitrack = true;
-                    this.updateGUIFromTrain();
-                }
-            })
-            .setNegativeButton(R.string.cancel, (dialog, which) -> {})
-            .show();
     }
 
     private void displayUntotalDialog() {
@@ -638,13 +594,22 @@ public class EngineController extends NavigationBase {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventMainThread(EngineChangeEvent event) {
         super.onEventMainThread(event);
-        if ((engine != null) && (event.getAddr() == this.engine.addr))
+        if ((this.engine != null) && (event.getAddr() == this.engine.addr))
             this.updateGUIFromTrain();
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEventMainThread(EngineAddEvent event) {
+        super.onEventMainThread(event);
+        this.updateGUIFromTrain(); // to enable multitraction checkbox
+        if (event.getAddr() != this.engine.addr)
+            this.displayGroupDialog(getString(R.string.ta_dialog_new_engine_group_title));
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventMainThread(EngineRemoveEvent event) {
         super.onEventMainThread(event);
+        this.updateGUIFromTrain(); // to disable multitraction checkbox
 
         Toast.makeText(getApplicationContext(),
             String.format(getString(R.string.ta_release_ok), event.getAddr()), Toast.LENGTH_LONG)
