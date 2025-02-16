@@ -1,0 +1,6 @@
+* Add Automatic Train Protection (ATP).
+* Show all vehicle information on click on vehicle name in header.
+* Suggest enabling/disabling total control and multitraction of other vehicles when user enables/disables total control of a vehicle or a new vehicle is received.
+* Localize error messages regarding server disconnect reason.
+* Add "Cancel" button to multitraction add and login dialogs.
+* Many code enhancements based on Android Studio's static analysis.

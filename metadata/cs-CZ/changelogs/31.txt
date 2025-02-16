@@ -1,0 +1,7 @@
+* Přidat vlakový zabezpečovač.
+* Při kliku na název vozidla v záhlaví zobrazit všechny jeho údaje.
+* Při přebírání/odebírání vozidla do ručního řízení nabídnout zapnutí/vypnutí ručního řízení a multitrakce i u dalších vozidel.
+* Lokalizovat chybové zprávy odpojení od serveru.
+* Doplnit tlačítko "Zrušit" do dialogu multitrakce.
+* Doplnit tlačítko "Zrušit" do přihlašovacího dialogu.
+* Vylepšení kódu na základě statické analýzy Android Studia.
