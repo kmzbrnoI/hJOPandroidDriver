@@ -602,7 +602,7 @@ public class EngineController extends NavigationBase {
     public void onEventMainThread(EngineAddEvent event) {
         super.onEventMainThread(event);
         this.updateGUIFromTrain(); // to enable multitraction checkbox
-        if (event.getAddr() != this.engine.addr)
+        if ((event.getAddr() != this.engine.addr) && (this.engine.total))
             this.displayGroupDialog(getString(R.string.ta_dialog_new_engine_group_title));
     }
 
