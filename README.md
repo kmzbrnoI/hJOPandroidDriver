@@ -1,12 +1,10 @@
-# Android Driver for hJOP
+hJOPdriver for Android
+======================
 
-hJOPandroidDriver is a simple application, which allows user to become an
-engine driver and control one or more engines on the model railroad. It fully
-cooperates with [hJOP](http://hjop.kmz-brno.cz) (in Czech). Importantly,
-hJOP is required for this application to work.
-
-Application connects directly to the main hJOPserver via WiFi and requests
-engines from railroad dispatchers.
+With hJOPdriver you become an engine driver and control your engines on the
+model railroad controlled by [hJOP](http://hjop.kmz-brno.cz). The application
+connects directly to the hJOPserver via WiFi and requests engines from railroad
+dispatchers.
 
 [<img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png"
      alt="Get it on F-Droid"
@@ -17,24 +15,26 @@ engines from railroad dispatchers.
 
 ## Main Features
 
- * Automatic server scan in local network, server select.
- * Server database.
- * Train request.
- * Speed control, direction control, function control.
- * Function meaning displaying.
- * Idle, emergency stop.
- * Show modell speed in kmph.
+ * Automatic scan of hJOPservers in local network.
+ * Database of connections, credentials storage.
+ * Train requesting from a dispatcher, train releasing.
+ * Speed control, direction control, functions control, idle, emergency stop.
+ * Displaying of functions meaning.
+ * Momentary and permanent functions.
+ * Model speed shown in km/h.
  * Multitraction.
- * Train release.
- * Differentiation between total control and semi-total control.
+ * Total control and semi-total control.
+ * Signal repeater.
+ * Automatic Train Protection (ATP).
 
 ## Contributors
 
-Application was developed as [master thesis](https://is.mendelu.cz/zp/index.pl?podrobnosti_zp=54008)
-at Mendel University in Brno by [Miroslav Marik](https://www.linkedin.com/in/miroslav-mařík-27a939b4),
-however the current maintainer is [Jan Horacek](http://apophis.cz/)
-([jan.horacek@kmz-brno.cz](mailto:jan.horacek@kmz-brno.cz)).
-Another contributor is [Vladan Kudláč](https://kudlav.github.io/).
+* [Jan Horáček](http://apophis.cz/) ([jan.horacek@kmz-brno.cz](mailto:jan.horacek@kmz-brno.cz)).
+* [Vladan Kudláč](https://kudlav.github.io/).
+* [Miroslav Mařík](https://www.linkedin.com/in/miroslav-mařík-27a939b4).
+
+hJOPdriver was developed as a [master thesis](https://is.mendelu.cz/zp/index.pl?podrobnosti_zp=54008)
+at Mendel University in Brno by Miroslav Mařík.
 
 ## Licence
 
