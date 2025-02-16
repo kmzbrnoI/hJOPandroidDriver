@@ -30,7 +30,7 @@
     <string name="ta_release_ok" tools:ignore="PluralsCandidate">Engine %d released.</string>
     <string name="ta_release_really">Really release engine</string>
     <string name="ta_dialog_group_title">Choose engines for multitraction</string>
-    <string name="ta_dialog_new_engine_group_title">New engine received, add to multitraction?</string>
+    <string name="ta_dialog_new_engine_group_title">New engine received, choose engines for multitraction</string>
     <string name="ta_dialog_ungroup_msg">Turn off multitraction of other engines?</string>
     <string name="ta_dialog_ungroup_ok">OK</string>
     <string name="ta_dialog_ungroup_cancel">Keep</string>
