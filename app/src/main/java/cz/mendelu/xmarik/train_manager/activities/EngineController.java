@@ -116,6 +116,19 @@ public class EngineController extends NavigationBase {
         setContentView(R.layout.activity_engine_controller);
         super.onCreate(savedInstanceState);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
+        try {
+            this.infoPlayer = new MediaPlayer();
+            final Context appContent = EngineController.this.getApplicationContext();
+            final AssetFileDescriptor afd = appContent.getResources().openRawResourceFd(R.raw.s_info);
+            this.infoPlayer.setDataSource(afd.getFileDescriptor(), afd.getStartOffset(), afd.getLength());
+            this.infoPlayer.prepareAsync();
+        } catch (IOException e) {
+            this.infoPlayer = null;
+            Log.e("EC::onCreate", "s_info sound load", e);
+        }
+
+        // ATP must be created after infoPlayer, it potentially needs it
         this.atp = new ATP();
 
         this.toolbar = findViewById(R.id.toolbar);
@@ -169,17 +182,6 @@ public class EngineController extends NavigationBase {
         this.rg_atp_mode.setOnCheckedChangeListener((group, checkedId) -> this.onRgATPModeCheckedChange(group, checkedId));
 
         this.ib_release.setOnClickListener(this::ib_ReleaseClick);
-
-        try {
-            this.infoPlayer = new MediaPlayer();
-            final Context appContent = EngineController.this.getApplicationContext();
-            final AssetFileDescriptor afd = appContent.getResources().openRawResourceFd(R.raw.s_info);
-            this.infoPlayer.setDataSource(afd.getFileDescriptor(), afd.getStartOffset(), afd.getLength());
-            this.infoPlayer.prepareAsync();
-        } catch (IOException e) {
-            this.infoPlayer = null;
-            Log.e("EC::onCreate", "s_info sound load", e);
-        }
     }
 
     @Override
