@@ -185,6 +185,12 @@ public class EngineController extends NavigationBase {
     }
 
     @Override
+    public void onDestroy() {
+        super.onDestroy();
+        this.atp.onDestroy();
+    }
+
+    @Override
     public void onStart() {
         super.onStart();
 
@@ -712,6 +718,11 @@ public class EngineController extends NavigationBase {
                 this.soundPlayer = null;
                 Log.e("ATP ctor", "s2_warning sound load", e);
             }
+        }
+
+        public void onDestroy() {
+            if (this.overspeed)
+                this.overSpeedEnd();
         }
 
         public void update() {
