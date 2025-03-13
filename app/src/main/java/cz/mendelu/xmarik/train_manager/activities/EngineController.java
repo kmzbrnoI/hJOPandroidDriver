@@ -230,7 +230,8 @@ public class EngineController extends NavigationBase {
 
         this.engine.setTotal(checked);
         if (checked) {
-            this.displayGroupDialog(getString(R.string.ta_dialog_group_title));
+            if (EngineDb.instance.engines.size() >= 2)
+                this.displayGroupDialog(getString(R.string.ta_dialog_group_title));
         } else {
             final boolean wasMultitrack = this.engine.multitrack;
             this.engine.multitrack = false;
