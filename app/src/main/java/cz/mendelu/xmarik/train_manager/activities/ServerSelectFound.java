@@ -126,6 +126,7 @@ public class ServerSelectFound extends Fragment {
         this.t_no_servers_found.cancel(); // hide potentially visible toast
 
         if (!isWifiOnAndConnected()) {
+            this.refreshLayout.setRefreshing(false);
             Toast.makeText(context, R.string.conn_wifi_unavailable, Toast.LENGTH_LONG).show();
             return;
         }
