@@ -52,7 +52,7 @@
 
     <string name="conn_servers_found">Nalezené servery</string>
     <string name="conn_servers_stored">Uložené servery</string>
-    <string name="conn_wifi_unavailable">Wifi připojení není dostupné.</string>
+    <string name="conn_wifi_unavailable">Nelze vyhledat servery: WiFi připojení není dostupné.</string>
     <string name="conn_refresh_in_progress">Vyhledávání serverů již probíhá, počkejte na dokončení!</string>
     <string name="conn_connected">Připojeno a autorizováno.</string>
     <string name="conn_server_offline">Server je offline, skutečně se připojit?</string>
