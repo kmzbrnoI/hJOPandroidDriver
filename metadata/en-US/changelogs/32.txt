@@ -1,0 +1,6 @@
+Resolve v2.0 issues:
+* Fix infoPlayer nullpointer dereference.
+* Group dialog when total control enabled: show only if => 2 engines present.
+* Stop ATP sound when screen orientation changed.
+* Stop refreshing animation when WiFi not available.
+* Server refresh: show Alert instead of Toast in case of error.

@@ -1,0 +1,6 @@
+Opravit nedokonalosti v2.0:
+* Opravit nullpointer dereference vedoucí k pádu aplikace při překlopení v aktivitě řízení loko.
+* Multitrakce: nabídnout přidání při aktivaci ručního řízení pouze při >= 2 loko v aplikaci.
+* Zastavit akustickou výstrahu při překlopení displeje.
+* Zastavit animaci aktualizace serverů při chybě.
+* Vyhledávání serverů: zobrazit Alert místo Toast při chybě.
