@@ -92,7 +92,8 @@ public class ServerSelectFound extends Fragment {
         this.refreshLayout.setOnRefreshListener(this::discoverServers);
 
         // run UDP discover after UI init:
-        this.refreshLayout.post(this::discoverServers);
+        if (this.isWifiOnAndConnected())
+            this.refreshLayout.post(this::discoverServers);
 
         return view;
     }
@@ -127,11 +128,19 @@ public class ServerSelectFound extends Fragment {
 
         if (!isWifiOnAndConnected()) {
             this.refreshLayout.setRefreshing(false);
-            Toast.makeText(context, R.string.conn_wifi_unavailable, Toast.LENGTH_LONG).show();
+            new AlertDialog.Builder(this.getContext())
+                    .setMessage(getString(R.string.conn_wifi_unavailable))
+                    .setCancelable(false)
+                    .setPositiveButton(getString(R.string.dialog_ok), (dialog, which) -> {})
+                    .show();
             return;
         }
         if ((this.udpDiscover != null) && (this.udpDiscover.isAlive())) {
-            Toast.makeText(context, R.string.conn_refresh_in_progress, Toast.LENGTH_LONG).show();
+            new AlertDialog.Builder(this.getContext())
+                    .setMessage(getString(R.string.conn_refresh_in_progress))
+                    .setCancelable(false)
+                    .setPositiveButton(getString(R.string.dialog_ok), (dialog, which) -> {})
+                    .show();
             return;
         }
 
