@@ -204,7 +204,7 @@ public class ServerConnector extends AppCompatActivity {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventMainThread(ConnectionEstablishedEvent event) {
         // connection established -> begin handshake
-        TCPClient.getInstance().send("-;HELLO;1.1");
+        TCPClient.getInstance().send("-;HELLO;" + TCPClient.PROTOCOL_VERSION_CLIENT + ";" + TCPClient.PROTOCOL_APP_NAME);
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

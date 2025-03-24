@@ -52,6 +52,9 @@ public class TCPClient {
     public Server server = null;
     public MutableLiveData<Boolean> dccState = new MutableLiveData<>(null);
 
+    public static final String PROTOCOL_VERSION_CLIENT = "1.1";
+    public static final String PROTOCOL_APP_NAME = "hJOPdriver";
+
     public TCPClient() {
         if (!EventBus.getDefault().isRegistered(this))
             EventBus.getDefault().register(this);
