@@ -7,7 +7,7 @@ android {
         applicationId "cz.mendelu.xmarik.train_manager"
         minSdkVersion 21
         versionCode 32
-        versionName "2.1"
+        versionName "2.2"
         targetSdkVersion 35
         def buildTime = new Date()
         buildConfigField "String", "BUILD_DATETIME", "\"${buildTime.format('yyyy-MM-dd HH:mm:ss')}\""

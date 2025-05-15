@@ -50,7 +50,18 @@ public class TCPClient {
     private static TCPClient instance = null;
 
     public Server server = null;
-    public MutableLiveData<Boolean> dccState = new MutableLiveData<>(null);
+
+    public class DCCState {
+        public boolean on;
+        public boolean iCanMakeItGo;
+
+        public DCCState(boolean _on, boolean _iCanMakeItGo) {
+            this.on = _on;
+            this.iCanMakeItGo = _iCanMakeItGo;
+        }
+    };
+
+    public MutableLiveData<DCCState> dccState = new MutableLiveData<>(null);
 
     public static final String PROTOCOL_VERSION_CLIENT = "1.1";
     public static final String PROTOCOL_APP_NAME = "hJOPdriver";
@@ -198,7 +209,7 @@ public class TCPClient {
             EventBus.getDefault().post(new AreasEvent(parsed));
 
         } else if ((parsed.get(1).equals("DCC")) && (parsed.size() > 2)) {
-            this.dccState.postValue(parsed.get(2).equals("GO"));
+            this.dccState.postValue(new DCCState(parsed.get(2).equals("GO"), parsed.get(2).equals("STOP")));
 
         } else if ((parsed.get(1).equals("MOD-CAS") && (parsed.size() > 2))) {
             EventBus.getDefault().post(new TimeEvent(parsed));

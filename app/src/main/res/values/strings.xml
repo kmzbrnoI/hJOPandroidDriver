@@ -38,6 +38,7 @@
     <string name="ta_state_ok">Engine control is OK</string>
     <string name="ta_state_err">Last command failed</string>
     <string name="ta_state_stolen">Regaining engine control</string>
+    <string name="ta_really_stop_dcc">Really stop DCC on whole layout?</string>
 
     <string name="ta_atp_mode">ATP mode:</string>
     <string name="ta_atp_train">Train</string>
@@ -85,6 +86,8 @@
     <string name="general_error">General error!</string>
     <string name="yes">yes</string>
     <string name="no">no</string>
+    <string name="Yes">Yes</string>
+    <string name="No">No</string>
     <string name="dialog_ok">OK</string>
     <string name="total_on_error">Unable to enable Total control of %1$s!</string>
     <string name="total_off_error">Unable to turn off Total control of %1$s!</string>

@@ -11,6 +11,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.AssetFileDescriptor;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
@@ -78,7 +80,8 @@ public class EngineController extends NavigationBase {
     private Button b_idle;
     private CheckBox chb_group;
     private ImageButton ib_status;
-    private ImageButton ib_dcc;
+    private ImageButton ib_dcc_go;
+    private ImageButton ib_dcc_stop;
     private ListView lv_functions;
     private TextView tv_kmhSpeed;
     private TextView tv_expSpeed;
@@ -142,7 +145,8 @@ public class EngineController extends NavigationBase {
         this.b_idle = findViewById(R.id.startButton1);
         this.chb_group = findViewById(R.id.goupManaged1);
         this.ib_status = findViewById(R.id.ib_status);
-        this.ib_dcc = findViewById(R.id.ib_dcc);
+        this.ib_dcc_go = findViewById(R.id.ib_dcc_go);
+        this.ib_dcc_stop = findViewById(R.id.ib_dcc_stop);
         this.ib_release = findViewById(R.id.ib_release);
         this.lv_functions = findViewById(R.id.checkBoxView1);
         this.tv_kmhSpeed = findViewById(R.id.kmh1);
@@ -416,20 +420,29 @@ public class EngineController extends NavigationBase {
     }
 
     /**
-     * Show DCC stop when DCC status is known and different from GO
+     * Show DCC status
      */
     private void observeDccState() {
-        TCPClient.getInstance().dccState.observe(this, enabled -> {
-            if (enabled != null && !enabled) {
+        TCPClient.getInstance().dccState.observe(this, state -> {
+            boolean goEnabled = (state != null) && (!state.on) && (state.iCanMakeItGo);
+            boolean stopEnabled = (state != null) && (state.on);
+
+            this.ib_dcc_go.setEnabled(goEnabled);
+            if (goEnabled) {
+                this.ib_dcc_go.getDrawable().setColorFilter(null);
+            } else {
+                this.ib_dcc_go.getDrawable().setColorFilter(Color.LTGRAY, PorterDuff.Mode.SRC_IN);
+            }
+
+            this.ib_dcc_stop.setEnabled(stopEnabled);
+            if (stopEnabled) {
+                this.ib_dcc_stop.clearAnimation();
+            } else {
                 Animation blink = new AlphaAnimation(0.0f, 1.0f);
-                blink.setDuration(250);
+                blink.setDuration(100);
                 blink.setRepeatMode(Animation.REVERSE);
                 blink.setRepeatCount(Animation.INFINITE);
-                this.ib_dcc.setAlpha(1.0f);
-                this.ib_dcc.startAnimation(blink);
-            } else {
-                this.ib_dcc.clearAnimation();
-                this.ib_dcc.setAlpha(0.0f);
+                this.ib_dcc_stop.startAnimation(blink);
             }
         });
     }
@@ -515,6 +528,20 @@ public class EngineController extends NavigationBase {
         } else {
             Toast.makeText(this, R.string.ta_state_ok, Toast.LENGTH_SHORT).show();
         }
+    }
+
+    public void ib_dccGoClick(View v) {
+        TCPClient.getInstance().send("-;DCC;GO");
+    }
+
+    public void ib_dccStopClick(View v) {
+        new AlertDialog.Builder(this)
+            .setMessage(R.string.ta_really_stop_dcc)
+            .setNegativeButton(R.string.No, (dialog, which) -> {})
+            .setPositiveButton(R.string.Yes, (dialog, which) -> {
+                TCPClient.getInstance().send("-;DCC;STOP");
+            })
+            .show();
     }
 
     public void ib_ReleaseClick(View v) {
