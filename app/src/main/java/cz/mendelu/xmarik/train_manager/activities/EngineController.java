@@ -142,7 +142,7 @@ public class EngineController extends NavigationBase {
         this.updating = false;
 
         this.sb_speed = findViewById(R.id.speedkBar1);
-        this.s_direction = findViewById(R.id.handlerDirection1);
+        this.s_direction = findViewById(R.id.s_direction);
         this.b_idle = findViewById(R.id.startButton1);
         this.chb_group = findViewById(R.id.goupManaged1);
         this.ib_status = findViewById(R.id.ib_status);
@@ -313,6 +313,15 @@ public class EngineController extends NavigationBase {
     private void onDirectionChange(Engine.Direction newDir) {
         if (this.updating)
             return;
+
+        if ((this.atp.mode == ATP.Mode.TRAIN) && (!this.engine.expDirectionMatch(newDir))) {
+            this.s_direction.setChecked(this.engine.direction == Engine.Direction.FORWARD);
+            new AlertDialog.Builder(this)
+                    .setMessage(R.string.ta_atp_direction_change_not_allowed_msg)
+                    .setPositiveButton(getString(R.string.dialog_ok), (dialog, which) -> {})
+                    .show();
+            return;
+        }
 
         this.s_direction.setText((newDir == Engine.Direction.FORWARD) ? R.string.ta_direction_forward : R.string.ta_direction_backwards);
         this.engine.setDirection(newDir);
@@ -732,7 +741,7 @@ public class EngineController extends NavigationBase {
         private MediaPlayer soundPlayer;
 
         Handler t_overSpeedEB = new Handler(); // EB = emergency braking
-        Runnable t_verSpeedEBRunnable = new Runnable() {
+        Runnable t_overSpeedEBRunnable = new Runnable() {
             @Override
             public void run() { overSpeedEB(); }
         };
@@ -758,6 +767,23 @@ public class EngineController extends NavigationBase {
 
         public void update() {
             this.overSpeedUpdate();
+        }
+
+        private void soundStart() {
+            if ((this.soundPlayer != null) && (!this.soundPlayer.isPlaying())) {
+                if (EngineController.this.infoPlayer.isPlaying()) {
+                    EngineController.this.infoPlayer.stop();
+                    EngineController.this.infoPlayer.prepareAsync();
+                }
+                this.soundPlayer.start();
+            }
+        }
+
+        private void soundStop() {
+            if ((this.soundPlayer != null) && (this.soundPlayer.isPlaying())) {
+                this.soundPlayer.stop();
+                this.soundPlayer.prepareAsync();
+            }
         }
 
         private void overSpeedUpdate() {
@@ -786,7 +812,7 @@ public class EngineController extends NavigationBase {
         }
 
         private void overSpeedBegin() {
-            this.t_overSpeedEB.postDelayed(t_verSpeedEBRunnable, OVERSPEED_DELAY_EB_MS);
+            this.t_overSpeedEB.postDelayed(t_overSpeedEBRunnable, OVERSPEED_DELAY_EB_MS);
 
             { // Animation
                 Animation blink = new AlphaAnimation(0.0f, 1.0f);
@@ -797,27 +823,14 @@ public class EngineController extends NavigationBase {
                 EngineController.this.tv_expSpeed.startAnimation(blink);
             }
 
-            { // Sound
-                if ((this.soundPlayer != null) && (!this.soundPlayer.isPlaying())) {
-                    if (EngineController.this.infoPlayer.isPlaying()) {
-                        EngineController.this.infoPlayer.stop();
-                        EngineController.this.infoPlayer.prepareAsync();
-                    }
-                    this.soundPlayer.start();
-                }
-            }
+            this.soundStart();
         }
 
         private void overSpeedEnd() {
-            this.t_overSpeedEB.removeCallbacks(t_verSpeedEBRunnable);
-
+            this.t_overSpeedEB.removeCallbacks(t_overSpeedEBRunnable);
             EngineController.this.tv_kmhSpeed.clearAnimation();
             EngineController.this.tv_expSpeed.clearAnimation();
-
-            if ((this.soundPlayer != null) && (this.soundPlayer.isPlaying())) {
-                this.soundPlayer.stop();
-                this.soundPlayer.prepareAsync();
-            }
+            this.soundStop();
         }
 
         private void overSpeedEB() {
@@ -828,7 +841,6 @@ public class EngineController extends NavigationBase {
 
                 new AlertDialog.Builder(EngineController.this)
                     .setMessage(getString(R.string.ta_atp_overspeed_eb_msg))
-                    .setCancelable(false)
                     .setPositiveButton(getString(R.string.dialog_ok), (dialog, which) -> {})
                     .show();
             }

@@ -79,7 +79,7 @@
                         android:orientation="horizontal">
 
                         <androidx.appcompat.widget.SwitchCompat
-                            android:id="@+id/handlerDirection1"
+                            android:id="@+id/s_direction"
                             android:layout_width="120dp"
                             android:layout_height="46dp"
                             android:layout_gravity="top|center_horizontal"
