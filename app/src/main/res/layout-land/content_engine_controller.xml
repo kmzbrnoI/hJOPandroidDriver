@@ -170,7 +170,6 @@
                 <LinearLayout
                     android:layout_width="75dp"
                     android:layout_height="200dp"
-                    android:paddingTop="@dimen/activity_vertical_margin"
                     android:gravity="center_horizontal"
                     android:orientation="vertical">
 
@@ -200,6 +199,16 @@
                         android:minWidth="64sp"
                         android:textAlignment="center"
                         android:text="120 km/h"
+                        tools:ignore="HardcodedText" />
+
+                    <TextView
+                        android:id="@+id/expDirection"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:maxLines="1"
+                        android:minWidth="64sp"
+                        android:textAlignment="center"
+                        android:text="forward"
                         tools:ignore="HardcodedText" />
 
                 </LinearLayout>

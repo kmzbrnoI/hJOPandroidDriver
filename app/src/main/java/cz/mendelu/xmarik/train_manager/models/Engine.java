@@ -2,9 +2,15 @@ package cz.mendelu.xmarik.train_manager.models;
 
 import android.content.Context;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.util.ArrayList;
 
 import cz.mendelu.xmarik.train_manager.R;
+import cz.mendelu.xmarik.train_manager.events.EngineChangeEvent;
+import cz.mendelu.xmarik.train_manager.events.EngineEvent;
+import cz.mendelu.xmarik.train_manager.events.EngineRespEvent;
+import cz.mendelu.xmarik.train_manager.events.EngineTotalChangeErrorEvent;
 import cz.mendelu.xmarik.train_manager.network.TCPClient;
 import cz.mendelu.xmarik.train_manager.helpers.ParseHelper;
 
@@ -18,7 +24,13 @@ public class Engine {
     public enum Direction {
         FORWARD,
         BACKWARD,
-    }
+    };
+
+    public enum ExpDirection {
+        UNKNOWN,
+        FORWARD,
+        BACKWARD,
+    };
 
     // data:
     public String name;
@@ -39,6 +51,7 @@ public class Engine {
     public int expSignalCode = SIGNAL_UNKNOWN;
     public String expSignalBlock;
     public int expSpeed = EXP_SPEED_UNKNOWN;
+    public ExpDirection expDirection = ExpDirection.UNKNOWN;
 
     // client-side props
     public boolean multitrack = false;
@@ -135,18 +148,98 @@ public class Engine {
         return (this.total) && (!this.stolen);
     }
 
+    private void change() {
+        EventBus.getDefault().post(new EngineChangeEvent(this.addr));
+    }
+
     public String kindStr(Context context) {
-        switch (this.kind) {
-            case 0: return context.getString(R.string.engine_kind_steam);
-            case 1: return context.getString(R.string.engine_kind_diesel);
-            case 2: return context.getString(R.string.engine_kind_motor);
-            case 3: return context.getString(R.string.engine_kind_electric);
-            case 4: return context.getString(R.string.engine_kind_car);
-            default: return context.getString(R.string.engine_kind_unknown);
-        }
+        return switch (this.kind) {
+            case 0 -> context.getString(R.string.engine_kind_steam);
+            case 1 -> context.getString(R.string.engine_kind_diesel);
+            case 2 -> context.getString(R.string.engine_kind_motor);
+            case 3 -> context.getString(R.string.engine_kind_electric);
+            case 4 -> context.getString(R.string.engine_kind_car);
+            default -> context.getString(R.string.engine_kind_unknown);
+        };
     }
 
     public static Direction invertDirection(Direction d) {
         return (d == Direction.FORWARD) ? Direction.BACKWARD : Direction.FORWARD;
+    }
+
+    public static String expDirectionStrfy(Context context, ExpDirection dir) {
+        return switch (dir) {
+            case ExpDirection.FORWARD -> context.getString(R.string.ta_direction_forward);
+            case ExpDirection.BACKWARD -> context.getString(R.string.ta_direction_backwards);
+            default -> "---";
+        };
+    }
+
+    public String expDirectionStr(Context context) {
+        return expDirectionStrfy(context, this.expDirection);
+    }
+
+    public void totalEvent(final ArrayList<String> parsed) {
+        final boolean total = parsed.get(4).equals("1");
+        if (this.total == total) {
+            this.change();
+        } else {
+            this.total = total;
+            EventBus.getDefault().post(new EngineTotalChangeErrorEvent(this.addr, total));
+        }
+    }
+
+    public void respEvent(final ArrayList<String> parsed) {
+        if (parsed.get(4).equalsIgnoreCase("OK"))
+            this.kmphSpeed = Integer.parseInt(parsed.get(6));
+        EventBus.getDefault().post(new EngineRespEvent(parsed));
+    }
+
+    public void spdEvent(final ArrayList<String> parsed) {
+        this.kmphSpeed = Integer.parseInt(parsed.get(4));
+        this.stepsSpeed = Integer.parseInt(parsed.get(5));
+        this.direction = (parsed.get(6).equals("1") ? Engine.Direction.BACKWARD : Engine.Direction.FORWARD);
+        this.change();
+    }
+
+    public void fEvent(final ArrayList<String> parsed) {
+        String[] f = parsed.get(4).split("-");
+        if (f.length == 1) {
+            this.function[Integer.parseInt(f[0])].checked = (parsed.get(5).equals("1"));
+        } else if (f.length == 2) {
+            int from = Integer.parseInt(f[0]);
+            int to = Integer.parseInt(f[1]);
+            for (int i = from; i <= to; i++)
+                this.function[i].checked = (parsed.get(5).charAt(i-from) == '1');
+        }
+        this.change();
+    }
+
+    public void expSpdEvent(final ArrayList<String> parsed) {
+        final String expSpeed = parsed.get(4);
+        this.expSpeed = (!expSpeed.equals("-")) ? Integer.parseInt(expSpeed) : EXP_SPEED_UNKNOWN;
+
+        if (parsed.size() > 5) {
+            final String expDirection = parsed.get(5);
+            switch (expDirection) {
+                case "0": this.expDirection = ExpDirection.FORWARD; break;
+                case "1": this.expDirection = ExpDirection.BACKWARD; break;
+                default:  this.expDirection = ExpDirection.UNKNOWN; break;
+            }
+        } else {
+            this.expDirection = Engine.ExpDirection.UNKNOWN;
+        }
+
+        this.change();
+    }
+
+    public void expSignalEvent(final ArrayList<String> parsed) {
+        this.expSignalBlock = parsed.get(4);
+        try {
+            this.expSignalCode = Integer.parseInt(parsed.get(5));
+        } catch (NumberFormatException e) {
+            this.expSignalCode = -1;
+        }
+        this.change();
     }
 }

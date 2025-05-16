@@ -228,8 +228,9 @@ public class TCPClient {
                     EventBus.getDefault().post(new GlobalAuthEvent(parsed));
                 else if (parsed.get(3).equalsIgnoreCase("PLEASE-RESP"))
                     EventBus.getDefault().post(new RequestEvent(parsed));
-            } else
+            } else {
                 EventBus.getDefault().post(new EngineEvent(parsed));
+            }
         }
     }
 

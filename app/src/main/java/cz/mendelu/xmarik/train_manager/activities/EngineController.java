@@ -85,6 +85,7 @@ public class EngineController extends NavigationBase {
     private ListView lv_functions;
     private TextView tv_kmhSpeed;
     private TextView tv_expSpeed;
+    private TextView tv_expDirection;
     private TextView tv_expSignalBlock;
     private TextView tv_time;
     private ScomView scom_expSignal;
@@ -151,6 +152,7 @@ public class EngineController extends NavigationBase {
         this.lv_functions = findViewById(R.id.checkBoxView1);
         this.tv_kmhSpeed = findViewById(R.id.kmh1);
         this.tv_expSpeed = findViewById(R.id.expSpeed);
+        this.tv_expDirection = findViewById(R.id.expDirection);
         this.tv_expSignalBlock = findViewById(R.id.expSignalBlock);
         this.tv_time = findViewById(R.id.tvTime);
         this.scom_expSignal = findViewById(R.id.scom_view);
@@ -368,10 +370,12 @@ public class EngineController extends NavigationBase {
                 this.playInfoSound();
 
             this.tv_expSpeed.setText((this.engine.expSpeed != EXP_SPEED_UNKNOWN) ? String.format("%s km/h", this.engine.expSpeed) : "- km/h");
+            this.tv_expDirection.setText(this.engine.expDirectionStr(this));
             this.scom_expSignal.setCode(this.engine.expSignalCode);
             this.tv_expSignalBlock.setText((this.engine.expSignalCode != SIGNAL_UNKNOWN) ? this.engine.expSignalBlock : "---");
         } else { // SHUNT
             this.tv_expSpeed.setText(Integer.toString(ATP.SHUNT_MAX_SPEED_KMPH) + " km/h");
+            this.tv_expDirection.setText("-");
             this.scom_expSignal.setCode(SIGNAL_UNKNOWN);
             this.tv_expSignalBlock.setText("---");
         }

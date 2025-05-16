@@ -42,27 +42,33 @@ public class EngineDb {
     @Subscribe
     public void onEvent(EngineEvent event) {
         try {
-            if (event.getParsed().get(3).equalsIgnoreCase("AUTH"))
+            if (event.getParsed().get(3).equalsIgnoreCase("AUTH")) {
                 this.authEvent(event);
-            else if (event.getParsed().get(3).equalsIgnoreCase("F"))
-                this.fEvent(event);
-            else if (event.getParsed().get(3).equalsIgnoreCase("SPD"))
-                this.spdEvent(event);
-            else if (event.getParsed().get(3).equalsIgnoreCase("RESP"))
-                this.respEvent(event);
-            else if (event.getParsed().get(3).equalsIgnoreCase("TOTAL"))
-                this.totalEvent(event);
-            else if (event.getParsed().get(3).equalsIgnoreCase("NAV"))
-                this.expSignEvent(event);
-            else if (event.getParsed().get(3).equalsIgnoreCase("EXPECTED-SPEED"))
-                this.expSpdEvent(event);
+            } else {
+                Engine engine = engines.get(Integer.parseInt(event.getParsed().get(2)));
+                if (engine == null)
+                    return;
+
+                if (event.getParsed().get(3).equalsIgnoreCase("F"))
+                    engine.fEvent(event.getParsed());
+                else if (event.getParsed().get(3).equalsIgnoreCase("SPD"))
+                    engine.spdEvent(event.getParsed());
+                else if (event.getParsed().get(3).equalsIgnoreCase("RESP"))
+                    engine.respEvent(event.getParsed());
+                else if (event.getParsed().get(3).equalsIgnoreCase("TOTAL"))
+                    engine.totalEvent(event.getParsed());
+                else if (event.getParsed().get(3).equalsIgnoreCase("NAV"))
+                    engine.expSignalEvent(event.getParsed());
+                else if (event.getParsed().get(3).equalsIgnoreCase("EXPECTED-SPEED"))
+                    engine.expSpdEvent(event.getParsed());
+            }
         } catch (Exception e) {
             Log.e("Lok parse", "Error", e);
         }
     }
 
     public void authEvent(EngineEvent event) {
-        int addr = Integer.parseInt(event.getParsed().get(2));
+        final int addr = Integer.parseInt(event.getParsed().get(2));
 
         if (event.getParsed().get(4).equalsIgnoreCase("OK") ||
                 event.getParsed().get(4).equalsIgnoreCase("TOTAL")) {
@@ -95,87 +101,6 @@ public class EngineDb {
                 EventBus.getDefault().post(new EngineChangeEvent(addr));
             }
         }
-    }
-
-    public void fEvent(EngineEvent event) {
-        Engine e = engines.get(Integer.valueOf(event.getParsed().get(2)));
-        if (e == null)
-            return;
-        String[] f = event.getParsed().get(4).split("-");
-        if (f.length == 1) {
-            e.function[Integer.parseInt(f[0])].checked = (event.getParsed().get(5).equals("1"));
-        } else if (f.length == 2) {
-            int from = Integer.parseInt(f[0]);
-            int to = Integer.parseInt(f[1]);
-
-            for (int i = from; i <= to; i++)
-                e.function[i].checked = (event.getParsed().get(5).charAt(i-from) == '1');
-        }
-
-        EventBus.getDefault().post(new EngineChangeEvent(e.addr));
-    }
-
-    public void spdEvent(EngineEvent event) {
-        Engine e = engines.get(Integer.valueOf(event.getParsed().get(2)));
-        if (e == null)
-            return;
-
-        e.kmphSpeed = Integer.parseInt(event.getParsed().get(4));
-        e.stepsSpeed = Integer.parseInt(event.getParsed().get(5));
-        e.direction = (event.getParsed().get(6).equals("1") ? Engine.Direction.BACKWARD : Engine.Direction.FORWARD);
-
-        EventBus.getDefault().post(new EngineChangeEvent(e.addr));
-    }
-
-    public void respEvent(EngineEvent event) {
-        Engine e = engines.get(Integer.valueOf(event.getParsed().get(2)));
-        if (e == null)
-            return;
-
-        if (event.getParsed().get(4).equalsIgnoreCase("OK"))
-            e.kmphSpeed = Integer.parseInt(event.getParsed().get(6));
-
-        EventBus.getDefault().post(new EngineRespEvent(event.getParsed()));
-    }
-
-    public void totalEvent(EngineEvent event) {
-        Engine e = engines.get(Integer.parseInt(event.getParsed().get(2)));
-        if (e == null)
-            return;
-
-        boolean total = event.getParsed().get(4).equals("1");
-        if (e.total == total) {
-            EventBus.getDefault().post(new EngineChangeEvent(e.addr));
-        } else {
-            e.total = total;
-            EventBus.getDefault().post(new EngineTotalChangeErrorEvent(e.addr, total));
-        }
-    }
-
-    public void expSignEvent(EngineEvent event) {
-        int addr = Integer.parseInt(event.getParsed().get(2));
-        Engine engine = engines.get(addr);
-        if (engine == null)
-            return;
-
-        engine.expSignalBlock = event.getParsed().get(4);
-        try {
-            engine.expSignalCode = Integer.parseInt(event.getParsed().get(5));
-        } catch (NumberFormatException e) {
-            engine.expSignalCode = -1;
-        }
-        EventBus.getDefault().post(new EngineChangeEvent(engine.addr));
-    }
-
-    public void expSpdEvent(EngineEvent event) {
-        Engine e = engines.get(Integer.parseInt(event.getParsed().get(2)));
-        if (e == null)
-            return;
-
-        String expSpeed = event.getParsed().get(4);
-        e.expSpeed = (!expSpeed.equals("-")) ? Integer.parseInt(expSpeed) : EXP_SPEED_UNKNOWN;
-
-        EventBus.getDefault().post(new EngineChangeEvent(e.addr));
     }
 
     @Subscribe
