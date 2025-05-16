@@ -731,6 +731,7 @@ public class EngineController extends NavigationBase {
         // It takes 3.9 s for train in H0 at 40 km/h to pass 50 cm (sensor-signal distance)
         // -> 3 s should be safe for stopping before the signal
         static final int OVERSPEED_DELAY_EB_MS = 3000;
+        static final int DIR_MISMATCH_DELAY_EB_MS = 3000;
         public enum Mode {
             TRAIN,
             SHUNT,
@@ -738,12 +739,19 @@ public class EngineController extends NavigationBase {
 
         public Mode mode = Mode.TRAIN;
         private boolean overspeed;
+        private boolean dirMismatch;
         private MediaPlayer soundPlayer;
 
         Handler t_overSpeedEB = new Handler(); // EB = emergency braking
         Runnable t_overSpeedEBRunnable = new Runnable() {
             @Override
             public void run() { overSpeedEB(); }
+        };
+
+        Handler t_dirMismatchEB = new Handler(); // EB = emergency braking
+        Runnable t_dirMismatchEBRunnable = new Runnable() {
+            @Override
+            public void run() { dirMismatchEB(); }
         };
 
         public ATP() {
@@ -763,10 +771,13 @@ public class EngineController extends NavigationBase {
         public void onDestroy() {
             if (this.overspeed)
                 this.overSpeedEnd();
+            if (this.dirMismatch)
+                this.dirMismatchEnd();
         }
 
         public void update() {
             this.overSpeedUpdate();
+            this.directionUpdate();
         }
 
         private void soundStart() {
@@ -779,11 +790,16 @@ public class EngineController extends NavigationBase {
             }
         }
 
-        private void soundStop() {
-            if ((this.soundPlayer != null) && (this.soundPlayer.isPlaying())) {
+        private void soundCheckStop() {
+            if ((!this.overspeed) && (!this.dirMismatch) && (this.soundPlayer != null) && (this.soundPlayer.isPlaying())) {
                 this.soundPlayer.stop();
                 this.soundPlayer.prepareAsync();
             }
+        }
+
+        private void removeAllEBCallbacks() {
+            this.t_overSpeedEB.removeCallbacks(t_overSpeedEBRunnable);
+            this.t_dirMismatchEB.removeCallbacks(t_dirMismatchEBRunnable);
         }
 
         private void overSpeedUpdate() {
@@ -830,19 +846,79 @@ public class EngineController extends NavigationBase {
             this.t_overSpeedEB.removeCallbacks(t_overSpeedEBRunnable);
             EngineController.this.tv_kmhSpeed.clearAnimation();
             EngineController.this.tv_expSpeed.clearAnimation();
-            this.soundStop();
+            this.soundCheckStop();
         }
 
         private void overSpeedEB() {
             final SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(EngineController.this);
+            this.removeAllEBCallbacks();
 
             if ((EngineController.this.engine.isMyControl()) && (!sharedPreferences.getBoolean("ATPEBDisable", false))) {
                 EngineController.this.emergencyStop();
 
                 new AlertDialog.Builder(EngineController.this)
                     .setMessage(getString(R.string.ta_atp_overspeed_eb_msg))
+                    .setCancelable(false)
                     .setPositiveButton(getString(R.string.dialog_ok), (dialog, which) -> {})
                     .show();
+            }
+        }
+
+        private void directionUpdate() {
+            final Engine thisEngine = EngineController.this.engine;
+
+            boolean dirMismatch = false;
+            if ((thisEngine.isMyControl()) && (this.mode != Mode.SHUNT) && (thisEngine.stepsSpeed > 0)) {
+                dirMismatch = (thisEngine.expDirection != Engine.ExpDirection.UNKNOWN) ? (!thisEngine.expDirectionMatch(thisEngine.direction)) : false;
+            }
+            this.dirMismatchSet(dirMismatch);
+        }
+
+        private void dirMismatchSet(boolean mismatch) {
+            if (mismatch == this.dirMismatch)
+                return;
+            this.dirMismatch = mismatch;
+
+            if (mismatch)
+                this.dirMismatchBegin();
+            else
+                this.dirMismatchEnd();
+        }
+
+        private void dirMismatchBegin() {
+            this.t_dirMismatchEB.postDelayed(t_dirMismatchEBRunnable, DIR_MISMATCH_DELAY_EB_MS);
+
+            { // Animation
+                Animation blink = new AlphaAnimation(0.0f, 1.0f);
+                blink.setDuration(100);
+                blink.setRepeatMode(Animation.REVERSE);
+                blink.setRepeatCount(Animation.INFINITE);
+                EngineController.this.s_direction.startAnimation(blink);
+                EngineController.this.tv_expDirection.startAnimation(blink);
+            }
+
+            this.soundStart();
+        }
+
+        private void dirMismatchEnd() {
+            this.t_dirMismatchEB.removeCallbacks(t_dirMismatchEBRunnable);
+            EngineController.this.s_direction.clearAnimation();
+            EngineController.this.tv_expDirection.clearAnimation();
+            this.soundCheckStop();
+        }
+
+        private void dirMismatchEB() {
+            final SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(EngineController.this);
+            this.removeAllEBCallbacks();
+
+            if ((EngineController.this.engine.isMyControl()) && (!sharedPreferences.getBoolean("ATPEBDisable", false))) {
+                EngineController.this.emergencyStop();
+
+                new AlertDialog.Builder(EngineController.this)
+                        .setMessage(getString(R.string.ta_atp_direction_eb_msg))
+                        .setCancelable(false)
+                        .setPositiveButton(getString(R.string.dialog_ok), (dialog, which) -> {})
+                        .show();
             }
         }
 

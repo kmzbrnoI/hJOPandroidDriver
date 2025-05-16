@@ -44,6 +44,7 @@
     <string name="ta_atp_train">Vlak</string>
     <string name="ta_atp_shunt">Posun</string>
     <string name="ta_atp_overspeed_eb_msg">Vlakový zabezpečovač: zavedeno nouzové brzdění z důvodu překročení povolené rychlosti!</string>
+    <string name="ta_atp_direction_eb_msg">Vlakový zabezpečovač: zavedeno nouzové brzdění z důvodu špatného směru!</string>
     <string name="ta_atp_direction_change_not_allowed_msg">Vlakový zabezpečovač: změna směru není povolena!</string>
     <string name="ta_atp_movement_not_allowed">Vlakový zabezpečovač: neoprávněný rozjezd (rychlost/směr)!</string>
 
