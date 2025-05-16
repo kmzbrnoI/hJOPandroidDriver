@@ -179,6 +179,16 @@ public class Engine {
         return expDirectionStrfy(context, this.expDirection);
     }
 
+    public boolean expDirectionMatch(Direction d) {
+        // arrow case causes compiler exception
+        switch (this.expDirection) {
+            case ExpDirection.BACKWARD: return (d == Direction.BACKWARD);
+            case ExpDirection.FORWARD: return (d == Direction.FORWARD);
+            case ExpDirection.UNKNOWN: return true;
+        }
+        return false;
+    }
+
     public void totalEvent(final ArrayList<String> parsed) {
         final boolean total = parsed.get(4).equals("1");
         if (this.total == total) {

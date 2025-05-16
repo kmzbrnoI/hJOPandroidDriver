@@ -375,7 +375,7 @@ public class EngineController extends NavigationBase {
             this.tv_expSignalBlock.setText((this.engine.expSignalCode != SIGNAL_UNKNOWN) ? this.engine.expSignalBlock : "---");
         } else { // SHUNT
             this.tv_expSpeed.setText(Integer.toString(ATP.SHUNT_MAX_SPEED_KMPH) + " km/h");
-            this.tv_expDirection.setText("-");
+            this.tv_expDirection.setText("---");
             this.scom_expSignal.setCode(SIGNAL_UNKNOWN);
             this.tv_expSignalBlock.setText("---");
         }
@@ -838,7 +838,8 @@ public class EngineController extends NavigationBase {
             final Engine thisEngine = EngineController.this.engine;
             if (this.mode == Mode.SHUNT)
                 return true;
-            return ((thisEngine.expSpeed == EXP_SPEED_UNKNOWN) || (thisEngine.expSpeed > 0));
+            return (((thisEngine.expSpeed == EXP_SPEED_UNKNOWN) || (thisEngine.expSpeed > 0)) &&
+                    (thisEngine.expDirectionMatch(thisEngine.direction)));
         }
 
         public boolean isSoundPlaying() {

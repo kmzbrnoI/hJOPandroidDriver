@@ -44,7 +44,7 @@
     <string name="ta_atp_train">Train</string>
     <string name="ta_atp_shunt">Shunting</string>
     <string name="ta_atp_overspeed_eb_msg">Automatic Train Protection: inhibited emergency braking due to overspeed!</string>
-    <string name="ta_atp_movement_not_allowed">Automatic Train Protection: movement is not allowed!</string>
+    <string name="ta_atp_movement_not_allowed">Automatic Train Protection: movement is not allowed (speed/direction)!</string>
 
     <string name="tr_disp_message">Optional message for the dispatcher:</string>
     <string name="tr_info_request_sent">Request sent, waiting for server response…</string>
