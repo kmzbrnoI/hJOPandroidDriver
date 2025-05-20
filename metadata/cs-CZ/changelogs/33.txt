@@ -1,0 +1,3 @@
+* VZ: přidat kontrolu směru jízdy.
+* Umožnit zastavit (a spustit) DCC na celém kolejišti.
+* Doplnit do zprávy HELLO hJOPserveru jméno aplikace (novinka v protokolu).

@@ -1,0 +1,3 @@
+* ATP: add direction check.
+* Allow to STOP & GO DCC from application.
+* Add app's name to HELLO command (new protocol feature).
