@@ -13,9 +13,13 @@ import android.content.SharedPreferences;
 import android.content.res.AssetFileDescriptor;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.VibrationEffect;
+import android.os.Vibrator;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -47,6 +51,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import cz.kudlav.scomview.ScomView;
 import cz.mendelu.xmarik.train_manager.R;
@@ -97,11 +103,13 @@ public class EngineController extends NavigationBase {
     private int lastExpSignalCode = SIGNAL_UNKNOWN;
 
     private MediaPlayer infoPlayer = null;
+    private Vibrator vibrator;
     Handler t_setSpeedHandler = new Handler();
     Runnable t_setSpeedRunnable = new Runnable() {
         @Override
         public void run() { timerSetSpeedRun(); }
     };
+    private boolean notifyTimerScheduled = false;
 
     void timerSetSpeedRun() {
         if ((!this.updating) && (this.engine != null) && (this.engine.isMyControl()) && (this.engine.stepsSpeed != this.sb_speed.getProgress())) {
@@ -131,6 +139,8 @@ public class EngineController extends NavigationBase {
             this.infoPlayer = null;
             Log.e("EC::onCreate", "s_info sound load", e);
         }
+
+        this.vibrator = (Vibrator)getSystemService(Context.VIBRATOR_SERVICE);
 
         // ATP must be created after infoPlayer, it potentially needs it
         this.atp = new ATP();
@@ -374,9 +384,19 @@ public class EngineController extends NavigationBase {
         this.chb_total.setChecked(this.engine.total);
 
         if (this.atp.mode == ATP.Mode.TRAIN) {
-            if ((this.engine.isMyControl()) && (!this.atp.isSoundPlaying()) &&
-                    ((this.engine.expSpeed != this.lastExpSpeed) || (this.engine.expSignalCode != this.lastExpSignalCode)))
-                this.playInfoSound();
+            if ((this.engine.isMyControl()) && (!this.notifyTimerScheduled) &&
+                    ((this.engine.expSpeed != this.lastExpSpeed) || (this.engine.expSignalCode != this.lastExpSignalCode))) {
+                // Run notifyUser after 100 ms to leave time for ATP to start sound/vibration first
+                this.notifyTimerScheduled = true;
+                new Timer().schedule(new TimerTask() {
+                    @Override
+                    public void run() {
+                        notifyTimerScheduled = false;
+                        if (!atp.isWarning())
+                            notifyUser();
+                    }
+                }, 100);
+            }
 
             this.tv_expSpeed.setText((this.engine.expSpeed != EXP_SPEED_UNKNOWN) ? String.format("%s km/h", this.engine.expSpeed) : "- km/h");
             this.tv_expDirection.setText(this.engine.expDirectionStr(this));
@@ -694,9 +714,20 @@ public class EngineController extends NavigationBase {
         this.b_idle.setEnabled(enabled);
     }
 
-    private void playInfoSound() {
-        if ((this.infoPlayer != null) && (!this.infoPlayer.isPlaying()))
+    private void notifyUser() {
+        AudioManager am = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
+
+        if ((am.getRingerMode() == AudioManager.RINGER_MODE_NORMAL) && (this.infoPlayer != null) && (!this.infoPlayer.isPlaying()))
             this.infoPlayer.start();
+
+        if (am.getRingerMode() != AudioManager.RINGER_MODE_SILENT) {
+            final long VIBRATE_DURATION_MS = 200;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                this.vibrator.vibrate(VibrationEffect.createOneShot(VIBRATE_DURATION_MS, VibrationEffect.DEFAULT_AMPLITUDE));
+            } else {
+                this.vibrator.vibrate(VIBRATE_DURATION_MS);
+            }
+        }
     }
 
     @Override
@@ -741,6 +772,7 @@ public class EngineController extends NavigationBase {
         private boolean overspeed;
         private boolean dirMismatch;
         private MediaPlayer soundPlayer;
+        private boolean warning = false;
 
         Handler t_overSpeedEB = new Handler(); // EB = emergency braking
         Runnable t_overSpeedEBRunnable = new Runnable() {
@@ -780,20 +812,37 @@ public class EngineController extends NavigationBase {
             this.directionUpdate();
         }
 
-        private void soundStart() {
-            if ((this.soundPlayer != null) && (!this.soundPlayer.isPlaying())) {
+        private void warningStart() {
+            AudioManager am = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
+
+            if ((am.getRingerMode() == AudioManager.RINGER_MODE_NORMAL) && (this.soundPlayer != null) && (!this.soundPlayer.isPlaying())) {
                 if (EngineController.this.infoPlayer.isPlaying()) {
                     EngineController.this.infoPlayer.stop();
                     EngineController.this.infoPlayer.prepareAsync();
                 }
                 this.soundPlayer.start();
             }
+
+            if (am.getRingerMode() != AudioManager.RINGER_MODE_SILENT) {
+                final long VIBRATE_DURATION_MS = 400;
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    EngineController.this.vibrator.vibrate(VibrationEffect.createWaveform(new long[]{0, VIBRATE_DURATION_MS}, 0));
+                } else {
+                    EngineController.this.vibrator.vibrate(VIBRATE_DURATION_MS);
+                }
+            }
+
+            this.warning = true;
         }
 
-        private void soundCheckStop() {
-            if ((!this.overspeed) && (!this.dirMismatch) && (this.soundPlayer != null) && (this.soundPlayer.isPlaying())) {
-                this.soundPlayer.stop();
-                this.soundPlayer.prepareAsync();
+        private void warningCheckStop() {
+            if ((!this.overspeed) && (!this.dirMismatch)) {
+                if ((this.soundPlayer != null) && (this.soundPlayer.isPlaying())) {
+                    this.soundPlayer.stop();
+                    this.soundPlayer.prepareAsync();
+                }
+                EngineController.this.vibrator.cancel();
+                this.warning = false;
             }
         }
 
@@ -839,14 +888,14 @@ public class EngineController extends NavigationBase {
                 EngineController.this.tv_expSpeed.startAnimation(blink);
             }
 
-            this.soundStart();
+            this.warningStart();
         }
 
         private void overSpeedEnd() {
             this.t_overSpeedEB.removeCallbacks(t_overSpeedEBRunnable);
             EngineController.this.tv_kmhSpeed.clearAnimation();
             EngineController.this.tv_expSpeed.clearAnimation();
-            this.soundCheckStop();
+            this.warningCheckStop();
         }
 
         private void overSpeedEB() {
@@ -897,14 +946,14 @@ public class EngineController extends NavigationBase {
                 EngineController.this.tv_expDirection.startAnimation(blink);
             }
 
-            this.soundStart();
+            this.warningStart();
         }
 
         private void dirMismatchEnd() {
             this.t_dirMismatchEB.removeCallbacks(t_dirMismatchEBRunnable);
             EngineController.this.s_direction.clearAnimation();
             EngineController.this.tv_expDirection.clearAnimation();
-            this.soundCheckStop();
+            this.warningCheckStop();
         }
 
         private void dirMismatchEB() {
@@ -930,8 +979,8 @@ public class EngineController extends NavigationBase {
                     (thisEngine.expDirectionMatch(thisEngine.direction)));
         }
 
-        public boolean isSoundPlaying() {
-            return this.soundPlayer.isPlaying();
+        public boolean isWarning() {
+            return this.warning;
         }
     }
 }
