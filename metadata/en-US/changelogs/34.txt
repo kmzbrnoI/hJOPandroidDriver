@@ -1,0 +1,2 @@
+* ATP: vibrate.
+* Vibration and sound is enabled/disabled based on phone mode (full sound / vibrate only / muted).

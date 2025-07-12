@@ -1,0 +1,2 @@
+* VZ: doplnit vibrace.
+* Vibrace a akustická výstraha VZ se zapíná/vypíná v závislosti na režimu telefonu (plné zvuky / pouze vibrace / vše ztlumeno).
