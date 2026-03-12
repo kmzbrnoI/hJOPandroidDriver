@@ -5,6 +5,7 @@
       <item index="0" class="java.lang.String" itemvalue="org.greenrobot.eventbus.Subscribe" />
     </list>
   </component>
+  <component name="ExternalStorageConfigurationManager" enabled="true" />
   <component name="NullableNotNullManager">
     <option name="myDefaultNullable" value="android.support.annotation.Nullable" />
     <option name="myDefaultNotNull" value="androidx.annotation.NonNull" />
