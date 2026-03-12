@@ -218,13 +218,13 @@
             </LinearLayout>
 
             <TextView
-                android:id="@+id/kmh1"
+                android:id="@+id/tv_speed_kmph"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 android:gravity="center"
                 android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                android:text="-- km/h"
+                android:text="-- / -- km/h"
                 tools:ignore="HardcodedText" />
 
             <SeekBar

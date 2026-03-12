@@ -53,6 +53,8 @@ public class EngineDb {
                     engine.fEvent(event.getParsed());
                 else if (event.getParsed().get(3).equalsIgnoreCase("SPD"))
                     engine.spdEvent(event.getParsed());
+                else if (event.getParsed().get(3).equalsIgnoreCase("SPC"))
+                    engine.spcEvent(event.getParsed());
                 else if (event.getParsed().get(3).equalsIgnoreCase("RESP"))
                     engine.respEvent(event.getParsed());
                 else if (event.getParsed().get(3).equalsIgnoreCase("TOTAL"))

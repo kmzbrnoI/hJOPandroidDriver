@@ -10,6 +10,7 @@ import cz.mendelu.xmarik.train_manager.R;
 import cz.mendelu.xmarik.train_manager.events.EngineChangeEvent;
 import cz.mendelu.xmarik.train_manager.events.EngineEvent;
 import cz.mendelu.xmarik.train_manager.events.EngineRespEvent;
+import cz.mendelu.xmarik.train_manager.events.EngineSpcEvent;
 import cz.mendelu.xmarik.train_manager.events.EngineTotalChangeErrorEvent;
 import cz.mendelu.xmarik.train_manager.network.TCPClient;
 import cz.mendelu.xmarik.train_manager.helpers.ParseHelper;
@@ -45,6 +46,7 @@ public class Engine {
     // state:
     public int stepsSpeed = 0;
     public int kmphSpeed = 0;
+    public int kmphSpeedContinuous = 0;
     public Direction direction = Direction.FORWARD;
     public boolean total = false;
     public boolean stolen = false;
@@ -80,6 +82,7 @@ public class Engine {
         this.stepsSpeed = Integer.parseInt(parsed.get(9));
         this.kmphSpeed = Integer.parseInt(parsed.get(10));
         this.direction = parsed.get(11).equals("1") ? Direction.BACKWARD : Direction.FORWARD;
+        this.kmphSpeedContinuous = this.kmphSpeed;
 
         this.function = new EngineFunction[parsed.get(8).length()];
         for (int i = 0; i < function.length; i++) {
@@ -200,8 +203,14 @@ public class Engine {
     }
 
     public void respEvent(final ArrayList<String> parsed) {
-        if (parsed.get(4).equalsIgnoreCase("OK"))
-            this.kmphSpeed = Integer.parseInt(parsed.get(6));
+        if (parsed.get(4).equalsIgnoreCase("OK")) {
+            if (parsed.size() > 6)
+                this.kmphSpeed = Integer.parseInt(parsed.get(6));
+            if (parsed.size() > 7)
+                this.kmphSpeedContinuous = Integer.parseInt(parsed.get(7));
+            else
+                this.kmphSpeedContinuous = this.kmphSpeed;
+        }
         EventBus.getDefault().post(new EngineRespEvent(parsed));
     }
 
@@ -210,6 +219,11 @@ public class Engine {
         this.stepsSpeed = Integer.parseInt(parsed.get(5));
         this.direction = (parsed.get(6).equals("1") ? Engine.Direction.BACKWARD : Engine.Direction.FORWARD);
         this.change();
+    }
+
+    public void spcEvent(final ArrayList<String> parsed) {
+        this.kmphSpeedContinuous = Integer.parseInt(parsed.get(4));
+        EventBus.getDefault().post(new EngineSpcEvent());
     }
 
     public void fEvent(final ArrayList<String> parsed) {
