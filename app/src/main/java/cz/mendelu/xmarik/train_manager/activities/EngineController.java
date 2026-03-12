@@ -902,7 +902,7 @@ public class EngineController extends NavigationBase {
             final SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(EngineController.this);
             this.removeAllEBCallbacks();
 
-            if ((EngineController.this.engine.isMyControl()) && (!sharedPreferences.getBoolean("ATPEBDisable", false))) {
+            if (EngineController.this.engine.isMyControl()) {
                 EngineController.this.emergencyStop();
 
                 new AlertDialog.Builder(EngineController.this)
@@ -960,7 +960,7 @@ public class EngineController extends NavigationBase {
             final SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(EngineController.this);
             this.removeAllEBCallbacks();
 
-            if ((EngineController.this.engine.isMyControl()) && (!sharedPreferences.getBoolean("ATPEBDisable", false))) {
+            if (EngineController.this.engine.isMyControl()) {
                 EngineController.this.emergencyStop();
 
                 new AlertDialog.Builder(EngineController.this)

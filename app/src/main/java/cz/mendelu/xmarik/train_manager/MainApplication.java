@@ -19,13 +19,6 @@ public class MainApplication extends Application {
         int mode = getTheme(sharedPreferences.getString("theme", ""));
         AppCompatDelegate.setDefaultNightMode(mode);
 
-        if (sharedPreferences.getBoolean("ATPEBDisable", false)) {
-            // ATPEBDisable is only temporary -> set to false
-            SharedPreferences.Editor editor = sharedPreferences.edit();
-            editor.putBoolean("ATPEBDisable", false);
-            editor.apply();
-        }
-
         // create database of servers
         ServerDb.instance = new ServerDb(sharedPreferences);
 
