@@ -90,7 +90,8 @@ public class EngineController extends NavigationBase {
     private ImageButton ib_dcc_go;
     private ImageButton ib_dcc_stop;
     private ListView lv_functions;
-    private TextView tv_kmhSpeed;
+    private TextView tv_kmhSpeedSelected;
+    private TextView tv_kmhSpeedReal;
     private TextView tv_expSpeed;
     private TextView tv_expDirection;
     private TextView tv_expSignalBlock;
@@ -161,7 +162,8 @@ public class EngineController extends NavigationBase {
         this.ib_dcc_stop = findViewById(R.id.ib_dcc_stop);
         this.ib_release = findViewById(R.id.ib_release);
         this.lv_functions = findViewById(R.id.checkBoxView1);
-        this.tv_kmhSpeed = findViewById(R.id.tv_speed_kmph);
+        this.tv_kmhSpeedSelected = findViewById(R.id.tv_speed_kmph_selected);
+        this.tv_kmhSpeedReal = findViewById(R.id.tv_speed_kmph_real);
         this.tv_expSpeed = findViewById(R.id.expSpeed);
         this.tv_expDirection = findViewById(R.id.expDirection);
         this.tv_expSignalBlock = findViewById(R.id.expSignalBlock);
@@ -381,7 +383,8 @@ public class EngineController extends NavigationBase {
         }
         this.chb_group.setChecked(this.engine.multitrack);
 
-        this.tvKmhUpdate();
+        this.tv_kmhSpeedSelected.setText(this.engine.kmphSpeed + " km/h");
+        this.tv_kmhSpeedReal.setText(this.engine.kmphSpeedContinuous + " km/h");
         this.chb_total.setChecked(this.engine.total);
 
         if (this.atp.mode == ATP.Mode.TRAIN) {
@@ -704,19 +707,15 @@ public class EngineController extends NavigationBase {
         if (Integer.parseInt(event.getParsed().get(2)) != this.engine.addr)
             return;
 
-        this.tvKmhUpdate();
+        this.tv_kmhSpeedSelected.setText(this.engine.kmphSpeed + " km/h");
+        this.tv_kmhSpeedReal.setText(this.engine.kmphSpeedContinuous + " km/h");
         this.updateStatus(!event.getParsed().get(4).equalsIgnoreCase("OK"));
         this.atp.update();
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventMainThread(EngineSpcEvent event) {
-        this.tvKmhUpdate();
-    }
-
-    private void tvKmhUpdate()
-    {
-        this.tv_kmhSpeed.setText(String.format("%s / %s km/h", this.engine.kmphSpeed, this.engine.kmphSpeedContinuous));
+        this.tv_kmhSpeedReal.setText(this.engine.kmphSpeedContinuous + " km/h");
     }
 
     private void setEnabled(boolean enabled) {
@@ -895,7 +894,7 @@ public class EngineController extends NavigationBase {
                 blink.setDuration(100);
                 blink.setRepeatMode(Animation.REVERSE);
                 blink.setRepeatCount(Animation.INFINITE);
-                EngineController.this.tv_kmhSpeed.startAnimation(blink);
+                EngineController.this.tv_kmhSpeedSelected.startAnimation(blink);
                 EngineController.this.tv_expSpeed.startAnimation(blink);
             }
 
@@ -904,7 +903,7 @@ public class EngineController extends NavigationBase {
 
         private void overSpeedEnd() {
             this.t_overSpeedEB.removeCallbacks(t_overSpeedEBRunnable);
-            EngineController.this.tv_kmhSpeed.clearAnimation();
+            EngineController.this.tv_kmhSpeedSelected.clearAnimation();
             EngineController.this.tv_expSpeed.clearAnimation();
             this.warningCheckStop();
         }

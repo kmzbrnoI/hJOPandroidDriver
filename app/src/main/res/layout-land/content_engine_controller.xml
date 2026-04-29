@@ -215,15 +215,35 @@
 
             </LinearLayout>
 
-            <TextView
-                android:id="@+id/tv_speed_kmph"
+            <LinearLayout
+                android:id="@+id/llSpeeds"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
+                android:orientation="horizontal"
                 android:gravity="center"
-                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                android:text="-- / -- km/h"
-                tools:ignore="HardcodedText" />
+                android:layout_marginTop="5dp">
+
+                <TextView
+                    android:id="@+id/tv_speed_kmph_selected"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                    android:text="-- km/h"
+                    tools:ignore="HardcodedText" />
+
+                <TextView
+                    android:id="@+id/tv_speed_kmph_real"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                    android:text="-- km/h"
+                    tools:ignore="HardcodedText" />
+
+            </LinearLayout>
 
             <SeekBar
                 android:layout_width="match_parent"
