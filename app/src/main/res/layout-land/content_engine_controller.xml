@@ -152,6 +152,8 @@
                             android:layout_weight="0.6"
                             android:onClick="b_stopClick"
                             android:text="@string/ta_emergency_stop"
+                            android:backgroundTint="@android:color/holo_red_dark"
+                            android:textColor="@android:color/white"
                             tools:ignore="UsingOnClickInXml" />
 
                         <Button
