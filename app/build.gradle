@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     namespace 'cz.mendelu.xmarik.train_manager'
-    compileSdk 35
+    compileSdk = 36
     defaultConfig {
         applicationId "cz.mendelu.xmarik.train_manager"
         minSdkVersion 21
@@ -15,7 +15,7 @@ android {
     buildTypes {
         release {
             minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt')
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt')
         }
     }
     compileOptions {
