@@ -29,7 +29,7 @@ dispatchers.
 
 ## Contributors
 
-* [Jan Horáček](http://apophis.cz/) ([jan.horacek@kmz-brno.cz](mailto:jan.horacek@kmz-brno.cz)).
+* [Jan Malina (Horáček)](http://apophis.cz/) ([jan.malina@kmz-brno.cz](mailto:jan.malina@kmz-brno.cz)).
 * [Vladan Kudláč](https://kudlav.github.io/).
 * [Miroslav Mařík](https://www.linkedin.com/in/miroslav-mařík-27a939b4).
 
