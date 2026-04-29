@@ -1,0 +1,3 @@
+* Show selected and real dynamic vehicle speed.
+* Make 'Emergency stop' button red.
+* Remove ATP EB override functionality.

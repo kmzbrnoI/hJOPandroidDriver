@@ -1,0 +1,3 @@
+* Zobrazit nastavenou i reálnou dynamickou rychlost vozidla.
+* Tlačítko "Nouzové stop" je červené.
+* Zrušit možnost přemostění nouzového brzdění VZ.
