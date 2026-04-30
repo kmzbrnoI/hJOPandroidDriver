@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import cz.mendelu.xmarik.train_manager.R;
 import cz.mendelu.xmarik.train_manager.events.EngineChangeEvent;
 import cz.mendelu.xmarik.train_manager.events.EngineEvent;
+import cz.mendelu.xmarik.train_manager.events.EngineExpSpeedSetToZero;
 import cz.mendelu.xmarik.train_manager.events.EngineRespEvent;
 import cz.mendelu.xmarik.train_manager.events.EngineSpcEvent;
 import cz.mendelu.xmarik.train_manager.events.EngineTotalChangeErrorEvent;
@@ -241,6 +242,7 @@ public class Engine {
 
     public void expSpdEvent(final ArrayList<String> parsed) {
         final String expSpeed = parsed.get(4);
+        final int lastExpectedSpeed = this.expSpeed;
         this.expSpeed = (!expSpeed.equals("-")) ? Integer.parseInt(expSpeed) : EXP_SPEED_UNKNOWN;
 
         if (parsed.size() > 5) {
@@ -253,6 +255,9 @@ public class Engine {
         } else {
             this.expDirection = Engine.ExpDirection.UNKNOWN;
         }
+
+        if ((lastExpectedSpeed > 0) && (this.expSpeed == 0))
+            EventBus.getDefault().post(new EngineExpSpeedSetToZero(this.addr));
 
         this.change();
     }

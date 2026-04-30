@@ -59,6 +59,7 @@ import cz.mendelu.xmarik.train_manager.R;
 import cz.mendelu.xmarik.train_manager.adapters.FunctionCheckBoxAdapter;
 import cz.mendelu.xmarik.train_manager.events.EngineAddEvent;
 import cz.mendelu.xmarik.train_manager.events.EngineChangeEvent;
+import cz.mendelu.xmarik.train_manager.events.EngineExpSpeedSetToZero;
 import cz.mendelu.xmarik.train_manager.events.EngineRemoveEvent;
 import cz.mendelu.xmarik.train_manager.events.EngineRespEvent;
 import cz.mendelu.xmarik.train_manager.events.EngineSpcEvent;
@@ -402,7 +403,12 @@ public class EngineController extends NavigationBase {
                 }, 100);
             }
 
-            this.tv_expSpeed.setText((this.engine.expSpeed != EXP_SPEED_UNKNOWN) ? String.format("%s km/h", this.engine.expSpeed) : "- km/h");
+            String speedText = "";
+            speedText += (this.engine.expSpeed != EXP_SPEED_UNKNOWN) ? Integer.toString(this.engine.expSpeed) : "-";
+            if (this.atp.release.running())
+                speedText += "/" + Integer.toString(ATP.Release.RELEASE_SPEED_KMH);
+            this.tv_expSpeed.setText(speedText + " km/h");
+
             this.tv_expDirection.setText(this.engine.expDirectionStr(this));
             this.scom_expSignal.setCode(this.engine.expSignalCode);
             this.tv_expSignalBlock.setText((this.engine.expSignalCode != SIGNAL_UNKNOWN) ? this.engine.expSignalBlock : "---");
@@ -718,6 +724,13 @@ public class EngineController extends NavigationBase {
         this.tv_kmhSpeedReal.setText(this.engine.kmphSpeedContinuous + " km/h");
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEventMainThread(EngineExpSpeedSetToZero event) {
+        if (event.getAddr() != this.engine.addr)
+            return;
+        this.atp.engineExpSpeedSetToZero();
+    }
+
     private void setEnabled(boolean enabled) {
         this.s_direction.setEnabled(enabled);
         this.sb_speed.setEnabled(enabled);
@@ -796,6 +809,8 @@ public class EngineController extends NavigationBase {
             public void run() { dirMismatchEB(); }
         };
 
+        Release release = new Release();
+
         public ATP() {
             try {
                 this.soundPlayer = new MediaPlayer();
@@ -818,6 +833,7 @@ public class EngineController extends NavigationBase {
         }
 
         public void update() {
+            this.releaseUpdate();
             this.overSpeedUpdate();
             this.directionUpdate();
         }
@@ -861,11 +877,25 @@ public class EngineController extends NavigationBase {
             this.t_dirMismatchEB.removeCallbacks(t_dirMismatchEBRunnable);
         }
 
+        public void engineExpSpeedSetToZero() {
+            final Engine thisEngine = EngineController.this.engine;
+            if ((this.mode == Mode.TRAIN) && (thisEngine.stepsSpeed > 0) && (!this.release.running()))
+                this.release.start();
+        }
+
+        public void releaseUpdate() {
+            final Engine thisEngine = EngineController.this.engine;
+            if ((this.release.running()) && ((thisEngine.expSpeed > 0) || (thisEngine.stepsSpeed == 0))) {
+                this.release.stop();
+                EngineController.this.updateGUIFromTrain();
+            }
+        }
+
         private void overSpeedUpdate() {
             final Engine thisEngine = EngineController.this.engine;
 
             boolean overSpeed = false;
-            if (thisEngine.isMyControl()) {
+            if ((thisEngine.isMyControl()) && ((!this.release.running()) || (thisEngine.kmphSpeed > Release.RELEASE_SPEED_KMH))) {
                 if (this.mode == Mode.SHUNT) {
                     overSpeed = (thisEngine.kmphSpeed > SHUNT_MAX_SPEED_KMPH);
                 } else { // mode == Mode.TRAIN
@@ -991,6 +1021,40 @@ public class EngineController extends NavigationBase {
 
         public boolean isWarning() {
             return this.warning;
+        }
+
+        class Release {
+            static final int RELEASE_TIMEOUT_MS = 6000;
+            static final int RELEASE_SPEED_KMH = 20;
+            private boolean _running = false;
+
+            private Handler t_release = new Handler(); // release speed active
+            private Runnable t_releaseRunnable = new Runnable() {
+                @Override
+                public void run() { releaseTimeout(); }
+            };
+
+            private void releaseTimeout() {
+                _running = false;
+                EngineController.this.updateGUIFromTrain();
+            }
+
+            public boolean running() {
+                return _running;
+            }
+
+            public void start() {
+                if (running())
+                    return;
+                _running = true;
+                t_release.postDelayed(t_releaseRunnable, RELEASE_TIMEOUT_MS);
+            }
+
+            public void stop() {
+                _running = false;
+                t_release.removeCallbacks(t_releaseRunnable);
+            }
+
         }
     }
 }
