@@ -2,7 +2,7 @@ apply plugin: 'com.android.library'
 
 android {
     namespace 'cz.kudlav.scomview'
-    compileSdk 35
+    compileSdk 36
 
     defaultConfig {
         minSdkVersion 21
@@ -12,10 +12,10 @@ android {
         targetCompatibility JavaVersion.VERSION_21
     }
     lint {
-        targetSdk 35
+        targetSdk 36
     }
     testOptions {
-        targetSdk 35
+        targetSdk 36
     }
 }
 

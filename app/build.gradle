@@ -8,7 +8,7 @@ android {
         minSdkVersion 21
         versionCode 36
         versionName "2.5"
-        targetSdkVersion 35
+        targetSdkVersion 36
         def buildTime = new Date()
         buildConfigField "String", "BUILD_DATETIME", "\"${buildTime.format('yyyy-MM-dd HH:mm:ss')}\""
     }
