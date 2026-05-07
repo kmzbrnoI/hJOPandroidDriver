@@ -11,8 +11,11 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.preference.PreferenceManager;
 
 import org.greenrobot.eventbus.EventBus;
@@ -52,6 +55,15 @@ public class ServerConnector extends AppCompatActivity {
         ListView mList = findViewById(R.id.list);
         messagesAdapter = new TextViewAdapter(this, messages);
         mList.setAdapter(messagesAdapter);
+
+        this.getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                if (TCPClient.getInstance().connected())
+                    TCPClient.getInstance().disconnect(getString(R.string.sc_disconnected_user_cancelled));
+                finish();
+            }
+        });
     }
 
     @Override
@@ -59,13 +71,6 @@ public class ServerConnector extends AppCompatActivity {
         super.onPause();
         if (EventBus.getDefault().isRegistered(this))
             EventBus.getDefault().unregister(this);
-    }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        if (TCPClient.getInstance().connected())
-            TCPClient.getInstance().disconnect(getString(R.string.sc_disconnected_user_cancelled));
     }
 
     @Override

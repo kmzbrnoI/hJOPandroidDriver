@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AlertDialog;
@@ -70,6 +71,20 @@ public class EngineRequest extends NavigationBase {
         this.messageForServer.setOnFocusChangeListener((view, b) -> {
             if (messageForServer.isFocused())
                 messageForServer.setText("");
+        });
+
+        this.getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                final DrawerLayout drawer = findViewById(R.id.drawer_layout);
+                if (drawer.isDrawerOpen(GravityCompat.START)) {
+                    drawer.closeDrawer(GravityCompat.START);
+                } else {
+                    EventBus.getDefault().unregister(this);
+                    dialog.dismiss();
+                    finish();
+                }
+            }
         });
     }
 
@@ -140,18 +155,6 @@ public class EngineRequest extends NavigationBase {
 
     private void cancelRequest() {
         TCPClient.getInstance().send("-;LOK;G;CANCEL");
-    }
-
-    @Override
-    public void onBackPressed() {
-        final DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            EventBus.getDefault().unregister(this);
-            this.dialog.dismiss();
-            super.onBackPressed();
-        }
     }
 
     @Override

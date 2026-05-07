@@ -36,6 +36,7 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.SwitchCompat;
@@ -202,6 +203,19 @@ public class EngineController extends NavigationBase {
         this.rg_atp_mode.setOnCheckedChangeListener((group, checkedId) -> this.onRgATPModeCheckedChange(group, checkedId));
 
         this.ib_release.setOnClickListener(this::ib_ReleaseClick);
+
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                final DrawerLayout drawer = findViewById(R.id.drawer_layout);
+                if (drawer.isDrawerOpen(GravityCompat.START)) {
+                    drawer.closeDrawer(GravityCompat.START);
+                } else {
+                    b_idleClick(findViewById(R.id.startButton1));
+                    finish();
+                }
+            }
+        });
     }
 
     @Override
@@ -758,17 +772,6 @@ public class EngineController extends NavigationBase {
         this.b_idleClick(findViewById(R.id.startButton1));
         this.t_setSpeedHandler.removeCallbacks(t_setSpeedRunnable);
         super.onPause();
-    }
-
-    @Override
-    public void onBackPressed() {
-        final DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            b_idleClick(findViewById(R.id.startButton1));
-            super.onBackPressed();
-        }
     }
 
     @Override
