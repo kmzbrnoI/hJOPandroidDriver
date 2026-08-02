@@ -48,9 +48,9 @@
     <string name="ta_atp_direction_change_not_allowed_msg">Vlakový zabezpečovač: změna směru není povolena!</string>
     <string name="ta_atp_movement_not_allowed">Vlakový zabezpečovač: neoprávněný rozjezd (rychlost/směr)!</string>
 
-    <string name="tr_disp_message">Volitelná zpráva pro dispečera:</string>
+    <string name="tr_disp_message">Volitelná zpráva pro výpravčího:</string>
     <string name="tr_info_request_sent">Žádost odeslána, čekám na odpověď serveru…</string>
-    <string name="tr_info_waiting_disp">Žádost odeslána, čekám na dispečera…</string>
+    <string name="tr_info_waiting_disp">Žádost odeslána, čekám na výpravčího…</string>
     <string name="tr_no_areas">Žádné oblasti řízení.</string>
 
     <string name="conn_servers_found">Nalezené servery</string>
