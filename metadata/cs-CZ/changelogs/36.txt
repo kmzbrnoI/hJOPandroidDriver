@@ -1,0 +1,3 @@
+* Doplnit uvolňovací rychlost.
+* Umožnit nastavení jazyku specificky pro aplikaci.
+* Drobné opravy a vylepšení.

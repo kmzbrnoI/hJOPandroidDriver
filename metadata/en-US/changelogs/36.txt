@@ -1,0 +1,3 @@
+* Add release speed.
+* Allow to pick language for this app specifically.
+* Minor bugfixes & improvements.
